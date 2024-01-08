@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 MIN_AREA = 500
-MAX_AREA = 5000
+MAX_AREA = 10000
 MAX_RATIO = 0.7
 
 # runPipeline() is called every frame by Limelight's backend.
@@ -48,7 +48,6 @@ def runPipeline(image, llrobot):
             if rect_aspect_ratio < MAX_RATIO and MIN_AREA < contour_area < MAX_AREA:
                 # Draw ellipse
                 cv2.ellipse(image, ellipse, (0, 255, 0), 2)
-
                 llpython = [x, y, w, h]
                 contour_output = largestContour
 

@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import time
-
 # global variables go here:
 testVar = 0
 
@@ -15,7 +14,7 @@ def incrementTestVar():
 # runPipeline() is called every frame by Limelight's backend.
 def runPipeline(image, llrobot):
     
-    tic = time.perf_counter();
+    tic = time.perf_counter()
     # img = cv2.medianBlur(image,101)
   
     # BGR->HSV
@@ -45,6 +44,6 @@ def runPipeline(image, llrobot):
     # an image to stream,
     # and optionally an array of up to 8 values for the "llpython"
     # networktables array
-    toc = time.perf_counter();
-    print("1 cycle ran in " + str(toc-tic) + " time");
+    toc = time.perf_counter()
+    print("1 cycle ran in " + str(toc-tic) + " time")
     return largestContour, image, llpython

@@ -8,8 +8,8 @@ public class Shooter extends SubsystemBase {
     
     public static Shooter mShooter;
 
-    private final TalonFX leftMotor = new TalonFX(99);
-    private final TalonFX rightMotor = new TalonFX(98);
+    private final TalonFX leftMotor = new TalonFX(60, "*");
+    private final TalonFX rightMotor = new TalonFX(61, "*");
 
     public static Shooter getInstance() {
         if (mShooter == null)
@@ -18,8 +18,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public Shooter() {
-        leftMotor.setInverted(false);
-        rightMotor.setInverted(true);
+        leftMotor.setInverted(true);
+        rightMotor.setInverted(false);
     }
 
     public void setSpeed(double leftSpeed, double rightSpeed) {

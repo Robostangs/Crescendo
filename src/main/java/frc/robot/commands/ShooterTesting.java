@@ -20,12 +20,12 @@ public class ShooterTesting extends Command {
     @Override
     public void execute() {
         if (leftTrig.getAsDouble() == 0)
-            leftSpeed = 0.05;
+            leftSpeed = -0.1;
         else
             leftSpeed = leftTrig.getAsDouble();
 
         if (rightTrig.getAsDouble() == 0)
-            rightSpeed = 0.05;
+            rightSpeed = -0.1;
         else
             rightSpeed = rightTrig.getAsDouble();
         

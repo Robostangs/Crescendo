@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.ShooterTesting;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
@@ -37,7 +38,7 @@ public class RobotContainer {
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
   private void configureBindings() {
-    // DRIVETRAIN
+    /* DRIVETRAIN */
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(-xDrive.getLeftY() * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
@@ -57,6 +58,8 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
+
+    /* SHOOTER */
     mShooter.setDefaultCommand(new ShooterTesting(mShooter, () -> xManip.getLeftTriggerAxis(), () -> xManip.getRightTriggerAxis()));
   }
 

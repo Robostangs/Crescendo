@@ -8,7 +8,7 @@ import frc.robot.subsystems.Shooter;
 public class ShooterTesting extends Command {
     public Shooter mShooter;
     public DoubleSupplier leftTrig, rightTrig;
-    public double leftSpeed, rightSpeed;
+    public double intakeSpeed, shooterSpeed;
 
     public ShooterTesting(Shooter mShooter, DoubleSupplier leftTrig, DoubleSupplier rightTrig) {
         this.mShooter = mShooter;
@@ -19,16 +19,23 @@ public class ShooterTesting extends Command {
 
     @Override
     public void execute() {
-        if (leftTrig.getAsDouble() == 0)
-            leftSpeed = -0.1;
-        else
-            leftSpeed = leftTrig.getAsDouble();
 
-        if (rightTrig.getAsDouble() == 0)
-            rightSpeed = -0.1;
-        else
-            rightSpeed = rightTrig.getAsDouble();
-        
-        mShooter.setSpeed(leftSpeed, rightSpeed);
+        intakeSpeed = leftTrig.getAsDouble();
+        shooterSpeed = rightTrig.getAsDouble();
+        if (intakeSpeed > shooterSpeed){
+            mShooter.setSpeed(-intakeSpeed, -intakeSpeed);
+        }else{
+            mShooter.setSpeed(shooterSpeed, shooterSpeed);
+        }
+    }
+
+    @Override
+    public void end(boolean interuppted){
+        mShooter.setSpeed(0, 0);
+    }
+    
+    @Override
+    public boolean isFinished(){
+        return false;
     }
 }

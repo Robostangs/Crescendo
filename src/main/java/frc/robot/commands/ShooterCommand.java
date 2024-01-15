@@ -22,8 +22,8 @@ public class ShooterCommand extends Command {
     @Override
     public void execute() {
 
-        feedSpeed = leftPressed.getAsBoolean() ? 0.5 : 0;
-        shootSpeed = rightPressed.getAsBoolean() ? 1 : 0;
+        feedSpeed = leftPressed.getAsBoolean() ? 0.3 : 0;
+        shootSpeed = rightPressed.getAsBoolean() ? 0.3 : 0;
         
         mShooter.setSpeed(shootSpeed, feedSpeed);
     }

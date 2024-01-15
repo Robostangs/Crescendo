@@ -22,7 +22,7 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         leftMotor.setInverted(false);
         rightMotor.setInverted(true);
-        holdingMotor.setInverted(true);
+        holdingMotor.setInverted(false);
     }
 
     public void setSpeed(double shootingSpeed, double holdingSpeed) {

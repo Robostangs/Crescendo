@@ -7,7 +7,6 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -15,9 +14,14 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 public class NoteAlign extends Command {
     private CommandSwerveDrivetrain mSwerve;
     private SwerveRequest.FieldCentric drive;
-    private PIDController mPID = new PIDController(0.3, 0.1, 0);
+    private PIDController mPID = new PIDController(0.3, 0, 0);
     private DoubleSupplier leftX, leftY;
     private double xSpeed, ySpeed, MaxSpeed;
+
+    private int positionsRecorded = 10; // How many past positions will be included in the position average
+    private double[] noteXHistory = new double[10];
+    private int historyCounter = 0;
+    private double historySum;
     
     public NoteAlign(CommandSwerveDrivetrain mSwerve, DoubleSupplier leftX, DoubleSupplier leftY, double MaxSpeed) {
         this.mSwerve = mSwerve;
@@ -34,7 +38,12 @@ public class NoteAlign extends Command {
     }
 
     public double getNoteX() {
-        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+        noteXHistory[historyCounter] = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+        historyCounter = (historyCounter + 1)%positionsRecorded;
+        historySum = 0;
+        for (double i : noteXHistory)
+            historySum += i;
+        return historySum/positionsRecorded;
     }
 
     @Override

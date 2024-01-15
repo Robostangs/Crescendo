@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -7,28 +8,24 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterTesting extends Command {
     public Shooter mShooter;
-    public DoubleSupplier leftTrig, rightTrig;
-    public double leftSpeed, rightSpeed;
 
-    public ShooterTesting(Shooter mShooter, DoubleSupplier leftTrig, DoubleSupplier rightTrig) {
+    public ShooterTesting(Shooter mShooter) {
         this.mShooter = mShooter;
-        this.leftTrig = leftTrig;
-        this.rightTrig = rightTrig;
         addRequirements(mShooter);
     }
 
     @Override
     public void execute() {
-        if (leftTrig.getAsDouble() == 0)
-            leftSpeed = 0.05;
-        else
-            leftSpeed = leftTrig.getAsDouble();
+        mShooter.setSpeed(1, 1);
+    }
 
-        if (rightTrig.getAsDouble() == 0)
-            rightSpeed = 0.05;
-        else
-            rightSpeed = rightTrig.getAsDouble();
-        
-        mShooter.setSpeed(leftSpeed, rightSpeed);
+    @Override
+    public void end(boolean interuppted){
+        mShooter.setSpeed(0, 0);
+    }
+    
+    @Override
+    public boolean isFinished(){
+        return false;
     }
 }

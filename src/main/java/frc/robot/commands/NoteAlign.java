@@ -22,6 +22,8 @@ public class NoteAlign extends Command {
     private double[] noteXHistory = new double[10];
     private int historyCounter = 0;
     private double historySum;
+    private double historyAverage;
+    private double worstPosition;
     
     public NoteAlign(CommandSwerveDrivetrain mSwerve, DoubleSupplier leftX, DoubleSupplier leftY, double MaxSpeed) {
         this.mSwerve = mSwerve;
@@ -40,10 +42,24 @@ public class NoteAlign extends Command {
     public double getNoteX() {
         noteXHistory[historyCounter] = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
         historyCounter = (historyCounter + 1)%positionsRecorded;
+        worstPosition = 0;
         historySum = 0;
-        for (double i : noteXHistory)
+
+        for (double i : noteXHistory) 
             historySum += i;
-        return historySum/positionsRecorded;
+
+        historyAverage = historySum/positionsRecorded;
+
+        for (double i : noteXHistory)
+            if (Math.abs(i-historyAverage) > Math.abs(worstPosition-historyAverage))
+                worstPosition = i;
+
+        return (historySum-worstPosition)/(positionsRecorded-1);
+    }
+
+    @Override
+    public void initialize() {
+        noteXHistory = new double[10];
     }
 
     @Override

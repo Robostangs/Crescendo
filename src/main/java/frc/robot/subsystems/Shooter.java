@@ -26,4 +26,11 @@ public class Shooter extends SubsystemBase {
         leftMotor.set(leftSpeed);
         rightMotor.set(rightSpeed);
     }
+
+    public void stop() {
+        leftMotor.set(0);
+        rightMotor.set(0);
+    }
+
+    
 }

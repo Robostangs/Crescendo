@@ -57,7 +57,7 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     /* NOTE FINDER */
-    xDrive.x().whileTrue(new NoteAlign(drivetrain, () -> xDrive.getLeftX(), () -> xDrive.getLeftY(), MaxSpeed));
+    xDrive.x().whileTrue(new NoteAlign(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), MaxSpeed));
   }
 
   public RobotContainer() {

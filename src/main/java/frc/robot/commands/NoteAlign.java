@@ -1,11 +1,14 @@
 package frc.robot.commands;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
@@ -14,19 +17,18 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 public class NoteAlign extends Command {
     private CommandSwerveDrivetrain mSwerve;
     private SwerveRequest.FieldCentric drive;
-    private PIDController mPID = new PIDController(0.3, 0, 0);
+    // private PIDController mPID = new PIDController(0.1, 0.15, 0);
+    private PIDController mPID = new PIDController(0.08, 0.1, 0.01);
     private DoubleSupplier leftX, leftY;
     private double xSpeed, ySpeed, MaxSpeed;
 
-    private int positionsRecorded = 10; // How many past positions will be included in the position average
-    private double[] noteXHistory = new double[10];
-    private int historyCounter = 0;
-    private double historySum;
-    private double historyAverage;
-    private double worstPosition;
+    private final NetworkTableEntry tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
+    private final int positionsRecorded = 10; // How many past positions will be included in the position average
+    Queue<Double> noteHist;
+    private double runningSum;
     
-    public NoteAlign(CommandSwerveDrivetrain mSwerve, DoubleSupplier leftX, DoubleSupplier leftY, double MaxSpeed) {
-        this.mSwerve = mSwerve;
+    public NoteAlign(DoubleSupplier leftX, DoubleSupplier leftY, double MaxSpeed) {
+        this.mSwerve = TunerConstants.DriveTrain;
         addRequirements(mSwerve);
 
         drive = new SwerveRequest.FieldCentric()
@@ -40,26 +42,18 @@ public class NoteAlign extends Command {
     }
 
     public double getNoteX() {
-        noteXHistory[historyCounter] = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-        historyCounter = (historyCounter + 1)%positionsRecorded;
-        worstPosition = 0;
-        historySum = 0;
-
-        for (double i : noteXHistory) 
-            historySum += i;
-
-        historyAverage = historySum/positionsRecorded;
-
-        for (double i : noteXHistory)
-            if (Math.abs(i-historyAverage) > Math.abs(worstPosition-historyAverage))
-                worstPosition = i;
-
-        return (historySum-worstPosition)/(positionsRecorded-1);
+        double x = tx.getDouble(0);
+        noteHist.add(x);
+        runningSum += x;
+        if (noteHist.size()>positionsRecorded){
+            runningSum -= noteHist.remove();
+        }   
+        return runningSum/noteHist.size();
     }
 
     @Override
     public void initialize() {
-        noteXHistory = new double[10];
+        noteHist = new LinkedList<>();
     }
 
     @Override

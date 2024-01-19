@@ -24,7 +24,6 @@ import frc.robot.generated.TunerConstants;
 public class telePaths extends Command{
     private CommandSwerveDrivetrain m_drive;
     private TunerConstants m_tunerConstants;
-    private Telemetry m_telemetry;
 
 
     private Pose2d currentPose = new Pose2d();
@@ -44,22 +43,16 @@ public class telePaths extends Command{
 
 
     List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-    currentPose,
-    //TODO add proper waypoints
-    new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)),
-    new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90))
+    currentPose
 );
 
 // Create the path using the bezier points created above
 PathPlannerPath path = new PathPlannerPath(
     bezierPoints,
-    //TODO add proper constraints
     new PathConstraints(0, 0, 0, 0), 
-    //TODO add proper goal
-    new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) 
+    new GoalEndState(0.0, Rotation2d.fromDegrees(0)) 
 );
 
-//TODO get ChassisSpped and Rotation2d 
 PathPlannerTrajectory trajectory = new PathPlannerTrajectory(path,new ChassisSpeeds(0, 0, 0),new Rotation2d(0));
 PathPlannerTrajectory.State state = trajectory.getState(0);
 
@@ -69,23 +62,21 @@ PathPlannerTrajectory.State state = trajectory.getState(0);
 public void Path1() {
 
 bezierPoints = PathPlannerPath.bezierFromPoses(
-    currentPose,
-    //TODO add proper waypoints
-    new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)),
-    new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90))
+    new Pose2d(1.80, 3.33, Rotation2d.fromDegrees(0)),
+    new Pose2d(3.46, 0.72, Rotation2d.fromDegrees(0)),
+    new Pose2d(6.89, 0.72, Rotation2d.fromDegrees(0)),
+    new Pose2d(8.20, 2.30, Rotation2d.fromDegrees(0))
 );
 
 // Create the path using the bezier points created above
  path = new PathPlannerPath(
     bezierPoints,
-    //TODO add proper constraints
-    new PathConstraints(0, 0, 0, 0), 
-    //TODO add proper goal
-    new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) 
+    new PathConstraints(3d, 3d, 540d, 720d), 
+    new GoalEndState(0.0, Rotation2d.fromDegrees(0.0)) 
 );
 
 //TODO get ChassisSpped and Rotation2d 
- trajectory = new PathPlannerTrajectory(path, new ChassisSpeeds(0, 0, 0),new Rotation2d(0));
+ trajectory = new PathPlannerTrajectory(path, new ChassisSpeeds(3.00, 0.00, 0),new Rotation2d(0));
 
 }
 
@@ -93,7 +84,7 @@ bezierPoints = PathPlannerPath.bezierFromPoses(
 public void execute() {
    
     targetPose = state.getTargetHolonomicPose();
-    m_drive.applyRequest(() ->drive.withVelocityX(0).withVelocityY(0).withRotationalRate(targetPose.getRotation().getRadians()));
+    m_drive.applyRequest(() ->drive.withVelocityX(3.00).withVelocityY(3.00).withRotationalRate(targetPose.getRotation().getRadians()));
 
     
 

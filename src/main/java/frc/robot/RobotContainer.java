@@ -19,18 +19,21 @@ import frc.robot.commands.shooter.ShooterCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.commands.NoteAlign;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
-  private double MaxSpeed = 6; // 6 meters per second desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // 6 meters per second desired top speed
+  private double MaxAngularRate = 8 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController xDrive = new CommandXboxController(0);
-  private final CommandXboxController xManip = new CommandXboxController(1);
+  private final CommandXboxController xDrive = new CommandXboxController(0); // My joystick
+  private final CommandXboxController xManip = new CommandXboxController(1); // My joystick
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(MaxSpeed * 0.08).withRotationalDeadband(MaxAngularRate * 0.08) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -40,6 +43,7 @@ public class RobotContainer {
   /*shooter */
   private final Shooter mShooter = Shooter.getInstance();
   private void configureBindings() {
+    /* DRIVETRAIN */
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(-xDrive.getLeftY() * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
@@ -50,18 +54,17 @@ public class RobotContainer {
     xDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
     xDrive.b().whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-xDrive.getLeftY(), -xDrive.getLeftX()))));
-    // xDrive.y().whileTrue(new NoteAlign(drivetrain));
 
     // reset the field-centric heading on left bumper press
-    // xDrive.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    xDrive.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-
-    /* SHOOTER */
+    /* NOTE FINDER */
+    xDrive.x().whileTrue(new NoteAlign(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), MaxSpeed));
   }
 
   public RobotContainer() {

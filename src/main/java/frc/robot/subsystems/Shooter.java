@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -9,10 +10,11 @@ public class Shooter extends SubsystemBase {
     
     public static Shooter mShooter;
 
-    private final TalonFX leftShootMotor = new TalonFX(ShooterConstants.leftShootID, "*");
-    private final TalonFX rightShootMotor = new TalonFX(ShooterConstants.rightShootID, "*");
-    private final TalonFX feedMotor = new TalonFX(ShooterConstants.feedID, "*");
-    private final TalonFX wristMotor = new TalonFX(ShooterConstants.wristID, "*");;
+    private final TalonFX leftShootMotor = new TalonFX(ShooterConstants.leftShootMotorID, "*");
+    private final TalonFX rightShootMotor = new TalonFX(ShooterConstants.rightShootMotorID, "*");
+    private final TalonFX feedMotor = new TalonFX(ShooterConstants.feedMotorID, "*");
+    private final TalonFX wristMotor = new TalonFX(ShooterConstants.wristMotorID, "*");
+    private final CANcoder wristEncoder = new CANcoder(ShooterConstants.wristEncoderID, "*");
 
     public static Shooter getInstance() {
         if (mShooter == null)
@@ -38,5 +40,9 @@ public class Shooter extends SubsystemBase {
 
     public void setWrist(double speed) {
         wristMotor.set(speed);
+    }
+
+    public double getWristEncoderVal() {
+        return wristEncoder.getAbsolutePosition().getValueAsDouble()-ShooterConstants.wristEncoderOffset;
     }
 }

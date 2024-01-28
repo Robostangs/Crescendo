@@ -28,14 +28,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        this.setVisionMeasurementStdDevs(Constants.Vision.visionStds);
+        this.setVisionMeasurementStdDevs(Constants.VisionConstants.visionStds);
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
+
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
-        this.setVisionMeasurementStdDevs(Constants.Vision.visionStds);
+        this.setVisionMeasurementStdDevs(Constants.VisionConstants.visionStds);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -62,7 +63,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     @Override
     public void periodic() {
-        if (Constants.Vision.useLimelightForOdometry)
+        if (Constants.VisionConstants.useLimelightForOdometry)
             this.addVisionMeasurement(aprilTagReader.getPoseAvg(), Timer.getFPGATimestamp());
     }
 }

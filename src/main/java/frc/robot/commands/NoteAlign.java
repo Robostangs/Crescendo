@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -27,18 +28,17 @@ public class NoteAlign extends Command {
     Queue<Double> noteHist;
     private double runningSum;
     
-    public NoteAlign(DoubleSupplier leftX, DoubleSupplier leftY, double MaxSpeed) {
+    public NoteAlign(DoubleSupplier leftX, DoubleSupplier leftY) {
         this.mSwerve = TunerConstants.DriveTrain;
         addRequirements(mSwerve);
 
+        // TODO: Make this robot centric where it drives forward automatically
         drive = new SwerveRequest.FieldCentric()
-                    .withDeadband(TunerConstants.kSpeedAt12VoltsMps * 0.08)
-                    .withRotationalDeadband(0)
+                    .withDeadband(DrivetrainConstants.MaxSpeed * 0.08)
                     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
         this.leftX = leftX;
         this.leftY = leftY;
-        this.MaxSpeed = MaxSpeed;
     }
 
     public double getNoteX() {

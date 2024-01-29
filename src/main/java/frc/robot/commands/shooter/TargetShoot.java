@@ -16,10 +16,12 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shooter;
 
 public class TargetShoot extends Command {
-    private Shooter mShooter;
-    private CommandSwerveDrivetrain mDrivetrain;
+    private Shooter mShooter = Shooter.getInstance();
+    private CommandSwerveDrivetrain mDrivetrain = CommandSwerveDrivetrain.getInstance();
+
     private PIDController wristPID = new PIDController(ShooterConstants.WRIST_P, ShooterConstants.WRIST_I, ShooterConstants.WRIST_D);
     private PIDController drivePID = new PIDController(ShooterConstants.AIM_P, ShooterConstants.AIM_I, ShooterConstants.AIM_D);
+
     private Pose2d pose;
 
     private DoubleSupplier leftX, leftY;
@@ -28,9 +30,7 @@ public class TargetShoot extends Command {
         .withDeadband(DrivetrainConstants.MAX_SPEED * 0.08)
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     
-    public TargetShoot(Shooter mShooter, CommandSwerveDrivetrain mDrivetrain, DoubleSupplier leftX, DoubleSupplier leftY){
-        this.mShooter = mShooter;
-        this.mDrivetrain = mDrivetrain;
+    public TargetShoot(DoubleSupplier leftX, DoubleSupplier leftY){
         addRequirements(mShooter);
         addRequirements(mDrivetrain);
         this.leftX = leftX;

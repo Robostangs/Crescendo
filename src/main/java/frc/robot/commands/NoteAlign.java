@@ -16,7 +16,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class NoteAlign extends Command {
-    private CommandSwerveDrivetrain mSwerve;
+    private CommandSwerveDrivetrain mDrivetrain = CommandSwerveDrivetrain.getInstance();
     private SwerveRequest.FieldCentric drive;
     // private PIDController mPID = new PIDController(0.1, 0.15, 0);
     private PIDController mPID = new PIDController(0.08, 0.1, 0.01);
@@ -29,8 +29,8 @@ public class NoteAlign extends Command {
     private double runningSum;
     
     public NoteAlign(DoubleSupplier leftX, DoubleSupplier leftY) {
-        this.mSwerve = TunerConstants.DriveTrain;
-        addRequirements(mSwerve);
+        this.mDrivetrain = TunerConstants.DriveTrain;
+        addRequirements(mDrivetrain);
 
         // TODO: Make this robot centric where it drives forward automatically
         drive = new SwerveRequest.FieldCentric()
@@ -60,7 +60,7 @@ public class NoteAlign extends Command {
     public void execute() {
         xSpeed = leftX.getAsDouble();
         ySpeed = leftY.getAsDouble();
-        mSwerve.setControl(drive.withVelocityY(-xSpeed * MaxSpeed) // Drive forward with negative Y (forward)
+        mDrivetrain.setControl(drive.withVelocityY(-xSpeed * MaxSpeed) // Drive forward with negative Y (forward)
             .withVelocityX(-ySpeed * MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(mPID.calculate(getNoteX()))// Drive counterclockwise with negative X (left)
         );

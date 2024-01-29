@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.Vision.AprilTagLimelight;
+import frc.robot.generated.TunerConstants;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -25,6 +26,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private AprilTagLimelight aprilTagReader = new AprilTagLimelight("limelight1", "limelight2");
+
+    private static CommandSwerveDrivetrain mDrivetrain;
+
+    public static CommandSwerveDrivetrain getInstance() {
+        if (mDrivetrain == null)
+            mDrivetrain = new CommandSwerveDrivetrain(TunerConstants.DrivetrainConstants, TunerConstants.FrontLeft,
+            TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);;
+        return mDrivetrain;
+    }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);

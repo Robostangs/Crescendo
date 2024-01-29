@@ -25,7 +25,7 @@ public class RobotContainer {
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController xDrive = new CommandXboxController(0); // My joystick
   private final CommandXboxController xManip = new CommandXboxController(1); // My joystick
-  private final CommandSwerveDrivetrain mDrivetrain = TunerConstants.DriveTrain; // My drivetrain
+  private final CommandSwerveDrivetrain mDrivetrain = CommandSwerveDrivetrain.getInstance(); // My drivetrain
   private final Shooter mShooter = Shooter.getInstance();
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()

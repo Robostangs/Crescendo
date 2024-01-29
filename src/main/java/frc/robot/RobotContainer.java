@@ -18,7 +18,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.commands.NoteAlign;
+import frc.robot.commands.intake.IntakeManual;
+import frc.robot.commands.intake.NoteAlign;
 
 public class RobotContainer {
 
@@ -26,7 +27,6 @@ public class RobotContainer {
   private final CommandXboxController xDrive = new CommandXboxController(0); // My joystick
   private final CommandXboxController xManip = new CommandXboxController(1); // My joystick
   private final CommandSwerveDrivetrain mDrivetrain = CommandSwerveDrivetrain.getInstance(); // My drivetrain
-  private final Shooter mShooter = Shooter.getInstance();
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(DrivetrainConstants.MAX_SPEED * 0.08).withRotationalDeadband(DrivetrainConstants.MAX_ANGULAR_RATE * 0.08) // Add a 10% deadband
@@ -50,7 +50,7 @@ public class RobotContainer {
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-xDrive.getLeftY(), -xDrive.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
-    xDrive.leftBumper().onTrue(mDrivetrain.runOnce(() -> mDrivetrain.seedFieldRelative()));
+    xDrive.y().onTrue(mDrivetrain.runOnce(() -> mDrivetrain.seedFieldRelative()));
 
     if (Utils.isSimulation()) {
       mDrivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -58,7 +58,9 @@ public class RobotContainer {
     mDrivetrain.registerTelemetry(logger::telemeterize);
 
     /* NOTE FINDER */
-    xDrive.x().whileTrue(new NoteAlign(() -> xDrive.getLeftX(), () -> xDrive.getLeftY()));
+    xDrive.x().whileTrue(new NoteAlign(() -> xDrive.getLeftX()));
+    xDrive.rightBumper().whileTrue(new IntakeManual());
+    xDrive.leftBumper().whileTrue(new NoteAlign(() -> xDrive.getLeftX()).alongWith(new IntakeManual()));
   }
 
   public RobotContainer() {

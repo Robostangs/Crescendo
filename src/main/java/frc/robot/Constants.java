@@ -53,4 +53,22 @@ public final class Constants {
         public static final double MAX_SPEED = TunerConstants.kSpeedAt12VoltsMps;
         public static final double MAX_ANGULAR_RATE = 8 * Math.PI;
     }
+
+    public static final class IntakeConstants {
+        // Intake CAN IDs
+        public static final int SOLENOID_FWD = 60; // TODO
+        public static final int SOLENOID_REV = 60; // TODO
+        public static final int INTAKE_MOTOR_ID = 60; // TODO
+
+        public static final boolean INTAKE_MOTOR_REVERSE = false; // TODO
+
+        public static final double INTAKE_SPEED = 1; // TODO
+
+        // NoteAlign constants
+        public static final double ALIGN_P = 0.08;
+        public static final double ALIGN_I = 0.1;
+        public static final double ALIGN_D = 0.01;
+        
+        public static final double DRIVE_SPEED = 2; // Meters per second (I think)
+    }
 }

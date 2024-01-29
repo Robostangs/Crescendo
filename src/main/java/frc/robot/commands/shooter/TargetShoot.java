@@ -18,13 +18,14 @@ import frc.robot.subsystems.Shooter;
 public class TargetShoot extends Command {
     private Shooter mShooter;
     private CommandSwerveDrivetrain mDrivetrain;
-    private PIDController wristPID = new PIDController(ShooterConstants.wristP, ShooterConstants.wristI, ShooterConstants.wristD);
-    private PIDController drivePID = new PIDController(ShooterConstants.aimP, ShooterConstants.aimI, ShooterConstants.aimD);
+    private PIDController wristPID = new PIDController(ShooterConstants.WRIST_P, ShooterConstants.WRIST_I, ShooterConstants.WRIST_D);
+    private PIDController drivePID = new PIDController(ShooterConstants.AIM_P, ShooterConstants.AIM_I, ShooterConstants.AIM_D);
+    private Pose2d pose;
 
     private DoubleSupplier leftX, leftY;
-
+    
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-        .withDeadband(DrivetrainConstants.MaxSpeed * 0.08) // Add a 10% deadband
+        .withDeadband(DrivetrainConstants.MAX_SPEED * 0.08)
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     
     public TargetShoot(Shooter mShooter, CommandSwerveDrivetrain mDrivetrain, DoubleSupplier leftX, DoubleSupplier leftY){
@@ -40,22 +41,35 @@ public class TargetShoot extends Command {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)); 
     }
 
-    private void aimWristSpeaker(Pose2d pose) {
-        double distance = getDistance(pose.getX()-VisionConstants.speakerCoordinates[0], pose.getY()-VisionConstants.speakerCoordinates[1]);
-        double angle = Math.atan(VisionConstants.speakerCoordinates[2]/distance);
-        mShooter.setWrist(wristPID.calculate(mShooter.getWristEncoderVal(), angle));
+    private boolean aimWristSpeaker(Pose2d pose) {
+        double distance = getDistance(pose.getX()-VisionConstants.SPEAKER_COORDINATES[0], pose.getY()-VisionConstants.SPEAKER_COORDINATES[1]);
+        double targetAngle = Math.atan(VisionConstants.SPEAKER_COORDINATES[2]/distance);
+        double wristEncoderVal = mShooter.getWristEncoderVal();
+        mShooter.setWrist(wristPID.calculate(wristEncoderVal, targetAngle));
+
+        return (Math.abs(targetAngle-wristEncoderVal) < ShooterConstants.WRIST_ANGLE_TOLORANCE);
     }
 
     // TODO: Make sure that 0 radians is pointing away from driver
-    private void aimDrivetrainSpeaker(Pose2d pose) {
-        double angle = Math.atan((VisionConstants.speakerCoordinates[1]-pose.getY())/(VisionConstants.speakerCoordinates[0]-pose.getX()));
-        mDrivetrain.applyRequest(() -> drive.withVelocityX(-leftY.getAsDouble() * DrivetrainConstants.MaxSpeed)
-            .withVelocityY(-leftX.getAsDouble() * DrivetrainConstants.MaxSpeed)
-            .withRotationalRate(drivePID.calculate(pose.getRotation().getRadians(), angle)));
+    private boolean aimDrivetrainSpeaker(Pose2d pose) {
+        double targetAngle = Math.atan((VisionConstants.SPEAKER_COORDINATES[1]-pose.getY())/(VisionConstants.SPEAKER_COORDINATES[0]-pose.getX()));
+        double robotAngle = pose.getRotation().getRadians();
+        mDrivetrain.applyRequest(() -> drive.withVelocityX(-leftY.getAsDouble() * DrivetrainConstants.MAX_SPEED)
+            .withVelocityY(-leftX.getAsDouble() * DrivetrainConstants.MAX_SPEED)
+            .withRotationalRate(drivePID.calculate(robotAngle, targetAngle)));
+        
+        return (Math.abs(targetAngle-robotAngle) < ShooterConstants.AIM_ANGLE_TOLORANCE);
     }
 
-    public void aimRobotSpeaker() {
-        Pose2d pose = mDrivetrain.getState().Pose;
-        aimWristSpeaker(pose);
+    public boolean aimRobotSpeaker() {
+        pose = mDrivetrain.getState().Pose;
+        return (aimWristSpeaker(pose) && aimDrivetrainSpeaker(pose));
+    }
+
+    @Override
+    public void execute() {
+        mShooter.setShooter(ShooterConstants.SHOOT_SPEED);
+        if (aimRobotSpeaker() && mShooter.getAvgRealShootSpeed() > ShooterConstants.SHOOT_SPEED_THRESHOLD)
+            mShooter.setFeeder(ShooterConstants.FEED_SPEED);
     }
 }

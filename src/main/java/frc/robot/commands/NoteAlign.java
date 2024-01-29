@@ -34,7 +34,7 @@ public class NoteAlign extends Command {
 
         // TODO: Make this robot centric where it drives forward automatically
         drive = new SwerveRequest.FieldCentric()
-                    .withDeadband(DrivetrainConstants.MaxSpeed * 0.08)
+                    .withDeadband(DrivetrainConstants.MAX_SPEED * 0.08)
                     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
         this.leftX = leftX;

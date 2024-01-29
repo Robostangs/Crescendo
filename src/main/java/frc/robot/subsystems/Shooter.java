@@ -10,11 +10,11 @@ public class Shooter extends SubsystemBase {
     
     public static Shooter mShooter;
 
-    private final TalonFX leftShootMotor = new TalonFX(ShooterConstants.leftShootMotorID, "*");
-    private final TalonFX rightShootMotor = new TalonFX(ShooterConstants.rightShootMotorID, "*");
-    private final TalonFX feedMotor = new TalonFX(ShooterConstants.feedMotorID, "*");
-    private final TalonFX wristMotor = new TalonFX(ShooterConstants.wristMotorID, "*");
-    private final CANcoder wristEncoder = new CANcoder(ShooterConstants.wristEncoderID, "*");
+    private final TalonFX leftShootMotor = new TalonFX(ShooterConstants.LEFT_SHOOT_MOTOR_ID, "*");
+    private final TalonFX rightShootMotor = new TalonFX(ShooterConstants.RIGHT_SHOOT_MOTOR_ID, "*");
+    private final TalonFX feedMotor = new TalonFX(ShooterConstants.FEED_MOTOR_ID, "*");
+    private final TalonFX wristMotor = new TalonFX(ShooterConstants.WRIST_MOTOR_ID, "*");
+    private final CANcoder wristEncoder = new CANcoder(ShooterConstants.WRIST_ENCODER_ID, "*");
 
     public static Shooter getInstance() {
         if (mShooter == null)
@@ -23,10 +23,10 @@ public class Shooter extends SubsystemBase {
     }
 
     public Shooter() {
-        leftShootMotor.setInverted(ShooterConstants.leftShootInvert);
-        rightShootMotor.setInverted(ShooterConstants.rightShootInvert);
-        feedMotor.setInverted(ShooterConstants.feedInvert);
-        wristMotor.setInverted(ShooterConstants.wristInvert);
+        leftShootMotor.setInverted(ShooterConstants.LEFT_SHOOT_INVERT);
+        rightShootMotor.setInverted(ShooterConstants.RIGHT_SHOOT_INVERT);
+        feedMotor.setInverted(ShooterConstants.FEED_INVERT);
+        wristMotor.setInverted(ShooterConstants.WRIST_INVERT);
     }
     
     public void setShooter(double speed) {
@@ -43,6 +43,10 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getWristEncoderVal() {
-        return wristEncoder.getAbsolutePosition().getValueAsDouble()-ShooterConstants.wristEncoderOffset;
+        return wristEncoder.getAbsolutePosition().getValueAsDouble()-ShooterConstants.WRIST_ENCODER_OFFSET;
+    }
+
+    public double getAvgRealShootSpeed() {
+        return (leftShootMotor.getVelocity().getValueAsDouble() + rightShootMotor.getVelocity().getValueAsDouble())/2;
     }
 }

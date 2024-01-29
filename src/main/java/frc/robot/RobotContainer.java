@@ -29,20 +29,20 @@ public class RobotContainer {
   private final Shooter mShooter = Shooter.getInstance();
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(DrivetrainConstants.MaxSpeed * 0.08).withRotationalDeadband(DrivetrainConstants.MaxAngularRate * 0.08) // Add a 10% deadband
+      .withDeadband(DrivetrainConstants.MAX_SPEED * 0.08).withRotationalDeadband(DrivetrainConstants.MAX_ANGULAR_RATE * 0.08) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(DrivetrainConstants.MaxSpeed);
+  private final Telemetry logger = new Telemetry(DrivetrainConstants.MAX_SPEED);
 
   private void configureBindings() {
     /* DRIVETRAIN */
     mDrivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        mDrivetrain.applyRequest(() -> drive.withVelocityX(-xDrive.getLeftY() * DrivetrainConstants.MaxSpeed) // Drive forward with
+        mDrivetrain.applyRequest(() -> drive.withVelocityX(-xDrive.getLeftY() * DrivetrainConstants.MAX_SPEED) // Drive forward with
                                                                                           // negative Y (forward)
-            .withVelocityY(-xDrive.getLeftX() * DrivetrainConstants.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-xDrive.getRightX() * DrivetrainConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withVelocityY(-xDrive.getLeftX() * DrivetrainConstants.MAX_SPEED) // Drive left with negative X (left)
+            .withRotationalRate(-xDrive.getRightX() * DrivetrainConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
         ));
 
     xDrive.a().whileTrue(mDrivetrain.applyRequest(() -> brake));

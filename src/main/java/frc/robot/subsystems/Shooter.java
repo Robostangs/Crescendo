@@ -38,12 +38,16 @@ public class Shooter extends SubsystemBase {
         feedMotor.set(speed);
     } 
 
-    public void setWrist(double speed) {
-        wristMotor.set(speed);
+    public void setWristVoltage(double voltage) {
+        wristMotor.set(voltage);
     }
 
     public double getWristEncoderVal() {
         return wristEncoder.getAbsolutePosition().getValueAsDouble()-ShooterConstants.WRIST_ENCODER_OFFSET;
+    }
+
+    public double getWristSpeed() {
+        return wristEncoder.getVelocity().getValueAsDouble();
     }
 
     public double getAvgRealShootSpeed() {

@@ -52,7 +52,7 @@ public class RobotContainer {
 
 
     
-    joystick.y().onTrue(new DeferredCommand(() -> drivetrain.followPath(drivetrain.getState().Pose),Set.of(drivetrain)));
+    joystick.y().whileTrue(new DeferredCommand(() -> drivetrain.followthePath(drivetrain.getState().Pose),Set.of(drivetrain)));
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));

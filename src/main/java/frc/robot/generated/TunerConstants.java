@@ -146,20 +146,20 @@ public class TunerConstants {
                         FrontLeft,
                         FrontRight, BackLeft, BackRight);
 
-        public static final HolonomicPathFollowerConfig FollowConfig = new HolonomicPathFollowerConfig( 
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                        static double dev = 2.3d;
+        public static final HolonomicPathFollowerConfig FollowConfig = new HolonomicPathFollowerConfig(
+                        new PIDConstants(dev, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(dev, 0.0, 0.0), // Rotation PID constants
                         TunerConstants.kSpeedAt12VoltsMps, // Max module speed, in m/s
-                        //TODO find drive base radius
-                        Units.inchesToMeters(29.5),
+                        Units.inchesToMeters(Math.sqrt(Math.pow(14.75, 2) + Math.pow(14.75, 2))),
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
         );
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-                new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
-                new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
-                new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
-                new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
+                        new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+                        new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
+                        new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
+                        new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
 
         );
 

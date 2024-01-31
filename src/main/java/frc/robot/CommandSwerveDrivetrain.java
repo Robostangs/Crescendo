@@ -18,9 +18,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.generated.TunerConstants;
@@ -38,13 +41,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             .withDeadband(TunerConstants.kSpeedAt12VoltsMps * 0.08)
             .withRotationalDeadband(0)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    private Field2d mField = new Field2d();
+    private boolean pathFollowing;
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        // AutoBuilder.configureHolonomic(null, null, null, null, null, null, null);
         AutoBuilder.configureHolonomic(
             () -> this.getState().Pose, // Robot pose supplier
             (pose) -> this.seedFieldRelative(pose), // Method to reset odometry (will be called if your auto has a starting pose)
@@ -69,10 +73,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     }
 
-    public Command followPath(Supplier<Pose2d> startPose){
+    public Command followPath(Pose2d startPose){
+
+
+        // Field2d field2d = new Field2d();
 
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-            startPose.get(),
+            startPose,
             new Pose2d(1.80, 3.33, Rotation2d.fromDegrees(0)),
             new Pose2d(3.46, 0.72, Rotation2d.fromDegrees(0)),
             new Pose2d(6.89, 0.72, Rotation2d.fromDegrees(0)),
@@ -115,6 +122,23 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public ChassisSpeeds getChassisSpeeds() {
         return TunerConstants.DriveTrain.m_kinematics
                 .toChassisSpeeds(TunerConstants.DriveTrain.m_cachedState.ModuleStates);
+    }
+
+
+    @Override
+    public void periodic(){
+
+        //
+        mField.setRobotPose(this.getState().Pose);
+
+        SmartDashboard.putData("Field", mField);
+        
+        SmartDashboard.putBoolean("BOOOOOLLLLLEEEAAAANNNNN", pathFollowing);
+        // if(pathFollowing){
+        //     followPath(this.getState().Pose);
+        //     // pathFollowing = false;
+        // }
+        // followPath(this.getState().Pose);
     }
        
 

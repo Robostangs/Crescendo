@@ -114,7 +114,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
 
         HolonomicPathFollowerConfig FollowConfig = new HolonomicPathFollowerConfig(
-                new PIDConstants(5d, 10.0, 0.0), // Translation PID constants
+                new PIDConstants(3.5d, 1.0, 0.0), // Translation PID constants
                 new PIDConstants(3d, 0.0, 0.0), // Rotation PID constants
                 TunerConstants.kSpeedAt12VoltsMps, // Max module speed, in m/s
                 Units.inchesToMeters(Math.sqrt(Math.pow(14.75, 2) + Math.pow(14.75, 2))),

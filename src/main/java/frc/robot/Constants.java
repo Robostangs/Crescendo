@@ -26,6 +26,11 @@ public final class Constants {
         public static final double WRIST_I = 0; // TODO
         public static final double WRIST_D = 0; // TODO
 
+        // Wrist feed forward
+        public static final double WRIST_S = 0; // TODO
+        public static final double WRIST_G = 0; // TODO
+        public static final double WRIST_V = 0; // TODO
+
         public static final double WRIST_ENCODER_OFFSET = 0; // TODO
 
         public static final double WRIST_ANGLE_TOLORANCE = Math.toRadians(10); // TODO
@@ -45,7 +50,7 @@ public final class Constants {
 
     public static final class VisionConstants {
         public static final boolean USE_LIMELIGHTS_FOR_ODOMETRY = true;
-        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10)); // TODO
+        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10)); // TODO: these are values that other team used
         public static final double[] SPEAKER_COORDINATES = {0.21, 5.55, 1.97}; // (x, y, z) in meters
     }
 

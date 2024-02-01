@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,6 +21,7 @@ public class TargetShoot extends Command {
     private CommandSwerveDrivetrain mDrivetrain = CommandSwerveDrivetrain.getInstance();
 
     private PIDController wristPID = new PIDController(ShooterConstants.WRIST_P, ShooterConstants.WRIST_I, ShooterConstants.WRIST_D);
+    private ArmFeedforward wristFeedForward = new ArmFeedforward(ShooterConstants.WRIST_S, ShooterConstants.WRIST_G, ShooterConstants.WRIST_V);
     private PIDController drivePID = new PIDController(ShooterConstants.AIM_P, ShooterConstants.AIM_I, ShooterConstants.AIM_D);
 
     private Pose2d pose;
@@ -45,7 +47,7 @@ public class TargetShoot extends Command {
         double distance = getDistance(pose.getX()-VisionConstants.SPEAKER_COORDINATES[0], pose.getY()-VisionConstants.SPEAKER_COORDINATES[1]);
         double targetAngle = Math.atan(VisionConstants.SPEAKER_COORDINATES[2]/distance);
         double wristEncoderVal = mShooter.getWristEncoderVal();
-        mShooter.setWrist(wristPID.calculate(wristEncoderVal, targetAngle));
+        mShooter.setWristVoltage(wristPID.calculate(wristEncoderVal, targetAngle) + wristFeedForward.calculate(wristEncoderVal, mShooter.getWristSpeed())); // TODO: Check with Dan
 
         return (Math.abs(targetAngle-wristEncoderVal) < ShooterConstants.WRIST_ANGLE_TOLORANCE);
     }

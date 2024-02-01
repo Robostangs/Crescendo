@@ -103,31 +103,32 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
         PathPlannerPath path = new PathPlannerPath(
                 bezierPoints,
-                new PathConstraints(7d, 7d, 540d, 720d),
-                new GoalEndState(0.0, Rotation2d.fromDegrees(90.0)));
+                new PathConstraints(TunerConstants.kSpeedAt12VoltsMps-1, TunerConstants.kSpeedAt12VoltsMps-1, 540d, 720d),
+                new GoalEndState(0.0, Rotation2d.fromDegrees(0.0)));
 
         return AutoBuilder.followPath(path);
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
-         double dev = 9d;
+
 
         HolonomicPathFollowerConfig FollowConfig = new HolonomicPathFollowerConfig(
-                new PIDConstants(dev, 0.0, 0.0), // Translation PID constants
-                new PIDConstants(dev, 0.0, 0.0), // Rotation PID constants
+                new PIDConstants(5d, 10.0, 0.0), // Translation PID constants
+                new PIDConstants(3d, 0.0, 0.0), // Rotation PID constants
                 TunerConstants.kSpeedAt12VoltsMps, // Max module speed, in m/s
                 Units.inchesToMeters(Math.sqrt(Math.pow(14.75, 2) + Math.pow(14.75, 2))),
                 new ReplanningConfig()); // Default path replanning config. See the API for the options here
         System.out.println(FollowConfig);
+
+
         AutoBuilder.configureHolonomic(
                 () -> this.getState().Pose, // Robot pose supplier
                 (pose) -> this.seedFieldRelative(pose), // Method to reset odometry (will be called if your auto has a
                                                         // starting pose)
                 () -> getChassisSpeeds(), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                // Method that will  drive the robot given ROBOT RELATIVE ChassisSpeeds
-                (speeds) -> setControl(
-                        drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond)), 
+                (speeds) -> setControl(// Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                        drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond)),
                 FollowConfig,
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red

@@ -60,7 +60,7 @@ public class RobotContainer {
     xDrive.axisGreaterThan(2, 0.9).whileTrue(new IntakeManual()); // RT - INTAKE
     xDrive.leftBumper().whileTrue(new NoteAlign(() -> xDrive.getLeftX()).alongWith(new IntakeManual())); // LB - ALIGN TO NOTE & INTAKE
 
-    xDrive.rightBumper().whileTrue(new TargetShoot(() -> xDrive.getLeftX(), () -> xDrive.getLeftY()));
+    xDrive.rightBumper().whileTrue(new TargetShoot(() -> xDrive.getLeftX(), () -> xDrive.getLeftY())); // RB - TARGET SHOOT
 
     /* KEYBINDS END */
   }

@@ -37,6 +37,7 @@ import frc.robot.generated.TunerConstants;
  * subsystem
  * so it can be used in command-based projects easily.
  */
+
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
@@ -46,7 +47,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             .withRotationalDeadband(0)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private Field2d mField = new Field2d();
-    private boolean pathFollowing;
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
@@ -58,16 +58,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                                                         // starting pose)
                 () -> getChassisSpeeds(), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds) -> setControl(
-                        drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond)), // Method
-                                                                                                                // that
-                                                                                                                // will
-                                                                                                                // drive
-                                                                                                                // the
-                                                                                                                // robot
-                                                                                                                // given
-                                                                                                                // ROBOT
-                                                                                                                // RELATIVE
-                                                                                                                // ChassisSpeeds
+                        drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond)), // drives with the given chassis speeds
                 TunerConstants.FollowConfig,
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
@@ -103,7 +94,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
         PathPlannerPath path = new PathPlannerPath(
                 bezierPoints,
-                new PathConstraints(TunerConstants.kSpeedAt12VoltsMps-1, TunerConstants.kSpeedAt12VoltsMps-1, 540d, 720d),
+                new PathConstraints(6, 5, 540d, 720d),
                 new GoalEndState(0.0, Rotation2d.fromDegrees(0.0)));
 
         return AutoBuilder.followPath(path);
@@ -114,13 +105,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
 
         HolonomicPathFollowerConfig FollowConfig = new HolonomicPathFollowerConfig(
-                new PIDConstants(3.5d, 1.0, 0.0), // Translation PID constants
-                new PIDConstants(3d, 0.0, 0.0), // Rotation PID constants
+                new PIDConstants(3.5, 0, 1), // Translation PID constants
+                new PIDConstants(55, 0.0, 50.0), // Rotation PID constants
                 TunerConstants.kSpeedAt12VoltsMps, // Max module speed, in m/s
                 Units.inchesToMeters(Math.sqrt(Math.pow(14.75, 2) + Math.pow(14.75, 2))),
                 new ReplanningConfig()); // Default path replanning config. See the API for the options here
-        System.out.println(FollowConfig);
-
 
         AutoBuilder.configureHolonomic(
                 () -> this.getState().Pose, // Robot pose supplier
@@ -182,12 +171,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
         SmartDashboard.putData("Field", mField);
 
-        SmartDashboard.putBoolean("BOOOOOLLLLLEEEAAAANNNNN", pathFollowing);
-        // if(pathFollowing){
-        // followPath(this.getState().Pose);
-        // // pathFollowing = false;
-        // }
-        // followPath(this.getState().Pose);
+
+        SmartDashboard.putNumber("robot angle", this.getState().Pose.getRotation().getDegrees());
+
     }
 
 }
+

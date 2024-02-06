@@ -30,11 +30,11 @@
     }
   },
   "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    },
     "transitory": {
       "SmartDashboard": {
-        "Field": {
-          "open": true
-        },
         "open": true
       }
     }

@@ -1,6 +1,5 @@
 package frc.robot;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
@@ -10,19 +9,15 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -48,32 +43,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private Field2d mField = new Field2d();
 
+
+
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-
-        AutoBuilder.configureHolonomic(
-                () -> this.getState().Pose, // Robot pose supplier
-                (pose) -> this.seedFieldRelative(pose), // Method to reset odometry (will be called if your auto has a
-                                                        // starting pose)
-                () -> getChassisSpeeds(), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds) -> setControl(
-                        drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond)), // drives with the given chassis speeds
-                TunerConstants.FollowConfig,
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
-                    // alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
-                this // Reference to this subsystem to set requirements
-        );
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -82,42 +56,56 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public Command followthePath(Pose2d startPose) {
+        this.applyRequest(() -> drive.withRotationalDeadband(this.getState().Pose.getRotation().getDegrees() - this.getState().Pose.getRotation().getDegrees()));
 
-        // Field2d field2d = new Field2d();
 
-        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                startPose,
-                new Pose2d(1.80, 3.33, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.46, 0.72, Rotation2d.fromDegrees(0)),
-                new Pose2d(6.89, 0.72, Rotation2d.fromDegrees(0)),
-                new Pose2d(8.20, 2.30, Rotation2d.fromDegrees(0)));
+        // List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+        //         new Pose2d(startPose.getTranslation(), Rotation2d.fromDegrees(-90)),
+        //         new Pose2d(4.54, 4.05, Rotation2d.fromDegrees(-82.76)),
+        //         new Pose2d(5, 0.6, Rotation2d.fromDegrees(1.86)),
+        //         new Pose2d(8.22, 2.34, Rotation2d.fromDegrees(52.16)));
 
-        PathPlannerPath path = new PathPlannerPath(
-                bezierPoints,
-                new PathConstraints(6, 5, 540d, 720d),
-                new GoalEndState(0.0, Rotation2d.fromDegrees(0.0)));
+        // PathPlannerPath paths = new PathPlannerPath(
+        //         bezierPoints,
+        //         new PathConstraints(5, 6, 540d, 720d),
+        //         new GoalEndState(0.0, Rotation2d.fromDegrees(-90.0)));
 
-        return AutoBuilder.followPath(path);
+        PathConstraints constraints = new PathConstraints(5, 6, 540d, 720d);
+
+  
+        Pose2d targetPose = new Pose2d(8.27, 2.42, Rotation2d.fromDegrees(0));
+
+        Command pathfindingCommand = AutoBuilder.pathfindToPose(
+        targetPose,
+        constraints,
+        0.0, // Goal end velocity in meters/sec
+        0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+);
+        return pathfindingCommand;
+      
+
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
 
-
         HolonomicPathFollowerConfig FollowConfig = new HolonomicPathFollowerConfig(
-                new PIDConstants(3.5, 0, 1), // Translation PID constants
-                new PIDConstants(55, 0.0, 50.0), // Rotation PID constants
+                // new PIDConstants(0.0001, 1.25, 0.4), // Translation PID constants
+                new PIDConstants(0, 0, 0), // Translation PID constants
+                new PIDConstants(1.75, 0.0, 0.0), // Rotation PID constants
+                // new PIDConstants(12.5, 0.5, 0.3), // Translation PID constants
+                // new PIDConstants(1.57,0.07,0.9,1), // Rotation PID constants
                 TunerConstants.kSpeedAt12VoltsMps, // Max module speed, in m/s
                 Units.inchesToMeters(Math.sqrt(Math.pow(14.75, 2) + Math.pow(14.75, 2))),
                 new ReplanningConfig()); // Default path replanning config. See the API for the options here
 
         AutoBuilder.configureHolonomic(
                 () -> this.getState().Pose, // Robot pose supplier
-                (pose) -> this.seedFieldRelative(pose), // Method to reset odometry (will be called if your auto has a
-                                                        // starting pose)
+                // () -> new Pose2d(4.54, 4.05, Rotation2d.fromDegrees(-90)),
+                (pose) -> this.seedFieldRelative(pose), // Method to reset odometry (will be called if your auto has a starting pose)
                 () -> getChassisSpeeds(), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds) -> setControl(// Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                        drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond)),
+                        drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond).withRotationalRate(speeds.omegaRadiansPerSecond)),
                 FollowConfig,
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
@@ -156,6 +144,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
+
+
     }
 
     public ChassisSpeeds getChassisSpeeds() {
@@ -174,7 +164,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
         SmartDashboard.putNumber("robot angle", this.getState().Pose.getRotation().getDegrees());
 
+        SmartDashboard.putNumber("robot x", -(this.getState().Pose.getRotation().getDegrees()+1));
+
+   
+
     }
+    
 
 }
-

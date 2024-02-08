@@ -12,8 +12,8 @@ public class AprilTagLimelight {
     }
 
     public Pose2d getPoseAvg() {
-        int tidOne = (int) LimelightHelpers.getFiducialID(limelightOne);
-        int tidTwo = (int) LimelightHelpers.getFiducialID(limelightTwo);
+        int tidOne = (int) LimelightHelpers.getTid(limelightOne);
+        int tidTwo = (int) LimelightHelpers.getTid(limelightTwo);
 
         Pose2d llPoseOne = LimelightHelpers.getLatestResults(limelightOne).targetingResults.getBotPose2d_wpiBlue();
         Pose2d llPoseTwo = LimelightHelpers.getLatestResults(limelightTwo).targetingResults.getBotPose2d_wpiBlue();

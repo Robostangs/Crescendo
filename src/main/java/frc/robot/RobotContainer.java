@@ -1,92 +1,139 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import java.util.Set;
-
-import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
-import frc.robot.subsystems.*;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.shooter.HoldToPosition;
-import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.commands.intake.IntakeManual;
-import frc.robot.commands.intake.NoteAlign;
-import frc.robot.commands.shooter.SetPoint;
-import frc.robot.commands.shooter.SpinShooter;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import frc.robot.Commands.Shooter.AimAndShoot;
+import frc.robot.Commands.Shooter.FeedAndShoot;
+import frc.robot.Commands.Shooter.FineAdjust;
+import frc.robot.Commands.Shooter.SetPoint;
+import frc.robot.Subsystems.Arm;
+import frc.robot.Subsystems.Drivetrain;
 
 public class RobotContainer {
+  private final CommandXboxController xDrive = new CommandXboxController(0);
+  private final CommandXboxController Manip = new CommandXboxController(1);
+  private final GenericHID simController = new GenericHID(3);
 
-  /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController xDrive = new CommandXboxController(0); // My joystick
-  private final CommandXboxController xManip = new CommandXboxController(1);
-  private final Drivetrain mDrivetrain = Drivetrain.getInstance(); // My drivetrain
-  private final Shooter mShooter = Shooter.getInstance();
+  private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final Arm mArm = Arm.getInstance();
 
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(DrivetrainConstants.MAX_SPEED * 0.08).withRotationalDeadband(DrivetrainConstants.MAX_ANGULAR_RATE * 0.08) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      .withDeadband(Constants.OperatorConstants.deadband)
+      .withRotationalDeadband(Constants.OperatorConstants.rotationalDeadband)
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+  private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric();
+
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(DrivetrainConstants.MAX_SPEED);
+
+  private final Telemetry logger;
+  public Field2d field;
 
   private void configureBindings() {
-    /* DRIVETRAIN */
-    /*
-    mDrivetrain.setDefaultCommand(
-         mDrivetrain.applyRequest(() -> drive.withVelocityX(-xDrive.getLeftY() * DrivetrainConstants.MAX_SPEED)
-             .withVelocityY(-xDrive.getLeftX() * DrivetrainConstants.MAX_SPEED) // Drive left with negative X (left)
-             .withRotationalRate(-xDrive.getRightX() * DrivetrainConstants.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
-         ));
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive
+            .withVelocityX(-xDrive.getLeftY() * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+            .withVelocityY(-xDrive.getLeftX() * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+            .withRotationalRate(
+                -xDrive.getRightX() * Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)));
+                /* TODO: fix again */
+            // .withSlowDown(xDrive.getHID().getRightBumper(), 0.5)).ignoringDisable(true));
 
-     if (Utils.isSimulation()) {
-       mDrivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-     }
-     mDrivetrain.registerTelemetry(logger::telemeterize);
+    xDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    xDrive.b().whileTrue(drivetrain
+        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-xDrive.getLeftY(), -xDrive.getLeftX()))));
 
-     */
-    /* KEYBINDS START */
+    xDrive.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-    /*
-    xDrive.pov(0).onTrue(mDrivetrain.runOnce(() -> mDrivetrain.seedFieldRelative())); // UP - ZERO GYRO
-    xDrive.pov(90).whileTrue(mDrivetrain.applyRequest(() -> brake)); // RIGHT - LOCK WHEELS
-    xDrive.pov(180).whileTrue(mDrivetrain
-         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-xDrive.getLeftY(), -xDrive.getLeftX())))); // DOWN - POINT WHEELS
+    xDrive.x().whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(1).withVelocityY(1)));
 
-    xDrive.axisGreaterThan(2, 0.9).whileTrue(new IntakeManual()); // RT - INTAKE
-    xDrive.leftBumper().whileTrue(new NoteAlign(() -> xDrive.getLeftX()).alongWith(new IntakeManual())); // LB - ALIGN TO NOTE & INTAKE
+    // Manip.y().whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
+    // Manip.x().whileTrue(new
+    // SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
 
-    xDrive.y().whileTrue(new DeferredCommand(() -> mDrivetrain.followthePath(mDrivetrain.getState().Pose),Set.of(mDrivetrain)));
+    // Manip.y().whileTrue(new RunCommand(() ->
+    // mShooter.SetRpm(SmartDashboard.getNumber("Shooter/left motor/setRpm", 0),
+    // SmartDashboard.getNumber("Shooter/right motor/setRpm", 0)),
+    // mShooter).andThen(() -> mShooter.stop(), mShooter));
 
-		xManip.b().whileTrue(new SetPoint(0));
-		xManip.a().whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeaker));
-    */
-    // xManip.a().whileTrue(new AimAndShoot());
+    Manip.b().whileTrue(new SetPoint(0));
+    Manip.a().whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeaker));
 
-    mShooter.setDefaultCommand(new SpinShooter(() -> xManip.getLeftTriggerAxis(), () -> xManip.getRightTriggerAxis(), () -> xManip.x().getAsBoolean()));
-    mArm.setDefaultCommand(new HoldToPosition(0));
+    Manip.leftBumper().whileTrue(new FeedAndShoot());
 
-    /* KEYBINDS END */
+    // mArm.setDefaultCommand(new AimAndShoot());
+
+    // Manip.leftBumper().whileTrue(new RunCommand(() -> mShooter.loadPiece()));
+
+    mArm.setDefaultCommand(new FineAdjust(() -> -Manip.getRightY()));
+
+    Manip.x().whileTrue(new AimAndShoot());
+
+    // mShooter.setDefaultCommand(new RunCommand(() -> System.out.println("taking
+    // shooter thing"), mShooter));
+
+    /* Set Sim Binds */
+    if (Robot.isSimulation()) {
+      drivetrain.setDefaultCommand(drivetrain
+          .applyRequest(() -> drive
+              .withVelocityX(
+                  -simController.getRawAxis(1) * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+              .withVelocityY(
+                  -simController.getRawAxis(0) * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+              .withRotationalRate(-simController.getRawAxis(3)
+                  * Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond))
+            //   .withSlowDown(simController.getRawButton(5), Constants2.SwerveConstants.slowDownMultiplier))
+          .withName("xDrive"));
+
+      // new Trigger(() ->
+      // simController.getRawButtonPressed(1)).onTrue(drivetrain.applyRequest(() ->
+      // brake));
+
+      new Trigger(() -> simController.getRawButtonPressed(1))
+          .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
+
+      new Trigger(() -> simController.getRawButtonPressed(2))
+          .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
+
+      new Trigger(() -> simController.getRawButtonPressed(3))
+          .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeaker));
+
+      new Trigger(() -> simController.getRawButtonPressed(4)).whileTrue(new AimAndShoot());
+
+      // new Trigger(() -> simController.getRawButtonPressed(2))
+      // .onTrue(new InstantCommand(() -> drivetrain.seedFieldRelative()));
+
+      // new Trigger(() -> simController.getRawButtonPressed(3))
+      // .onTrue(new
+      // SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(1));
+
+      // new Trigger(() -> simController.getRawButtonPressed(3)).onTrue(new
+      // SetPoint(0).withTimeout(1));
+
+      // new Trigger(() -> simController.getRawButtonPressed(3))
+      // .whileTrue(drivetrain.applyRequest(() ->
+      // forwardStraight.withVelocityX(1).withVelocityY(0)));
+
+      mArm.setDefaultCommand(new FineAdjust(() -> -simController.getRawAxis(2)));
+
+      // new Trigger(() -> simController.getRawButtonPressed(4)).onTrue(new
+      // InstantCommand(Intake.toggleDeploy));
+
+    }
   }
 
   public RobotContainer() {
+    logger = new Telemetry();
+    field = Robot.mField;
+    drivetrain.registerTelemetry((telemetry) -> logger.telemeterize(telemetry));
     configureBindings();
-  }
-
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
   }
 }

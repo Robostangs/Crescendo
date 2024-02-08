@@ -1,54 +1,55 @@
-package frc.robot.commands.shooter;
+package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Shooter;
+import frc.robot.Constants;
+import frc.robot.Subsystems.Shooter;
 
 public class FeedAndShoot extends Command {
-    private final Shooter shooter;
+    private final Shooter mShooter;
     private Timer timer;
 
+    /**
+     * This command will activate the feed motor for
+     */
     public FeedAndShoot() {
         timer = new Timer();
-        shooter = Shooter.getInstance();
-        this.setName("Shoot");
-        this.addRequirements(shooter);
+        mShooter = Shooter.getInstance();
+        this.setName("Feed And Shoot");
+        this.addRequirements(mShooter);
     }
 
     @Override
     public void initialize() {
         timer.restart();
-        Arm.getInstance().setBrake(true);
+        // Arm.getInstance().setBrake(true);
+        mShooter.setHolding(true);
     }
 
     @Override
     public void execute() {
-        if (timer.get() < 2) {
-            shooter.shoot(1, 0.0001);
+        if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime) {
+            mShooter.shoot(1, Constants.ShooterConstants.kFeederFeedForward);
         } else {
-            shooter.shoot(1, 1);
+            mShooter.shoot(1, 1);
         }
-        // if (timer.get() < 0.4) {
-        //     shooter.shoot(0, 0.3);
-        // } else {
-        //     shooter.shoot(01, 0);
-        // }
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setBrakeMode(true);
-        Arm.getInstance().setBrake(false);
-        shooter.stop();
+        mShooter.setBrakeMode(true);
+        // Arm.getInstance().setBrake(false);
+        mShooter.stop();
 
-        if (!(timer.get() < 0.3)) {
-            shooter.toggleHolding();
+        if (!(timer.get() < Constants.ShooterConstants.shooterChargeUpTime)) {
+            mShooter.setHolding(false);
         }
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !mShooter.getHolding();
+        // return false;
+        // return timer.get() > Constants.BeltConstants.shooterChargeUpTime + 0.1;
     }
 }

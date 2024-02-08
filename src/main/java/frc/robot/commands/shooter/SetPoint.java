@@ -1,9 +1,9 @@
-package frc.robot.commands.shooter;
+package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Arm;
+import frc.robot.Subsystems.Arm;
 
 public class SetPoint extends Command {
     private Arm mArm;
@@ -42,8 +42,8 @@ public class SetPoint extends Command {
             System.out.println("Error: " + error);
             System.out.println("*************************** Debug Stats (initialize) ***************************\n");
         }
-
-
+        mArm.setArmTarget(armSetpoint);
+        mArm.setMotionMagic(armSetpoint);
     }
     
     @Override
@@ -51,7 +51,6 @@ public class SetPoint extends Command {
         if (!mArm.validSetpoint(armSetpoint)) {
             this.end(true);
         }
-        mArm.setArmTarget(armSetpoint);
 
         error = armSetpoint - mArm.getArmPosition();
 
@@ -69,12 +68,13 @@ public class SetPoint extends Command {
 
     @Override
     public boolean isFinished() {
+        return false;
+
         // if (Robot.isSimulation()) {
         //     return timer.get() > 0.3;
         // } else {
         //     return mArm.isInRangeOfTarget(armSetpoint);
         // }
-        return false;
         // return timer.get() > 0.3;
     }
 
@@ -83,7 +83,5 @@ public class SetPoint extends Command {
         if (interrupted) {
             SmartDashboard.putNumber("Arm/Velocity", 0);
         }
-        // mArm.stop();
-        // System.out.println("Shooter position (end of command): " + (mArm.getArmPosition()));
     }
 }

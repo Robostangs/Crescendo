@@ -1,7 +1,9 @@
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
@@ -13,6 +15,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -32,7 +35,6 @@ import frc.robot.Constants;
 import frc.robot.Vision.AprilTagLimelight;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.generated.TunerConstants;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements
@@ -49,12 +51,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     public static Drivetrain getInstance() {
         if (mDrivetrain == null)
-            mDrivetrain = new Drivetrain(TunerConstants.DrivetrainConstants, TunerConstants.FrontLeft,
-            TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);;
+            mDrivetrain = new Drivetrain(Constants.SwerveConstants.DrivetrainConstants,
+                    Constants.SwerveConstants.FrontLeft,
+                    Constants.SwerveConstants.FrontRight, Constants.SwerveConstants.BackLeft,
+                    Constants.SwerveConstants.BackRight);
+        ;
         return mDrivetrain;
     }
+
     private SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(TunerConstants.kSpeedAt12VoltsMps * 0.08)
+            .withDeadband(Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond * 0.08)
             .withRotationalDeadband(0)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private Field2d mField = new Field2d();
@@ -69,7 +75,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 () -> this.getState().Pose, // Robot pose supplier
                 (pose) -> this.seedFieldRelative(pose), // Method to reset odometry (will be called if your auto has a
                                                         // starting pose)
-                () -> getChassisSpeeds(), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                () -> getCurrentRobotChassisSpeeds(), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds) -> setControl(
                         drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond)), // Method
                                                                                                                 // that
@@ -81,7 +87,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                                                                                                                 // ROBOT
                                                                                                                 // RELATIVE
                                                                                                                 // ChassisSpeeds
-                TunerConstants.FollowConfig,
+                new HolonomicPathFollowerConfig(
+                        Constants.AutoConstants.translationPID,
+                        Constants.AutoConstants.rotationPID,
+                        Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond,
+                        Constants.SwerveConstants.driveBaseRadius,
+                        new ReplanningConfig()),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
                     // alliance
@@ -102,24 +113,23 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         }
 
     }
-    
+
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         this.setVisionMeasurementStdDevs(Constants.VisionConstants.VISION_STDS);
         HolonomicPathFollowerConfig FollowConfig = new HolonomicPathFollowerConfig(
                 new PIDConstants(5d, 10.0, 0.0), // Translation PID constants
                 new PIDConstants(3d, 0.0, 0.0), // Rotation PID constants
-                TunerConstants.kSpeedAt12VoltsMps, // Max module speed, in m/s
+                Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond, // Max module speed, in m/s
                 Units.inchesToMeters(Math.sqrt(Math.pow(14.75, 2) + Math.pow(14.75, 2))),
                 new ReplanningConfig()); // Default path replanning config. See the API for the options here
         System.out.println(FollowConfig);
-    
-    
+
         AutoBuilder.configureHolonomic(
                 () -> this.getState().Pose, // Robot pose supplier
                 (pose) -> this.seedFieldRelative(pose), // Method to reset odometry (will be called if your auto has a
                                                         // starting pose)
-                () -> getChassisSpeeds(), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                () -> getCurrentRobotChassisSpeeds(), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds) -> setControl(// Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                         drive.withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond)),
                 FollowConfig,
@@ -128,7 +138,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                     // alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-    
+
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
                         return alliance.get() == DriverStation.Alliance.Red;
@@ -137,33 +147,35 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 },
                 this // Reference to this subsystem to set requirements
         );
-    
+
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
 
-    
     public Command followthePath(Pose2d startPose) {
-        
+
         // Field2d field2d = new Field2d();
-        
+
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-            startPose,
-            new Pose2d(1.80, 3.33, Rotation2d.fromDegrees(0)),
-            new Pose2d(3.46, 0.72, Rotation2d.fromDegrees(0)),
-            new Pose2d(6.89, 0.72, Rotation2d.fromDegrees(0)),
-            new Pose2d(8.20, 2.30, Rotation2d.fromDegrees(0)));
-            
-            PathPlannerPath path = new PathPlannerPath(
+                startPose,
+                new Pose2d(1.80, 3.33, Rotation2d.fromDegrees(0)),
+                new Pose2d(3.46, 0.72, Rotation2d.fromDegrees(0)),
+                new Pose2d(6.89, 0.72, Rotation2d.fromDegrees(0)),
+                new Pose2d(8.20, 2.30, Rotation2d.fromDegrees(0)));
+
+        PathPlannerPath path = new PathPlannerPath(
                 bezierPoints,
-                new PathConstraints(TunerConstants.kSpeedAt12VoltsMps-1, TunerConstants.kSpeedAt12VoltsMps-1, 540d, 720d),
+                new PathConstraints(Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond - 1,
+                        Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond
+                                - 1,
+                        540d, 720d),
                 new GoalEndState(0.0, Rotation2d.fromDegrees(0.0)));
-                
-                return AutoBuilder.followPath(path);
-            }    
-                
-                public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
+
+        return AutoBuilder.followPath(path);
+    }
+
+    public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
@@ -182,16 +194,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    public ChassisSpeeds getChassisSpeeds() {
-        return TunerConstants.DriveTrain.m_kinematics
-                .toChassisSpeeds(TunerConstants.DriveTrain.m_cachedState.ModuleStates);
-            }
-            
+    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
+        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
+    }
+
     @Override
     public void periodic() {
-                
-                if (Constants.VisionConstants.USE_LIMELIGHTS_FOR_ODOMETRY)
-                    this.addVisionMeasurement(aprilTagReader.getPoseAvg(), Timer.getFPGATimestamp());
+
+        if (Constants.VisionConstants.USE_LIMELIGHTS_FOR_ODOMETRY)
+            this.addVisionMeasurement(aprilTagReader.getPoseAvg(), Timer.getFPGATimestamp());
         //
         mField.setRobotPose(this.getState().Pose);
 
@@ -203,6 +214,40 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         // // pathFollowing = false;
         // }
         // followPath(this.getState().Pose);
+    }
+
+    public void addFieldObj(PathPlannerTrajectory trajectory) {
+        List<Pose2d> poses = new ArrayList<>();
+        // int i = 0;
+        AtomicInteger i = new AtomicInteger(0);
+        trajectory.getStates().forEach((state) -> {
+            if (!(state.getTargetHolonomicPose().equals(trajectory.getInitialTargetHolonomicPose()))
+                    && i.get() % 10 == 0)
+                poses.add(state.getTargetHolonomicPose());
+            i.incrementAndGet();
+        });
+        mField.getObject(Constants.AutoConstants.kFieldObjectName).setPoses(poses);
+    }
+
+    public void addFieldObj(List<Pose2d> poses) {
+        mField.getObject(Constants.AutoConstants.kFieldObjectName).setPoses(poses);
+    }
+
+    public Field2d getField() {
+        return mField;
+    }
+
+    public Pose2d getPose() {
+        return getState().Pose;
+    }
+
+    public Constants.SwerveConstants.Target whatAmILookingAt() {
+        double rotation = getPose().getRotation().getDegrees();
+        if (rotation > -60 && rotation < -120) {
+            return Constants.SwerveConstants.Target.kAmp;
+        } else {
+            return Constants.SwerveConstants.Target.kSpeaker;
+        }
     }
 
 }

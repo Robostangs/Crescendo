@@ -1,9 +1,9 @@
-package frc.robot.commands.shooter;
+package frc.robot.Commands.Shooter;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Arm;
+import frc.robot.Subsystems.Arm;
 
 public class FineAdjust extends Command {
     private final Arm mArm = Arm.getInstance();
@@ -12,7 +12,7 @@ public class FineAdjust extends Command {
 
     public FineAdjust(Supplier<Double> manualAdjust) {
         this.manualAdjust = manualAdjust;
-        this.setName("FineAdjust");
+        this.setName("Fine Adjust");
         this.addRequirements(mArm);
     }
 

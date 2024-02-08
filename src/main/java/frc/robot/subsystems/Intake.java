@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -6,15 +6,15 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
     
     public static Intake mIntake;
     public Compressor mCompressor;
-    private DoubleSolenoid mSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.SOLENOID_FWD, IntakeConstants.SOLENOID_REV); // TODO: Make sure this is right
-    private TalonFX intakeMotor = new TalonFX(IntakeConstants.INTAKE_MOTOR_ID, "*");
+    private DoubleSolenoid mSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.intakeSolenoidFwdID, Constants.IntakeConstants.intakeSolenoidRevID); // TODO: Make sure this is right
+    private TalonFX intakeMotor = new TalonFX(Constants.IntakeConstants.intakeMotorID, "rio");
 
     public static Intake getInstance() {
         if (mIntake == null)

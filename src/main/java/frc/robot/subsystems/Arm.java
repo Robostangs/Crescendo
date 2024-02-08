@@ -1,13 +1,13 @@
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
@@ -21,18 +21,22 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.commands.shooter.SetPoint;
+import frc.robot.Commands.Shooter.SetPoint;
+// import frc.robot.Subsystems.Music;
 import frc.robot.LoggyThings.LoggyCANcoder;
 import frc.robot.LoggyThings.LoggyTalonFX;
-// import frc.robot.Subsystems.Music;
 
+/**
+ * To zero: first put the arm in a position where the shooter is parallel to the
+ * ground, then, in tuner X, zero the armCoder
+ */
 public class Arm extends SubsystemBase {
     private static Arm mInstance;
     private LoggyTalonFX armMotor;
     private LoggyCANcoder armCoder;
     private double shooterExtensionSetpoint = 0;
 
-    private VelocityDutyCycle velocityDutyCycle;
+    private MotionMagicTorqueCurrentFOC motionMagicDutyCycle;
 
     private Mechanism2d armMechanism;
     private MechanismLigament2d shooterLigament, shooterExtension, elbowLigament;
@@ -64,7 +68,21 @@ public class Arm extends SubsystemBase {
         }
 
         SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
-        SmartDashboard.putBoolean("Arm/At Setpoint", isInRangeOfTarget(shooterExtensionSetpoint));
+        SmartDashboard.putBoolean("Arm/At Setpoint", isInRangeOfTarget(getArmTarget()));
+
+        if (Shooter.getInstance().getCurrentCommand() == null) {
+            motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrent;
+        } else {
+            motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrentWhileShooting;
+        }
+
+        if (!(this.getCurrentCommand() instanceof SetPoint)) {
+            motionMagicDutyCycle.Position = Units.degreesToRotations(getArmPosition());
+        }
+
+        armMotor.setControl(motionMagicDutyCycle);
+
+        // SmartDashboard.putData(this);
     }
 
     private Arm() {
@@ -105,11 +123,15 @@ public class Arm extends SubsystemBase {
 
         armMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
+        armMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
         armMotorConfig.Audio.AllowMusicDurDisable = true;
 
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
+        /* TODO: Increase these values */
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.25;
         motionMagicConfigs.MotionMagicAcceleration = 0.25;
+        /* TODO: Adjust to get trapezoidal formation */
         motionMagicConfigs.MotionMagicJerk = 100;
 
         armMotor.getConfigurator().apply(armMotorConfig);
@@ -125,7 +147,7 @@ public class Arm extends SubsystemBase {
         double rootYInches = 4;
 
         if (Robot.isReal()) {
-            /* Motor Profile Mechanism */
+            /* Create Motor Profile Mechanism */
             armMechanism = new Mechanism2d(0.7493 * 2, Units.inchesToMeters(
                     rootYInches + shooterHeightInches + shooterExtensionInches + shooterLengthInches + 5));
 
@@ -160,6 +182,12 @@ public class Arm extends SubsystemBase {
                 .append(simShooterLigament).append(simShooterExtension).append(simElbowLigament);
         SmartDashboard.putData("Arm/Target Profile", simArmMechanism);
 
+        // motionMagicDutyCycle = new MotionMagicTorqueCurrentFOC(0);
+        motionMagicDutyCycle = new MotionMagicTorqueCurrentFOC(getArmPosition());
+        // motionMagicDutyCycle = new
+        // MotionMagicTorqueCurrentFOC(Units.degreesToRotations(-Constants.ArmConstants.shooterOffset));
+        motionMagicDutyCycle.Slot = 0;
+        new SetPoint(0).schedule();
     }
 
     /**
@@ -220,10 +248,6 @@ public class Arm extends SubsystemBase {
         armMotor.set(setVal);
     }
 
-    public void aimVelocity(double velocity) {
-        armMotor.setControl(velocityDutyCycle.withVelocity(velocity));
-    }
-
     /**
      * Returns the position of the arm in degrees
      * 
@@ -240,6 +264,10 @@ public class Arm extends SubsystemBase {
         return getArmPosition() + Constants.ArmConstants.shooterOffset;
     }
 
+    public void stop() {
+        setMotionMagic(getArmPosition());
+    }
+
     /**
      * Sets the Sim Arm Target Mechanism to a specific position
      * 
@@ -249,16 +277,25 @@ public class Arm extends SubsystemBase {
         shooterExtensionSetpoint = target + Constants.ArmConstants.shooterOffset;
     }
 
+    public double getArmTarget() {
+        return shooterExtensionSetpoint - Constants.ArmConstants.shooterOffset;
+    }
+
     public double getVelocityRotations() {
         return armMotor.getVelocity().getValueAsDouble();
     }
 
     public double getVelocity() {
-        // if (Robot.isSimulation()) {
-        //     return 0;
-        // }
+        if (Robot.isSimulation()) {
+            return 0;
+        }
 
         return armMotor.getVelocity().getValueAsDouble() * 360;
+    }
+
+    public void setMotionMagic(double position) {
+        // TODO: Get this to work (PID tuning)
+        motionMagicDutyCycle.Position = Units.degreesToRotations(position);
     }
 
     public double calculateArmSetpoint() {
@@ -271,9 +308,9 @@ public class Arm extends SubsystemBase {
         // System.out.println("Distance to speaker" + distToSpeaker);
         returnVal += distToSpeaker * 3;
         // if (distToSpeaker < fieldLength / 5) { // 10% of the field length
-        //     returnVal = Constants.ArmConstants.SetPoints.kSpeakerClosestPoint;
+        // returnVal = Constants.ArmConstants.SetPoints.kSpeakerClosestPoint;
         // } else {
-        //     returnVal = Constants.ArmConstants.SetPoints.kHorizontal;
+        // returnVal = Constants.ArmConstants.SetPoints.kHorizontal;
         // }
 
         /* Make sure that we dont accidentally return a stupid value */

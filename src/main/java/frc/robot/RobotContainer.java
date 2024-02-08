@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Commands.Shooter.FeedAndShoot;
-import frc.robot.Commands.Shooter.FineAdjust;
-import frc.robot.Commands.Shooter.SetPoint;
-import frc.robot.Subsystems.Arm;
-import frc.robot.Subsystems.Drivetrain.Drivetrain;
-import frc.robot.Subsystems.Drivetrain.SwerveRequest;
-import frc.robot.Subsystems.Drivetrain.SwerveModule.DriveRequestType;
+import frc.robot.commands.shooter.FeedAndShoot;
+import frc.robot.commands.shooter.FineAdjust;
+import frc.robot.commands.shooter.SetPoint;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
+import frc.robot.subsystems.Drivetrain.SwerveRequest;
+import frc.robot.subsystems.Drivetrain.SwerveModule.DriveRequestType;
 
 public class RobotContainer {
     private final CommandXboxController xDrive = new CommandXboxController(0);

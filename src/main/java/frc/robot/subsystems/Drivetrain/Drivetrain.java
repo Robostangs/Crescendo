@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Robot;
 import frc.robot.Vision.AprilTagLimelight;
+import frc.robot.Vision.LimelightHelpers;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -86,6 +87,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
+
+        if (Constants.Vision.UseLimelight) {
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag2, Constants.Vision.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+        }
+
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -94,6 +102,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+
+        if (Constants.Vision.UseLimelight) {
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag2, Constants.Vision.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+        }
+
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();

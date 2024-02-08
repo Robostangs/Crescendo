@@ -4,7 +4,7 @@
  * For support and suggestions contact support@ctr-electronics.com or file
  * an issue tracker at https://github.com/CrossTheRoadElec/Phoenix-Releases
  */
-package frc.robot.Subsystems.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
@@ -33,7 +33,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.LoggyThings.LoggyCANcoder;
 import frc.robot.LoggyThings.LoggyTalonFX;
-import frc.robot.Subsystems.Music;
+import frc.robot.subsystems.Music;
 
 import java.util.List;
 

@@ -173,11 +173,12 @@ public final class Constants {
 				.withSteerMotorInverted(false);
 		public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
 				kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
-				Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
+				Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide)
+				.withSteerMotorInverted(true);
 		public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
 				kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
 				Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches),
-				kInvertRightSide);
+				kInvertRightSide).withDriveMotorInverted(true);
 	}
 
 	public enum AprilTag {

@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -61,6 +61,8 @@ public class Shooter extends SubsystemBase {
         Music.getInstance().addFalcon(List.of(shootMotorLeft, shootMotorRight,
                 feedMotor));
         SmartDashboard.putString("Shooter/.type", "Subsystem");
+        SmartDashboard.putString("Shooter/Shooter State", "Idle");
+
     }
 
     public void shoot(double feeder, double shooter) {

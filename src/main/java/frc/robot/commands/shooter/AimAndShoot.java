@@ -1,80 +1,117 @@
-package frc.robot.Commands.Shooter;
+package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Arm;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shooter;
+
+import java.util.function.BooleanSupplier;
 
 public class AimAndShoot extends Command {
     private Arm mArm;
-    private double setpoint;
+    private Shooter mShooter;
+    private double armSetpoint;
     private double error = 0;
-    private boolean debugMode = false;
     private Timer timer;
+    private boolean debugMode = false;
+    private BooleanSupplier atPosition;
 
     /**
-     * @deprecated Use setpoint instead, this function is useless
+     * Set the shooter to a specific position and shoots when within 1 degree
+     * 
+     * @param target in degrees of THE SHOOTER, not the extension bar
      */
-    public AimAndShoot() {
-        mArm = Arm.getInstance();
-
-        this.setName("Aim and Shoot");
-        this.addRequirements(mArm);
-
+    public AimAndShoot(double target) {
         timer = new Timer();
+        mArm = Arm.getInstance();
+        mShooter = Shooter.getInstance();
+        armSetpoint = target;
+        this.atPosition = () -> true;
+
+        this.setName("Setpoint: " + armSetpoint + " degrees");
+        this.addRequirements(mArm, mShooter);
+    }
+
+    public AimAndShoot(double target, BooleanSupplier atPosition) {
+        timer = new Timer();
+        mArm = Arm.getInstance();
+        mShooter = Shooter.getInstance();
+        armSetpoint = target;
+        this.atPosition = atPosition;
+
+        this.setName("Setpoint: " + armSetpoint + " degrees");
+        this.addRequirements(mArm, mShooter);
     }
 
     @Override
     public void initialize() {
         timer.restart();
+
+        SmartDashboard.putString("Shooter/Shooter State", "Charging Up");
+
+        mShooter.setHolding(true);
+
+        error = armSetpoint - mArm.getArmPosition();
+        SmartDashboard.putNumber("Arm/Arm Position Error", error);
+        SmartDashboard.putNumber("Arm/Setpoint", armSetpoint);
+
+        if (debugMode) {
+            System.out.println("\n*************************** Debug Stats (initialize) ***************************");
+            System.out.println("Shooter position: " + mArm.getArmPosition());
+            System.out.println("Shooter target position: " + armSetpoint);
+            System.out.println("Error: " + error);
+            System.out.println("*************************** Debug Stats (initialize) ***************************\n");
+        }
+        mArm.setArmTarget(armSetpoint);
+        mArm.setMotionMagic(armSetpoint);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void execute() {
-        setpoint = mArm.calculateArmSetpoint();
-
-        if (!mArm.validSetpoint(setpoint)) {
+        if (!mArm.validSetpoint(armSetpoint)) {
             this.end(true);
         }
 
-        mArm.setMotionMagic(setpoint);
-        error = setpoint - mArm.getArmPosition();
+        error = armSetpoint - mArm.getArmPosition();
 
-        SmartDashboard.putNumber("Arm/Arm Position Error", error);
-        SmartDashboard.putNumber("Arm/Velocity", mArm.getVelocity());
+        if (error < 1 && timer.get() > Constants.ShooterConstants.shooterChargeUpTime && atPosition.getAsBoolean()) {
+            mShooter.shoot(1, 0.95, 1);
+            SmartDashboard.putString("Shooter/Shooter State", "Shooting");
+        } else {
+            mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
+            SmartDashboard.putString("Shooter/Shooter State", "Charging Up");
+        }
 
         if (debugMode) {
             System.out.println("\n*************************** Debug Stats (execute) ***************************");
             System.out.println("Shooter position: " + mArm.getArmPosition());
-            System.out.println("Shooter target position: " + setpoint);
+            System.out.println("Shooter target position: " + armSetpoint);
             System.out.println("Error: " + error);
             System.out.println("*************************** Debug Stats (execute) ***************************\n");
         }
     }
 
-    // @Override
-    // public boolean isFinished() {
-    //     // if (Robot.isSimulation()) {
-    //     //     return timer.get() > 0.3;
-    //     // } else {
-    //     //     return mArm.isInRangeOfTarget(armSetpoint);
-    //     // }
-    //     return false;
-    //     // return timer.get() > 0.3;
-    // }
-
     @Override
     public boolean isFinished() {
-        return timer.get() > 5;
+        // return false;
+
+        if (Robot.isSimulation()) {
+            return timer.get() > 1;
+        } else {
+            /* TODO: this dont work fix it */
+            return mArm.isInRangeOfTarget(armSetpoint);
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            SmartDashboard.putNumber("Arm/Velocity", 0);
+            SmartDashboard.putNumber("Constants2.", 0);
         }
-        mArm.stop();
-        // System.out.println("Shooter position (end of command): " + (mArm.getArmPosition()));
+        SmartDashboard.putString("Shooter/Shooter State", "Idle");
+        mShooter.setBrakeMode(true);
     }
 }

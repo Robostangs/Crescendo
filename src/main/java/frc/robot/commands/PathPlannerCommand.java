@@ -1,4 +1,4 @@
-package frc.robot.Commands;
+package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -10,9 +10,10 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Commands.Shooter.FeedAndShoot;
-import frc.robot.Commands.Shooter.SetPoint;
-import frc.robot.Subsystems.Drivetrain.Drivetrain;
+import frc.robot.commands.shooter.AimAndShoot;
+import frc.robot.commands.shooter.FeedAndShoot;
+import frc.robot.commands.shooter.SetPoint;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -26,10 +27,9 @@ public class PathPlannerCommand extends SequentialCommandGroup {
 
     public PathPlannerCommand(String autoName, boolean shoot) {
         NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command, PathPlanner"));
-        NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command, PathPlanner"));
-        // new
+        // NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command, PathPlanner"));
+        NamedCommands.registerCommand("AimAndShoot", new AimAndShoot(Constants.ArmConstants.SetPoints.kHorizontal).withTimeout(1));
         // SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.1));
-        // NamedCommands.registerCommand("AimAndShoot", new AimAndShoot().withTimeout(0.3));
         NamedCommands.registerCommand("Stow", new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(0.3));
 
         swerve = Drivetrain.getInstance();

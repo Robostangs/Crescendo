@@ -4,7 +4,7 @@
  * For support and suggestions contact support@ctr-electronics.com or file
  * an issue tracker at https://github.com/CrossTheRoadElec/Phoenix-Releases
  */
-package frc.robot.Subsystems.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;

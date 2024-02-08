@@ -4,7 +4,7 @@
  * For support and suggestions contact support@ctr-electronics.com or file
  * an issue tracker at https://github.com/CrossTheRoadElec/Phoenix-Releases
  */
-package frc.robot.Subsystems.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -34,7 +34,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Subsystems.Drivetrain.SwerveRequest.SwerveControlRequestParameters;
+import frc.robot.subsystems.Drivetrain.SwerveRequest.SwerveControlRequestParameters;
 
 /**
  * Swerve Drive class utilizing CTR Electronics' Phoenix 6 API.

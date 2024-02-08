@@ -1,9 +1,9 @@
-package frc.robot.Commands.Shooter;
+package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Arm;
+import frc.robot.subsystems.Arm;
 
 public class SetPoint extends Command {
     private Arm mArm;
@@ -32,8 +32,6 @@ public class SetPoint extends Command {
         timer.restart();
 
         error = armSetpoint - mArm.getArmPosition();
-        SmartDashboard.putNumber("Arm/Arm Position Error", error);
-        SmartDashboard.putNumber("Arm/Setpoint", armSetpoint);
 
         if (debugMode) {
             System.out.println("\n*************************** Debug Stats (initialize) ***************************");
@@ -55,7 +53,6 @@ public class SetPoint extends Command {
         error = armSetpoint - mArm.getArmPosition();
 
         SmartDashboard.putNumber("Arm/Arm Position Error", error);
-        SmartDashboard.putNumber("Arm/Velocity", mArm.getVelocity());
 
         if (debugMode) {
             System.out.println("\n*************************** Debug Stats (execute) ***************************");
@@ -81,7 +78,6 @@ public class SetPoint extends Command {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            SmartDashboard.putNumber("Arm/Velocity", 0);
         }
     }
 }

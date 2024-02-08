@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -21,11 +21,11 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Commands.Shooter.SetPoint;
 // import frc.robot.Subsystems.Music;
 import frc.robot.LoggyThings.LoggyCANcoder;
 import frc.robot.LoggyThings.LoggyTalonFX;
-import frc.robot.Subsystems.Drivetrain.Drivetrain;
+import frc.robot.commands.shooter.SetPoint;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 /**
  * To zero: first put the arm in a position where the shooter is parallel to the
@@ -39,10 +39,8 @@ public class Arm extends SubsystemBase {
 
     private MotionMagicTorqueCurrentFOC motionMagicDutyCycle;
 
-    private Mechanism2d armMechanism;
+    private Mechanism2d armMechanism, simArmMechanism;
     private MechanismLigament2d shooterLigament, shooterExtension, elbowLigament;
-
-    private Mechanism2d simArmMechanism;
     private MechanismLigament2d simShooterLigament, simShooterExtension, simElbowLigament;
 
     public static Arm getInstance() {
@@ -70,6 +68,10 @@ public class Arm extends SubsystemBase {
 
         SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
         SmartDashboard.putBoolean("Arm/At Setpoint", isInRangeOfTarget(getArmTarget()));
+        SmartDashboard.putString("Arm/.type", "Subsystem");
+        SmartDashboard.putNumber("Arm/Velocity", getVelocity());
+        SmartDashboard.putNumber("Arm/Position Error", this.getArmTarget() - this.getArmPosition());
+        SmartDashboard.putNumber("Arm/Setpoint", getArmTarget());
 
         if (Shooter.getInstance().getCurrentCommand() == null) {
             motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrent;
@@ -98,41 +100,9 @@ public class Arm extends SubsystemBase {
         // armCoder.getConfigurator().apply(armCoderConfig);
 
         armMotor = new LoggyTalonFX(Constants.ArmConstants.armMotorID, false);
-        TalonFXConfiguration armMotorConfig = new TalonFXConfiguration();
-        armMotorConfig.Feedback.SensorToMechanismRatio = 2;
-        armMotorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
-        armMotorConfig.Feedback.RotorToSensorRatio = 50;
-        armMotorConfig.Feedback.FeedbackRemoteSensorID = armCoder.getDeviceID();
 
-        armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-
-        armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Units
-                .degreesToRotations(Constants.ArmConstants.kArmMaxAngle);
-        armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Units
-                .degreesToRotations(Constants.ArmConstants.kArmMinAngle);
-
-        MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
-
-        /* Tune these */
-        armMotorConfig.Slot0.kV = 04;
-        armMotorConfig.Slot0.kP = 100;
-        armMotorConfig.Slot0.kI = 5;
-        armMotorConfig.Slot0.kG = 0.03;
-        armMotorConfig.Slot0.kD = 0.2;
-
-        /* TODO: Increase these values */
-        motionMagicConfigs.MotionMagicCruiseVelocity = 0.25;
-        motionMagicConfigs.MotionMagicAcceleration = 0.25;
-        /* TODO: Adjust to get trapezoidal formation */
-        motionMagicConfigs.MotionMagicJerk = 100;
-
-        armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        armMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        armMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        armMotorConfig.Audio.AllowMusicDurDisable = true;
-
-        armMotor.getConfigurator().apply(armMotorConfig);
+        setArmMotorConfig(getArmMotorConfig(true));
+        // armMotor.getConfigurator().apply(getArmMotorConfig(true));
 
         Music.getInstance().addFalcon(armMotor);
 
@@ -185,9 +155,6 @@ public class Arm extends SubsystemBase {
         // motionMagicDutyCycle = new
         // MotionMagicTorqueCurrentFOC(Units.degreesToRotations(-Constants.ArmConstants.shooterOffset));
         motionMagicDutyCycle.Slot = 0;
-
-        SmartDashboard.putString("Arm/.type", "Subsystem");
-
     }
 
     /**
@@ -197,7 +164,7 @@ public class Arm extends SubsystemBase {
      * @return true if in range or false if out of range
      */
     public boolean isInRangeOfTarget(double target) {
-        if ((getArmPosition() - target) < 0.5) {
+        if ((getArmPosition() - target) < 5) {
             return true;
         } else {
 
@@ -342,5 +309,52 @@ public class Arm extends SubsystemBase {
         }
 
         armMotor.setNeutralMode(mode);
+    }
+
+    public TalonFXConfiguration getArmMotorConfig(boolean softLimits) {
+        TalonFXConfiguration armMotorConfig = new TalonFXConfiguration();
+        armMotorConfig.Feedback.SensorToMechanismRatio = 2;
+        armMotorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
+        armMotorConfig.Feedback.RotorToSensorRatio = 50;
+        armMotorConfig.Feedback.FeedbackRemoteSensorID = armCoder.getDeviceID();
+
+        armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
+        if (softLimits) {
+            armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Units
+                    .degreesToRotations(Constants.ArmConstants.kArmMaxAngle);
+            armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Units
+                    .degreesToRotations(Constants.ArmConstants.kArmMinAngle);
+        }
+
+        MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
+
+        /* Tune these */
+        armMotorConfig.Slot0.kV = 04;
+        armMotorConfig.Slot0.kP = 100;
+        armMotorConfig.Slot0.kI = 5;
+        armMotorConfig.Slot0.kG = 0.03;
+        armMotorConfig.Slot0.kD = 0.2;
+
+        /* TODO: Increase these values */
+        motionMagicConfigs.MotionMagicCruiseVelocity = 0.25;
+        motionMagicConfigs.MotionMagicAcceleration = 0.25;
+        /*
+         * TODO: Adjust to get trapezoidal formation (use the velocity posted in
+         * smartdashobard to track trapezoid)
+         */
+        motionMagicConfigs.MotionMagicJerk = 100;
+
+        armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+        armMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        armMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        armMotorConfig.Audio.AllowMusicDurDisable = true;
+
+        return armMotorConfig;
+    }
+
+    public void setArmMotorConfig(TalonFXConfiguration config) {
+        armMotor.getConfigurator().apply(config);
     }
 }

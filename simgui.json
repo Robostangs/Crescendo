@@ -1,0 +1,74 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
+      "/SmartDashboard/Arm": "Subsystem",
+      "/SmartDashboard/Arm/Target Profile": "Mechanism2d",
+      "/SmartDashboard/Auton Chooser": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Shooter": "Subsystem",
+      "/SmartDashboard/Swerve/Module 0": "Mechanism2d",
+      "/SmartDashboard/Swerve/Module 1": "Mechanism2d",
+      "/SmartDashboard/Swerve/Module 2": "Mechanism2d",
+      "/SmartDashboard/Swerve/Module 3": "Mechanism2d"
+    },
+    "windows": {
+      "/SmartDashboard/Arm/Target Profile": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Auton Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "Robot": {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "length": 0.7200000286102295,
+          "weight": 1.0,
+          "width": 0.7200000286102295
+        },
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "path": {
+          "arrowSize": 42,
+          "arrows": false,
+          "selectable": false,
+          "style": "Line"
+        },
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
+  }
+}

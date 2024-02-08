@@ -25,6 +25,7 @@ import frc.robot.Commands.Shooter.SetPoint;
 // import frc.robot.Subsystems.Music;
 import frc.robot.LoggyThings.LoggyCANcoder;
 import frc.robot.LoggyThings.LoggyTalonFX;
+import frc.robot.Subsystems.Drivetrain.Drivetrain;
 
 /**
  * To zero: first put the arm in a position where the shooter is parallel to the
@@ -81,8 +82,6 @@ public class Arm extends SubsystemBase {
         }
 
         armMotor.setControl(motionMagicDutyCycle);
-
-        // SmartDashboard.putData(this);
     }
 
     private Arm() {
@@ -113,30 +112,29 @@ public class Arm extends SubsystemBase {
         armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Units
                 .degreesToRotations(Constants.ArmConstants.kArmMinAngle);
 
+        MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
+
+        /* Tune these */
         armMotorConfig.Slot0.kV = 04;
         armMotorConfig.Slot0.kP = 100;
         armMotorConfig.Slot0.kI = 5;
         armMotorConfig.Slot0.kG = 0.03;
         armMotorConfig.Slot0.kD = 0.2;
 
-        armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-
-        armMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-
-        armMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-
-        armMotorConfig.Audio.AllowMusicDurDisable = true;
-
-        MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
         /* TODO: Increase these values */
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.25;
         motionMagicConfigs.MotionMagicAcceleration = 0.25;
         /* TODO: Adjust to get trapezoidal formation */
         motionMagicConfigs.MotionMagicJerk = 100;
 
+        armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+        armMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        armMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        armMotorConfig.Audio.AllowMusicDurDisable = true;
+
         armMotor.getConfigurator().apply(armMotorConfig);
 
-        // Music.getInstance().addFalcon(armMotor);
+        Music.getInstance().addFalcon(armMotor);
 
         double shooterHeightInches = 22;
         double shooterLengthInches = 9.5;
@@ -187,7 +185,9 @@ public class Arm extends SubsystemBase {
         // motionMagicDutyCycle = new
         // MotionMagicTorqueCurrentFOC(Units.degreesToRotations(-Constants.ArmConstants.shooterOffset));
         motionMagicDutyCycle.Slot = 0;
-        new SetPoint(0).schedule();
+
+        SmartDashboard.putString("Arm/.type", "Subsystem");
+
     }
 
     /**
@@ -294,17 +294,21 @@ public class Arm extends SubsystemBase {
     }
 
     public void setMotionMagic(double position) {
-        // TODO: Get this to work (PID tuning)
         motionMagicDutyCycle.Position = Units.degreesToRotations(position);
     }
 
+    /**
+     * @deprecated just set motion magic
+     * @return
+     */
     public double calculateArmSetpoint() {
         /* Swerve Pose calculated in meters */
         double returnVal = Constants.ArmConstants.SetPoints.kSpeakerClosestPoint;
         Pose2d currentPose = Drivetrain.getInstance().getState().Pose;
         double distToSpeaker = Math.sqrt(Math.pow(currentPose.getX(), 2) + Math.pow(currentPose.getY(), 2));
 
-        /* TODO: Algorithm to calculate arm setpoint */
+        /* Not planning on using */
+
         // System.out.println("Distance to speaker" + distToSpeaker);
         returnVal += distToSpeaker * 3;
         // if (distToSpeaker < fieldLength / 5) { // 10% of the field length

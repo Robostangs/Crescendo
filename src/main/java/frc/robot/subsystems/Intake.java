@@ -1,28 +1,37 @@
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+import frc.robot.LoggyThings.LoggyTalonFX;
 
 public class Intake extends SubsystemBase {
-    
-    public static Intake mIntake;
+    public static Intake mInstance;
     public Compressor mCompressor;
-    private DoubleSolenoid mSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.intakeSolenoidFwdID, Constants.IntakeConstants.intakeSolenoidRevID); // TODO: Make sure this is right
-    private TalonFX intakeMotor = new TalonFX(Constants.IntakeConstants.intakeMotorID, "rio");
+    private DoubleSolenoid mSolenoid;
 
+    
+    @Override
+    public void periodic() {
+        // TODO Auto-generated method stub
+        super.periodic();
+    }
+    
+    private LoggyTalonFX intakeMotor;
+    
     public static Intake getInstance() {
-        if (mIntake == null)
-            mIntake = new Intake();
-        return mIntake;
+        if (mInstance == null)
+            mInstance = new Intake();
+        return mInstance;
     }
 
     public Intake() {
+        mSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+                Constants.IntakeConstants.intakeSolenoidFwdID, Constants.IntakeConstants.intakeSolenoidRevID);
+
+        intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.intakeMotorID, false);
         mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
         mCompressor.enableDigital();
     }
@@ -37,4 +46,6 @@ public class Intake extends SubsystemBase {
     public void setSpin(double speed) {
         intakeMotor.set(speed);
     }
+
+    /* TODO: Should I put belt stuff into here or make a new subsystem? */
 }

@@ -17,23 +17,29 @@ import edu.wpi.first.math.util.Units;
 //0.42545 + 0.254/2
 
 public final class Constants {
-	/** Should be 16.54 */
-
-	/** Should be 16.54 */
+	/** Should be 16.542 */
 	public static final double fieldLength = Units.inchesToMeters(76.1 + 250.5) * 2;
-	public static final double fieldHeight = 8.21;
+	public static final double fieldHeight = 8.014;
 
 	public static final double kRange = 20;
 
-	public static final String logDirectory = "";
+	public static final String logDirectory = "logs";
 
 	public class Vision {
 		public static final boolean UseLimelight = false;
 		public static final String llAprilTag = "limelight";
+		public static final String llAprilTag2 = "limelight2";
 		public static final int llAprilTagPipelineIndex = 0;
 
 		public static final String llPython = "limelight-python";
 		public static final int llPythonPipelineIndex = 0;
+
+		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
+		public static final double[] SPEAKER_COORDINATES = { 0.21, 5.55, 1.97 };
+
+		public static final class VisionConstants {
+			/* TODO: set these values correctly */
+		}
 	}
 
 	public class SwerveConstants {
@@ -343,10 +349,4 @@ public final class Constants {
 		public static final double kRobostangs = 0.63;
 		public static final double kKillLights = 0.99;
 	}
-
-	    public static final class VisionConstants {
-        public static final boolean USE_LIMELIGHTS_FOR_ODOMETRY = true;
-        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10)); // TODO: these are values that other team used
-        public static final double[] SPEAKER_COORDINATES = {0.21, 5.55, 1.97}; // (x, y, z) in meters
-    }
 }

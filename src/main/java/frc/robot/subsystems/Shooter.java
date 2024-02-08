@@ -7,8 +7,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-// import frc.robot.Subsystems.Music;
 import frc.robot.LoggyThings.LoggyTalonFX;
+
+import java.util.List;
 
 public class Shooter extends SubsystemBase {
     private static Shooter mInstance;
@@ -28,29 +29,16 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("Shooter/left motor/actual Rpm",
-        // shootMotorLeft.getVelocity().getValueAsDouble() * 60);
-        // SmartDashboard.putNumber("Shooter/right motor/actual Rpm",
-        // shootMotorRight.getVelocity().getValueAsDouble() * 60);
-
-        // SmartDashboard.putNumber("Shooter/left motor/Supply Current",
-        // shootMotorLeft.getSupplyCurrent().getValueAsDouble());
-        // SmartDashboard.putNumber("Shooter/right motor/Supply Current",
-        // shootMotorRight.getSupplyCurrent().getValueAsDouble());
-
-        // SmartDashboard.putNumber("", value);
+        SmartDashboard.putBoolean("Shooter/Holding", holding);
     }
 
     private Shooter() {
-        SmartDashboard.putNumber("Shooter/left motor/setRpm", 1000);
-        SmartDashboard.putNumber("Shooter/right motor/setRpm", 1000);
-
         holding = true;
 
         shootMotorRight = new LoggyTalonFX(Constants.ShooterConstants.shootMotorRight, false);
         shootMotorLeft = new LoggyTalonFX(Constants.ShooterConstants.shootMotorLeft, false);
         feedMotor = new LoggyTalonFX(Constants.ShooterConstants.feedMotor, false);
- 
+
         TalonFXConfiguration fxConfig = new TalonFXConfiguration();
         fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
         fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
@@ -70,14 +58,21 @@ public class Shooter extends SubsystemBase {
         shootMotorRight.setInverted(Constants.ShooterConstants.rightShootIsInverted);
         shootMotorLeft.setInverted(Constants.ShooterConstants.leftShootIsInverted);
 
-        // Music.getInstance().addFalcon(List.of(shootMotorLeft, shootMotorRight,
-        // feedMotor));
+        Music.getInstance().addFalcon(List.of(shootMotorLeft, shootMotorRight,
+                feedMotor));
+        SmartDashboard.putString("Shooter/.type", "Subsystem");
     }
 
-    public void shoot(double shooter, double feeder) {
+    public void shoot(double feeder, double shooter) {
         shootMotorRight.set(shooter);
         shootMotorLeft.set(shooter);
         feedMotor.set(feeder);
+    }
+
+    public void shoot(double feeder, double leftShooter, double rightShooter) {
+        feedMotor.set(feeder);
+        shootMotorLeft.set(leftShooter);
+        shootMotorRight.set(rightShooter);
     }
 
     public void stop() {

@@ -12,6 +12,9 @@ public class AimAndShoot extends Command {
     private boolean debugMode = false;
     private Timer timer;
 
+    /**
+     * @deprecated Use setpoint instead, this function is useless
+     */
     public AimAndShoot() {
         mArm = Arm.getInstance();
 
@@ -26,6 +29,7 @@ public class AimAndShoot extends Command {
         timer.restart();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void execute() {
         setpoint = mArm.calculateArmSetpoint();

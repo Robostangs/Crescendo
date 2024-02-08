@@ -2,6 +2,7 @@ package frc.robot.Vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Subsystems.Drivetrain.Drivetrain;
 
 public class AprilTagLimelight {
     private String limelightOne, limelightTwo;
@@ -27,7 +28,9 @@ public class AprilTagLimelight {
             return llPoseOne;
         } else if (tidTwo != -1) {
             return llPoseTwo;
+        } else {
+            System.out.println("No AprilTag pose");
+            return Drivetrain.getInstance().getPose();
         }
-        return null;
     }
 }

@@ -1,6 +1,7 @@
 package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Subsystems.Shooter;
@@ -21,6 +22,7 @@ public class FeedAndShoot extends Command {
 
     @Override
     public void initialize() {
+        SmartDashboard.putString("Shooter/Shooter State", "Charging Up");
         timer.restart();
         // Arm.getInstance().setBrake(true);
         mShooter.setHolding(true);
@@ -29,21 +31,26 @@ public class FeedAndShoot extends Command {
     @Override
     public void execute() {
         if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime) {
-            mShooter.shoot(1, Constants.ShooterConstants.kFeederFeedForward);
+            mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
+            SmartDashboard.putString("Shooter/Shooter State", "Charging Up");
         } else {
-            mShooter.shoot(1, 1);
+            // mShooter.shoot(1, 1);
+            mShooter.shoot(1, 0.95, 1);
+            SmartDashboard.putString("Shooter/Shooter State", "Shooting");
         }
     }
 
     @Override
     public void end(boolean interrupted) {
+        SmartDashboard.putString("Shooter/Shooter State", "Idle");
+
         mShooter.setBrakeMode(true);
         // Arm.getInstance().setBrake(false);
         mShooter.stop();
 
-        if (!(timer.get() < Constants.ShooterConstants.shooterChargeUpTime)) {
-            mShooter.setHolding(false);
-        }
+        // if (!(timer.get() < Constants.ShooterConstants.shooterChargeUpTime)) {
+        //     mShooter.setHolding(false);
+        // }
     }
 
     @Override

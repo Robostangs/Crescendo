@@ -2,6 +2,7 @@ package frc.robot.Vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class AprilTagLimelight {
     private String limelightOne, limelightTwo;
@@ -12,8 +13,8 @@ public class AprilTagLimelight {
     }
 
     public Pose2d getPoseAvg() {
-        int tidOne = (int) LimelightHelpers.getFiducialID(limelightOne);
-        int tidTwo = (int) LimelightHelpers.getFiducialID(limelightTwo);
+        int tidOne = (int) LimelightHelpers.getTid(limelightOne);
+        int tidTwo = (int) LimelightHelpers.getTid(limelightTwo);
 
         Pose2d llPoseOne = LimelightHelpers.getLatestResults(limelightOne).targetingResults.getBotPose2d_wpiBlue();
         Pose2d llPoseTwo = LimelightHelpers.getLatestResults(limelightTwo).targetingResults.getBotPose2d_wpiBlue();
@@ -27,7 +28,9 @@ public class AprilTagLimelight {
             return llPoseOne;
         } else if (tidTwo != -1) {
             return llPoseTwo;
+        } else {
+            System.out.println("No AprilTag pose");
+            return Drivetrain.getInstance().getPose();
         }
-        return null;
     }
 }

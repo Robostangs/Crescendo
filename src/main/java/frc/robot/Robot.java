@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.PathPlannerCommand;
-import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
@@ -105,7 +104,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		Shooter.getInstance().setBrakeMode(false);
-		new SetPoint(0).schedule();
 	}
 
 	@Override

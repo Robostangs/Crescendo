@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,6 +17,8 @@ public class Shooter extends SubsystemBase {
     /** shootMotorRight is the master motor */
     private LoggyTalonFX shootMotorRight, shootMotorLeft, feedMotor;
     private VelocityVoltage shootPid = new VelocityVoltage(0);
+
+    private DigitalInput ringSensor;
 
     private boolean holding;
 
@@ -38,6 +41,7 @@ public class Shooter extends SubsystemBase {
         shootMotorRight = new LoggyTalonFX(Constants.ShooterConstants.shootMotorRight, false);
         shootMotorLeft = new LoggyTalonFX(Constants.ShooterConstants.shootMotorLeft, false);
         feedMotor = new LoggyTalonFX(Constants.ShooterConstants.feedMotor, false);
+        ringSensor = new DigitalInput(0);
 
         TalonFXConfiguration fxConfig = new TalonFXConfiguration();
         fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
@@ -61,7 +65,8 @@ public class Shooter extends SubsystemBase {
         Music.getInstance().addFalcon(List.of(shootMotorLeft, shootMotorRight,
                 feedMotor));
         SmartDashboard.putString("Shooter/.type", "Subsystem");
-        SmartDashboard.putString("Shooter/Shooter State", "Idle");
+        SmartDashboard.putString("Shooter/Status", "Idle");
+        SmartDashboard.putBoolean("Shooter/Loaded", getHolding());
 
     }
 
@@ -83,16 +88,16 @@ public class Shooter extends SubsystemBase {
         feedMotor.set(0);
     }
 
-    public void setHolding(boolean holding) {
-        this.holding = holding;
-    }
+    // public void setHolding(boolean holding) {
+    //     this.holding = holding;
+    // }
 
-    public void toggleHolding() {
-        holding = !holding;
-    }
+    // public void toggleHolding() {
+    //     holding = !holding;
+    // }
 
     public boolean getHolding() {
-        return holding;
+        return ringSensor.get();
     }
 
     /**

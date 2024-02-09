@@ -158,13 +158,13 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * whether the arm is within 0.5 degrees of the target
+     * whether the arm is within {@link Constants.ArmConstants#kInRangeThreshold} degrees of the target
      * 
      * @param target target position in degrees
      * @return true if in range or false if out of range
      */
     public boolean isInRangeOfTarget(double target) {
-        if ((getArmPosition() - target) < 5) {
+        if ((getArmPosition() - target) < Constants.ArmConstants.kInRangeThreshold) {
             return true;
         } else {
 

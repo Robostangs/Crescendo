@@ -23,7 +23,7 @@ public final class Constants {
 
 	public static final double kRange = 20;
 
-	public static final String logDirectory = "logs";
+	public static final String logDirectory = "";
 
 	public class Vision {
 		public static final boolean UseLimelight = false;
@@ -35,11 +35,7 @@ public final class Constants {
 		public static final int llPythonPipelineIndex = 0;
 
 		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
-		public static final double[] SPEAKER_COORDINATES = { 0.21, 5.55, 1.97 };
-
-		public static final class VisionConstants {
-			/* TODO: set these values correctly */
-		}
+		public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 	}
 
 	public class SwerveConstants {
@@ -88,9 +84,9 @@ public final class Constants {
 		// Estimated at first, then fudge-factored to make odom
 		// match record
 
-		private static final boolean kSteerMotorReversed = true;
-		private static final boolean kInvertLeftSide = false;
-		private static final boolean kInvertRightSide = true;
+		private static final boolean kSteerMotorReversed = false;
+		private static final boolean kInvertLeftSide = true;
+		private static final boolean kInvertRightSide = false;
 
 		// These are only used for simulation
 		private static final double kSteerInertia = 0.00001;
@@ -161,24 +157,21 @@ public final class Constants {
 		private static final double kBackRightXPosInches = -driveBaseWidth / 2;
 		private static final double kBackRightYPosInches = -driveBaseHeight / 2;
 
-		public static final SwerveModuleConstants FrontLeft = ConstantCreator
-				.createModuleConstants(kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId,
-						kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
-						Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide)
-				.withDriveMotorInverted(true);
-		public static final SwerveModuleConstants FrontRight = ConstantCreator
-				.createModuleConstants(kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId,
-						kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
-						Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide)
-				.withSteerMotorInverted(false);
+		public static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
+				kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId,
+				kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
+				Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
+		public static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
+				kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId,
+				kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
+				Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
 		public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
 				kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
-				Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide)
-				.withSteerMotorInverted(true);
+				Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
 		public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
 				kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
 				Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches),
-				kInvertRightSide).withDriveMotorInverted(true);
+				kInvertRightSide);
 	}
 
 	public enum AprilTag {
@@ -222,26 +215,10 @@ public final class Constants {
 	}
 
 	public static final class AutoConstants {
-		public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5, 0.3);
-		// public static final PIDConstants translationPID = new PIDConstants(1, 0.5,
-		// 0.1, 0);
-		// public static final PIDConstants rotationPID = new PIDConstants(-10, -20, 10,
-		// 3);
-		// public static final PIDConstants rotationPID = new PIDConstants(1.9, -0.13,
-		// 0.1, 0);
 
 		/* Best so far */
+		public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5, 0.3);
 		public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
-
-		// public static final PIDConstants rotationPID = new PIDConstants(-2.5, 0.3,
-		// 0.94, 1);
-
-		// public static final PIDConstants rotationPID = new PIDConstants(-Math.PI/2,
-		// 0.25, 0.97, 2);
-
-		/* Stolen from Align.java */
-		// public static final PIDConstants rotationPID = new PIDConstants(0.08, 0.05,
-		// 0.01);
 
 		public static final double kMaxSpeedMetersPerSecond = 5;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
@@ -296,7 +273,7 @@ public final class Constants {
 		public static final double kSourceIntakeSpeed = 0.2;
 
 		public static final double kFeederFeedForward = 0.01;
-		public static final double shooterChargeUpTime = 0.3;
+		public static final double shooterChargeUpTime = 0.5;
 	}
 
 	public static class ArmConstants {
@@ -311,12 +288,13 @@ public final class Constants {
 
 		/** 100 degrees */
 		public static final double kArmMaxAngle = 60;
-		/** 300 degrees */
+		/** 301 degrees */
 		public static final double kArmMinAngle = -59;
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
 		public static final double shooterOffset = 58.2;
+		public static final double kInRangeThreshold = 2.5;
 
 		public static class SetPoints {
 			public static final double kSpeaker = -30;
@@ -330,13 +308,10 @@ public final class Constants {
 	public static class IntakeConstants {
 		public static final int intakeMotorID = 58;
 		public static final int intakeSolenoidID = 0;
-		public static final int intakeSolenoidID2 = 1;
 		public static final int intakeSolenoidFwdID = 0;
-		public static final int intakeSolenoidRevID = 0;
+		public static final int intakeSolenoidRevID = 4;
 
-		public static final double kIntakeSpeed = 0.5;
-		public static final double kIntakeSpeedOut = -0.5;
-
+		public static final double kIntakeSpeed = 1;
 	}
 
 	public static class Lights {

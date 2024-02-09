@@ -50,9 +50,7 @@ public class AimAndShoot extends Command {
     public void initialize() {
         timer.restart();
 
-        SmartDashboard.putString("Shooter/Shooter State", "Charging Up");
-
-        mShooter.setHolding(true);
+        SmartDashboard.putString("Shooter/Status", "Charging Up");
 
         error = armSetpoint - mArm.getArmPosition();
         SmartDashboard.putNumber("Arm/Arm Position Error", error);
@@ -79,10 +77,10 @@ public class AimAndShoot extends Command {
 
         if (error < 1 && timer.get() > Constants.ShooterConstants.shooterChargeUpTime && atPosition.getAsBoolean()) {
             mShooter.shoot(1, 0.95, 1);
-            SmartDashboard.putString("Shooter/Shooter State", "Shooting");
+            SmartDashboard.putString("Shooter/Status", "Shooting");
         } else {
             mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
-            SmartDashboard.putString("Shooter/Shooter State", "Charging Up");
+            SmartDashboard.putString("Shooter/Status", "Charging Up");
         }
 
         if (debugMode) {
@@ -111,7 +109,8 @@ public class AimAndShoot extends Command {
         if (interrupted) {
             SmartDashboard.putNumber("Constants2.", 0);
         }
-        SmartDashboard.putString("Shooter/Shooter State", "Idle");
+        SmartDashboard.putString("Shooter/Status", "Idle");
         mShooter.setBrakeMode(true);
+        mShooter.stop();
     }
 }

@@ -4,16 +4,23 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Shooter;
+import java.util.function.BooleanSupplier;
 
 public class FeedAndShoot extends Command {
     private final Shooter mShooter;
     private Timer timer;
+    private BooleanSupplier feedUntil;
 
     /**
      * This command will activate the feed motor for
      */
     public FeedAndShoot() {
+        this(() -> true);
+    }
+
+    public FeedAndShoot(BooleanSupplier feedUntil) {
         timer = new Timer();
         mShooter = Shooter.getInstance();
         this.setName("Feed And Shoot");
@@ -22,27 +29,26 @@ public class FeedAndShoot extends Command {
 
     @Override
     public void initialize() {
-        SmartDashboard.putString("Shooter/Shooter State", "Charging Up");
+        SmartDashboard.putString("Shooter/Status", "Charging Up");
         timer.restart();
         // Arm.getInstance().setBrake(true);
-        mShooter.setHolding(true);
     }
 
     @Override
     public void execute() {
-        if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime) {
+        if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime && feedUntil.getAsBoolean()) {
             mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
-            SmartDashboard.putString("Shooter/Shooter State", "Charging Up");
+            SmartDashboard.putString("Shooter/Status", "Charging Up");
         } else {
-            // mShooter.shoot(1, 1);
-            mShooter.shoot(1, 0.95, 1);
-            SmartDashboard.putString("Shooter/Shooter State", "Shooting");
+            mShooter.shoot(1, 1);
+            // mShooter.shoot(1, 0.95, 1);
+            SmartDashboard.putString("Shooter/Status", "Shooting");
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putString("Shooter/Shooter State", "Idle");
+        SmartDashboard.putString("Shooter/Status", "Idle");
 
         mShooter.setBrakeMode(true);
         // Arm.getInstance().setBrake(false);
@@ -55,8 +61,9 @@ public class FeedAndShoot extends Command {
 
     @Override
     public boolean isFinished() {
-        return !mShooter.getHolding();
-        // return false;
-        // return timer.get() > Constants.BeltConstants.shooterChargeUpTime + 0.1;
+        if (Robot.isReal()) {
+            return !mShooter.getHolding();
+        }
+        return timer.get() < 0.5;
     }
 }

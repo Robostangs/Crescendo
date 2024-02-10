@@ -48,9 +48,9 @@ public class PathPlannerCommand extends SequentialCommandGroup {
 
         swerve.seedFieldRelative(startPose);
 
-        this.addCommands(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.5),
+        this.addCommands(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(Constants.OperatorConstants.setpointTimeout),
                 new FeedAndShoot().withTimeout(0.5),
-                new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(0.5), auto);
+                new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(Constants.OperatorConstants.setpointTimeout), auto);
 
     }
 

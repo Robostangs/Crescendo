@@ -7,7 +7,7 @@ import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 
 public class SetPoint extends Command {
-    private Arm mArm;
+    private final Arm mArm;
     private double armSetpoint;
     private double error = 0;
     private Timer timer;
@@ -29,7 +29,6 @@ public class SetPoint extends Command {
 
     @Override
     public void initialize() {
-        mArm.setArmTarget(armSetpoint);
         timer.restart();
 
         error = armSetpoint - mArm.getArmPosition();
@@ -44,7 +43,7 @@ public class SetPoint extends Command {
         mArm.setArmTarget(armSetpoint);
         mArm.setMotionMagic(armSetpoint);
     }
-    
+
     @Override
     public void execute() {
         if (!mArm.validSetpoint(armSetpoint)) {
@@ -67,8 +66,9 @@ public class SetPoint extends Command {
     @Override
     public boolean isFinished() {
         if (Robot.isSimulation()) {
-            return timer.get() > 0.3;
+            return timer.get() > 1;
         } else {
+            // return false;
             return mArm.isInRangeOfTarget(armSetpoint);
         }
     }

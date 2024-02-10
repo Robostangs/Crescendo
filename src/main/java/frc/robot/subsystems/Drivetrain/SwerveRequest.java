@@ -228,8 +228,8 @@ public interface SwerveRequest {
 
         public FieldCentric withSlowDown(boolean babyOnBoard, double slowDownRate) {
             this.babyOnBoard = babyOnBoard;
-            if (slowDownRate == 0) {
-                slowDownRate = 0.5;
+            if (slowDownRate <= 0.1) {
+                slowDownRate = 0.3;
             } else {
                 this.slowDownRate = slowDownRate;
             }

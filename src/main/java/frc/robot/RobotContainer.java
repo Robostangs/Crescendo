@@ -1,8 +1,11 @@
 package frc.robot;
 
+import java.util.Set;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
@@ -32,6 +35,11 @@ public class RobotContainer {
 
 	private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
+	private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
+			.withDeadband(Constants.OperatorConstants.deadband)
+			.withRotationalDeadband(Constants.OperatorConstants.rotationalDeadband)
+			.withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
 	private final Telemetry logger;
 	public Field2d field;
 
@@ -45,28 +53,28 @@ public class RobotContainer {
 						.withRotationalRate(
 								-xDrive.getRightX()
 										* Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)
-						// .withSlowDown(xDrive.getHID().getRightBumper(), 0.5))
-						/* TODO: Try this maybe its better */
 						.withSlowDown(true, 1 - xDrive.getRightTriggerAxis()))
 						.ignoringDisable(true));
 
-		// xDrive.x().whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(1).withVelocityY(1)));
+		xDrive.x().whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(1).withVelocityY(1)));
 		xDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
 		xDrive.b().whileTrue(drivetrain
 				.applyRequest(() -> point.withModuleDirection(
 						new Rotation2d(-xDrive.getLeftY(), xDrive.getLeftX()))));
 
+		
+
 		xDrive.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+		xDrive.rightBumper().whileTrue(
+				new DeferredCommand(() -> drivetrain.followthePath(drivetrain.getState().Pose), Set.of(drivetrain)));
 	}
 
 	private void configureManipBinds() {
 		mArm.setDefaultCommand(new FineAdjust(() -> -xManip.getRightY()));
-
-		/* TODO: Kind of scary, test appropriately */
 		xManip.x().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
-		xManip.b().onTrue(new SetPoint(0));
-		xManip.a().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
 		xManip.y().whileTrue(new AimAndShoot(0));
+		xManip.a().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
+		xManip.b().onTrue(new SetPoint(0));
 
 		xManip.pov(90).whileTrue(new Spit());
 		xManip.pov(180).whileTrue(new DeployAndIntake());

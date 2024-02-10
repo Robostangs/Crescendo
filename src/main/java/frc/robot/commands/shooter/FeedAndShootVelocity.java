@@ -7,7 +7,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 import java.util.function.BooleanSupplier;
 
-public class FeedAndShoot extends Command {
+public class FeedAndShootVelocity extends Command {
     private final Shooter mShooter;
     private Timer timer;
     private BooleanSupplier feedUntil;
@@ -17,11 +17,11 @@ public class FeedAndShoot extends Command {
     /**
      * This command will activate the feed motor for
      */
-    public FeedAndShoot() {
+    public FeedAndShootVelocity() {
         this(null);
     }
 
-    public FeedAndShoot(BooleanSupplier feedUntil) {
+    public FeedAndShootVelocity(BooleanSupplier feedUntil) {
         timer = new Timer();
         mShooter = Shooter.getInstance();
         this.setName("Feed And Shoot");
@@ -39,18 +39,18 @@ public class FeedAndShoot extends Command {
     public void execute() {
         if (feedUntil == null) {
             if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime) {
-                mShooter.setShoot(Constants.ShooterConstants.kFeederFeedForward, 1);
+                mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
                 SmartDashboard.putString("Shooter/Status", "Charging Up");
             } else {
-                mShooter.setShoot(0, 1);
+                mShooter.shoot(0.1, 1);
                 SmartDashboard.putString("Shooter/Status", "Shooting");
             }
         } else {
             if (feedUntil.getAsBoolean()) {
-                mShooter.setShoot(1, 1);
+                mShooter.shoot(0.1, 1);
                 SmartDashboard.putString("Shooter/Status", "Shooting");
             } else {
-                mShooter.setShoot(Constants.ShooterConstants.kFeederFeedForward, 1);
+                mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
                 SmartDashboard.putString("Shooter/Status", "Charging Up");
             }
         }

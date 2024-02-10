@@ -4,11 +4,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shooter;
-
-import java.util.function.BooleanSupplier;
 
 public class AimAndShoot extends Command {
     private Arm mArm;
@@ -17,7 +14,7 @@ public class AimAndShoot extends Command {
     private double error = 0;
     private Timer timer;
     private boolean debugMode = false;
-    private BooleanSupplier atPosition;
+    // private Supplier<Boolean> feedUntil;
 
     /**
      * Set the shooter to a specific position and shoots when within 1 degree
@@ -29,18 +26,7 @@ public class AimAndShoot extends Command {
         mArm = Arm.getInstance();
         mShooter = Shooter.getInstance();
         armSetpoint = target;
-        this.atPosition = () -> true;
-
-        this.setName("Setpoint: " + armSetpoint + " degrees");
-        this.addRequirements(mArm, mShooter);
-    }
-
-    public AimAndShoot(double target, BooleanSupplier atPosition) {
-        timer = new Timer();
-        mArm = Arm.getInstance();
-        mShooter = Shooter.getInstance();
-        armSetpoint = target;
-        this.atPosition = atPosition;
+        // this.feedUntil = null;
 
         this.setName("Setpoint: " + armSetpoint + " degrees");
         this.addRequirements(mArm, mShooter);
@@ -53,7 +39,7 @@ public class AimAndShoot extends Command {
         SmartDashboard.putString("Shooter/Status", "Charging Up");
 
         error = armSetpoint - mArm.getArmPosition();
-        SmartDashboard.putNumber("Arm/Arm Position Error", error);
+        SmartDashboard.putNumber("Arm/Position Error", error);
         SmartDashboard.putNumber("Arm/Setpoint", armSetpoint);
 
         if (debugMode) {
@@ -75,8 +61,8 @@ public class AimAndShoot extends Command {
 
         error = armSetpoint - mArm.getArmPosition();
 
-        if (error < 1 && timer.get() > Constants.ShooterConstants.shooterChargeUpTime && atPosition.getAsBoolean()) {
-            mShooter.shoot(1, 0.95, 1);
+        if (error < 1 && timer.get() > Constants.ShooterConstants.shooterChargeUpTime && mArm.getVelocity() < 5) {
+            mShooter.shoot(1, 1);
             SmartDashboard.putString("Shooter/Status", "Shooting");
         } else {
             mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
@@ -94,14 +80,13 @@ public class AimAndShoot extends Command {
 
     @Override
     public boolean isFinished() {
-        // return false;
-
-        if (Robot.isSimulation()) {
-            return timer.get() > 1;
-        } else {
-            /* TODO: this dont work fix it */
-            return mArm.isInRangeOfTarget(armSetpoint);
-        }
+        /* Dont do this unless absolutely necessary (do it once the motionMagic works properly */
+        return false;
+        // if (Robot.isSimulation()) {
+        //     return timer.get() > 1;
+        // } else {
+        //     return mArm.isInRangeOfTarget(armSetpoint);
+        // }
     }
 
     @Override
@@ -110,7 +95,7 @@ public class AimAndShoot extends Command {
             SmartDashboard.putNumber("Constants2.", 0);
         }
         SmartDashboard.putString("Shooter/Status", "Idle");
-        mShooter.setBrakeMode(true);
+        mShooter.setBrake(true);
         mShooter.stop();
     }
 }

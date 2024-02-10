@@ -73,14 +73,14 @@ public final class Constants {
 		private static final double kSlipCurrentA = 300.0;
 
 		// Theoretical free speed (m/s) at 12v applied output;
-		public static final double kSpeedAt12VoltsMetersPerSecond = 9.46;
+		public static final double kSpeedAt12VoltsMetersPerSecond = 4.73;
 
 		// Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
 		private static final double kCoupleRatio = 3.5714285714285716;
 
 		private static final double kDriveGearRatio = 6.746031746031747;
 		private static final double kSteerGearRatio = 21.428571428571427;
-		private static final double kWheelRadiusInches = 4;
+		private static final double kWheelRadiusInches = 2;
 		// Estimated at first, then fudge-factored to make odom
 		// match record
 
@@ -107,10 +107,10 @@ public final class Constants {
 
 		/* Picture the front of the robot facing to the right in the XY axis */
 
-		/** Distance between the 2 right side CANcoders */
-		public static final double driveBaseWidth = 24;
+		/** Distance between the 2 left side CANcoders */
+		public static final double driveBaseWidth = 24.75;
 		/** Distance between the 2 front side CANcoders */
-		public static final double driveBaseHeight = 24;
+		public static final double driveBaseHeight = 24.1;
 
 		/**
 		 * distance from the center of the robot to the furthest module (meters) should
@@ -123,37 +123,35 @@ public final class Constants {
 		public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
 				.withPigeon2Id(kPigeonId).withCANbusName(kCANbusName);
 
-		// Front Right
-		private static final int kFrontRightDriveMotorId = 21;
-		private static final int kFrontRightSteerMotorId = 22;
-		private static final int kFrontRightEncoderId = 20;
-		private static final double kFrontRightEncoderOffset = -0.38134765625;
-		private static final double kFrontRightXPosInches = driveBaseWidth / 2;
-		private static final double kFrontRightYPosInches = -driveBaseHeight / 2;
-		/* Steer motor inverted (technically un inverted) */
-
 		// Front Left
 		private static final int kFrontLeftDriveMotorId = 11;
 		private static final int kFrontLeftSteerMotorId = 12;
 		private static final int kFrontLeftEncoderId = 10;
-		private static final double kFrontLeftEncoderOffset = -0.31982421875;
+		private static final double kFrontLeftEncoderOffset = -0.320556640625;
 		private static final double kFrontLeftXPosInches = driveBaseWidth / 2;
 		private static final double kFrontLeftYPosInches = driveBaseHeight / 2;
-		/* Drive motor inverted */
+
+		// Front Right
+		private static final int kFrontRightDriveMotorId = 21;
+		private static final int kFrontRightSteerMotorId = 22;
+		private static final int kFrontRightEncoderId = 20;
+		private static final double kFrontRightEncoderOffset = -0.375244140625;
+		private static final double kFrontRightXPosInches = driveBaseWidth / 2;
+		private static final double kFrontRightYPosInches = -driveBaseHeight / 2;
 
 		// Back Left
 		private static final int kBackLeftDriveMotorId = 31;
 		private static final int kBackLeftSteerMotorId = 32;
 		private static final int kBackLeftEncoderId = 30;
-		private static final double kBackLeftEncoderOffset = -0.181396484375;
+		private static final double kBackLeftEncoderOffset = -0.17578125;
 		private static final double kBackLeftXPosInches = -driveBaseWidth / 2;
-		private static final double kBackLeftYPosInches = driveBaseHeight;
+		private static final double kBackLeftYPosInches = driveBaseHeight / 2;
 
 		// Back Right
 		private static final int kBackRightDriveMotorId = 41;
 		private static final int kBackRightSteerMotorId = 42;
 		private static final int kBackRightEncoderId = 40;
-		private static final double kBackRightEncoderOffset = -0.10498046875;
+		private static final double kBackRightEncoderOffset = 0.41455078125;
 		private static final double kBackRightXPosInches = -driveBaseWidth / 2;
 		private static final double kBackRightYPosInches = -driveBaseHeight / 2;
 
@@ -167,11 +165,11 @@ public final class Constants {
 				Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
 		public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
 				kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
-				Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
+				Units.inchesToMeters(kBackLeftXPosInches),								 Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
 		public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
 				kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
 				Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches),
-				kInvertRightSide);
+				kInvertRightSide).withDriveMotorInverted(true);
 	}
 
 	public enum AprilTag {
@@ -229,15 +227,13 @@ public final class Constants {
 		public static final double kPYController = 10;
 		public static final double kPThetaController = 1;
 
-		public static final double intakeBeltOnTimeSeconds = 0.5;
-		public static final double intakeDeployTimeSeconds = 0.5;
-
 		public static final String kFieldObjectName = "path";
 	}
 
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
 		public static final double FalconRotorLoadThresholdRPM = 1000;
+		public static final double falconShooterLoadRPM = 8000;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -255,8 +251,10 @@ public final class Constants {
 	public static class OperatorConstants {
 		public static final int kDriverControllerPort = 0;
 
-		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.05;
-		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * 0.05;
+		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.07;
+		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * 0.07;
+
+		public static final double setpointTimeout = 15;
 	}
 
 	public static class ShooterConstants {
@@ -272,7 +270,7 @@ public final class Constants {
 		public static final double kShootSpeedAmp = 0.2;
 		public static final double kSourceIntakeSpeed = 0.2;
 
-		public static final double kFeederFeedForward = 0.01;
+		public static final double kFeederFeedForward = 0.0275;
 		public static final double shooterChargeUpTime = 0.5;
 	}
 
@@ -286,19 +284,25 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrent = 6.04;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 8;
 
+		/**
+		 * Value that gets multiplied against the FineAdjust input variable, this number
+		 * is the max output of the Arm Motor
+		 */
+		public static final double rateOfMotion = 0.5;
+
 		/** 100 degrees */
 		public static final double kArmMaxAngle = 60;
-		/** 301 degrees */
-		public static final double kArmMinAngle = -59;
+		/** 301.8 degrees */
+		public static final double kArmMinAngle = -58.2;
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
 		public static final double shooterOffset = 58.2;
-		public static final double kInRangeThreshold = 2.5;
+		public static final double kInRangeThreshold = 1;
 
 		public static class SetPoints {
 			public static final double kSpeaker = -30;
-			public static final double kSpeakerClosestPoint = -60;
+			public static final double kSpeakerClosestPoint = kArmMinAngle;
 			public static final double kAmp = 53.75;
 			public static final double kIntake = -50;
 			public static final double kHorizontal = 0;
@@ -306,12 +310,15 @@ public final class Constants {
 	}
 
 	public static class IntakeConstants {
-		public static final int intakeMotorID = 58;
-		public static final int intakeSolenoidID = 0;
-		public static final int intakeSolenoidFwdID = 0;
-		public static final int intakeSolenoidRevID = 4;
+		public static final int intakeMotorID = 62;
+		public static final int beltMotorID = 62;
+		public static final int leftSolenoidID = 0;
+		public static final int rightSolenoidID = 3;
 
-		public static final double kIntakeSpeed = 1;
+		public static final int intakeSensorPWM_ID = 0;
+		public static final int beltSensorPWM_ID = 1;
+
+		public static final double kDeployTimeSeconds = 1.5;
 	}
 
 	public static class Lights {

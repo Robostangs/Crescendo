@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,8 +16,6 @@ public class Shooter extends SubsystemBase {
     /** shootMotorRight is the master motor */
     private LoggyTalonFX shootMotorRight, shootMotorLeft, feedMotor;
     private VelocityVoltage shootPid = new VelocityVoltage(0);
-
-    private DigitalInput ringSensor;
 
     private boolean holding;
 
@@ -41,13 +38,14 @@ public class Shooter extends SubsystemBase {
         shootMotorRight = new LoggyTalonFX(Constants.ShooterConstants.shootMotorRight, false);
         shootMotorLeft = new LoggyTalonFX(Constants.ShooterConstants.shootMotorLeft, false);
         feedMotor = new LoggyTalonFX(Constants.ShooterConstants.feedMotor, false);
-        ringSensor = new DigitalInput(0);
 
         TalonFXConfiguration fxConfig = new TalonFXConfiguration();
         fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
         fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
         fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
         fxConfig.MotorOutput.PeakReverseDutyCycle = 0;
+
+        /* TODO: Tune this a lot */
         fxConfig.Slot0.kP = 0.2;
         fxConfig.Slot0.kI = 0.07;
         fxConfig.Slot0.kV = 2 / 16;
@@ -66,38 +64,44 @@ public class Shooter extends SubsystemBase {
                 feedMotor));
         SmartDashboard.putString("Shooter/.type", "Subsystem");
         SmartDashboard.putString("Shooter/Status", "Idle");
-        SmartDashboard.putBoolean("Shooter/Loaded", getHolding());
+        // SmartDashboard.putBoolean("Shooter/Loaded", ringSensor.get());
 
     }
 
-    public void shoot(double feeder, double shooter) {
+    public void setShoot(double feeder, double shooter) {
         shootMotorRight.set(shooter);
         shootMotorLeft.set(shooter);
         feedMotor.set(feeder);
     }
 
-    public void shoot(double feeder, double leftShooter, double rightShooter) {
+    public void setShoot(double feeder, double leftShooter, double rightShooter) {
+        // shootMotorLeft.set(leftShooter);
+        // shootMotorRight.set(rightShooter);
         feedMotor.set(feeder);
-        shootMotorLeft.set(leftShooter);
-        shootMotorRight.set(rightShooter);
+    }
+
+    /**
+     * Velocity is in RPM, values should be [-1,1]
+     */
+    public void shoot(double feederSetValue, double shooterSetValue) {
+        shoot(feederSetValue, shooterSetValue, shooterSetValue);
+    }
+
+    /**
+     * Velocity is in RPM, values should be [-1,1]
+     */
+    public void shoot(double feederSetVal, double leftShooterSetVal, double rightShooterSetVal) {
+        shootMotorRight
+                .setControl(shootPid.withVelocity(Constants.MotorConstants.falconShooterLoadRPM * rightShooterSetVal));
+        shootMotorLeft
+                .setControl(shootPid.withVelocity(Constants.MotorConstants.falconShooterLoadRPM * leftShooterSetVal));
+        feedMotor.set(feederSetVal);
     }
 
     public void stop() {
         shootMotorRight.set(0);
         shootMotorLeft.set(0);
         feedMotor.set(0);
-    }
-
-    // public void setHolding(boolean holding) {
-    //     this.holding = holding;
-    // }
-
-    // public void toggleHolding() {
-    //     holding = !holding;
-    // }
-
-    public boolean getHolding() {
-        return ringSensor.get();
     }
 
     /**
@@ -112,13 +116,12 @@ public class Shooter extends SubsystemBase {
         return false;
     }
 
-    public void SetRpm(double left, double right) {
-        /* TODO: Are we even going to use this? (shootPid) */
-        shootMotorRight.setControl(shootPid.withVelocity(right / 60));
-        shootMotorLeft.setControl(shootPid.withVelocity(left / 60));
-    }
+    // public void SetRpm(double left, double right) {
+    //     shootMotorRight.setControl(shootPid.withVelocity(right / 60));
+    //     shootMotorLeft.setControl(shootPid.withVelocity(left / 60));
+    // }
 
-    public void setBrakeMode(boolean brake) {
+    public void setBrake(boolean brake) {
         NeutralModeValue mode = NeutralModeValue.Coast;
         if (brake) {
             mode = NeutralModeValue.Brake;

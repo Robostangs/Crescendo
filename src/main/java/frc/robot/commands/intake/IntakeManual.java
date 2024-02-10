@@ -1,7 +1,6 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
 public class IntakeManual extends Command {
@@ -14,16 +13,17 @@ public class IntakeManual extends Command {
     @Override
     public void initialize() {
         mIntake.setExtend(true);
+        /* Matthew's command will work weird because motors start as soon as command begins, rewrite Matt's code */
     }
 
     @Override
     public void execute() {
-        mIntake.setSpin(IntakeConstants.INTAKE_SPEED);
+        mIntake.setMotor(1);
     }
 
     @Override
     public void end(boolean interrupted) {
-        mIntake.setSpin(0);
+        mIntake.setMotor(0);
         mIntake.setExtend(false);
     }
 }

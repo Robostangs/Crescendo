@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
+import org.ejml.simple.UnsupportedOperation;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,8 +27,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Robot;
 
 public class LimelightHelpers {
+    private LimelightHelpers() {
+        throw new UnsupportedOperation("This is a utility class! Access un-statically!");
+    }
 
     public static class LimelightTarget_Retro {
 
@@ -37,7 +43,7 @@ public class LimelightHelpers {
         private double[] robotPose_FieldSpace;
 
         @JsonProperty("t6r_ts")
-        private  double[] robotPose_TargetSpace;
+        private double[] robotPose_TargetSpace;
 
         @JsonProperty("t6t_cs")
         private double[] targetPose_CameraSpace;
@@ -45,45 +51,43 @@ public class LimelightHelpers {
         @JsonProperty("t6t_rs")
         private double[] targetPose_RobotSpace;
 
-        public Pose3d getCameraPose_TargetSpace()
-        {
+        public Pose3d getCameraPose_TargetSpace() {
             return toPose3D(cameraPose_TargetSpace);
         }
-        public Pose3d getRobotPose_FieldSpace()
-        {
+
+        public Pose3d getRobotPose_FieldSpace() {
             return toPose3D(robotPose_FieldSpace);
         }
-        public Pose3d getRobotPose_TargetSpace()
-        {
+
+        public Pose3d getRobotPose_TargetSpace() {
             return toPose3D(robotPose_TargetSpace);
         }
-        public Pose3d getTargetPose_CameraSpace()
-        {
+
+        public Pose3d getTargetPose_CameraSpace() {
             return toPose3D(targetPose_CameraSpace);
         }
-        public Pose3d getTargetPose_RobotSpace()
-        {
+
+        public Pose3d getTargetPose_RobotSpace() {
             return toPose3D(targetPose_RobotSpace);
         }
 
-        public Pose2d getCameraPose_TargetSpace2D()
-        {
+        public Pose2d getCameraPose_TargetSpace2D() {
             return toPose2D(cameraPose_TargetSpace);
         }
-        public Pose2d getRobotPose_FieldSpace2D()
-        {
+
+        public Pose2d getRobotPose_FieldSpace2D() {
             return toPose2D(robotPose_FieldSpace);
         }
-        public Pose2d getRobotPose_TargetSpace2D()
-        {
+
+        public Pose2d getRobotPose_TargetSpace2D() {
             return toPose2D(robotPose_TargetSpace);
         }
-        public Pose2d getTargetPose_CameraSpace2D()
-        {
+
+        public Pose2d getTargetPose_CameraSpace2D() {
             return toPose2D(targetPose_CameraSpace);
         }
-        public Pose2d getTargetPose_RobotSpace2D()
-        {
+
+        public Pose2d getTargetPose_RobotSpace2D() {
             return toPose2D(targetPose_RobotSpace);
         }
 
@@ -138,48 +142,46 @@ public class LimelightHelpers {
         @JsonProperty("t6t_rs")
         private double[] targetPose_RobotSpace;
 
-        public Pose3d getCameraPose_TargetSpace()
-        {
+        public Pose3d getCameraPose_TargetSpace() {
             return toPose3D(cameraPose_TargetSpace);
         }
-        public Pose3d getRobotPose_FieldSpace()
-        {
+
+        public Pose3d getRobotPose_FieldSpace() {
             return toPose3D(robotPose_FieldSpace);
         }
-        public Pose3d getRobotPose_TargetSpace()
-        {
+
+        public Pose3d getRobotPose_TargetSpace() {
             return toPose3D(robotPose_TargetSpace);
         }
-        public Pose3d getTargetPose_CameraSpace()
-        {
+
+        public Pose3d getTargetPose_CameraSpace() {
             return toPose3D(targetPose_CameraSpace);
         }
-        public Pose3d getTargetPose_RobotSpace()
-        {
+
+        public Pose3d getTargetPose_RobotSpace() {
             return toPose3D(targetPose_RobotSpace);
         }
 
-        public Pose2d getCameraPose_TargetSpace2D()
-        {
+        public Pose2d getCameraPose_TargetSpace2D() {
             return toPose2D(cameraPose_TargetSpace);
         }
-        public Pose2d getRobotPose_FieldSpace2D()
-        {
+
+        public Pose2d getRobotPose_FieldSpace2D() {
             return toPose2D(robotPose_FieldSpace);
         }
-        public Pose2d getRobotPose_TargetSpace2D()
-        {
+
+        public Pose2d getRobotPose_TargetSpace2D() {
             return toPose2D(robotPose_TargetSpace);
         }
-        public Pose2d getTargetPose_CameraSpace2D()
-        {
+
+        public Pose2d getTargetPose_CameraSpace2D() {
             return toPose2D(targetPose_CameraSpace);
         }
-        public Pose2d getTargetPose_RobotSpace2D()
-        {
+
+        public Pose2d getTargetPose_RobotSpace2D() {
             return toPose2D(targetPose_RobotSpace);
         }
-        
+
         @JsonProperty("ta")
         public double ta;
 
@@ -197,7 +199,6 @@ public class LimelightHelpers {
 
         @JsonProperty("ts")
         public double ts;
-        
         public LimelightTarget_Fiducial() {
             cameraPose_TargetSpace = new double[6];
             robotPose_FieldSpace = new double[6];
@@ -237,7 +238,7 @@ public class LimelightHelpers {
         @JsonProperty("typ")
         public double ty_pixels;
 
-        public  LimelightTarget_Classifier() {
+        public LimelightTarget_Classifier() {
         }
     }
 
@@ -309,11 +310,11 @@ public class LimelightHelpers {
         public Pose3d getBotPose3d() {
             return toPose3D(botpose);
         }
-    
+
         public Pose3d getBotPose3d_wpiRed() {
             return toPose3D(botpose_wpired);
         }
-    
+
         public Pose3d getBotPose3d_wpiBlue() {
             return toPose3D(botpose_wpiblue);
         }
@@ -321,11 +322,11 @@ public class LimelightHelpers {
         public Pose2d getBotPose2d() {
             return toPose2D(botpose);
         }
-    
+
         public Pose2d getBotPose2d_wpiRed() {
             return toPose2D(botpose_wpired);
         }
-    
+
         public Pose2d getBotPose2d_wpiBlue() {
             return toPose2D(botpose_wpiblue);
         }
@@ -382,21 +383,19 @@ public class LimelightHelpers {
         return name;
     }
 
-    private static Pose3d toPose3D(double[] inData){
-        if(inData.length < 6)
-        {
+    private static Pose3d toPose3D(double[] inData) {
+        if (inData.length < 6) {
             System.err.println("Bad LL 3D Pose Data!");
             return new Pose3d();
         }
         return new Pose3d(
-            new Translation3d(inData[0], inData[1], inData[2]),
-            new Rotation3d(Units.degreesToRadians(inData[3]), Units.degreesToRadians(inData[4]),
-                    Units.degreesToRadians(inData[5])));
+                new Translation3d(inData[0], inData[1], inData[2]),
+                new Rotation3d(Units.degreesToRadians(inData[3]), Units.degreesToRadians(inData[4]),
+                        Units.degreesToRadians(inData[5])));
     }
 
-    private static Pose2d toPose2D(double[] inData){
-        if(inData.length < 6)
-        {
+    private static Pose2d toPose2D(double[] inData) {
+        if (inData.length < 6) {
             System.err.println("Bad LL 2D Pose Data!");
             return new Pose2d();
         }
@@ -540,8 +539,8 @@ public class LimelightHelpers {
         return getLimelightNTDoubleArray(limelightName, "tc");
     }
 
-    public static double getFiducialID(String limelightName) {
-        return getLimelightNTDouble(limelightName, "tid");
+    public static int getTid(String limelightName) {
+        return (int) getLimelightNTDouble(limelightName, "tid");
     }
 
     public static double getNeuralClassID(String limelightName) {
@@ -682,12 +681,12 @@ public class LimelightHelpers {
         setLimelightNTDouble(limelightName, "camMode", 1);
     }
 
-
     /**
      * Sets the crop window. The crop window in the UI must be completely open for
      * dynamic cropping to work.
      */
-    public static void setCropWindow(String limelightName, double cropXMin, double cropXMax, double cropYMin, double cropYMax) {
+    public static void setCropWindow(String limelightName, double cropXMin, double cropXMax, double cropYMin,
+            double cropYMax) {
         double[] entries = new double[4];
         entries[0] = cropXMin;
         entries[1] = cropXMax;
@@ -696,7 +695,8 @@ public class LimelightHelpers {
         setLimelightNTDoubleArray(limelightName, "crop", entries);
     }
 
-    public static void setCameraPose_RobotSpace(String limelightName, double forward, double side, double up, double roll, double pitch, double yaw) {
+    public static void setCameraPose_RobotSpace(String limelightName, double forward, double side, double up,
+            double roll, double pitch, double yaw) {
         double[] entries = new double[6];
         entries[0] = forward;
         entries[1] = side;
@@ -755,26 +755,29 @@ public class LimelightHelpers {
      * Parses Limelight's JSON results dump into a LimelightResults Object
      */
     public static LimelightResults getLatestResults(String limelightName) {
+        if (Robot.isReal()) {
+            long start = System.nanoTime();
+            LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
+            if (mapper == null) {
+                mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            }
 
-        long start = System.nanoTime();
-        LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
-        if (mapper == null) {
-            mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            try {
+                results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
+            } catch (JsonProcessingException e) {
+                System.err.println("lljson error: " + e.getMessage());
+            }
+
+            long end = System.nanoTime();
+            double millis = (end - start) * .000001;
+            results.targetingResults.latency_jsonParse = millis;
+            if (profileJSON) {
+                System.out.printf("lljson: %.2f\r\n", millis);
+            }
+
+            return results;
+        } else {
+            return new LimelightHelpers.LimelightResults();
         }
-
-        try {
-            results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
-        } catch (JsonProcessingException e) {
-            System.err.println("lljson error: " + e.getMessage());
-        }
-
-        long end = System.nanoTime();
-        double millis = (end - start) * .000001;
-        results.targetingResults.latency_jsonParse = millis;
-        if (profileJSON) {
-            System.out.printf("lljson: %.2f\r\n", millis);
-        }
-
-        return results;
     }
 }

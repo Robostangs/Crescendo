@@ -4,73 +4,136 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.PathPlannerCommand;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+	public SendableChooser<String> mChooser = new SendableChooser<>();
+	public static Field2d mField = new Field2d();
+	private Timer timer;
+	private Command auton;
 
-  private RobotContainer m_robotContainer;
+	public static boolean atComp = false;
+	public static boolean autonomousExited = false;
 
-  @Override
-  public void robotInit() {
-    m_robotContainer = new RobotContainer();
-  }
+	@Override
+	public void robotInit() {
+		DataLogManager.start(Constants.logDirectory);
 
-  @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
-  }
+		new RobotContainer();
 
-  @Override
-  public void disabledInit() {}
+		SmartDashboard.putData("Field", mField);
 
-  @Override
-  public void disabledPeriodic() {}
+		mChooser.setDefaultOption("Do Nothing", "null");
+		AutoBuilder.getAllAutoNames().forEach((name) -> mChooser.addOption(name, name));
+		SmartDashboard.putData("Auton Chooser", mChooser);
 
-  @Override
-  public void disabledExit() {}
+		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
 
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+		CommandScheduler.getInstance()
+				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
+		CommandScheduler.getInstance()
+				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
+		CommandScheduler.getInstance()
+				.onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
 
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-  }
+		if (DriverStation.isFMSAttached()) {
+			atComp = true;
+			DataLogManager.start(Constants.logDirectory);
+		}
 
-  @Override
-  public void autonomousPeriodic() {}
+		DriverStation.silenceJoystickConnectionWarning(true);
+	}
 
-  @Override
-  public void autonomousExit() {}
+	@Override
+	public void robotPeriodic() {
+		CommandScheduler.getInstance().run();
 
-  @Override
-  public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-  }
+		PathPlannerCommand.publishTrajectory(mChooser.getSelected());
+	}
 
-  @Override
-  public void teleopPeriodic() {}
+	@Override
+	public void disabledInit() {
+	}
 
-  @Override
-  public void teleopExit() {}
+	@Override
+	public void disabledPeriodic() {
+	}
 
-  @Override
-  public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
+	@Override
+	public void disabledExit() {
+	}
 
-  @Override
-  public void testPeriodic() {}
+	@Override
+	public void autonomousInit() {
 
-  @Override
-  public void testExit() {}
+		timer = new Timer();
+		auton = new PathPlannerCommand(mChooser.getSelected(), true);
+		auton.schedule();
+		timer.restart();
+	}
 
-  @Override
-  public void simulationPeriodic() {}
+	@Override
+	public void autonomousPeriodic() {
+		NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("Auto Timer").setDouble(timer.get());
+		if (!CommandScheduler.getInstance().isScheduled(auton)) {
+			timer.stop();
+		}
+	}
+
+	@Override
+	public void autonomousExit() {
+		if (atComp) {
+			PathPlannerCommand.unpublishTrajectory();
+			autonomousExited = true;
+		}
+	}
+
+	@Override
+	public void teleopInit() {
+		Shooter.getInstance().setBrakeMode(false);
+	}
+
+	@Override
+	public void teleopPeriodic() {
+	}
+
+	@Override
+	public void teleopExit() {
+		Shooter.getInstance().setBrakeMode(true);
+	}
+
+	@Override
+	public void testInit() {
+		CommandScheduler.getInstance().cancelAll();
+	}
+
+	@Override
+	public void testPeriodic() {
+	}
+
+	@Override
+	public void testExit() {
+	}
+
+	@Override
+	public void simulationPeriodic() {
+	}
+
+	@Override
+	public void simulationInit() {
+	}
 }

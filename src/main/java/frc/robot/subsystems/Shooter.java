@@ -1,56 +1,130 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants;
+import frc.robot.LoggyThings.LoggyTalonFX;
+
+import java.util.List;
 
 public class Shooter extends SubsystemBase {
-    
-    public static Shooter mShooter;
+    private static Shooter mInstance;
+    /** shootMotorRight is the master motor */
+    private LoggyTalonFX shootMotorRight, shootMotorLeft, feedMotor;
+    private VelocityVoltage shootPid = new VelocityVoltage(0);
 
-    private final TalonFX leftShootMotor = new TalonFX(ShooterConstants.LEFT_SHOOT_MOTOR_ID, "*");
-    private final TalonFX rightShootMotor = new TalonFX(ShooterConstants.RIGHT_SHOOT_MOTOR_ID, "*");
-    private final TalonFX feedMotor = new TalonFX(ShooterConstants.FEED_MOTOR_ID, "*");
-    private final TalonFX wristMotor = new TalonFX(ShooterConstants.WRIST_MOTOR_ID, "*");
-    private final CANcoder wristEncoder = new CANcoder(ShooterConstants.WRIST_ENCODER_ID, "*");
+    private DigitalInput ringSensor;
+
+    private boolean holding;
 
     public static Shooter getInstance() {
-        if (mShooter == null)
-            mShooter = new Shooter();
-        return mShooter;
+        if (mInstance == null) {
+            mInstance = new Shooter();
+        }
+
+        return mInstance;
     }
 
-    public Shooter() {
-        leftShootMotor.setInverted(ShooterConstants.LEFT_SHOOT_INVERT);
-        rightShootMotor.setInverted(ShooterConstants.RIGHT_SHOOT_INVERT);
-        feedMotor.setInverted(ShooterConstants.FEED_INVERT);
-        wristMotor.setInverted(ShooterConstants.WRIST_INVERT);
-    }
-    
-    public void setShooter(double speed) {
-        leftShootMotor.set(speed);
-        rightShootMotor.set(speed);
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("Shooter/Holding", holding);
     }
 
-    public void setFeeder(double speed) {
-        feedMotor.set(speed);
-    } 
+    private Shooter() {
+        holding = true;
 
-    public void setWristVoltage(double voltage) {
-        wristMotor.set(voltage);
+        shootMotorRight = new LoggyTalonFX(Constants.ShooterConstants.shootMotorRight, false);
+        shootMotorLeft = new LoggyTalonFX(Constants.ShooterConstants.shootMotorLeft, false);
+        feedMotor = new LoggyTalonFX(Constants.ShooterConstants.feedMotor, false);
+        ringSensor = new DigitalInput(0);
+
+        TalonFXConfiguration fxConfig = new TalonFXConfiguration();
+        fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
+        fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
+        fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
+        fxConfig.MotorOutput.PeakReverseDutyCycle = 0;
+        fxConfig.Slot0.kP = 0.2;
+        fxConfig.Slot0.kI = 0.07;
+        fxConfig.Slot0.kV = 2 / 16;
+        fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        fxConfig.Feedback.SensorToMechanismRatio = 14 / 20;
+        fxConfig.Audio.AllowMusicDurDisable = true;
+        shootMotorLeft.getConfigurator().apply(fxConfig);
+        shootMotorRight.getConfigurator().apply(fxConfig);
+        feedMotor.getConfigurator().apply(fxConfig);
+
+        feedMotor.setInverted(Constants.ShooterConstants.feedIsInverted);
+        shootMotorRight.setInverted(Constants.ShooterConstants.rightShootIsInverted);
+        shootMotorLeft.setInverted(Constants.ShooterConstants.leftShootIsInverted);
+
+        Music.getInstance().addFalcon(List.of(shootMotorLeft, shootMotorRight,
+                feedMotor));
+        SmartDashboard.putString("Shooter/.type", "Subsystem");
+        SmartDashboard.putString("Shooter/Status", "Idle");
+        SmartDashboard.putBoolean("Shooter/Loaded", getHolding());
+
     }
 
-    public double getWristEncoderVal() {
-        return wristEncoder.getAbsolutePosition().getValueAsDouble()-ShooterConstants.WRIST_ENCODER_OFFSET;
+    public void shoot(double feeder, double shooter) {
+        shootMotorRight.set(shooter);
+        shootMotorLeft.set(shooter);
+        feedMotor.set(feeder);
     }
 
-    public double getWristSpeed() {
-        return wristEncoder.getVelocity().getValueAsDouble();
+    public void shoot(double feeder, double leftShooter, double rightShooter) {
+        feedMotor.set(feeder);
+        shootMotorLeft.set(leftShooter);
+        shootMotorRight.set(rightShooter);
     }
 
-    public double getAvgRealShootSpeed() {
-        return (leftShootMotor.getVelocity().getValueAsDouble() + rightShootMotor.getVelocity().getValueAsDouble())/2;
+    public void stop() {
+        shootMotorRight.set(0);
+        shootMotorLeft.set(0);
+        feedMotor.set(0);
+    }
+
+    // public void setHolding(boolean holding) {
+    //     this.holding = holding;
+    // }
+
+    // public void toggleHolding() {
+    //     holding = !holding;
+    // }
+
+    public boolean getHolding() {
+        return ringSensor.get();
+    }
+
+    /**
+     * @deprecated idk why we would ever use this
+     * @return whether or not the shoot motor right is below the threshold RPM (1000
+     *         RPM)
+     */
+    public boolean getSpeedChange() {
+        if (shootMotorRight.getVelocity().getValueAsDouble() < Constants.MotorConstants.FalconRotorLoadThresholdRPM) {
+            return true;
+        }
+        return false;
+    }
+
+    public void SetRpm(double left, double right) {
+        /* TODO: Are we even going to use this? (shootPid) */
+        shootMotorRight.setControl(shootPid.withVelocity(right / 60));
+        shootMotorLeft.setControl(shootPid.withVelocity(left / 60));
+    }
+
+    public void setBrakeMode(boolean brake) {
+        NeutralModeValue mode = NeutralModeValue.Coast;
+        if (brake) {
+            mode = NeutralModeValue.Brake;
+        }
+
+        shootMotorRight.setNeutralMode(mode);
+        shootMotorLeft.setNeutralMode(mode);
     }
 }

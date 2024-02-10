@@ -1,8 +1,11 @@
 package frc.robot;
 
+import java.util.Set;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
@@ -56,6 +59,8 @@ public class RobotContainer {
         xDrive.b().whileTrue(drivetrain
                 .applyRequest(() -> point.withModuleDirection(
                         new Rotation2d(-xDrive.getLeftY(), xDrive.getLeftX()))));
+        xDrive.y().whileTrue(new DeferredCommand(() -> drivetrain.followthePath(drivetrain.getState().Pose),Set.of(drivetrain)));
+
 
         xDrive.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 

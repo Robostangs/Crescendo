@@ -164,7 +164,7 @@ public class Arm extends SubsystemBase {
      * @return true if in range or false if out of range
      */
     public boolean isInRangeOfTarget(double target) {
-        if ((getArmPosition() - target) < Constants.ArmConstants.kInRangeThreshold) {
+        if (Math.abs((getArmPosition() - target)) < Constants.ArmConstants.kInRangeThreshold) {
             return true;
         } else {
 

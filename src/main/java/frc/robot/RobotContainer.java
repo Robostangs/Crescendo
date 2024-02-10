@@ -68,7 +68,7 @@ public class RobotContainer {
         /* TODO: Kind of scary, test appropriately */
         xManip.x().whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
 
-        xManip.leftBumper().whileTrue(new FeedAndShoot());
+        xManip.leftBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getRightBumper()));
         xManip.y().whileTrue(new AimAndShootSequential(0));
 
         /* Set Sim Binds */

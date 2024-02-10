@@ -272,7 +272,7 @@ public final class Constants {
 		public static final double kShootSpeedAmp = 0.2;
 		public static final double kSourceIntakeSpeed = 0.2;
 
-		public static final double kFeederFeedForward = 0.01;
+		public static final double kFeederFeedForward = 0.0;
 		public static final double shooterChargeUpTime = 0.5;
 	}
 
@@ -294,7 +294,7 @@ public final class Constants {
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
 		public static final double shooterOffset = 58.2;
-		public static final double kInRangeThreshold = 2.5;
+		public static final double kInRangeThreshold = 1;
 
 		public static class SetPoints {
 			public static final double kSpeaker = -30;
@@ -306,7 +306,7 @@ public final class Constants {
 	}
 
 	public static class IntakeConstants {
-		public static final int intakeMotorID = 58;
+		public static final int intakeMotorID = 62;
 		public static final int intakeSolenoidID = 0;
 		public static final int intakeSolenoidFwdID = 0;
 		public static final int intakeSolenoidRevID = 4;

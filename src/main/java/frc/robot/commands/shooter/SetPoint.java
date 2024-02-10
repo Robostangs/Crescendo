@@ -3,6 +3,7 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 
 public class SetPoint extends Command {
@@ -65,19 +66,10 @@ public class SetPoint extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
-
-        // if (Robot.isSimulation()) {
-        //     return timer.get() > 0.3;
-        // } else {
-        //     return mArm.isInRangeOfTarget(armSetpoint);
-        // }
-        // return timer.get() > 0.3;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        if (interrupted) {
+        if (Robot.isSimulation()) {
+            return timer.get() > 0.3;
+        } else {
+            return mArm.isInRangeOfTarget(armSetpoint);
         }
     }
 }

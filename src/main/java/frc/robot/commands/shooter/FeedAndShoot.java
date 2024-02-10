@@ -17,7 +17,7 @@ public class FeedAndShoot extends Command {
      * This command will activate the feed motor for
      */
     public FeedAndShoot() {
-        this(() -> true);
+        this(() -> false);
     }
 
     public FeedAndShoot(BooleanSupplier feedUntil) {
@@ -36,12 +36,11 @@ public class FeedAndShoot extends Command {
 
     @Override
     public void execute() {
-        if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime && feedUntil.getAsBoolean()) {
+        if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime && !feedUntil.getAsBoolean()) {
             mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
             SmartDashboard.putString("Shooter/Status", "Charging Up");
         } else {
-            mShooter.shoot(1, 1);
-            // mShooter.shoot(1, 0.95, 1);
+            mShooter.shoot(0, 1);
             SmartDashboard.putString("Shooter/Status", "Shooting");
         }
     }

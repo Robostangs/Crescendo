@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -21,10 +22,9 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-// import frc.robot.Subsystems.Music;
 import frc.robot.LoggyThings.LoggyCANcoder;
 import frc.robot.LoggyThings.LoggyTalonFX;
-import frc.robot.commands.shooter.SetPoint;
+import frc.robot.commands.shooter.FineAdjust;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 /**
@@ -55,11 +55,12 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         if (Robot.isReal()) {
             shooterExtension.setAngle(getShooterExtensionPosition() - 90);
+            simShooterExtension.setAngle(getExtensionFromArmPosition(Units.rotationsToDegrees(motionMagicDutyCycle.Position)) - 90);
         }
         simShooterExtension.setAngle(shooterExtensionSetpoint - 90);
 
         if (Robot.isReal()) {
-            if (isInRangeOfTarget(getArmPositionFromExtension(shooterExtension.getAngle() - 90))) {
+            if (isInRangeOfTarget(getArmTarget(), 5)) {
                 elbowLigament.setColor(new Color8Bit(Color.kGreen));
             } else {
                 elbowLigament.setColor(new Color8Bit(Color.kWhite));
@@ -70,7 +71,7 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putBoolean("Arm/At Setpoint", isInRangeOfTarget(getArmTarget()));
         SmartDashboard.putString("Arm/.type", "Subsystem");
         SmartDashboard.putNumber("Arm/Velocity", getVelocity());
-        SmartDashboard.putNumber("Arm/Position Error", this.getArmTarget() - this.getArmPosition());
+        SmartDashboard.putNumber("Arm/Position Error", Units.rotationsToDegrees(motionMagicDutyCycle.Position) - getArmPosition());
         SmartDashboard.putNumber("Arm/Setpoint", getArmTarget());
 
         if (Shooter.getInstance().getCurrentCommand() == null) {
@@ -79,8 +80,18 @@ public class Arm extends SubsystemBase {
             motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrentWhileShooting;
         }
 
-        if (!(this.getCurrentCommand() instanceof SetPoint)) {
+        motionMagicDutyCycle.FeedForward *= Rotation2d.fromDegrees(getShooterExtensionPosition())
+                .minus(Rotation2d.fromDegrees(20)).getCos();
+        
+        if (getArmPosition() > Constants.ArmConstants.kArmMaxAngle) {
+            motionMagicDutyCycle.FeedForward = -8;
+        }
+
+        if (this.getCurrentCommand() instanceof FineAdjust) {
             motionMagicDutyCycle.Position = Units.degreesToRotations(getArmPosition());
+            SmartDashboard.putString("Arm/Status", "Fine Adjust");
+        } else {
+            SmartDashboard.putString("Arm/Status", "Setpoint");
         }
 
         armMotor.setControl(motionMagicDutyCycle);
@@ -150,24 +161,31 @@ public class Arm extends SubsystemBase {
                 .append(simShooterLigament).append(simShooterExtension).append(simElbowLigament);
         SmartDashboard.putData("Arm/Target Profile", simArmMechanism);
 
-        // motionMagicDutyCycle = new MotionMagicTorqueCurrentFOC(0);
         motionMagicDutyCycle = new MotionMagicTorqueCurrentFOC(getArmPosition());
-        // motionMagicDutyCycle = new
-        // MotionMagicTorqueCurrentFOC(Units.degreesToRotations(-Constants.ArmConstants.shooterOffset));
         motionMagicDutyCycle.Slot = 0;
     }
 
     /**
-     * whether the arm is within {@link Constants.ArmConstants#kInRangeThreshold} degrees of the target
+     * whether the arm is within {@link Constants.ArmConstants#kInRangeThreshold} degrees of the target setpoint
      * 
      * @param target target position in degrees
      * @return true if in range or false if out of range
      */
     public boolean isInRangeOfTarget(double target) {
-        if ((getArmPosition() - target) < Constants.ArmConstants.kInRangeThreshold) {
+        return isInRangeOfTarget(target, Constants.ArmConstants.kInRangeThreshold);
+    }
+    
+    /**
+     * whether the arm is within the specified degrees of the target setpoint
+     * 
+     * @param target target position in degrees
+     * @param rangeThreshold the threshold in degrees
+     * @return true if in range or false if out of range
+     */
+    public boolean isInRangeOfTarget(double target, double rangeThreshold) {
+        if (Math.abs((getArmPosition() - target)) < rangeThreshold) {
             return true;
         } else {
-
             return false;
         }
     }
@@ -193,13 +211,10 @@ public class Arm extends SubsystemBase {
      */
     public void aim(double setVal) {
         if (Math.abs(setVal) <= 0.06) {
-            setVal = 0.0;
-            if (getArmPosition() < 35) {
-                setVal = 0.02;
-            }
+            stop();
+        } else {
+            armMotor.set(setVal);
         }
-
-        armMotor.set(setVal);
     }
 
     /**
@@ -208,10 +223,6 @@ public class Arm extends SubsystemBase {
      * @param setVal the value to set the arm motor to [-1,1]
      */
     public void aimRaw(double setVal) {
-        // if (Math.abs(setVal) > 0.25) {
-        //     setVal = 0;
-        // }
-
         armMotor.set(setVal);
     }
 
@@ -331,17 +342,19 @@ public class Arm extends SubsystemBase {
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
         /* Tune these */
-        armMotorConfig.Slot0.kV = 04;
-        armMotorConfig.Slot0.kP = 100;
+        armMotorConfig.Slot0.kA = 0.0;
+        armMotorConfig.Slot0.kD = 0.0;
+        armMotorConfig.Slot0.kG = 0.0;
         armMotorConfig.Slot0.kI = 5;
-        armMotorConfig.Slot0.kG = 0.03;
-        armMotorConfig.Slot0.kD = 0.2;
+        armMotorConfig.Slot0.kP = 60;
+        armMotorConfig.Slot0.kS = 0;
+        armMotorConfig.Slot0.kV = 04;
 
         /* TODO: Increase these values */
-        motionMagicConfigs.MotionMagicCruiseVelocity = 0.25;
-        motionMagicConfigs.MotionMagicAcceleration = 0.25;
+        motionMagicConfigs.MotionMagicCruiseVelocity = 0.5;
+        motionMagicConfigs.MotionMagicAcceleration = 0.5;
         /*
-         * TODO: Adjust to get trapezoidal formation (use the velocity posted in
+         * Adjust to get trapezoidal formation (use the velocity posted in
          * smartdashobard to track trapezoid)
          */
         motionMagicConfigs.MotionMagicJerk = 100;
@@ -356,5 +369,11 @@ public class Arm extends SubsystemBase {
 
     public void setArmMotorConfig(TalonFXConfiguration config) {
         armMotor.getConfigurator().apply(config);
+    }
+
+    public void lastDitchEffortSetArmMotorWithoutSoftLimits(boolean Are_You_Sure_You_Want_To_Do_This) {
+        if (Are_You_Sure_You_Want_To_Do_This) {
+            armMotor.getConfigurator().apply(getArmMotorConfig(false));
+        }
     }
 }

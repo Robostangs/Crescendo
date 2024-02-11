@@ -3,10 +3,11 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 
 public class SetPoint extends Command {
-    private Arm mArm;
+    private final Arm mArm;
     private double armSetpoint;
     private double error = 0;
     private Timer timer;
@@ -28,7 +29,6 @@ public class SetPoint extends Command {
 
     @Override
     public void initialize() {
-        mArm.setArmTarget(armSetpoint);
         timer.restart();
 
         error = armSetpoint - mArm.getArmPosition();
@@ -43,7 +43,7 @@ public class SetPoint extends Command {
         mArm.setArmTarget(armSetpoint);
         mArm.setMotionMagic(armSetpoint);
     }
-    
+
     @Override
     public void execute() {
         if (!mArm.validSetpoint(armSetpoint)) {
@@ -65,20 +65,10 @@ public class SetPoint extends Command {
 
     @Override
     public boolean isFinished() {
-        /* TODO: Not working at all */
-        return false;
-
-        // if (Robot.isSimulation()) {
-        //     return timer.get() > 0.3;
-        // } else {
-        //     return mArm.isInRangeOfTarget(armSetpoint);
-        // }
-        // return timer.get() > 0.3;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        if (interrupted) {
+        if (Robot.isSimulation()) {
+            return timer.get() > 1;
+        } else {
+            return mArm.isInRangeOfTarget(armSetpoint);
         }
     }
 }

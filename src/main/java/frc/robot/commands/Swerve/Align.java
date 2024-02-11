@@ -1,3 +1,4 @@
+/* TODO: this dont work cuz i changed a bunch of stuff, rewrite this cuz might be useful */
 
 package frc.robot.commands.Swerve;
 
@@ -5,59 +6,56 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 import frc.robot.subsystems.Drivetrain.SwerveModule.DriveRequestType;
 
 public class Align extends Command {
-    private Drivetrain mSwerve;
-    private SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond * 0.08)
-            .withRotationalDeadband(0)
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    private Drivetrain mDrivetrain = Drivetrain.getInstance();
+    private SwerveRequest.FieldCentricFacingAngle drive;
 
-    private PIDController mPID = new PIDController(0.08, 0.05, 0.01);
-    private DoubleSupplier leftX, leftY;
-    private double xSpeed, ySpeed, MaxSpeed;
+    // private PIDController mPID = new PIDController(
+    //         Constants.AutoConstants.noteAlignPID.kP,
+    //         Constants.AutoConstants.noteAlignPID.kI,
+    //         Constants.AutoConstants.noteAlignPID.kD);
 
-    private final DoubleSupplier tx;
+    private DoubleSupplier xTranslation, yTranslation, babiesOnBoard;
+    private DoubleSupplier getTargetX;
+    private boolean note;
+
     private final int positionsRecorded = 10;
     private Queue<Double> noteHist;
     private double runningSum;
 
-    /**
-     * Aligns the robot to the target using the limelight
-     * 
-     * @param leftX    The left X axis of the controller
-     * @param leftY    The left Y axis of the controller
-     * @param MaxSpeed The maximum speed of the robot
-     * @param note     True if targeting note, false for targeting AprilTag
-     */
-    public Align(DoubleSupplier leftX, DoubleSupplier leftY, double MaxSpeed, boolean note) {
-        if (note) {
-            tx = () -> LimelightHelpers.getTX(Constants.Vision.llPython);
-        } else {
-            tx = () -> LimelightHelpers.getTX(Constants.Vision.llAprilTag);
-        }
-        this.mSwerve = Drivetrain.getInstance();
-        this.addRequirements(mSwerve);
+    /** Test this soon af */
+    public Align(DoubleSupplier xTranslation, DoubleSupplier yTranslation, DoubleSupplier babiesOnBoard, boolean note) {
+        this.addRequirements(mDrivetrain);
+        this.setName("Align");
 
-        drive = new SwerveRequest.FieldCentric()
-                .withDeadband(Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond * 0.08)
-                .withRotationalDeadband(0)
+        drive = new SwerveRequest.FieldCentricFacingAngle()
+                .withDeadband(OperatorConstants.deadband)
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-        this.leftX = leftX;
-        this.leftY = leftY;
-        this.MaxSpeed = MaxSpeed;
+        this.xTranslation = xTranslation;
+        this.yTranslation = yTranslation;
+        this.babiesOnBoard = babiesOnBoard;
+        this.note = note;
+
+
+        if (note) {
+            getTargetX = () -> LimelightHelpers.getTX(Constants.Vision.llPython);
+        } else {
+            getTargetX = () -> LimelightHelpers.getTX(Constants.Vision.llAprilTagRear);
+        }
     }
 
-    private double getAverageTX() {
-        double x = tx.getAsDouble();
+    public double getNoteX() {
+        double x = getTargetX.getAsDouble();
         noteHist.add(x);
         runningSum += x;
         if (noteHist.size() > positionsRecorded) {
@@ -69,22 +67,32 @@ public class Align extends Command {
     @Override
     public void initialize() {
         noteHist = new LinkedList<>();
-        mPID.setIntegratorRange(-1.5, 1.5);
-        mPID.setIZone(20);
+        if (note) {
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+        } else {
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 1);
+        }
+
+        /* TODO: i heavily doubt this works, the problem is that getTargetX will return a rotation that is relative to robot, not to X axis */
+        drive.TargetDirection = Rotation2d.fromDegrees(getTargetX.getAsDouble());
     }
 
     @Override
     public void execute() {
-        xSpeed = leftX.getAsDouble();
-        ySpeed = leftY.getAsDouble();
-        mSwerve.setControl(drive.withVelocityY(-xSpeed * MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityX(-ySpeed * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(mPID.calculate(getAverageTX()))// Drive counterclockwise with negative X (left)
-        );
-    }
+        mDrivetrain.setControl(
+                drive
+                        .withVelocityX(xTranslation.getAsDouble() * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        .withVelocityY(
+                                yTranslation.getAsDouble() * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        .withSlowDown(true, 1 - babiesOnBoard.getAsDouble()));
 
-    @Override
-    public boolean isFinished() {
-        return Math.abs(tx.getAsDouble()) < 0.2;
+        // xSpeed = leftX.getAsDouble();
+        // mDrivetrain.setControl(drive.withVelocityY(Constants.AutoConstants.driveSpeed)
+        // // Drive forward with negative Y
+        // // (forward)
+        // .withVelocityX(-xSpeed * MaxSpeed) // Drive left with negative X (left)
+        // .withRotationalRate(mPID.calculate(getNoteX()))// Drive counterclockwise with
+        // negative X (left)
+        // );
     }
 }

@@ -332,6 +332,10 @@ public interface SwerveRequest {
          */
         public double RotationalDeadband = 0;
 
+        public double slowDownRate = 0.5;
+
+        public boolean babyOnBoard = false;
+
         /**
          * The type of control request to use for the drive motor.
          */
@@ -352,6 +356,10 @@ public interface SwerveRequest {
         public PhoenixPIDController HeadingController = new PhoenixPIDController(0, 0, 0);
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
+            if (babyOnBoard) {
+                this.VelocityX *= slowDownRate;
+                this.VelocityY *= slowDownRate;
+            }
             double toApplyX = VelocityX;
             double toApplyY = VelocityY;
 
@@ -428,6 +436,18 @@ public interface SwerveRequest {
          */
         public FieldCentricFacingAngle withDeadband(double deadband) {
             this.Deadband = deadband;
+            return this;
+        }
+
+
+        public FieldCentricFacingAngle withSlowDown(boolean babyOnBoard, double slowDownRate) {
+            this.babyOnBoard = babyOnBoard;
+            if (slowDownRate <= 0.1) {
+                slowDownRate = 0.3;
+            } else {
+                this.slowDownRate = slowDownRate;
+            }
+
             return this;
         }
 

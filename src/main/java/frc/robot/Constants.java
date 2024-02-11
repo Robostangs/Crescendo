@@ -28,7 +28,7 @@ public final class Constants {
 	public class Vision {
 		public static final boolean UseLimelight = false;
 		public static final String llAprilTag = "limelight";
-		public static final String llAprilTag2 = "limelight2";
+		public static final String llAprilTagRear = "limelight2";
 		public static final int llAprilTagPipelineIndex = 0;
 
 		public static final String llPython = "limelight-python";
@@ -43,7 +43,6 @@ public final class Constants {
 			kSpeaker, kAmp, None
 		}
 
-		public static final double slowDownMultiplier = 0.5;
 		public static final double kMaxSpeedMetersPerSecond = 6;
 		public static final double kMaxAngularSpeedMetersPerSecond = 3 * Math.PI;
 
@@ -194,46 +193,29 @@ public final class Constants {
 		}
 	}
 
-	public static class CustomDeadzone {
-		public static final double kLowerLimitExpFunc = 0.1;
-		public static final double kUpperLimitExpFunc = 0.5;
-		public static final double kUpperLimitLinFunc = 1;
-
-		public static final double kExpFuncConstant = 0.3218;
-		public static final double kExpFuncBase = 12.5;
-		public static final double kExpFuncMult = 0.25;
-
-		public static final double kLinFuncMult = 0.876;
-		public static final double kLinFuncOffset = 0.5;
-		public static final double kLinFuncConstant = 0.562;
-
-		public static final double kNoSpeed = 0;
-
-		public static final double kJoyStickDeadZone = 0.05;
-	}
-
 	public static final class AutoConstants {
 
 		/* Best so far */
 		public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5, 0.3);
 		public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
 
-		public static final double kMaxSpeedMetersPerSecond = 5;
+		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
-		public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-		public static final double kMaxAngularSpeedRadiansPerSecondSquared = 2 * Math.PI;
-
-		public static final double kPXController = 10;
-		public static final double kPYController = 10;
-		public static final double kPThetaController = 1;
+		public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
+		public static final double kMaxAngularSpeedMetersPerSecondSquared = 2 * kMaxAngularSpeedMetersPerSecond;
 
 		public static final String kFieldObjectName = "path";
+
+		// NoteAlign constants
+		public static final PIDConstants noteAlignPID = new PIDConstants(0.08, 0.1, 0.01);
+
+		public static final double driveSpeed = 2;
 	}
 
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
 		public static final double FalconRotorLoadThresholdRPM = 1000;
-		public static final double falconShooterLoadRPM = 8000;
+		public static final double falconShooterLoadRPM = 5000;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -251,8 +233,11 @@ public final class Constants {
 	public static class OperatorConstants {
 		public static final int kDriverControllerPort = 0;
 
-		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.07;
-		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * 0.07;
+		public static final double kDeadzone = 0.05;
+		public static final double slowDownMultiplier = 0.5;
+
+		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * kDeadzone;
+		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * kDeadzone;
 
 		public static final double setpointTimeout = 15;
 	}
@@ -318,7 +303,7 @@ public final class Constants {
 		public static final int intakeSensorPWM_ID = 0;
 		public static final int beltSensorPWM_ID = 1;
 
-		public static final double kDeployTimeSeconds = 1.5;
+		public static final double kDeployTimeSeconds = 0.4;
 	}
 
 	public static class Lights {

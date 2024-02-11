@@ -48,7 +48,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     private double m_lastSimTime;
     private Field2d mField;
     private AprilTagLimelight aprilTagReader = new AprilTagLimelight(Constants.Vision.llAprilTag,
-            Constants.Vision.llAprilTag2);
+            Constants.Vision.llAprilTagRear);
     private BooleanSupplier isRed = () -> {
         if (Robot.atComp) {
             return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
@@ -90,7 +90,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         if (Constants.Vision.UseLimelight) {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag2, Constants.Vision.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
         }
 
@@ -105,7 +105,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         if (Constants.Vision.UseLimelight) {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag2, Constants.Vision.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
         }
 

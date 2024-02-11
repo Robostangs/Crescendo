@@ -93,7 +93,7 @@ public class Arm extends SubsystemBase {
         } else {
             SmartDashboard.putString("Arm/Status", "Setpoint");
         }
-
+        
         armMotor.setControl(motionMagicDutyCycle);
     }
 

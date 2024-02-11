@@ -646,28 +646,6 @@ public class Utils {
         }
     }
 
-    /**
-     * Custom Deadzone Function that is exponential at the lower end and linear at
-     * the upper end
-     * 
-     * @param input (double) Input to be deadzoned
-     * @return (double) Deadzoned input
-     */
-    public static double customDeadzone(double input) {
-        if (Math.abs(input) >= Constants.CustomDeadzone.kLowerLimitExpFunc
-                && Math.abs(input) < Constants.CustomDeadzone.kUpperLimitExpFunc) {
-            return Math.signum(input) * ((Constants.CustomDeadzone.kExpFuncMult)
-                    * Math.pow((Constants.CustomDeadzone.kExpFuncBase), Math.abs(input))
-                    - Constants.CustomDeadzone.kExpFuncConstant);
-        } else if (Math.abs(input) >= Constants.CustomDeadzone.kUpperLimitExpFunc
-                && Math.abs(input) <= Constants.CustomDeadzone.kUpperLimitLinFunc) {
-            return Math.signum(input) * ((Constants.CustomDeadzone.kLinFuncMult)
-                    * (Math.abs(input) - Constants.CustomDeadzone.kLinFuncOffset)
-                    + (Constants.CustomDeadzone.kLinFuncConstant));
-        }
-        return Constants.CustomDeadzone.kNoSpeed;
-    }
-
     public static boolean withinRange(double input, double range) {
         if (input >= -range && input <= range) {
             return true;

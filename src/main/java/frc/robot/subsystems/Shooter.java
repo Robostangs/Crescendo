@@ -30,6 +30,8 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Shooter/Holding", holding);
+        SmartDashboard.putNumber("Shooter/Actual Left RPM", shootMotorLeft.getVelocity().getValueAsDouble() * 60);
+        SmartDashboard.putNumber("Shooter/Actual Right RPM", shootMotorRight.getVelocity().getValueAsDouble() * 60);
     }
 
     private Shooter() {
@@ -46,11 +48,12 @@ public class Shooter extends SubsystemBase {
         fxConfig.MotorOutput.PeakReverseDutyCycle = 0;
 
         /* TODO: Tune this a lot */
-        fxConfig.Slot0.kP = 0.2;
-        fxConfig.Slot0.kI = 0.07;
-        fxConfig.Slot0.kV = 2 / 16;
+        // fxConfig.Slot0.kP = 0.2;
+        fxConfig.Slot0.kP = 0.07;
+        fxConfig.Slot0.kI = 0.01;
+        fxConfig.Slot0.kV = 10.5 / 88.9;
         fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        fxConfig.Feedback.SensorToMechanismRatio = 14 / 20;
+        // fxConfig.Feedback.SensorToMechanismRatio = 14 / 20;
         fxConfig.Audio.AllowMusicDurDisable = true;
         shootMotorLeft.getConfigurator().apply(fxConfig);
         shootMotorRight.getConfigurator().apply(fxConfig);
@@ -92,9 +95,11 @@ public class Shooter extends SubsystemBase {
      */
     public void shoot(double feederSetVal, double leftShooterSetVal, double rightShooterSetVal) {
         shootMotorRight
-                .setControl(shootPid.withVelocity(Constants.MotorConstants.falconShooterLoadRPM * rightShooterSetVal));
+                .setControl(shootPid
+                        .withVelocity((Constants.MotorConstants.falconShooterLoadRPM * rightShooterSetVal) / 60));
         shootMotorLeft
-                .setControl(shootPid.withVelocity(Constants.MotorConstants.falconShooterLoadRPM * leftShooterSetVal));
+                .setControl(shootPid
+                        .withVelocity((Constants.MotorConstants.falconShooterLoadRPM * leftShooterSetVal) / 60));
         feedMotor.set(feederSetVal);
     }
 
@@ -117,8 +122,8 @@ public class Shooter extends SubsystemBase {
     }
 
     // public void SetRpm(double left, double right) {
-    //     shootMotorRight.setControl(shootPid.withVelocity(right / 60));
-    //     shootMotorLeft.setControl(shootPid.withVelocity(left / 60));
+    // shootMotorRight.setControl(shootPid.withVelocity(right / 60));
+    // shootMotorLeft.setControl(shootPid.withVelocity(left / 60));
     // }
 
     public void setBrake(boolean brake) {

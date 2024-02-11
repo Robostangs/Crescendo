@@ -32,8 +32,6 @@ public class DeployAndIntake extends Command {
     @Override
     public void end(boolean interrupted) {
         mIntake.setMotor(0);
-        if (!interrupted) {
-        }
         mIntake.setExtend(false);
     }
 }

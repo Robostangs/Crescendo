@@ -10,6 +10,8 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
+      "/Shuffleboard/Autonomous/Field": "Field2d",
+      "/Shuffleboard/Autonomous/Start Position": "String Chooser",
       "/SmartDashboard/Arm": "Subsystem",
       "/SmartDashboard/Arm/Target Profile": "Mechanism2d",
       "/SmartDashboard/Auton Chooser": "String Chooser",

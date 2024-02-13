@@ -4,11 +4,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import java.util.function.BooleanSupplier;
 
 public class FeedAndShootVelocity extends Command {
     private final Shooter mShooter;
+    private final Intake mIntake;
     private Timer timer;
     private BooleanSupplier feedUntil;
 
@@ -24,8 +26,9 @@ public class FeedAndShootVelocity extends Command {
     public FeedAndShootVelocity(BooleanSupplier feedUntil) {
         timer = new Timer();
         mShooter = Shooter.getInstance();
+        mIntake = Intake.getInstance();
         this.setName("Feed And Shoot");
-        this.addRequirements(mShooter);
+        this.addRequirements(mShooter, mIntake);
         this.feedUntil = feedUntil;
     }
 
@@ -40,17 +43,21 @@ public class FeedAndShootVelocity extends Command {
         if (feedUntil == null) {
             if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime) {
                 mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
+                mIntake.setBelt(0.2);
                 SmartDashboard.putString("Shooter/Status", "Charging Up");
             } else {
                 mShooter.shoot(0.1, 1);
+                mIntake.setBelt(0);
                 SmartDashboard.putString("Shooter/Status", "Shooting");
             }
         } else {
             if (feedUntil.getAsBoolean()) {
                 mShooter.shoot(0.1, 1);
+                mIntake.setBelt(0);
                 SmartDashboard.putString("Shooter/Status", "Shooting");
             } else {
                 mShooter.shoot(Constants.ShooterConstants.kFeederFeedForward, 1);
+                mIntake.setBelt(0.2);
                 SmartDashboard.putString("Shooter/Status", "Charging Up");
             }
         }

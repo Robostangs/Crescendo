@@ -1,98 +1,101 @@
-/* TODO: this dont work cuz i changed a bunch of stuff, rewrite this cuz might be useful */
-
 package frc.robot.commands.Swerve;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.Vision.LimelightHelpers;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
-import frc.robot.subsystems.Drivetrain.SwerveModule.DriveRequestType;
 
 public class Align extends Command {
     private Drivetrain mDrivetrain = Drivetrain.getInstance();
-    private SwerveRequest.FieldCentricFacingAngle drive;
+    private Intake mIntake = Intake.getInstance();
 
-    // private PIDController mPID = new PIDController(
-    //         Constants.AutoConstants.noteAlignPID.kP,
-    //         Constants.AutoConstants.noteAlignPID.kI,
-    //         Constants.AutoConstants.noteAlignPID.kD);
+    private SwerveRequest drive;
+    private Timer timer;
 
-    private DoubleSupplier xTranslation, yTranslation, babiesOnBoard;
-    private DoubleSupplier getTargetX;
+    private Supplier<Double> translateX, translateY, howManyBabiesOnBoard;
+    private Supplier<Rotation2d> getTargetRotation;
     private boolean note;
 
-    private final int positionsRecorded = 10;
-    private Queue<Double> noteHist;
-    private double runningSum;
-
     /** Test this soon af */
-    public Align(DoubleSupplier xTranslation, DoubleSupplier yTranslation, DoubleSupplier babiesOnBoard, boolean note) {
+    public Align(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard,
+            boolean note) {
         this.addRequirements(mDrivetrain);
         this.setName("Align");
 
-        drive = new SwerveRequest.FieldCentricFacingAngle()
-                .withDeadband(OperatorConstants.deadband)
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+        if (howManyBabiesOnBoard == null) {
+            this.howManyBabiesOnBoard = () -> 0.0;
+        }
 
-        this.xTranslation = xTranslation;
-        this.yTranslation = yTranslation;
-        this.babiesOnBoard = babiesOnBoard;
-        this.note = note;
+        timer = new Timer();
 
-
-        if (note) {
-            getTargetX = () -> LimelightHelpers.getTX(Constants.Vision.llPython);
+        if (this.note) {
+            getTargetRotation = () -> Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llPython));
+            this.addRequirements(mIntake);
         } else {
-            getTargetX = () -> LimelightHelpers.getTX(Constants.Vision.llAprilTagRear);
+            getTargetRotation = () -> {
+                Pose2d pose = mDrivetrain.getPose();
+                double rotation = Math.atan2(Constants.Vision.SpeakerCoords[1] - pose.getY(),
+                        Constants.Vision.SpeakerCoords[0]);
+                return Rotation2d.fromRadians(rotation);
+            };
+            // getTargetX = () -> LimelightHelpers.getTX(Constants.Vision.llAprilTagRear);
         }
-    }
-
-    public double getNoteX() {
-        double x = getTargetX.getAsDouble();
-        noteHist.add(x);
-        runningSum += x;
-        if (noteHist.size() > positionsRecorded) {
-            runningSum -= noteHist.remove();
-        }
-        return runningSum / noteHist.size();
     }
 
     @Override
     public void initialize() {
-        noteHist = new LinkedList<>();
+        timer.restart();
         if (note) {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
         } else {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 1);
         }
-
-        /* TODO: i heavily doubt this works, the problem is that getTargetX will return a rotation that is relative to robot, not to X axis */
-        drive.TargetDirection = Rotation2d.fromDegrees(getTargetX.getAsDouble());
     }
 
     @Override
     public void execute() {
-        mDrivetrain.setControl(
-                drive
-                        .withVelocityX(xTranslation.getAsDouble() * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-                        .withVelocityY(
-                                yTranslation.getAsDouble() * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-                        .withSlowDown(true, 1 - babiesOnBoard.getAsDouble()));
+        if (note) {
+            mIntake.setExtend(true);
+            if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
+                mIntake.setIntake(1);
+            }
+        }
 
-        // xSpeed = leftX.getAsDouble();
-        // mDrivetrain.setControl(drive.withVelocityY(Constants.AutoConstants.driveSpeed)
-        // // Drive forward with negative Y
-        // // (forward)
-        // .withVelocityX(-xSpeed * MaxSpeed) // Drive left with negative X (left)
-        // .withRotationalRate(mPID.calculate(getNoteX()))// Drive counterclockwise with
-        // negative X (left)
-        // );
+        if (Math.abs(translateX.get()) <= Constants.OperatorConstants.kDeadzone
+                && Math.abs(translateY.get()) <= Constants.OperatorConstants.kDeadzone) {
+            drive = new SwerveRequest.SwerveDriveBrake();
+        } else {
+            drive = new SwerveRequest.FieldCentricFacingAngle()
+                    .withVelocityX(-translateY.get()
+                            * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                    .withVelocityY(-translateX.get()
+                            * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                    /*
+                     * TODO: i heavily doubt this works, the problem is that getTargetRotation will return
+                     * a rotation that is relative to robot, not to X axis if the note boolean is true
+                     */
+                    .withTargetDirection(getTargetRotation.get())
+                    .withSlowDown(true, 1 - howManyBabiesOnBoard.get())
+                    .withRotationalDeadband(Constants.OperatorConstants.rotationalDeadband)
+                    .withDeadband(Constants.OperatorConstants.deadband);
+        }
+
+        mDrivetrain.setControl(drive);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        mDrivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
+        if (note) {
+            mIntake.setIntake(0);
+            mIntake.setExtend(false);
+        }
     }
 }

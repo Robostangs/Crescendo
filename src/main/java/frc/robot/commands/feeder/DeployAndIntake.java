@@ -25,13 +25,22 @@ public class DeployAndIntake extends Command {
     public void execute() {
         mIntake.setExtend(true);
         if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
-            mIntake.setMotor(1);
+            mIntake.setIntake(1);
         }
+
+        mIntake.setBelt(01);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+        // return mIntake.getBeltSensor();
     }
 
     @Override
     public void end(boolean interrupted) {
-        mIntake.setMotor(0);
+        mIntake.setIntake(0);
+        mIntake.setBelt(0);
         mIntake.setExtend(false);
     }
 }

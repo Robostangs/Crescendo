@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
-import frc.robot.subsystems.Drivetrain.SwerveModule.DriveRequestType;
 
 import java.util.function.Supplier;
 
@@ -32,22 +31,36 @@ public class xDrive extends Command {
 
     @Override
     public void execute() {
+
+				// drivetrain.setControl(() -> drive
+				// 		.withVelocityX(-xDrive.getLeftY()
+				// 				* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+				// 		.withVelocityY(-xDrive.getLeftX()
+				// 				* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+				// 		.withRotationalRate(
+				// 				-xDrive.getRightX()
+				// 						* Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)
+				// 		.withSlowDown(true, 1 - xDrive.getRightTriggerAxis()))
+				// 		.ignoringDisable(true);
+
+
+
+
         if (Math.abs(translateX.get()) <= Constants.OperatorConstants.kDeadzone
                 && Math.abs(translateY.get()) <= Constants.OperatorConstants.kDeadzone
                 && Math.abs(rotate.get()) <= Constants.OperatorConstants.kDeadzone) {
             swerveRequest = new SwerveRequest.SwerveDriveBrake();
         } else {
             swerveRequest = new SwerveRequest.FieldCentric()
-                    .withVelocityX(translateX.get()
+                    .withVelocityX(-translateY.get()
                             * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-                    .withVelocityY(-translateY.get()
+                    .withVelocityY(-translateX.get()
                             * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-                    .withRotationalRate(rotate.get()
+                    .withRotationalRate(-rotate.get()
                             * Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)
-                    .withDeadband(Constants.OperatorConstants.deadband)
+                    .withSlowDown(1 - howManyBabiesOnBoard.get())
                     .withRotationalDeadband(Constants.OperatorConstants.rotationalDeadband)
-                    .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-                    .withSlowDown(true, 1 - howManyBabiesOnBoard.get());
+                    .withDeadband(Constants.OperatorConstants.deadband);
         }
 
         drivetrain.setControl(swerveRequest);

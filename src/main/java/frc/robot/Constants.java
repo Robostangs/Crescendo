@@ -43,7 +43,7 @@ public final class Constants {
 			kSpeaker, kAmp, None
 		}
 
-		public static final double kMaxSpeedMetersPerSecond = 6;
+		public static final double kMaxSpeedMetersPerSecond = 8;
 		public static final double kMaxAngularSpeedMetersPerSecond = 3 * Math.PI;
 
 		// The steer motor uses any SwerveModule.SteerRequestType control request with
@@ -206,7 +206,7 @@ public final class Constants {
 
 		public static final String kFieldObjectName = "path";
 
-		// NoteAlign constants
+		/* NoteAlign constants */
 		public static final PIDConstants noteAlignPID = new PIDConstants(0.08, 0.1, 0.01);
 
 		public static final double driveSpeed = 2;
@@ -214,8 +214,7 @@ public final class Constants {
 
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
-		public static final double FalconRotorLoadThresholdRPM = 1000;
-		public static final double falconShooterLoadRPM = 5000;
+		public static final double falconShooterLoadRPM = 6500;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -231,15 +230,13 @@ public final class Constants {
 	}
 
 	public static class OperatorConstants {
-		public static final int kDriverControllerPort = 0;
-
-		public static final double kDeadzone = 0.05;
+		public static final double kDeadzone = 0.03;
 		public static final double slowDownMultiplier = 0.5;
 
 		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * kDeadzone;
 		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * kDeadzone;
 
-		public static final double setpointTimeout = 15;
+		public static final double setpointTimeout = 2;
 	}
 
 	public static class ShooterConstants {
@@ -250,10 +247,6 @@ public final class Constants {
 		public static final boolean rightShootIsInverted = true;
 		public static final boolean leftShootIsInverted = false;
 		public static final boolean intakeIsPositive = true;
-
-		public static final double kShootSpeedSpeaker = 0.1;
-		public static final double kShootSpeedAmp = 0.2;
-		public static final double kSourceIntakeSpeed = 0.2;
 
 		public static final double kFeederFeedForward = 0.0275;
 		public static final double shooterChargeUpTime = 0.5;
@@ -278,7 +271,7 @@ public final class Constants {
 		/** 100 degrees */
 		public static final double kArmMaxAngle = 60;
 		/** 301.8 degrees */
-		public static final double kArmMinAngle = -58.2;
+		public static final double kArmMinAngle = -60;
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
@@ -286,7 +279,9 @@ public final class Constants {
 		public static final double kInRangeThreshold = 1;
 
 		public static class SetPoints {
-			public static final double kSpeaker = -30;
+			public static final double kSpeaker1 = -45;
+			public static final double kSpeaker2 = -40;
+			public static final double kSpeaker3 = -30;
 			public static final double kSpeakerClosestPoint = kArmMinAngle;
 			public static final double kAmp = 53.75;
 			public static final double kIntake = -50;
@@ -296,7 +291,8 @@ public final class Constants {
 
 	public static class IntakeConstants {
 		public static final int intakeMotorID = 62;
-		public static final int beltMotorID = 62;
+		public static final int beltMotorID = 61;
+
 		public static final int leftSolenoidID = 0;
 		public static final int rightSolenoidID = 3;
 
@@ -304,6 +300,10 @@ public final class Constants {
 		public static final int beltSensorPWM_ID = 1;
 
 		public static final double kDeployTimeSeconds = 0.4;
+		public static final double beltFeedForward = 0.05;
+
+		public static final boolean intakeMotorInverted = false;
+		public static final boolean beltMotorInverted = false;
 	}
 
 	public static class Lights {

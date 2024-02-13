@@ -30,11 +30,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Auton Chooser": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "Robot": {
           "color": [

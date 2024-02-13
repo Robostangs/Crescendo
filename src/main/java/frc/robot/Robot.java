@@ -4,27 +4,19 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.PathPlannerCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Robot extends TimedRobot {
 	public SendableChooser<String> mChooser = new SendableChooser<>();
 	public static Field2d mField = new Field2d();
-	private Timer timer;
-	private Command auton;
 
 	public static boolean atComp = false;
 	public static boolean autonomousExited = false;
@@ -36,10 +28,6 @@ public class Robot extends TimedRobot {
 		new RobotContainer();
 
 		SmartDashboard.putData("Field", mField);
-
-		mChooser.setDefaultOption("Do Nothing", "null");
-		AutoBuilder.getAllAutoNames().forEach((name) -> mChooser.addOption(name, name));
-		SmartDashboard.putData("Auton Chooser", mChooser);
 
 		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
 
@@ -59,10 +47,12 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
+	public void driverStationConnected() {
+	}
+
+	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
-
-		PathPlannerCommand.publishTrajectory(mChooser.getSelected());
 	}
 
 	@Override
@@ -79,27 +69,14 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-
-		timer = new Timer();
-		auton = new PathPlannerCommand(mChooser.getSelected(), true);
-		auton.schedule();
-		timer.restart();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
-		NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("Auto Timer").setDouble(timer.get());
-		if (!CommandScheduler.getInstance().isScheduled(auton)) {
-			timer.stop();
-		}
 	}
 
 	@Override
 	public void autonomousExit() {
-		if (atComp) {
-			PathPlannerCommand.unpublishTrajectory();
-			autonomousExited = true;
-		}
 	}
 
 	@Override

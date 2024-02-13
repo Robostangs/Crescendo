@@ -23,15 +23,14 @@ public class Spit extends Command {
     @Override
     public void execute() {
         mShooter.shoot(0.5, 0.5);
-        mIntake.setMotor(-0.5);
+        mIntake.setIntake(-0.5);
     }
 
     @Override
     public void end(boolean interrupted) {
         mShooter.shoot(0, 0);
-        mIntake.setMotor(0);
+        mIntake.setIntake(0);
         SmartDashboard.putString("Intake/Status", "Idle");
         SmartDashboard.putString("Shooter/Status", "Idle");
     }
-
 }

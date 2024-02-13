@@ -1,24 +1,21 @@
 package frc.robot;
 
-import java.util.Set;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
 import frc.robot.commands.Swerve.xDrive;
+import frc.robot.commands.feeder.BeltFeed;
 import frc.robot.commands.feeder.DeployAndIntake;
+import frc.robot.commands.shooter.Aim;
 import frc.robot.commands.shooter.AimAndShoot;
 import frc.robot.commands.shooter.FeedAndShootVelocity;
 import frc.robot.commands.shooter.FineAdjust;
 import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
-import frc.robot.subsystems.Drivetrain.SwerveRequest;
-import frc.robot.subsystems.Drivetrain.SwerveModule.DriveRequestType;
 
 public class RobotContainer {
 	private final CommandXboxController xDrive = new CommandXboxController(0);
@@ -27,57 +24,46 @@ public class RobotContainer {
 
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
 	private final Arm mArm = Arm.getInstance();
-
-	private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-	
-	private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
-	private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
-			.withDeadband(Constants.OperatorConstants.deadband)
-			.withRotationalDeadband(Constants.OperatorConstants.rotationalDeadband)
-			.withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+	private final Intake mIntake = Intake.getInstance();
 
 	private final Telemetry logger;
 	public Field2d field;
 
 	private void configureDriverBinds() {
-		/* TODO: Make sure works irl */
 		drivetrain.setDefaultCommand(
 				new xDrive(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () -> xDrive.getRightX(),
-						() -> xDrive.getRightTriggerAxis()));
+						() -> xDrive.getRightTriggerAxis()).ignoringDisable(true));
 
-		// drivetrain.setDefaultCommand(
-		// 		drivetrain.applyRequest(() -> drive
-		// 				.withVelocityX(-xDrive.getLeftY()
-		// 						* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-		// 				.withVelocityY(-xDrive.getLeftX()
-		// 						* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-		// 				.withRotationalRate(
-		// 						-xDrive.getRightX()
-		// 								* Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)
-		// 				.withSlowDown(true, 1 - xDrive.getRightTriggerAxis()))
-		// 				.ignoringDisable(true));
+		/* TODO: do not use this in real comps */
+		xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.tareEverything()));
+		// xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-		xDrive.x().whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(1).withVelocityY(1)));
-		xDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
-		xDrive.b().whileTrue(drivetrain
-				.applyRequest(() -> point.withModuleDirection(
-						new Rotation2d(-xDrive.getLeftY(), xDrive.getLeftX()))));
+		mIntake.setDefaultCommand(new BeltFeed());
 
-		xDrive.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-		xDrive.rightBumper().whileTrue(
-				new DeferredCommand(() -> drivetrain.followthePath(drivetrain.getState().Pose), Set.of(drivetrain)));
+		xDrive.rightBumper().whileTrue(new DeployAndIntake());
+
+		/* TODO: Install limelights then test */
+		// xDrive.leftBumper().whileTrue(
+		// new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () ->
+		// xDrive.getRightTriggerAxis(), true));
+		// xDrive.rightBumper().whileTrue(
+		// new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () ->
+		// xDrive.getRightTriggerAxis(), false));
+
 	}
 
 	private void configureManipBinds() {
 		mArm.setDefaultCommand(new FineAdjust(() -> -xManip.getRightY()));
-		xManip.x().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
-		xManip.y().whileTrue(new AimAndShoot(0));
-		xManip.a().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
-		xManip.b().onTrue(new SetPoint(0));
+
+		xManip.y().whileTrue(new AimAndShoot(0).withTimeout(Constants.OperatorConstants.setpointTimeout));
+		xManip.x().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint)
+				.withTimeout(Constants.OperatorConstants.setpointTimeout));
+		xManip.a().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)
+				.withTimeout(Constants.OperatorConstants.setpointTimeout));
+		xManip.b().onTrue(new SetPoint(0).withTimeout(Constants.OperatorConstants.setpointTimeout));
 
 		xManip.pov(90).whileTrue(new Spit());
-		xManip.pov(180).whileTrue(new DeployAndIntake());
+		xManip.povDown().whileTrue(new DeployAndIntake());
 
 		xManip.leftBumper().whileTrue(new FeedAndShootVelocity(() -> xManip.getHID().getRightBumper()));
 	}
@@ -98,22 +84,8 @@ public class RobotContainer {
 		drivetrain.removeDefaultCommand();
 		mArm.removeDefaultCommand();
 
-		drivetrain.setDefaultCommand(new xDrive(() -> -simController.getRawAxis(1), () -> simController.getRawAxis(0),
-				() -> -simController.getRawAxis(2), () -> 0d));
-
-		// drivetrain.setDefaultCommand(drivetrain
-		// 		.applyRequest(() -> drive
-		// 				.withVelocityX(
-		// 						-simController.getRawAxis(1)
-		// 								* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-		// 				.withVelocityY(
-		// 						-simController.getRawAxis(0)
-		// 								* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-		// 				.withRotationalRate(-simController.getRawAxis(2)
-		// 						* Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)
-		// 				.withSlowDown(simController.getRawButton(5),
-		// 						Constants.OperatorConstants.slowDownMultiplier))
-		// 		.withName("xDrive"));
+		drivetrain.setDefaultCommand(new xDrive(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1),
+				() -> simController.getRawAxis(2), () -> 0d));
 
 		new Trigger(() -> simController.getRawButtonPressed(1))
 				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
@@ -122,10 +94,13 @@ public class RobotContainer {
 				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
-				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeaker));
+				.whileTrue(new Aim());
 
-		new Trigger(() -> simController.getRawButtonPressed(4))
-				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kHorizontal));
+		// new Trigger(() -> simController.getRawButtonPressed(4))
+		// .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kHorizontal));
+
+		// new Trigger(() -> simController.getRawButtonPressed(4)).onTrue(new
+		// InstantCommand(() -> mArm.calculateArmSetpoint(), mArm));
 
 		// new Trigger(() -> simController.getRawButtonPressed(2))
 		// .onTrue(new InstantCommand(() -> drivetrain.seedFieldRelative()));

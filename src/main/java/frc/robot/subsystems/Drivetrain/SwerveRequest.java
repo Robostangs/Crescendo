@@ -140,7 +140,6 @@ public interface SwerveRequest {
          */
         public double RotationalDeadband = 0.05;
 
-        public boolean babyOnBoard = false;
         public double slowDownRate = 0.5;
 
         /**
@@ -158,11 +157,10 @@ public interface SwerveRequest {
         protected SwerveModuleState[] m_lastAppliedState = null;
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
-            if (babyOnBoard) {
-                this.VelocityX *= slowDownRate;
-                this.VelocityY *= slowDownRate;
-                this.RotationalRate *= slowDownRate;
-            }
+            this.VelocityX *= slowDownRate;
+            this.VelocityY *= slowDownRate;
+            this.RotationalRate *= slowDownRate;
+
             double toApplyX = VelocityX;
             double toApplyY = VelocityY;
             double toApplyOmega = RotationalRate;
@@ -226,8 +224,7 @@ public interface SwerveRequest {
             return this;
         }
 
-        public FieldCentric withSlowDown(boolean babyOnBoard, double slowDownRate) {
-            this.babyOnBoard = babyOnBoard;
+        public FieldCentric withSlowDown(double slowDownRate) {
             if (slowDownRate <= 0.1) {
                 slowDownRate = 0.3;
             } else {

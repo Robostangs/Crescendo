@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.InvertedValue;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -23,14 +20,10 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         if (leftSolenoid.get() != rightSolenoid.get()) {
             SmartDashboard.putString("Intake/Status", "ERROR: Solenoids are not in sync");
-            // setExtend(false);
+            setExtend(false);
         }
 
         SmartDashboard.putString("Intake/Status", leftSolenoid.get() ? "Extended" : "Retracted");
-
-        if (getExtended() && !getBeltSensor()) {
-            beltMotor.set(1);
-        }
     }
 
     public static Intake getInstance() {
@@ -49,13 +42,11 @@ public class Intake extends SubsystemBase {
         mCompressor.disable();
 
         intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.intakeMotorID, true);
-        // beltMotor = new LoggyTalonFX(Constants.IntakeConstants.beltMotorID, true);
+        beltMotor = new LoggyTalonFX(Constants.IntakeConstants.beltMotorID, true);
 
-        TalonFXConfiguration fxConfig = new TalonFXConfiguration();
-        fxConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorInverted);
+        beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);
 
-        intakeMotor.getConfigurator().apply(fxConfig);
-        // beltMotor.getConfigurator().apply(fxConfig);
     }
 
     public void setExtend(boolean deploy) {
@@ -63,11 +54,15 @@ public class Intake extends SubsystemBase {
         rightSolenoid.set(deploy);
     }
 
-    public void setMotor(double speed) {
+    public void setIntake(double speed) {
         intakeMotor.set(speed);
     }
 
-    public boolean getIntakeSensor() {
+    public void setBelt(double speed) {
+        beltMotor.set(speed);
+    }
+
+    public boolean getShooterSensor() {
         return intakeSensor.get();
     }
 
@@ -75,9 +70,6 @@ public class Intake extends SubsystemBase {
         return beltSensor.get();
     }
 
-    public void setBelt(double speed) {
-        beltMotor.set(speed);
-    }
 
     public boolean getExtended() {
         return leftSolenoid.get();

@@ -53,7 +53,6 @@ public class Shooter extends SubsystemBase {
         fxConfig.Slot0.kI = 0.01;
         fxConfig.Slot0.kV = 10.5 / 88.9;
         fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        // fxConfig.Feedback.SensorToMechanismRatio = 14 / 20;
         fxConfig.Audio.AllowMusicDurDisable = true;
         shootMotorLeft.getConfigurator().apply(fxConfig);
         shootMotorRight.getConfigurator().apply(fxConfig);
@@ -67,8 +66,6 @@ public class Shooter extends SubsystemBase {
                 feedMotor));
         SmartDashboard.putString("Shooter/.type", "Subsystem");
         SmartDashboard.putString("Shooter/Status", "Idle");
-        // SmartDashboard.putBoolean("Shooter/Loaded", ringSensor.get());
-
     }
 
     public void setShoot(double feeder, double shooter) {
@@ -78,8 +75,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShoot(double feeder, double leftShooter, double rightShooter) {
-        // shootMotorLeft.set(leftShooter);
-        // shootMotorRight.set(rightShooter);
+        shootMotorLeft.set(leftShooter);
+        shootMotorRight.set(rightShooter);
         feedMotor.set(feeder);
     }
 
@@ -108,23 +105,6 @@ public class Shooter extends SubsystemBase {
         shootMotorLeft.set(0);
         feedMotor.set(0);
     }
-
-    /**
-     * @deprecated idk why we would ever use this
-     * @return whether or not the shoot motor right is below the threshold RPM (1000
-     *         RPM)
-     */
-    public boolean getSpeedChange() {
-        if (shootMotorRight.getVelocity().getValueAsDouble() < Constants.MotorConstants.FalconRotorLoadThresholdRPM) {
-            return true;
-        }
-        return false;
-    }
-
-    // public void SetRpm(double left, double right) {
-    // shootMotorRight.setControl(shootPid.withVelocity(right / 60));
-    // shootMotorLeft.setControl(shootPid.withVelocity(left / 60));
-    // }
 
     public void setBrake(boolean brake) {
         NeutralModeValue mode = NeutralModeValue.Coast;

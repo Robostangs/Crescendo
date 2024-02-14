@@ -24,34 +24,34 @@ def runPipeline(image, llrobot):
     # find contours in the mask
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    largestContour = np.array([[]])
+    if len(contours) == 0: # cannot find any contours
+        return np.array([[]]), image, llpython
 
-    if len(contours) > 0:
-        largestContour = max(contours, key=cv2.contourArea)
+    contours = tuple(sorted(contours, key=cv2.contourArea, reverse=True))
+    for contour in contours:
         x = 0
         y = 0
         w = 0
         h = 0
 
-        contour_output = []
         # Fit an ellipse around the contour
-        if len(largestContour) >= 5:
-            ellipse = cv2.fitEllipse(largestContour)
+        if len(contour) >= 5:
+            ellipse = cv2.fitEllipse(contour)
 
-            x, y, w, h = cv2.boundingRect(largestContour)
+            x, y, w, h = cv2.boundingRect(contour)
 
             # Filter contours based on aspect ratio and area
             rect_aspect_ratio = h / w
-            contour_area = cv2.contourArea(largestContour)
+            contour_area = cv2.contourArea(contour)
 
             # Set aspect ratio and area 
             if rect_aspect_ratio < MAX_RATIO and MIN_AREA < contour_area < MAX_AREA:
                 # Draw ellipse
                 cv2.ellipse(image, ellipse, (0, 255, 0), 2)
                 llpython = [x, y, w, h]
-                contour_output = largestContour
+                return contour, image, llpython
 
     toc = time.perf_counter()
     print("1 cycle ran in " + str(toc - tic) + " time")
     
-    return contour_output, image, llpython
+    return np.array([[]]), image, llpython # cannot find a contour that meets requirement

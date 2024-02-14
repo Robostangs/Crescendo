@@ -287,7 +287,7 @@ public final class Constants {
 			public static final double kIntake = -50;
 			public static final double kHorizontal = 0;
 		}
-	}
+	}	
 
 	public static class IntakeConstants {
 		public static final int intakeMotorID = 62;
@@ -305,7 +305,8 @@ public final class Constants {
 		public static final boolean intakeMotorInverted = false;
 		public static final boolean beltMotorInverted = false;
 	}
-
+ 
+	
 	public static class Lights {
 		public static final double blinkTime = 7.5;
 		public static final int blinkinPWM_ID = 0;

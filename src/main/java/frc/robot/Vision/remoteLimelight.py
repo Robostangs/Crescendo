@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from limelightColorDetection import runPipeline
+from note_finder import runPipeline
 # global variables go here:
 testVar = 0
 

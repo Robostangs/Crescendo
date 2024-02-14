@@ -136,25 +136,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 this);
     }
 
-    /* @Hellothere212 needs to make this a command in the Swerve Commands folder */
-    public Command followthePath(Pose2d startPose) {
-        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                startPose,
-                new Pose2d(1.80, 3.33, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.46, 0.72, Rotation2d.fromDegrees(0)),
-                new Pose2d(6.89, 0.72, Rotation2d.fromDegrees(0)),
-                new Pose2d(8.20, 2.30, Rotation2d.fromDegrees(0)));
 
-        PathPlannerPath path = new PathPlannerPath(
-                bezierPoints,
-                new PathConstraints(Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond - 1,
-                        Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond
-                                - 1,
-                        540d, 720d),
-                new GoalEndState(0.0, Rotation2d.fromDegrees(0.0)));
-
-        return AutoBuilder.followPath(path);
-    }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));

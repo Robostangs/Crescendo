@@ -12,12 +12,12 @@ import frc.robot.subsystems.Drivetrain.SwerveRequest;
 import frc.robot.subsystems.Drivetrain.SwerveModule.DriveRequestType;
 
 public class PathToPoint {
-    private Drivetrain drivetrain = Drivetrain.getInstance();
-    private SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    private static Drivetrain drivetrain = Drivetrain.getInstance();
+    private static SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
     .withDeadband(Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond * 0.08)
     .withRotationalDeadband(0)
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
-    public Command followthePath(Pose2d startPose) {
+    public static Command followthePath(Pose2d startPose) {
         drivetrain.applyRequest(() -> drive.withRotationalDeadband(drivetrain.getPose().getRotation().getDegrees() - drivetrain.getPose().getRotation().getDegrees()));
 
         PathConstraints constraints = new PathConstraints(5, 6, 540d, 720d);

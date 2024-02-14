@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
+import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
 import frc.robot.commands.feeder.DeployAndIntake;
 import frc.robot.commands.shooter.AimAndShoot;
@@ -66,7 +67,7 @@ public class RobotContainer {
 
 		xDrive.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 		xDrive.rightBumper().whileTrue(
-				new DeferredCommand(() -> drivetrain.followthePath(drivetrain.getState().Pose), Set.of(drivetrain)));
+				new DeferredCommand(() -> PathToPoint.followthePath(drivetrain.getState().Pose), Set.of(drivetrain)));
 	}
 
 	private void configureManipBinds() {

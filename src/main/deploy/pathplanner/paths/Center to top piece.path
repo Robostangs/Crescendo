@@ -3,79 +3,78 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3442006938958933,
-        "y": 4.440343375192245
+        "x": 1.937908711196887,
+        "y": 4.046959477847527
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3588538061348099,
-        "y": 5.2997584443829595
-      },
-      "isLocked": false,
-      "linkedName": "LeftStart"
-    },
-    {
-      "anchor": {
-        "x": 2.68,
-        "y": 4.16
-      },
-      "prevControl": {
-        "x": 2.68,
-        "y": 5.43
-      },
-      "nextControl": {
-        "x": 2.68,
-        "y": 3.690867182144829
+        "x": 2.806508711045696,
+        "y": 1.4048155774882973
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.8974445036756058,
-        "y": 3.9030039049011016
+        "x": 7.873983029402071,
+        "y": 5.770506477768909
       },
       "prevControl": {
-        "x": 2.2305836150087743,
-        "y": 3.004550726126613
+        "x": 5.222223344781835,
+        "y": 4.394046994403379
+      },
+      "nextControl": {
+        "x": 9.27154062269434,
+        "y": 6.495942275738718
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.937908711196887,
+        "y": 3.920669229917329
+      },
+      "prevControl": {
+        "x": 2.6177704113220726,
+        "y": 1.4638503793376634
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.95,
-      "rotationDegrees": -46.0,
-      "rotateFast": true
-    }
-  ],
-  "constraintZones": [
-    {
-      "name": "Pickup Zone",
-      "minWaypointRelativePos": 0.9,
-      "maxWaypointRelativePos": 1.25,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
-        "maxAngularVelocity": 120.0,
-        "maxAngularAcceleration": 120.0
-      }
-    }
-  ],
+  "rotationTargets": [],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Intake",
       "waypointRelativePos": 0.9,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 2.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
               }
             }
           ]
@@ -91,14 +90,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -32.76999999999998,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Middle start",
   "previewStartingState": {
-    "rotation": 143.48676814343222,
-    "velocity": 0.0
+    "rotation": 0,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

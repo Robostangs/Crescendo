@@ -77,7 +77,30 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Under the stage",
+      "minWaypointRelativePos": 0.6,
+      "maxWaypointRelativePos": 1.55,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "Under the stage II",
+      "minWaypointRelativePos": 2.65,
+      "maxWaypointRelativePos": 3.45,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.0,
@@ -91,7 +114,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Middle start",
+  "folder": "Center start",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -49,13 +49,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     private Field2d mField;
     private AprilTagLimelight aprilTagReader = new AprilTagLimelight(Constants.Vision.llAprilTag,
             Constants.Vision.llAprilTagRear);
-    private BooleanSupplier isRed = () -> {
-        if (Robot.atComp) {
-            return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-        } else {
-            return false;
-        }
-    };
+
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
@@ -132,7 +126,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         SwerveConstants.kSpeedAt12VoltsMetersPerSecond,
                         Constants.SwerveConstants.driveBaseRadius,
                         new ReplanningConfig()),
-                isRed,
+                () -> Robot.isRed,
                 this);
     }
 

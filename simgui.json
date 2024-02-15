@@ -20,7 +20,9 @@
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Piece Count": "String Chooser",
       "/SmartDashboard/Shooter": "Subsystem",
+      "/SmartDashboard/Start Position": "String Chooser",
       "/SmartDashboard/Swerve/Module 0": "Mechanism2d",
       "/SmartDashboard/Swerve/Module 1": "Mechanism2d",
       "/SmartDashboard/Swerve/Module 2": "Mechanism2d",
@@ -60,7 +62,17 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Piece Count": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Shooter": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Start Position": {
         "window": {
           "visible": true
         }
@@ -76,11 +88,6 @@
         }
       },
       "/SmartDashboard/Swerve/Module 2": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Swerve/Module 3": {
         "window": {
           "visible": true
         }

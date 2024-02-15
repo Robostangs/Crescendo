@@ -6,26 +6,26 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "start to close left"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Right Stage"
+            "pathName": "close left to far left"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "close left to middle left"
           }
         }
       ]
     }
   },
-  "folder": "Misc",
+  "folder": null,
   "choreoAuto": false
 }

@@ -14,18 +14,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Stage"
+            "pathName": "Center to top piece"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "Center to center piece far"
           }
         }
       ]
     }
   },
-  "folder": "Misc",
+  "folder": null,
   "choreoAuto": false
 }

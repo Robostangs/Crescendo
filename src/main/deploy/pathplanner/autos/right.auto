@@ -8,12 +8,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Other 3 piece path"
+            "pathName": "Right 2 piece far"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right to Middle Collect"
           }
         }
       ]
     }
   },
-  "folder": "Misc",
+  "folder": null,
   "choreoAuto": false
 }

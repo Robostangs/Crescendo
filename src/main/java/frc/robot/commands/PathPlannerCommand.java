@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -91,6 +92,80 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         }
     }
 
+    public static void pickAuto(String startPos){
+        switch(startPos){
+			case "left":
+				PathPlannerCommand.publishTrajectory("left");
+				break;
+			case "right":
+				PathPlannerCommand.publishTrajectory("right");
+				break;
+			case "center":
+				PathPlannerCommand.publishTrajectory("center");
+				break;
+			default:
+				PathPlannerCommand.publishTrajectory("go");
+				break;}
+    }
+
+//TODO prepare to delete this:
+    public static void pickAuto(String startPos, String pieceChooser){
+        switch(startPos){
+        	case "left":
+                switch(pieceChooser){
+                    case "1":
+                        PathPlannerCommand.publishTrajectory("left1");
+                        break;
+                    case "2":
+                        PathPlannerCommand.publishTrajectory("left2");
+                        break;
+                    case "3":
+                        PathPlannerCommand.publishTrajectory("left3");
+                        break;
+                    default:
+                        PathPlannerCommand.publishTrajectory("left");
+                        break;
+                }
+				break;
+			case "right":
+                switch(pieceChooser){
+                case "1":
+                    PathPlannerCommand.publishTrajectory("right1");
+                    break;
+                case "2":
+                    PathPlannerCommand.publishTrajectory("right2");
+                    break;
+                case "3":
+                    PathPlannerCommand.publishTrajectory("right3");
+                    break;
+                default:
+                    PathPlannerCommand.publishTrajectory("right");
+                    break;
+            }
+				break;
+			case "center":
+                switch(pieceChooser){
+                case "1":
+                    PathPlannerCommand.publishTrajectory("center1");
+                    break;
+                case "2":
+                    PathPlannerCommand.publishTrajectory("center2");
+                    break;
+                case "3":
+                    PathPlannerCommand.publishTrajectory("center3");
+                    break;
+                default:
+                    PathPlannerCommand.publishTrajectory("center");
+                    break;
+                }
+				break;
+            case "go":
+                PathPlannerCommand.publishTrajectory("go");
+                break;
+			default:
+				PathPlannerCommand.publishTrajectory("null");
+				break;}
+    }
     // @Override
     // public void initialize() {
     // System.out.println("Starting Pose: " + startPose.toString());

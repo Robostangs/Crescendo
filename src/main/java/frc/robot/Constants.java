@@ -43,7 +43,7 @@ public final class Constants {
 			kSpeaker, kAmp, None
 		}
 
-		public static final double kMaxSpeedMetersPerSecond = 8;
+		public static final double kMaxSpeedMetersPerSecond = 5;
 		public static final double kMaxAngularSpeedMetersPerSecond = 3 * Math.PI;
 
 		// The steer motor uses any SwerveModule.SteerRequestType control request with
@@ -82,6 +82,12 @@ public final class Constants {
 		private static final double kWheelRadiusInches = 2;
 		// Estimated at first, then fudge-factored to make odom
 		// match record
+
+		/* This is with FOC disabled */
+		public static final double maxModuleSpeed = 4.7244;
+
+		/* This is with FOC enabled */
+		public static final double maxModuleSpeedFOC = 4.572;
 
 		private static final boolean kSteerMotorReversed = false;
 		private static final boolean kInvertLeftSide = true;
@@ -164,7 +170,7 @@ public final class Constants {
 				Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
 		public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
 				kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
-				Units.inchesToMeters(kBackLeftXPosInches),								 Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
+				Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
 		public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
 				kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
 				Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches),
@@ -202,7 +208,10 @@ public final class Constants {
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
 		public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
-		public static final double kMaxAngularSpeedMetersPerSecondSquared = 2 * kMaxAngularSpeedMetersPerSecond;
+		public static final double kMaxAngularAccelerationMetersPerSecondSquared = 2 * kMaxAngularSpeedMetersPerSecond;
+
+		public static final double kMaxAngularSpeedRadiansPerSecond = 540d;
+		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = 720d;
 
 		public static final String kFieldObjectName = "path";
 
@@ -230,7 +239,11 @@ public final class Constants {
 	}
 
 	public static class OperatorConstants {
-		public static final double kDeadzone = 0.03;
+		public static final double kDeadzone = 0.05;
+		public static final double kDeadzoneJoystick = 0.07;
+
+		public static final double kArmDeadzone = 0.07;
+
 		public static final double slowDownMultiplier = 0.5;
 
 		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * kDeadzone;
@@ -248,8 +261,9 @@ public final class Constants {
 		public static final boolean leftShootIsInverted = false;
 		public static final boolean intakeIsPositive = true;
 
-		public static final double kFeederFeedForward = 0.0275;
+		public static final double feederFeedForward = 0.05;
 		public static final double shooterChargeUpTime = 0.5;
+		public static final double feederChargeUpTime = 0.23;
 	}
 
 	public static class ArmConstants {
@@ -282,7 +296,7 @@ public final class Constants {
 			public static final double kSpeaker1 = -45;
 			public static final double kSpeaker2 = -40;
 			public static final double kSpeaker3 = -30;
-			public static final double kSpeakerClosestPoint = kArmMinAngle;
+			public static final double kSubwoofer = kArmMinAngle;
 			public static final double kAmp = 53.75;
 			public static final double kIntake = -50;
 			public static final double kHorizontal = 0;
@@ -290,13 +304,13 @@ public final class Constants {
 	}	
 
 	public static class IntakeConstants {
-		public static final int intakeMotorID = 62;
+		public static final int shooterMotorID = 62;
 		public static final int beltMotorID = 61;
 
 		public static final int leftSolenoidID = 0;
 		public static final int rightSolenoidID = 3;
 
-		public static final int intakeSensorPWM_ID = 0;
+		public static final int shooterSensorPWM_ID = 0;
 		public static final int beltSensorPWM_ID = 1;
 
 		public static final double kDeployTimeSeconds = 0.4;

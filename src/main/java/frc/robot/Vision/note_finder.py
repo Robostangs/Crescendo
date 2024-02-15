@@ -6,6 +6,9 @@ MIN_AREA = 500
 MAX_AREA = 10000
 MAX_RATIO = 0.7
 
+
+# NEED TO TEST
+
 # runPipeline() is called every frame by Limelight's backend.
 def runPipeline(image, llrobot):
     

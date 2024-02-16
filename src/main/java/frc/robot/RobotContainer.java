@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -8,9 +10,8 @@ import frc.robot.commands.Spit;
 import frc.robot.commands.Swerve.xDrive;
 import frc.robot.commands.feeder.BeltFeed;
 import frc.robot.commands.feeder.DeployAndIntake;
-import frc.robot.commands.shooter.Aim;
 import frc.robot.commands.shooter.AimAndShoot;
-import frc.robot.commands.shooter.FeedAndShootVelocity;
+import frc.robot.commands.shooter.FeedAndShoot;
 import frc.robot.commands.shooter.FineAdjust;
 import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Arm;
@@ -34,9 +35,9 @@ public class RobotContainer {
 				new xDrive(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () -> xDrive.getRightX(),
 						() -> xDrive.getRightTriggerAxis()).ignoringDisable(true));
 
-		/* TODO: do not use this in real comps */
-		xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.tareEverything()));
-		// xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+		xDrive.povDown().onTrue(drivetrain.run(() -> drivetrain.seedFieldRelative()));
+		// xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.tareEverything()));
+		// xDrive.povRight().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(5, 5, Rotation2d.fromDegrees(20)))));
 
 		mIntake.setDefaultCommand(new BeltFeed());
 
@@ -53,19 +54,22 @@ public class RobotContainer {
 	}
 
 	private void configureManipBinds() {
-		mArm.setDefaultCommand(new FineAdjust(() -> -xManip.getRightY()));
+		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kArmDeadzone)
+				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
-		xManip.y().whileTrue(new AimAndShoot(0).withTimeout(Constants.OperatorConstants.setpointTimeout));
-		xManip.x().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint)
-				.withTimeout(Constants.OperatorConstants.setpointTimeout));
-		xManip.a().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)
-				.withTimeout(Constants.OperatorConstants.setpointTimeout));
-		xManip.b().onTrue(new SetPoint(0).withTimeout(Constants.OperatorConstants.setpointTimeout));
+		xManip.y().whileTrue(new AimAndShoot(0));
+		xManip.x().whileTrue(new AimAndShoot(Constants.ArmConstants.SetPoints.kSubwoofer));
 
+		xManip.a().whileTrue(new AimAndShoot());
+		xManip.b().whileTrue(new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp));
+		// xManip.a().onTrue(new SetPoint(0));
+		// xManip.b().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
+
+		
 		xManip.pov(90).whileTrue(new Spit());
 		xManip.povDown().whileTrue(new DeployAndIntake());
 
-		xManip.leftBumper().whileTrue(new FeedAndShootVelocity(() -> xManip.getHID().getRightBumper()));
+		xManip.leftBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getRightBumper()));
 	}
 
 	public RobotContainer() {
@@ -88,13 +92,13 @@ public class RobotContainer {
 				() -> simController.getRawAxis(2), () -> 0d));
 
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
+				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSubwoofer));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
 				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
-				.whileTrue(new Aim());
+				.whileTrue(new AimAndShoot());
 
 		// new Trigger(() -> simController.getRawButtonPressed(4))
 		// .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kHorizontal));

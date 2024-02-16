@@ -140,7 +140,7 @@ public interface SwerveRequest {
          */
         public double RotationalDeadband = 0.05;
 
-        public double slowDownRate = 0.5;
+        public double slowDownRate = 1;
 
         /**
          * The type of control request to use for the drive motor.

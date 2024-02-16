@@ -82,6 +82,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		Arm.getInstance().setBrake(false);
+		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kSubwoofer);
 	}
 
 	@Override

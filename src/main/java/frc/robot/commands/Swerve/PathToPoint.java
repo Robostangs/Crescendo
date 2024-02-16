@@ -21,7 +21,7 @@ public class PathToPoint extends SequentialCommandGroup {
         this(new Pose2d(8.27, 2.42, Rotation2d.fromDegrees(0)));
     }
 
-    // TODO: figure out how to display the trajectory onto smartdashboard
+    // TODO: display the trajectory onto smartdashboard field using Robot.mField;
 
     // How to implement
     // xDrive.a().onTrue(new PathToPoint());

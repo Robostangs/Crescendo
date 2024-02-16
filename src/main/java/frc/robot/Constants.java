@@ -26,9 +26,9 @@ public final class Constants {
 	public static final String logDirectory = "";
 
 	public class Vision {
-		public static final boolean UseLimelight = false;
+		public static final boolean UseLimelight = true;
 		public static final String llAprilTag = "limelight";
-		public static final String llAprilTagRear = "limelight2";
+		public static final String llAprilTagRear = "limelight-rear";
 		public static final int llAprilTagPipelineIndex = 0;
 
 		public static final String llPython = "limelight-python";
@@ -261,9 +261,10 @@ public final class Constants {
 		public static final boolean leftShootIsInverted = false;
 		public static final boolean intakeIsPositive = true;
 
-		public static final double feederFeedForward = 0.05;
+		public static final double feederFeedForward = 0.0265;
 		public static final double shooterChargeUpTime = 0.5;
 		public static final double feederChargeUpTime = 0.23;
+		// public static final double feederChargeUpTime = 0.23;
 	}
 
 	public static class ArmConstants {

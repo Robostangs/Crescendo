@@ -26,7 +26,8 @@
       "/SmartDashboard/Swerve/Module 0": "Mechanism2d",
       "/SmartDashboard/Swerve/Module 1": "Mechanism2d",
       "/SmartDashboard/Swerve/Module 2": "Mechanism2d",
-      "/SmartDashboard/Swerve/Module 3": "Mechanism2d"
+      "/SmartDashboard/Swerve/Module 3": "Mechanism2d",
+      "/SmartDashboard/THE Field": "Field2d"
     },
     "windows": {
       "/SmartDashboard/Arm/Target Profile": {
@@ -57,10 +58,7 @@
         },
         "right": 2961,
         "top": 79,
-        "width": 16.541748046875,
-        "window": {
-          "visible": true
-        }
+        "width": 16.541748046875
       },
       "/SmartDashboard/Piece Count": {
         "window": {
@@ -88,6 +86,17 @@
         }
       },
       "/SmartDashboard/Swerve/Module 2": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/THE Field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
         "window": {
           "visible": true
         }

@@ -168,6 +168,7 @@ public class Robot extends TimedRobot {
 
 		mField.setRobotPose(Drivetrain.getInstance().getPose());
 
+		SmartDashboard.putData("THE Field", mField);
 		
 		// PathPlannerCommand.publishTrajectory(mChooser.getSelected());
 	}

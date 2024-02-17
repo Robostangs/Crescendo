@@ -16,12 +16,10 @@ public class AimAndShoot extends Command {
 
     private double armSetpoint;
     private Timer timer;
-    // private Timer setPoinTimer;
     private boolean debugMode = false;
     private boolean autoAim = false;
 
     private boolean isFinishedBool = false;
-    private boolean atSetpoint = false;
 
     /**
      * Set the shooter to a specific position and shoots when within 1 degree
@@ -51,7 +49,6 @@ public class AimAndShoot extends Command {
         mIntake = Intake.getInstance();
         isFinishedBool = false;
         autoAim = true;
-        atSetpoint = false;
 
         this.setName("Auto aim and shoot");
         this.addRequirements(mArm, mShooter, mIntake);
@@ -78,8 +75,6 @@ public class AimAndShoot extends Command {
             System.out.println("Error: " + (armSetpoint - mArm.getArmPosition()));
             System.out.println("*************************** Debug Stats (initialize) ***************************\n");
         }
-
-        // mArm.setArmTarget(armSetpoint);
     }
 
     @Override
@@ -97,12 +92,10 @@ public class AimAndShoot extends Command {
             }
         }
 
-        // If the arm is within 1 degree of the target
-        else if (mArm.isInRangeOfTarget(armSetpoint, 1) && mArm.getVelocity() < 1) {
+        // else if the arm is within 1.5 degrees of the target and the arm is not moving much
+        else if (mArm.isInRangeOfTarget(armSetpoint) && mArm.getVelocity() < 1) {
             mShooter.shoot(0.5, 1);
             SmartDashboard.putString("Shooter/Status", "Shooting");
-            /* TODO: this may not work cuz it cancels the command so quick but try it */
-            // if (atSetpointTimer.get() < )
             isFinishedBool = true;
         }
 
@@ -138,18 +131,15 @@ public class AimAndShoot extends Command {
             System.out.println("Error: " + (armSetpoint - mArm.getArmPosition()));
             System.out.println("*************************** Debug Stats (execute) ***************************\n");
         }
-        // SmartDashboard.putNumber("Arm/Position Error", (armSetpoint -
-        // mArm.getArmPosition()));
     }
 
     @Override
     public boolean isFinished() {
-        // return false;
         if (Robot.isSimulation()) {
             return false;
         }
 
-        return false;
+        return isFinishedBool && !mArm.isInRangeOfTarget(armSetpoint, 5);
 
         // return false;
         // return (mArm.isInRangeOfTarget(armSetpoint, 1) &&
@@ -160,5 +150,6 @@ public class AimAndShoot extends Command {
     public void end(boolean interrupted) {
         SmartDashboard.putString("Shooter/Status", "Idle");
         mShooter.stop();
+        mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
     }
 }

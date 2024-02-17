@@ -1,12 +1,11 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
+import frc.robot.commands.Swerve.Align;
 import frc.robot.commands.Swerve.xDrive;
 import frc.robot.commands.feeder.BeltFeed;
 import frc.robot.commands.feeder.DeployAndIntake;
@@ -35,22 +34,17 @@ public class RobotContainer {
 				new xDrive(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () -> xDrive.getRightX(),
 						() -> xDrive.getRightTriggerAxis()).ignoringDisable(true));
 
-		xDrive.povDown().onTrue(drivetrain.run(() -> drivetrain.seedFieldRelative()));
+		xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+		xDrive.x().toggleOnTrue(new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY() ,
+						() -> xDrive.getRightTriggerAxis(), false));
 		// xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.tareEverything()));
 		// xDrive.povRight().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(5, 5, Rotation2d.fromDegrees(20)))));
 
 		mIntake.setDefaultCommand(new BeltFeed());
 
-		xDrive.rightBumper().whileTrue(new DeployAndIntake());
-
-		/* TODO: Install limelights then test */
-		// xDrive.leftBumper().whileTrue(
-		// new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () ->
-		// xDrive.getRightTriggerAxis(), true));
-		// xDrive.rightBumper().whileTrue(
-		// new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () ->
-		// xDrive.getRightTriggerAxis(), false));
-
+		xDrive.rightBumper().whileTrue(new DeployAndIntake(true));
+		xDrive.leftBumper().whileTrue(new DeployAndIntake(false));
 	}
 
 	private void configureManipBinds() {
@@ -67,7 +61,7 @@ public class RobotContainer {
 
 		
 		xManip.pov(90).whileTrue(new Spit());
-		xManip.povDown().whileTrue(new DeployAndIntake());
+		xManip.povDown().whileTrue(new DeployAndIntake(true));
 
 		xManip.leftBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getRightBumper()));
 	}
@@ -99,6 +93,9 @@ public class RobotContainer {
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
 				.whileTrue(new AimAndShoot());
+
+		// new Trigger(() -> simController.getRawButtonPressed(3))
+		// 		.whileTrue(new AimAndShoot());
 
 		// new Trigger(() -> simController.getRawButtonPressed(4))
 		// .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kHorizontal));

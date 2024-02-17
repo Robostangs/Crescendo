@@ -57,21 +57,22 @@ public class Arm extends SubsystemBase {
         if (Robot.isReal()) {
             shooterExtension.setAngle(getShooterExtensionPosition() - 90);
             simShooterExtension.setAngle(
-                    getExtensionFromArmPosition(Units.rotationsToDegrees(motionMagicDutyCycle.Position)) - 90);
+                    getExtensionFromArmPosition(Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble())) - 90);
         }
         simShooterExtension.setAngle(shooterExtensionSetpoint - 90);
 
         if (Robot.isReal()) {
-            if (isInRangeOfTarget(getArmTarget(), 5)) {
+            if (isInRangeOfTarget(getArmTarget(), 3)) {
                 elbowLigament.setColor(new Color8Bit(Color.kGreen));
+                SmartDashboard.putBoolean("Arm/At Setpoint", true);
             } else {
                 elbowLigament.setColor(new Color8Bit(Color.kWhite));
+                SmartDashboard.putBoolean("Arm/At Setpoint", false);
             }
         }
 
-        SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
-        SmartDashboard.putBoolean("Arm/At Setpoint", isInRangeOfTarget(getArmTarget()));
         SmartDashboard.putString("Arm/.type", "Subsystem");
+        SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
         SmartDashboard.putNumber("Arm/VelocityRPS", getVelocityRotations());
         SmartDashboard.putNumber("Arm/VelocitySetpointRPS", armMotor.getClosedLoopReferenceSlope().getValueAsDouble());
         SmartDashboard.putNumber("Arm/Setpoint",
@@ -309,19 +310,17 @@ public class Arm extends SubsystemBase {
         double shooterToSpeakerBottomMouthMeters = Constants.Vision.SpeakerCoords[2] - Units
                 .inchesToMeters(groundToShooterInches);
 
-        double returnVal = Constants.ArmConstants.SetPoints.kSubwoofer;
-
         /* Swerve Pose calculated in meters */
         Pose2d currentPose = Drivetrain.getInstance().getState().Pose;
         double distToSpeakerMeters = Math.sqrt(
                 Math.pow(Constants.Vision.SpeakerCoords[0] - currentPose.getX(), 2)
-                        + Math.pow(Constants.Vision.SpeakerCoords[1] - currentPose.getY(), 2));
-        System.out.println("Distance to speaker: " + Units.metersToInches(distToSpeakerMeters));
-        System.out.println("Height to Speaker: " +
-                Units.metersToInches(shooterToSpeakerBottomMouthMeters));
+                        + Math.pow(Constants.Vision.SpeakerCoords[1] - currentPose.getY(), 2)) - Units.inchesToMeters(15);
+        // System.out.println("Distance to speaker: " + Units.metersToInches(distToSpeakerMeters));
+        // System.out.println("Height to Speaker: " +
+        //         Units.metersToInches(shooterToSpeakerBottomMouthMeters));
 
         double angleToSpeaker = Math.atan2(shooterToSpeakerBottomMouthMeters, distToSpeakerMeters);
-        System.out.println("Angle to speaker radians atan2: " + angleToSpeaker);
+        // System.out.println("Angle to speaker radians atan2: " + angleToSpeaker);
         angleToSpeaker = -Units.radiansToDegrees(angleToSpeaker);
         System.out.println("Angle to speaker Degrees: " + angleToSpeaker);
 
@@ -329,7 +328,7 @@ public class Arm extends SubsystemBase {
         if (validSetpoint(angleToSpeaker)) {
             return angleToSpeaker;
         } else {
-            System.out.println(returnVal + " is not a valid setpoint");
+            System.out.println(angleToSpeaker + " is not a valid setpoint");
             return getArmPosition();
         }
     }

@@ -27,15 +27,21 @@ public final class Constants {
 
 	public class Vision {
 		public static final boolean UseLimelight = true;
-		public static final String llAprilTag = "limelight";
+		public static final String llAprilTag = "limelight-front";
 		public static final String llAprilTagRear = "limelight-rear";
 		public static final int llAprilTagPipelineIndex = 0;
 
 		public static final String llPython = "limelight-python";
 		public static final int llPythonPipelineIndex = 0;
 
-		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
+		// public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
+		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(180));
+		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 		public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
+		/** Highest Y value of the speaker */
+		public static final double SpeakerUpperBound = 6;
+		/** Lowest Y value of the speaker */
+		public static final double SpeakerLowerBound = 5;
 	}
 
 	public class SwerveConstants {
@@ -68,25 +74,23 @@ public final class Constants {
 		// This affects the PID/FF gains for the drive motors
 		private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
-		// The stator current at which the wheels start to slip;
+		/** The stator current at which the wheels start to slip; */
 		private static final double kSlipCurrentA = 300.0;
 
-		// Theoretical free speed (m/s) at 12v applied output;
+		/** Theoretical free speed (m/s) at 12v applied output; */
 		public static final double kSpeedAt12VoltsMetersPerSecond = 4.73;
 
-		// Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
+		/** Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns; */
 		private static final double kCoupleRatio = 3.5714285714285716;
 
 		private static final double kDriveGearRatio = 6.746031746031747;
 		private static final double kSteerGearRatio = 21.428571428571427;
 		private static final double kWheelRadiusInches = 2;
-		// Estimated at first, then fudge-factored to make odom
-		// match record
 
-		/* This is with FOC disabled */
+		/** This is with FOC disabled */
 		public static final double maxModuleSpeed = 4.7244;
 
-		/* This is with FOC enabled */
+		/** This is with FOC enabled */
 		public static final double maxModuleSpeedFOC = 4.572;
 
 		private static final boolean kSteerMotorReversed = false;
@@ -110,7 +114,7 @@ public final class Constants {
 				.withDriveFrictionVoltage(kDriveFrictionVoltage).withFeedbackSource(SteerFeedbackType.FusedCANcoder)
 				.withCouplingGearRatio(kCoupleRatio).withSteerMotorInverted(kSteerMotorReversed);
 
-		/* Picture the front of the robot facing to the right in the XY axis */
+		/* Picture the front of the robot facing to the right in the XY axis, with the center on the origin (0,0) */
 
 		/** Distance between the 2 left side CANcoders */
 		public static final double driveBaseWidth = 24.75;
@@ -119,7 +123,7 @@ public final class Constants {
 
 		/**
 		 * distance from the center of the robot to the furthest module (meters) should
-		 * be 34.3
+		 * be 17.27
 		 */
 		public static final double driveBaseRadius = Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2);
 
@@ -246,7 +250,7 @@ public final class Constants {
 
 		public static final double slowDownMultiplier = 0.5;
 
-		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * kDeadzone;
+		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.07;
 		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * kDeadzone;
 
 		public static final double setpointTimeout = 2;
@@ -263,7 +267,7 @@ public final class Constants {
 
 		public static final double feederFeedForward = 0.0265;
 		public static final double shooterChargeUpTime = 0.5;
-		public static final double feederChargeUpTime = 0.23;
+		public static final double feederChargeUpTime = 0.22;
 		// public static final double feederChargeUpTime = 0.23;
 	}
 
@@ -283,15 +287,15 @@ public final class Constants {
 		 */
 		public static final double rateOfMotion = 0.5;
 
-		/** 100 degrees */
+		/** 60 degrees */
 		public static final double kArmMaxAngle = 60;
-		/** 301.8 degrees */
+		/** 300 degrees */
 		public static final double kArmMinAngle = -60;
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
 		public static final double shooterOffset = 58.2;
-		public static final double kInRangeThreshold = 1;
+		public static final double kInRangeThreshold = 1.5;
 
 		public static class SetPoints {
 			public static final double kSpeaker1 = -45;
@@ -299,7 +303,7 @@ public final class Constants {
 			public static final double kSpeaker3 = -30;
 			public static final double kSubwoofer = kArmMinAngle;
 			public static final double kAmp = 53.75;
-			public static final double kIntake = -50;
+			public static final double kIntake = -60;
 			public static final double kHorizontal = 0;
 		}
 	}	
@@ -318,7 +322,7 @@ public final class Constants {
 		public static final double beltFeedForward = 0.05;
 
 		public static final boolean intakeMotorInverted = false;
-		public static final boolean beltMotorInverted = false;
+		public static final boolean beltMotorInverted = true;
 	}
  
 	

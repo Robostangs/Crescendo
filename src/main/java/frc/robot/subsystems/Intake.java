@@ -14,17 +14,17 @@ public class Intake extends SubsystemBase {
     private Compressor mCompressor;
     private Solenoid leftSolenoid, rightSolenoid;
     private LoggyTalonFX intakeMotor, beltMotor;
-    private DigitalInput shooterSensor, beltSensor;
+    private DigitalInput shooterSensor;
 
     @Override
     public void periodic() {
+        SmartDashboard.putString("Intake/Status", leftSolenoid.get() ? "Extended" : "Retracted");
+        SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
+
         if (leftSolenoid.get() != rightSolenoid.get()) {
             SmartDashboard.putString("Intake/Status", "ERROR: Solenoids are not in sync");
             setExtend(false);
         }
-
-        SmartDashboard.putString("Intake/Status", leftSolenoid.get() ? "Extended" : "Retracted");
-        SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
     }
 
     public static Intake getInstance() {
@@ -38,7 +38,6 @@ public class Intake extends SubsystemBase {
         rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.rightSolenoidID);
         mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
         shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
-        // beltSensor = new DigitalInput(Constants.IntakeConstants.beltSensorPWM_ID);
         mCompressor.enableDigital();
         mCompressor.disable();
 
@@ -73,11 +72,6 @@ public class Intake extends SubsystemBase {
     public boolean getShooterSensor() {
         return !shooterSensor.get();
     }
-
-    // public boolean getBeltSensor() {
-    //     return beltSensor.get();
-    // }
-
 
     public boolean getExtended() {
         return leftSolenoid.get();

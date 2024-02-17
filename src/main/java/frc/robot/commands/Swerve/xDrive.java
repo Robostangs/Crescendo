@@ -14,12 +14,15 @@ public class xDrive extends Command {
 
     /**
      * Command to set the drivetrain to brake mode when not moving
-     * @param translateX the right to left movement of the robot
-     * @param translateY the forward to backward movement of the robot
-     * @param rotate the rotational movement of the robot
-     * @param howManyBabiesOnBoard 1 - the value of how much to slow down (right trigger axis)
+     * 
+     * @param translateX           the right to left movement of the robot
+     * @param translateY           the forward to backward movement of the robot
+     * @param rotate               the rotational movement of the robot
+     * @param howManyBabiesOnBoard 1 - the value of how much to slow down (right
+     *                             trigger axis)
      */
-    public xDrive(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> rotate, Supplier<Double> howManyBabiesOnBoard) {
+    public xDrive(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> rotate,
+            Supplier<Double> howManyBabiesOnBoard) {
         drivetrain = Drivetrain.getInstance();
         this.setName("xDrive");
         this.addRequirements(drivetrain);
@@ -31,21 +34,6 @@ public class xDrive extends Command {
 
     @Override
     public void execute() {
-
-				// drivetrain.setControl(() -> drive
-				// 		.withVelocityX(-xDrive.getLeftY()
-				// 				* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-				// 		.withVelocityY(-xDrive.getLeftX()
-				// 				* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-				// 		.withRotationalRate(
-				// 				-xDrive.getRightX()
-				// 						* Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)
-				// 		.withSlowDown(true, 1 - xDrive.getRightTriggerAxis()))
-				// 		.ignoringDisable(true);
-
-
-
-
         if (Math.abs(translateX.get()) <= Constants.OperatorConstants.kDeadzone
                 && Math.abs(translateY.get()) <= Constants.OperatorConstants.kDeadzone
                 && Math.abs(rotate.get()) <= Constants.OperatorConstants.kDeadzone) {

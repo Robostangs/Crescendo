@@ -14,16 +14,17 @@ public class Intake extends SubsystemBase {
     private Compressor mCompressor;
     private Solenoid leftSolenoid, rightSolenoid;
     private LoggyTalonFX intakeMotor, beltMotor;
-    private DigitalInput intakeSensor, beltSensor;
+    private DigitalInput shooterSensor;
 
     @Override
     public void periodic() {
+        SmartDashboard.putString("Intake/Status", leftSolenoid.get() ? "Extended" : "Retracted");
+        SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
+
         if (leftSolenoid.get() != rightSolenoid.get()) {
             SmartDashboard.putString("Intake/Status", "ERROR: Solenoids are not in sync");
             setExtend(false);
         }
-
-        SmartDashboard.putString("Intake/Status", leftSolenoid.get() ? "Extended" : "Retracted");
     }
 
     public static Intake getInstance() {
@@ -36,17 +37,15 @@ public class Intake extends SubsystemBase {
         leftSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.leftSolenoidID);
         rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.rightSolenoidID);
         mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
-        intakeSensor = new DigitalInput(Constants.IntakeConstants.intakeSensorPWM_ID);
-        beltSensor = new DigitalInput(Constants.IntakeConstants.beltSensorPWM_ID);
+        shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
         mCompressor.enableDigital();
         mCompressor.disable();
 
-        intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.intakeMotorID, true);
+        intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.shooterMotorID, true);
         beltMotor = new LoggyTalonFX(Constants.IntakeConstants.beltMotorID, true);
 
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorInverted);
         beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);
-
     }
 
     public void setExtend(boolean deploy) {
@@ -62,14 +61,17 @@ public class Intake extends SubsystemBase {
         beltMotor.set(speed);
     }
 
+    public void feedBelt() {
+        beltMotor.set(0.5);
+    }
+
+    /**
+     * Returns true if a piece is inside the shooter, false if the shooter is vacant
+     * @return true = shooter occupied, false = shooter is vacant
+     */
     public boolean getShooterSensor() {
-        return intakeSensor.get();
+        return !shooterSensor.get();
     }
-
-    public boolean getBeltSensor() {
-        return beltSensor.get();
-    }
-
 
     public boolean getExtended() {
         return leftSolenoid.get();

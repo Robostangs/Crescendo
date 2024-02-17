@@ -9,9 +9,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -19,8 +16,6 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
@@ -36,6 +31,8 @@ import frc.robot.Vision.LimelightHelpers;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+@SuppressWarnings("unused")
+
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements
  * subsystem
@@ -47,11 +44,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private Field2d mField;
-    private AprilTagLimelight aprilTagReader = new AprilTagLimelight(Constants.Vision.llAprilTag,
+    private AprilTagLimelight aprilTagReader = new AprilTagLimelight(
+            Constants.Vision.llAprilTag,
             Constants.Vision.llAprilTagRear);
+
     private BooleanSupplier isRed = () -> {
         if (Robot.atComp) {
-            return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+            return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
         } else {
             return false;
         }
@@ -63,25 +62,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     @Override
     public void periodic() {
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
-            this.addVisionMeasurement(aprilTagReader.getPoseAvg(), Timer.getFPGATimestamp());
+            if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
+                this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear),
+                        Timer.getFPGATimestamp());
+            }
         }
-
-        /*
-         * This code comes from robotPeriodic() in Robot.java
-         * Put this back into Robot.java if the subsystem periodic function seems to
-         * fail
-         */
-
-        // if (Constants.Vision.UseLimelight && Robot.isReal()) {
-
-        // var lastResult =
-        // LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag).targetingResults;
-        // Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
-
-        // if (LimelightHelpers.getTid("limelight") != -1) {
-        // Drivetrain.getInstance().addVisionMeasurement(llPose,
-        // Timer.getFPGATimestamp());
-        // }
     }
 
     private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
@@ -109,6 +94,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
                     Constants.Vision.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+            super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionOfMyVision);
         }
 
         configurePathPlanner();
@@ -137,26 +123,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 this);
     }
 
-    /* @Hellothere212 needs to make this a command in the Swerve Commands folder */
-    public Command followthePath(Pose2d startPose) {
-        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                startPose,
-                new Pose2d(1.80, 3.33, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.46, 0.72, Rotation2d.fromDegrees(0)),
-                new Pose2d(6.89, 0.72, Rotation2d.fromDegrees(0)),
-                new Pose2d(8.20, 2.30, Rotation2d.fromDegrees(0)));
-
-        PathPlannerPath path = new PathPlannerPath(
-                bezierPoints,
-                new PathConstraints(Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond - 1,
-                        Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond
-                                - 1,
-                        540d, 720d),
-                new GoalEndState(0.0, Rotation2d.fromDegrees(0.0)));
-
-        return AutoBuilder.followPath(path);
-    }
-
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
@@ -182,7 +148,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     public void addFieldObj(PathPlannerTrajectory trajectory) {
         List<Pose2d> poses = new ArrayList<>();
-        // int i = 0;
         AtomicInteger i = new AtomicInteger(0);
         trajectory.getStates().forEach((state) -> {
             if (!(state.getTargetHolonomicPose().equals(trajectory.getInitialTargetHolonomicPose()))

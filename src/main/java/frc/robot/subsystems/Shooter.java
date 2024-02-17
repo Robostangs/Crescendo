@@ -17,8 +17,6 @@ public class Shooter extends SubsystemBase {
     private LoggyTalonFX shootMotorRight, shootMotorLeft, feedMotor;
     private VelocityVoltage shootPid = new VelocityVoltage(0);
 
-    private boolean holding;
-
     public static Shooter getInstance() {
         if (mInstance == null) {
             mInstance = new Shooter();
@@ -29,14 +27,11 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Shooter/Holding", holding);
         SmartDashboard.putNumber("Shooter/Actual Left RPM", shootMotorLeft.getVelocity().getValueAsDouble() * 60);
         SmartDashboard.putNumber("Shooter/Actual Right RPM", shootMotorRight.getVelocity().getValueAsDouble() * 60);
     }
 
     private Shooter() {
-        holding = true;
-
         shootMotorRight = new LoggyTalonFX(Constants.ShooterConstants.shootMotorRight, false);
         shootMotorLeft = new LoggyTalonFX(Constants.ShooterConstants.shootMotorLeft, false);
         feedMotor = new LoggyTalonFX(Constants.ShooterConstants.feedMotor, false);
@@ -47,8 +42,6 @@ public class Shooter extends SubsystemBase {
         fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
         fxConfig.MotorOutput.PeakReverseDutyCycle = 0;
 
-        /* TODO: Tune this a lot */
-        // fxConfig.Slot0.kP = 0.2;
         fxConfig.Slot0.kP = 0.07;
         fxConfig.Slot0.kI = 0.01;
         fxConfig.Slot0.kV = 10.5 / 88.9;

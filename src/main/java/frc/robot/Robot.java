@@ -34,7 +34,6 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Robot extends TimedRobot {
-	public static Field2d mField = new Field2d();
 
 	private Timer timer;
 	private Command auton;
@@ -48,6 +47,7 @@ public class Robot extends TimedRobot {
 	public static boolean atComp = false;
 	public static boolean autonomousExited = false;
 	public static boolean isRed = false;
+	public static Field2d mField = new Field2d();
 
 
 	/* TODO: Set this value for every auto */
@@ -129,8 +129,7 @@ public class Robot extends TimedRobot {
 
 		/* All auton information */
 
-		SmartDashboard.putData("Field", mField);
-		autonTab.add("Field", mField).withWidget(BuiltInWidgets.kField);
+	
 
 
 		// mChooser.setDefaultOption("Do Nothing", "null");
@@ -165,10 +164,9 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
-		PathPlannerCommand.pickAuto(startPos.getSelected());
 		// PathPlannerCommand.pickAuto(startPos.getSelected(), pieceChooser.getSelected());
 
-	
+		mField.setRobotPose(Drivetrain.getInstance().getPose());
 
 		
 		// PathPlannerCommand.publishTrajectory(mChooser.getSelected());
@@ -189,8 +187,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		timer = new Timer(); 
-		auton = new PathPlannerCommand(startPosition.getString("left"), closePieceCount.getInteger(0),
-				farPieceCount.getInteger(0), false);
+		// auton = new PathPlannerCommand(startPosition.getString("left"), closePieceCount.getInteger(0),
+		// 		farPieceCount.getInteger(0), false);
+
+		auton = PathPlannerCommand.pickAuto(startPos.getSelected());
 
 		// auton = new PathPlannerCommand(mChooser.getSelected(),
 		// this.shoot.getBoolean(false));

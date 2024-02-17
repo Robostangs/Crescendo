@@ -52,6 +52,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
 
         swerve.seedFieldRelative(startPose);
 
+
         this.addCommands(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.5),
                 new FeedAndShoot().withTimeout(0.5),
                 new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(0.5), auto);
@@ -92,20 +93,22 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         }
     }
 
-    public static void pickAuto(String startPos){
+    public static Command pickAuto(String startPos){
         switch(startPos){
 			case "left":
-				PathPlannerCommand.publishTrajectory("left");
-				break;
+				PathPlannerCommand.publishTrajectory(startPos);
+                return AutoBuilder.buildAuto(startPos);
 			case "right":
-				PathPlannerCommand.publishTrajectory("right");
-				break;
+            PathPlannerCommand.publishTrajectory(startPos);
+            return AutoBuilder.buildAuto(startPos);				
 			case "center":
-				PathPlannerCommand.publishTrajectory("center");
-				break;
+            PathPlannerCommand.publishTrajectory(startPos);
+            return AutoBuilder.buildAuto(startPos);				
+            
 			default:
-				PathPlannerCommand.publishTrajectory("go");
-				break;}
+            PathPlannerCommand.publishTrajectory("go");
+            return AutoBuilder.buildAuto("go");				
+            }
     }
 
 //TODO prepare to delete this:

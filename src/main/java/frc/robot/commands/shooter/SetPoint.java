@@ -14,8 +14,8 @@ public class SetPoint extends Command {
     private boolean autoAim = false;
 
     /**
-    //  * @deprecated Use {@link AimAndShoot#AimAndShoot(double)} instead
      * <p>Set the shooter to a specific position
+     * <p>Only use this if the shooter sensor is not working
      * 
      * @param target in degrees of THE SHOOTER, not the extension bar
      */
@@ -30,6 +30,12 @@ public class SetPoint extends Command {
         this.addRequirements(mArm);
     }
 
+    /**
+     * <p>
+     * Set the shooter to a calculated position
+     * <p>
+     * Only use this if the shooter sensor is not working
+     */
     public SetPoint() {
         timer = new Timer();
         mArm = Arm.getInstance();

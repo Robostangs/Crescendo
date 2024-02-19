@@ -10,13 +10,10 @@ public class DeployAndIntake extends Command {
     private Intake mIntake;
     private Arm mArm;
     private Timer timer;
-    private boolean deploy;
 
-    public DeployAndIntake(boolean deploy) {
+    public DeployAndIntake() {
         mIntake = Intake.getInstance();
         mArm = Arm.getInstance();
-
-        this.deploy = deploy;
 
         timer = new Timer();
         this.setName("Deploy and Intake");
@@ -31,14 +28,12 @@ public class DeployAndIntake extends Command {
 
     @Override
     public void execute() {
-        if (deploy) {
-            mIntake.setExtend(true);
-            if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
-                mIntake.setIntake(1);
-            }
-        } else {
-            mIntake.setBelt(1);
+        mIntake.setExtend(true);
+        if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
+            mIntake.setIntake(1);
         }
+        // Maybe I need to change this
+        mIntake.setBelt(1);
     }
 
     @Override
@@ -49,6 +44,10 @@ public class DeployAndIntake extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        if (!interrupted) {
+            mIntake.setHolding(true);
+        }
+
         mIntake.setIntake(0);
         mIntake.setBelt(0);
         mIntake.setExtend(false);

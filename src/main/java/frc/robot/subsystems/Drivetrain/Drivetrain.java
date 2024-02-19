@@ -58,14 +58,25 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
-    @SuppressWarnings("unused")
     @Override
     public void periodic() {
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
-            if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
+            if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1
+                    && LimelightHelpers.getCurrentPipelineIndex(
+                            Constants.Vision.llAprilTagRear) == Constants.Vision.llAprilTagPipelineIndex) {
                 this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear),
                         Timer.getFPGATimestamp());
             }
+
+            // if (LimelightHelpers.getTid(Constants.Vision.llAprilTag) != -1) {
+            //     this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag),
+            //             Timer.getFPGATimestamp());
+            // }
+
+            // if (LimelightHelpers.getTid(Constants.Vision.llPython) != -1  && LimelightHelpers.getCurrentPipelineIndex(Constants.Vision.llPython) == Constants.Vision.llAprilTagPipelineIndex) {
+            //     this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llPython),
+            //             Timer.getFPGATimestamp());
+            // }
         }
     }
 
@@ -73,12 +84,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
-        if (Constants.Vision.UseLimelight) {
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
-                    Constants.Vision.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
-        }
+        // if (Constants.Vision.UseLimelight && Robot.isReal()) {
+        //     // LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
+        //     LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
+        //             Constants.Vision.llAprilTagPipelineIndex);
+        //     LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llAprilTagPipelineIndex);
+        // }
 
         configurePathPlanner();
         if (Utils.isSimulation()) {
@@ -90,10 +101,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         super(driveTrainConstants, modules);
 
         if (Constants.Vision.UseLimelight) {
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
+            // LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
                     Constants.Vision.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+
+            // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llAprilTagPipelineIndex);
+            
             super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionOfMyVision);
         }
 

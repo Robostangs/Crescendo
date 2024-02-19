@@ -111,9 +111,12 @@ public class Arm extends SubsystemBase {
          */
         armCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         armCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        armCoderConfig.MagnetSensor.MagnetOffset = -0.339599609375;
 
         /* Do not apply */
-        // armCoder.getConfigurator().apply(armCoderConfig);
+        armCoder.getConfigurator().apply(armCoderConfig);
+
+        // armCoder.setPosition(-Constants.ArmConstants.shooterOffset - Constants.ArmConstants.hardStopOffset);
 
         armMotor = new LoggyTalonFX(Constants.ArmConstants.armMotorID, false);
 
@@ -329,6 +332,9 @@ public class Arm extends SubsystemBase {
             return angleToSpeaker;
         } else {
             System.out.println(angleToSpeaker + " is not a valid setpoint");
+            if (angleToSpeaker < -60) {
+                return Constants.ArmConstants.SetPoints.kSubwoofer;
+            }
             return getArmPosition();
         }
     }

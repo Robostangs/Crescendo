@@ -29,15 +29,17 @@ public final class Constants {
 		public static final boolean UseLimelight = true;
 		public static final String llAprilTag = "limelight-front";
 		public static final String llAprilTagRear = "limelight-rear";
-		public static final int llAprilTagPipelineIndex = 0;
+		public static final int llAprilTagPipelineIndex = 1;
 
 		public static final String llPython = "limelight-python";
 		public static final int llPythonPipelineIndex = 0;
 
 		// public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
-		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(180));
+		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(180));
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
-		public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
+
+		/** This needs to be tuned for the shooter */
+		public static final double[] SpeakerCoords = { 0.4, 5.55, 1.97 };
 		/** Highest Y value of the speaker */
 		public static final double SpeakerUpperBound = 6;
 		/** Lowest Y value of the speaker */
@@ -243,7 +245,7 @@ public final class Constants {
 	}
 
 	public static class OperatorConstants {
-		public static final double kDeadzone = 0.05;
+		public static final double kDeadzone = 0.06;
 		public static final double kDeadzoneJoystick = 0.07;
 
 		public static final double kArmDeadzone = 0.07;
@@ -254,21 +256,6 @@ public final class Constants {
 		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * kDeadzone;
 
 		public static final double setpointTimeout = 2;
-	}
-
-	public static class ShooterConstants {
-		public static final int feedMotor = 60;
-		public static final int shootMotorLeft = 51;
-		public static final int shootMotorRight = 52;
-		public static final boolean feedIsInverted = true;
-		public static final boolean rightShootIsInverted = true;
-		public static final boolean leftShootIsInverted = false;
-		public static final boolean intakeIsPositive = true;
-
-		public static final double feederFeedForward = 0.0265;
-		public static final double shooterChargeUpTime = 0.5;
-		public static final double feederChargeUpTime = 0.22;
-		// public static final double feederChargeUpTime = 0.23;
 	}
 
 	public static class ArmConstants {
@@ -294,32 +281,54 @@ public final class Constants {
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
-		public static final double shooterOffset = 58.2;
-		public static final double kInRangeThreshold = 1.5;
+		public static final double shooterOffset = 58.8;
+		public static final double hardStopOffset = 1.5;
+		// TODO: Tune this
+		public static final double kInRangeThreshold = 1;
 
 		public static class SetPoints {
 			public static final double kSpeaker1 = -45;
 			public static final double kSpeaker2 = -40;
 			public static final double kSpeaker3 = -30;
 			public static final double kSubwoofer = kArmMinAngle;
-			public static final double kAmp = 53.75;
+			public static final double kAmp = 40;
 			public static final double kIntake = -60;
 			public static final double kHorizontal = 0;
 		}
 	}	
 
+	public static class ShooterConstants {
+		public static final int feedMotor = 60;
+		public static final int shootMotorLeft = 51;
+		public static final int shootMotorRight = 52;
+		public static final boolean feedIsInverted = true;
+		public static final boolean rightShootIsInverted = true;
+		public static final boolean leftShootIsInverted = false;
+		public static final boolean intakeIsPositive = true;
+
+		public static final double feederFeedForward = 0.0265;
+		public static final double shooterChargeUpTime = 0.5;
+		public static final double feederChargeUpTime = 2;
+
+		public static final double feederReverseFeed = -0.5;
+		// public static final double feederChargeUpTime = 0.24;
+		// public static final double feederChargeUpTime = 0.23;
+	}
+
 	public static class IntakeConstants {
 		public static final int shooterMotorID = 62;
 		public static final int beltMotorID = 61;
 
-		public static final int leftSolenoidID = 0;
-		public static final int rightSolenoidID = 3;
+		public static final int solenoidID = 0;
+		public static final int extraSolenoidID = 4;
 
-		public static final int shooterSensorPWM_ID = 0;
+		public static final int shooterSensorPWM_ID = 9;
 		public static final int beltSensorPWM_ID = 1;
 
 		public static final double kDeployTimeSeconds = 0.4;
 		public static final double beltFeedForward = 0.05;
+
+		public static final double beltIntakeSpeed = 0.75;
 
 		public static final boolean intakeMotorInverted = false;
 		public static final boolean beltMotorInverted = true;

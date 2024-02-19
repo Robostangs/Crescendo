@@ -42,10 +42,16 @@ public class Align extends Command {
         this.howManyBabiesOnBoard = howManyBabiesOnBoard;
 
         if (note) {
-            getTargetRotation = () -> {
-                return mDrivetrain.getPose().getRotation()
-                        .plus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-            };
+            // if (LimelightHelpers.getTX(Constants.Vision.llPython) == 0) {
+            //     getTargetRotation = () -> {
+            //         return mDrivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(90));
+            //     };
+            // } else {
+                getTargetRotation = () -> {
+                    return mDrivetrain.getPose().getRotation()
+                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llPython)));
+                };
+            // }
             // if (LimelightHelpers.getTX(Constants.Vision.llAprilTagRear) != 0) {
             // return mDrivetrain.getPose().getRotation()
             // .plus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
@@ -72,12 +78,12 @@ public class Align extends Command {
                 // Constants.Vision.SpeakerCoords[0] - mDrivetrain.getPose().getX()));
                 // }
 
-                if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) == -1) {
-                    return Rotation2d.fromDegrees(0);
-                } else {
-                    return mDrivetrain.getPose().getRotation()
-                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-                }
+                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) == -1) {
+                // return Rotation2d.fromDegrees(0);
+                // } else {
+                return mDrivetrain.getPose().getRotation()
+                        .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                // }
             };
         }
     }
@@ -94,7 +100,7 @@ public class Align extends Command {
         timer.restart();
 
         if (note) {
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 1);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
         } else {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 2);
         }
@@ -108,6 +114,7 @@ public class Align extends Command {
             mIntake.setExtend(true);
             if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
                 mIntake.setIntake(1);
+                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
             }
         }
 
@@ -143,52 +150,11 @@ public class Align extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        // mDrivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
+        LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
         if (note) {
+            // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llAprilTagPipelineIndex);
             mIntake.setIntake(0);
             mIntake.setExtend(false);
         }
     }
-
-    // @Override
-    // public void execute() {
-    // drive.RotationalDeadband = 0;
-
-    // if (note) {
-    // mIntake.setExtend(true);
-    // if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
-    // mIntake.setIntake(1);
-    // }
-    // }
-
-    // SmartDashboard.putNumber("Swerve/Rotation Error",
-    // drive.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees());
-
-    // drive
-    // .withVelocityX(-translateY.get()
-    // * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-    // .withVelocityY(-translateX.get()
-    // * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-    // .withSlowDown(1 - howManyBabiesOnBoard.get());
-
-    // drive2
-    // .withVelocityX(-translateY.get()
-    // * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-    // .withVelocityY(-translateX.get()
-    // * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-    // .withSlowDown(1 - howManyBabiesOnBoard.get());
-
-    // if (Math.abs(drive.TargetDirection.getDegrees() -
-    // getTargetRotation.get().getDegrees()) < 5) {
-    // SmartDashboard.putString("Swerve/Rotation Status", "In Position");
-    // mDrivetrain.setControl(drive2);
-    // } else {
-    // SmartDashboard.putString("Swerve/Rotation Status", "Travelling");
-    // drive.TargetDirection = getTargetRotation.get();
-    // mDrivetrain.setControl(drive);
-    // }
-
-    // SmartDashboard.putNumber("Swerve/Rotation Target",
-    // drive.TargetDirection.getDegrees());
-    // }
 }

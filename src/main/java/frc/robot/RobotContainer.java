@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.commands.Swerve.xDrive;
+import frc.robot.commands.feeder.BeltDrive;
 import frc.robot.commands.feeder.BeltFeed;
 import frc.robot.commands.feeder.DeployAndIntake;
+import frc.robot.commands.feeder.QuickFeed;
 import frc.robot.commands.shooter.AimAndShoot;
 import frc.robot.commands.shooter.FeedAndShoot;
 import frc.robot.commands.shooter.FineAdjust;
@@ -36,32 +38,40 @@ public class RobotContainer {
 
 		xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-		xDrive.x().toggleOnTrue(new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY() ,
-						() -> xDrive.getRightTriggerAxis(), false));
-		// xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.tareEverything()));
-		// xDrive.povRight().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(5, 5, Rotation2d.fromDegrees(20)))));
+		xDrive.x().toggleOnTrue(new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(),
+				() -> xDrive.getRightTriggerAxis(), false));
+
+		xDrive.b().toggleOnTrue(new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(),
+				() -> xDrive.getRightTriggerAxis(), true));
 
 		mIntake.setDefaultCommand(new BeltFeed());
 
-		xDrive.rightBumper().whileTrue(new DeployAndIntake(true));
-		xDrive.leftBumper().whileTrue(new DeployAndIntake(false));
+		xDrive.leftBumper().whileTrue(new DeployAndIntake());
+
+		// This is basically saying deploy and intake without deploying
+		xDrive.rightBumper().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
+
 	}
 
 	private void configureManipBinds() {
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kArmDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
-		xManip.y().whileTrue(new AimAndShoot(0));
-		xManip.x().whileTrue(new AimAndShoot(Constants.ArmConstants.SetPoints.kSubwoofer));
+		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kArmDeadzone)
+				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
+
+		// xManip.x().whileTrue(new
+		// AimAndShoot(Constants.ArmConstants.SetPoints.kSubwoofer));
+
+		xManip.x().whileTrue(new QuickFeed());
 
 		xManip.a().whileTrue(new AimAndShoot());
 		xManip.b().whileTrue(new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp));
 		// xManip.a().onTrue(new SetPoint(0));
 		// xManip.b().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
 
-		
-		xManip.pov(90).whileTrue(new Spit());
-		xManip.povDown().whileTrue(new DeployAndIntake(true));
+		xManip.povRight().whileTrue(new Spit());
+		xManip.povDown().whileTrue(new DeployAndIntake());
 
 		xManip.leftBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getRightBumper()));
 	}
@@ -95,7 +105,7 @@ public class RobotContainer {
 				.whileTrue(new AimAndShoot());
 
 		// new Trigger(() -> simController.getRawButtonPressed(3))
-		// 		.whileTrue(new AimAndShoot());
+		// .whileTrue(new AimAndShoot());
 
 		// new Trigger(() -> simController.getRawButtonPressed(4))
 		// .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kHorizontal));

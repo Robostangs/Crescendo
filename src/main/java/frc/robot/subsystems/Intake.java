@@ -12,19 +12,15 @@ import frc.robot.LoggyThings.LoggyTalonFX;
 public class Intake extends SubsystemBase {
     private static Intake mInstance;
     private Compressor mCompressor;
-    private Solenoid leftSolenoid, rightSolenoid;
+    private Solenoid solenoid;
     private LoggyTalonFX intakeMotor, beltMotor;
     private DigitalInput shooterSensor;
+    private boolean holding;
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Intake/Status", leftSolenoid.get() ? "Extended" : "Retracted");
+        SmartDashboard.putString("Intake/Status", solenoid.get() ? "Extended" : "Retracted");
         SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
-
-        if (leftSolenoid.get() != rightSolenoid.get()) {
-            SmartDashboard.putString("Intake/Status", "ERROR: Solenoids are not in sync");
-            setExtend(false);
-        }
     }
 
     public static Intake getInstance() {
@@ -34,12 +30,11 @@ public class Intake extends SubsystemBase {
     }
 
     private Intake() {
-        leftSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.leftSolenoidID);
-        rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.rightSolenoidID);
+        solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.solenoidID);
         mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
-        shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
         mCompressor.enableDigital();
         mCompressor.disable();
+        shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
 
         intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.shooterMotorID, true);
         beltMotor = new LoggyTalonFX(Constants.IntakeConstants.beltMotorID, true);
@@ -49,8 +44,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void setExtend(boolean deploy) {
-        leftSolenoid.set(deploy);
-        rightSolenoid.set(deploy);
+        solenoid.set(deploy);
     }
 
     public void setIntake(double speed) {
@@ -74,6 +68,14 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean getExtended() {
-        return leftSolenoid.get();
+        return solenoid.get();
+    }
+
+    public void setHolding(boolean holding) {
+        this.holding = holding;
+    }
+
+    public boolean getHolding() {
+        return holding;
     }
 }

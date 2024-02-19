@@ -54,7 +54,7 @@ public class FeedAndShoot extends Command {
 
                 if (timer.get() < 0.23) { // 0.23 is the time it takes for the note to travel into the shooter but not
                                           // hit the shooter wheels
-                    mShooter.shoot(0.05, 1);
+                    mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
                     SmartDashboard.putString("Shooter/Status", "Charging Up");
                 } else {
                     mShooter.shoot(0, 1);
@@ -66,7 +66,7 @@ public class FeedAndShoot extends Command {
                 }
             } else {
                 mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
-                mIntake.setBelt(0.3);
+                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
                 SmartDashboard.putString("Shooter/Status", "Charging Up");
             }
         } else {
@@ -91,7 +91,7 @@ public class FeedAndShoot extends Command {
                 mIntake.setBelt(0);
             } else {
                 mShooter.shoot(0.1, 1);
-                mIntake.setBelt(0.3);
+                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
                 SmartDashboard.putString("Shooter/Status", "Charging Up");
             }
         }
@@ -100,9 +100,7 @@ public class FeedAndShoot extends Command {
     @Override
     public void end(boolean interrupted) {
         SmartDashboard.putString("Shooter/Status", "Idle");
-
-        mShooter.setBrake(true);
-        mShooter.stop();
+        // mShooter.stop();
     }
 
     @Override

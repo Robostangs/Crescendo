@@ -1,5 +1,6 @@
 package frc.robot.commands.feeder;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
@@ -19,12 +20,18 @@ public class BeltFeed extends Command {
 
     @Override
     public void execute() {
-        if (!mIntake.getShooterSensor()) {
-            mIntake.setBelt(0.2);
+        if (!mIntake.getShooterSensor() && mIntake.getHolding()) {
+            mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
             mShooter.shoot(0.1, 0);
         } else {
-            mIntake.setBelt(Constants.IntakeConstants.beltFeedForward);
-            mShooter.shoot(0, 0);
+            if (mIntake.getShooterSensor()) {
+                SmartDashboard.putString("Arm/Status", "Waiting To Shoot");
+            } else {
+                SmartDashboard.putString("Arm/Status", "Waiting For Note");
+
+            }
+            mIntake.setBelt(0);
+            mShooter.shoot(0.05, 0);
         }
     }
 

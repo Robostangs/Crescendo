@@ -62,7 +62,7 @@ public class Arm extends SubsystemBase {
         simShooterExtension.setAngle(shooterExtensionSetpoint - 90);
 
         if (Robot.isReal()) {
-            if (isInRangeOfTarget(getArmTarget(), 3)) {
+            if (isInRangeOfTarget(getArmTarget())) {
                 elbowLigament.setColor(new Color8Bit(Color.kGreen));
                 SmartDashboard.putBoolean("Arm/At Setpoint", true);
             } else {
@@ -111,10 +111,10 @@ public class Arm extends SubsystemBase {
          */
         armCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         armCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        armCoderConfig.MagnetSensor.MagnetOffset = -0.339599609375;
+        // armCoderConfig.MagnetSensor.MagnetOffset = -0.339599609375;
 
         /* Do not apply */
-        armCoder.getConfigurator().apply(armCoderConfig);
+        // armCoder.getConfigurator().apply(armCoderConfig);
 
         // armCoder.setPosition(-Constants.ArmConstants.shooterOffset - Constants.ArmConstants.hardStopOffset);
 
@@ -273,7 +273,7 @@ public class Arm extends SubsystemBase {
             return 0;
         }
 
-        return armMotor.getVelocity().getValueAsDouble() * 360;
+        return Math.abs(armMotor.getVelocity().getValueAsDouble() * 360);
     }
 
     public void setMotionMagic(double position) {
@@ -315,9 +315,18 @@ public class Arm extends SubsystemBase {
 
         /* Swerve Pose calculated in meters */
         Pose2d currentPose = Drivetrain.getInstance().getState().Pose;
+        double SpeakerY = Constants.Vision.SpeakerCoords[1];
+
+        if (currentPose.getY() <= Constants.Vision.SpeakerLowerBound) {
+            SpeakerY = Constants.Vision.SpeakerLowerBound;
+        }
+        if (currentPose.getY() >= Constants.Vision.SpeakerUpperBound) {
+            SpeakerY = Constants.Vision.SpeakerUpperBound;
+        }
+
         double distToSpeakerMeters = Math.sqrt(
                 Math.pow(Constants.Vision.SpeakerCoords[0] - currentPose.getX(), 2)
-                        + Math.pow(Constants.Vision.SpeakerCoords[1] - currentPose.getY(), 2)) - Units.inchesToMeters(15);
+                        + Math.pow(SpeakerY - currentPose.getY(), 2)) - Units.inchesToMeters(15);
         // System.out.println("Distance to speaker: " + Units.metersToInches(distToSpeakerMeters));
         // System.out.println("Height to Speaker: " +
         //         Units.metersToInches(shooterToSpeakerBottomMouthMeters));
@@ -332,10 +341,11 @@ public class Arm extends SubsystemBase {
             return angleToSpeaker;
         } else {
             System.out.println(angleToSpeaker + " is not a valid setpoint");
-            if (angleToSpeaker < -60) {
+            if (angleToSpeaker < Constants.ArmConstants.kArmMinAngle) {
                 return Constants.ArmConstants.SetPoints.kSubwoofer;
+            } else {
+                return getArmPosition();
             }
-            return getArmPosition();
         }
     }
 
@@ -386,8 +396,8 @@ public class Arm extends SubsystemBase {
         // armMotorConfig.Slot0.kP = 60;
         // armMotorConfig.Slot0.kS = 0;
         // armMotorConfig.Slot0.kV = 04;
-        motionMagicConfigs.MotionMagicCruiseVelocity = 0.25;
-        motionMagicConfigs.MotionMagicAcceleration = 0.5;
+        motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
+        motionMagicConfigs.MotionMagicAcceleration = 1;
         /*
          * Adjust to get trapezoidal formation (use the velocity posted in
          * smartdashobard to track trapezoid)

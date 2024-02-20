@@ -155,6 +155,16 @@ public class Align extends Command {
             // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llAprilTagPipelineIndex);
             mIntake.setIntake(0);
             mIntake.setExtend(false);
+            mIntake.setHolding(!interrupted);
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        if (note) {
+            return mIntake.getShooterSensor();
+        } else {
+            return !mIntake.getHolding();
         }
     }
 }

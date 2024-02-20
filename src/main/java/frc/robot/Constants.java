@@ -10,6 +10,8 @@ import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
@@ -39,11 +41,15 @@ public final class Constants {
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 
 		/** This needs to be tuned for the shooter */
-		public static final double[] SpeakerCoords = { 0.4, 5.55, 1.97 };
+		public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
+
 		/** Highest Y value of the speaker */
-		public static final double SpeakerUpperBound = 6;
+		public static final double SpeakerYUpperBound = 6.12;
 		/** Lowest Y value of the speaker */
-		public static final double SpeakerLowerBound = 5;
+		public static final double SpeakerYLowerBound = 4.98;
+
+		/** Should be 0.57 */
+		public static final double SpeakerDeadBand = (SpeakerYUpperBound - SpeakerYLowerBound) / 2;
 	}
 
 	public class SwerveConstants {
@@ -225,11 +231,32 @@ public final class Constants {
 		public static final PIDConstants noteAlignPID = new PIDConstants(0.08, 0.1, 0.01);
 
 		public static final double driveSpeed = 2;
+
+		public static class WayPoints {
+			public static class Blue {
+				public static final Pose2d kAmp = new Pose2d(1.81, 7.75, Rotation2d.fromDegrees(-90));
+				public static final Pose2d kHumanPlayer = new Pose2d(13.8, 1.2, Rotation2d.fromDegrees(0));
+				public static final Pose2d kSpeakerLeft = new Pose2d(2.6, 6.45, Rotation2d.fromDegrees(180));
+				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerCoords[1],
+						Rotation2d.fromDegrees(180));
+				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
+			}
+			
+			public static class Red {
+				// TODO: Add Red Waypoints
+				public static final Pose2d kAmp = new Pose2d(1.81, 1.25, Rotation2d.fromDegrees(90));
+				public static final Pose2d kHumanPlayer = new Pose2d(13.8, 7.8, Rotation2d.fromDegrees(180));
+				public static final Pose2d kSpeakerLeft = new Pose2d(2.6, 2.55, Rotation2d.fromDegrees(0));
+				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerCoords[1],
+						Rotation2d.fromDegrees(0));
+				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 8.35, Rotation2d.fromDegrees(0));
+			}
+		}
 	}
 
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
-		public static final double falconShooterLoadRPM = 6500;
+		public static final double falconShooterLoadRPM = 6400;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -248,7 +275,7 @@ public final class Constants {
 		public static final double kDeadzone = 0.06;
 		public static final double kDeadzoneJoystick = 0.07;
 
-		public static final double kArmDeadzone = 0.07;
+		public static final double kManipDeadzone = 0.07;
 
 		public static final double slowDownMultiplier = 0.5;
 
@@ -277,22 +304,22 @@ public final class Constants {
 		/** 60 degrees */
 		public static final double kArmMaxAngle = 60;
 		/** 300 degrees */
-		public static final double kArmMinAngle = -60;
+		public static final double kArmMinAngle = -57.48;
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
 		public static final double shooterOffset = 58.8;
-		public static final double hardStopOffset = 1.5;
-		// TODO: Tune this
-		public static final double kInRangeThreshold = 1;
+		public static final double hardStopOffset = shooterOffset + kArmMinAngle;
+
+		public static final double kInRangeThreshold = 1.5;
 
 		public static class SetPoints {
 			public static final double kSpeaker1 = -45;
 			public static final double kSpeaker2 = -40;
 			public static final double kSpeaker3 = -30;
 			public static final double kSubwoofer = kArmMinAngle;
-			public static final double kAmp = 40;
-			public static final double kIntake = -60;
+			public static final double kAmp = 46;
+			public static final double kIntake = -57.48;
 			public static final double kHorizontal = 0;
 		}
 	}	
@@ -308,9 +335,9 @@ public final class Constants {
 
 		public static final double feederFeedForward = 0.0265;
 		public static final double shooterChargeUpTime = 0.5;
-		public static final double feederChargeUpTime = 2;
 
-		public static final double feederReverseFeed = -0.5;
+		public static final double feederChargeUpTime = 0.2;
+		public static final double feederReverseFeed = -0.02;
 		// public static final double feederChargeUpTime = 0.24;
 		// public static final double feederChargeUpTime = 0.23;
 	}

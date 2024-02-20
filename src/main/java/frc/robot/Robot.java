@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,6 +20,7 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 public class Robot extends TimedRobot {
 	public SendableChooser<String> mChooser = new SendableChooser<>();
 	public static Field2d mField = new Field2d();
+	public static PowerDistribution pdh = new PowerDistribution();
 
 	public static boolean atComp = false;
 	public static boolean autonomousExited = false;
@@ -27,7 +29,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
-		DataLogManager.start(Constants.logDirectory);
+		// DataLogManager.start(Constants.logDirectory);
 
 		new RobotContainer();
 
@@ -35,16 +37,22 @@ public class Robot extends TimedRobot {
 
 		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
 
-		CommandScheduler.getInstance()
-				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
-		CommandScheduler.getInstance()
-				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
-		CommandScheduler.getInstance()
-				.onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
-
 		if (DriverStation.isFMSAttached()) {
 			atComp = true;
 			DataLogManager.start(Constants.logDirectory);
+			CommandScheduler.getInstance()
+					.onCommandInitialize((action) -> DataLogManager.log(action.getName() + "Command Initialized"));
+			CommandScheduler.getInstance()
+					.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + "Command Interrupted"));
+			CommandScheduler.getInstance()
+					.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
+		} else {
+			CommandScheduler.getInstance()
+					.onCommandInitialize((action) -> System.out.println(action.getName() + " Command Initialized"));
+			CommandScheduler.getInstance()
+					.onCommandInterrupt((action) -> System.out.println(action.getName() + " Command Interrupted"));
+			CommandScheduler.getInstance()
+					.onCommandFinish((action) -> System.out.println(action.getName() + " Command Finished"));
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);

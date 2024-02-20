@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase {
     private Solenoid solenoid;
     private LoggyTalonFX intakeMotor, beltMotor;
     private DigitalInput shooterSensor;
-    private boolean holding;
+    private boolean holding = true;
 
     @Override
     public void periodic() {

@@ -4,9 +4,12 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.LoggyThings.LoggyTalonFX;
 
 import java.util.List;
@@ -40,7 +43,7 @@ public class Shooter extends SubsystemBase {
         fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
         fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
         fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
-        fxConfig.MotorOutput.PeakReverseDutyCycle = 0;
+        fxConfig.MotorOutput.PeakReverseDutyCycle = -1;
 
         fxConfig.Slot0.kP = 0.07;
         fxConfig.Slot0.kI = 0.01;
@@ -107,5 +110,9 @@ public class Shooter extends SubsystemBase {
 
         shootMotorRight.setNeutralMode(mode);
         shootMotorLeft.setNeutralMode(mode);
+    }
+
+    public boolean readyToShoot() {
+        return ((shootMotorRight.getVelocity().getValueAsDouble() * 60) > ((Robot.pdh.getVoltage()/12.8) * Constants.MotorConstants.falconShooterLoadRPM));
     }
 }

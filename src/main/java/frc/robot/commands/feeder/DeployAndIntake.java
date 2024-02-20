@@ -38,16 +38,16 @@ public class DeployAndIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
-        // return mIntake.getBeltSensor();
+        if (mIntake.getShooterSensor()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        if (!interrupted) {
-            mIntake.setHolding(true);
-        }
-
+        mIntake.setHolding(true);
         mIntake.setIntake(0);
         mIntake.setBelt(0);
         mIntake.setExtend(false);

@@ -66,6 +66,7 @@ public class RobotContainer {
 		xManip.x().whileTrue(new QuickFeed());
 
 		xManip.a().whileTrue(new AimAndShoot());
+
 		xManip.b().whileTrue(new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp));
 		// xManip.a().onTrue(new SetPoint(0));
 		// xManip.b().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
@@ -74,6 +75,7 @@ public class RobotContainer {
 		xManip.povDown().whileTrue(new DeployAndIntake());
 
 		xManip.leftBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getRightBumper()));
+		xManip.rightBumper().whileTrue(new FeedAndShoot());
 	}
 
 	public RobotContainer() {

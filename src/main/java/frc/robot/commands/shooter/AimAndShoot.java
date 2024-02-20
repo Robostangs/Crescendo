@@ -78,8 +78,8 @@ public class AimAndShoot extends Command {
 
     @Override
     public void execute() {
-        if (!mIntake.getShooterSensor()) { // If shooter is empty
-            // mShooter.shoot(0.1, 1, rightShooterVal);
+        // If shooter is empty 
+        if (!mIntake.getShooterSensor()) {
             mShooter.shoot(0.1, 0, 0);
 
             mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
@@ -93,16 +93,19 @@ public class AimAndShoot extends Command {
         }
 
         // else if the arm is within 1.5 degrees of the target and the arm is not moving
-        // much
-        else if (mArm.isInRangeOfTarget(armSetpoint) && mArm.getVelocity() < 1) {
-            mShooter.shoot(0.5, 1, rightShooterVal);
-            SmartDashboard.putString("Shooter/Status", "Shooting");
-            isFinishedBool = true;
+        else if (mArm.isInRangeOfTarget(armSetpoint) && mArm.getVelocity() < 0.5) {
+            if (mShooter.readyToShoot()) {
+                mShooter.shoot(0.5, 1, rightShooterVal);
+                SmartDashboard.putString("Shooter/Status", "Shooting");
+                isFinishedBool = true;
+            } else {
+                mShooter.shoot(0, 1, 1);
+                SmartDashboard.putString("Shooter/Status", "Charging Up");
+            }
         }
 
         // If shooter is loaded but arm is not in position
         else {
-            SmartDashboard.putString("Shooter/Status", "Traveling to Setpoint");
             if (timer == null) {
                 timer = new Timer();
                 timer.restart();
@@ -114,16 +117,11 @@ public class AimAndShoot extends Command {
                 mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0, 0);
                 SmartDashboard.putString("Shooter/Status", "Reversing Feed");
             } else {
-
-                // if the arm is moving downwards apply an extra feedforward to the feeder
-                if (armSetpoint < mArm.getArmPosition()) {
-                    mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1, rightShooterVal);
-                } else {
-                    mShooter.shoot(0, 1, rightShooterVal);
-                }
+                mShooter.shoot(0, 1, 1);
+                mArm.setMotionMagic(armSetpoint);
+                SmartDashboard.putString("Shooter/Status", "Traveling to Setpoint");
             }
 
-            mArm.setMotionMagic(armSetpoint);
         }
 
         if (debugMode) {
@@ -142,7 +140,8 @@ public class AimAndShoot extends Command {
         }
 
         return isFinishedBool && !mArm.isInRangeOfTarget(armSetpoint, 5);
-        // return isFinishedBool && mArm.isInRangeOfTarget(Constants.ArmConstants.SetPoints.kIntake, 5);
+        // return isFinishedBool &&
+        // mArm.isInRangeOfTarget(Constants.ArmConstants.SetPoints.kIntake, 5);
 
         // return false;
         // return (mArm.isInRangeOfTarget(armSetpoint, 1) &&
@@ -154,10 +153,6 @@ public class AimAndShoot extends Command {
         if (isFinishedBool) {
             mIntake.setHolding(false);
         }
-        if (timer == null) {
-            timer = new Timer();
-        }
-        System.out.println("Timer: " + timer.get());
 
         SmartDashboard.putString("Shooter/Status", "Idle");
         mShooter.stop();

@@ -116,7 +116,7 @@
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 3.0,
       "command": {
         "type": "parallel",
         "data": {

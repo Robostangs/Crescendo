@@ -8,19 +8,45 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right to bottom"
+            "pathName": "Right to center"
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "Right to second bottom"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right to second bottom"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Second bottom to shoot"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "Right to Middle Collect"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right to bottom"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Bottom to shoot"
+                }
+              }
+            ]
           }
         }
       ]

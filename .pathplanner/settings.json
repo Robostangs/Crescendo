@@ -3,8 +3,9 @@
   "robotLength": 0.72,
   "holonomicMode": true,
   "pathFolders": [
-    "Close Left Note",
     "Center start",
+    "Close Left Note",
+    "Coming back",
     "Right start"
   ],
   "autoFolders": [

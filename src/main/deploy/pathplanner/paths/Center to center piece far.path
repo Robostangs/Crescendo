@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.9332455387381013,
-        "y": 4.071332966884684
+        "x": 2.704574478593402,
+        "y": 5.167153500973669
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9365487265200727,
-        "y": 2.067514880007438
+        "x": 3.754905972774909,
+        "y": 4.391712292683844
       },
       "isLocked": false,
       "linkedName": null
@@ -22,22 +22,6 @@
       "prevControl": {
         "x": 6.035338551656929,
         "y": 5.0796770359509855
-      },
-      "nextControl": {
-        "x": 9.713296926593854,
-        "y": 3.166434420831805
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.8718867298845712,
-        "y": 4.8729039078448535
-      },
-      "prevControl": {
-        "x": 2.7878313765886795,
-        "y": 4.903546246907309
       },
       "nextControl": null,
       "isLocked": false,
@@ -59,8 +43,8 @@
     },
     {
       "name": "Under the stage II",
-      "minWaypointRelativePos": 1.35,
-      "maxWaypointRelativePos": 1.75,
+      "minWaypointRelativePos": 1,
+      "maxWaypointRelativePos": 1,
       "constraints": {
         "maxVelocity": 4.0,
         "maxAcceleration": 3.0,

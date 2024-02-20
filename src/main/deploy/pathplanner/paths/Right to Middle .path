@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.8077839091774899,
-        "y": 3.243310113563232
+        "x": 2.659026660645914,
+        "y": 2.839107729141384
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.892175577960828,
-        "y": 1.4480015970202733
+        "x": 4.357328180305949,
+        "y": 2.0504508813661655
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "RIGHT GO"
     },
     {
       "anchor": {
-        "x": 7.821149766183462,
-        "y": 4.152962521884865
+        "x": 7.862345247838644,
+        "y": 4.12376997902144
       },
       "prevControl": {
-        "x": 7.035655321310643,
-        "y": 4.048708125194029
+        "x": 7.076850802965826,
+        "y": 4.019515582330604
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Middle Intake"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Under the stage",
-      "minWaypointRelativePos": 0.4,
-      "maxWaypointRelativePos": 0.7,
+      "minWaypointRelativePos": 0.35,
+      "maxWaypointRelativePos": 0.65,
       "constraints": {
         "maxVelocity": 3.0,
         "maxAcceleration": 3.0,
@@ -43,18 +43,7 @@
     },
     {
       "name": "Intake",
-      "minWaypointRelativePos": 0.9,
-      "maxWaypointRelativePos": 1,
-      "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 2.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    },
-    {
-      "name": "Under the stage",
-      "minWaypointRelativePos": 1,
+      "minWaypointRelativePos": 0.85,
       "maxWaypointRelativePos": 1,
       "constraints": {
         "maxVelocity": 3.0,
@@ -76,23 +65,6 @@
               "type": "named",
               "data": {
                 "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "shoot",
-      "waypointRelativePos": 1.5,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Shoot"
               }
             }
           ]

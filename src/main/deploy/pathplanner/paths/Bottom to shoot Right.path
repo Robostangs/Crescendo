@@ -4,51 +4,33 @@
     {
       "anchor": {
         "x": 7.862345247838644,
-        "y": 7.401609493033802
+        "y": 0.7419484190820241
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.570317485890202,
-        "y": 7.030146362370062
+        "x": 6.0350879359166125,
+        "y": 0.9447460700476965
       },
       "isLocked": false,
-      "linkedName": "Top Intake"
+      "linkedName": "Bottom intake"
     },
     {
       "anchor": {
         "x": 1.944870130481002,
-        "y": 5.504575536928852
+        "y": 4.496703873037376
       },
       "prevControl": {
-        "x": 4.0824398106289985,
-        "y": 5.952980532184439
+        "x": 1.5054257330736889,
+        "y": 2.1937183087329135
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot"
+      "linkedName": "Right shoot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Shoot"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.0,
     "maxAcceleration": 4.0,
@@ -61,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Coming back Center",
+  "folder": "Coming back Right",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

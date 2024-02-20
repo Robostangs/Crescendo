@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.937908711196887,
-        "y": 4.046959477847527
+        "x": 2.762830553438885,
+        "y": 5.0268282156934685
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5092592592592595,
-        "y": 1.8286825369947042
+        "x": 3.7311522215637023,
+        "y": 4.981339782124009
       },
       "isLocked": false,
       "linkedName": null
@@ -20,40 +20,8 @@
         "y": 5.770506477768909
       },
       "prevControl": {
-        "x": 6.2685873103227685,
-        "y": 4.687327726507305
-      },
-      "nextControl": {
-        "x": 8.476526742396489,
-        "y": 6.177049574193838
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.976205091299072,
-        "y": 4.462736008805352
-      },
-      "prevControl": {
-        "x": 6.222089342326833,
-        "y": 4.434231507351904
-      },
-      "nextControl": {
-        "x": 3.990162501885612,
-        "y": 4.485295610469721
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.937908711196887,
-        "y": 5.368229004976529
-      },
-      "prevControl": {
-        "x": 2.9603295477052267,
-        "y": 5.296700521641784
+        "x": 6.926388065739094,
+        "y": 3.430101059276193
       },
       "nextControl": null,
       "isLocked": false,
@@ -75,8 +43,8 @@
     },
     {
       "name": "Under the stage",
-      "minWaypointRelativePos": 1.45,
-      "maxWaypointRelativePos": 1.7,
+      "minWaypointRelativePos": 1,
+      "maxWaypointRelativePos": 1,
       "constraints": {
         "maxVelocity": 4.0,
         "maxAcceleration": 3.0,
@@ -87,7 +55,7 @@
     {
       "name": "Intake",
       "minWaypointRelativePos": 0.95,
-      "maxWaypointRelativePos": 1.2,
+      "maxWaypointRelativePos": 1,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 1.0,
@@ -108,23 +76,6 @@
               "type": "named",
               "data": {
                 "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 3.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Shoot"
               }
             }
           ]

@@ -4,28 +4,44 @@
     {
       "anchor": {
         "x": 7.862345247838644,
-        "y": 7.401609493033802
+        "y": 2.416112804447831
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.570317485890202,
-        "y": 7.030146362370062
+        "x": 6.886600532460324,
+        "y": 2.384579699714955
       },
       "isLocked": false,
-      "linkedName": "Top Intake"
+      "linkedName": "Second Bottom Intake"
+    },
+    {
+      "anchor": {
+        "x": 2.445361668501115,
+        "y": 2.9147634267490767
+      },
+      "prevControl": {
+        "x": 3.705973245279824,
+        "y": 1.1618553561181202
+      },
+      "nextControl": {
+        "x": 1.7001361082310704,
+        "y": 3.9510159275994248
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
         "x": 1.944870130481002,
-        "y": 5.504575536928852
+        "y": 4.496703873037376
       },
       "prevControl": {
-        "x": 4.0824398106289985,
-        "y": 5.952980532184439
+        "x": 1.9150294805219241,
+        "y": 4.05087565499205
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot"
+      "linkedName": "Right shoot"
     }
   ],
   "rotationTargets": [],
@@ -33,18 +49,11 @@
   "eventMarkers": [
     {
       "name": "Shoot",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2.0,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Shoot"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     }
@@ -61,7 +70,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Coming back Center",
+  "folder": "Coming back Right",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

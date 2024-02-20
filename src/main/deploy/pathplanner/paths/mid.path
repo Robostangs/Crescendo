@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.8969469374123935,
-        "y": 6.719639295760073
+        "x": 7.862345247838644,
+        "y": 4.12376997902144
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8969469374123937,
-        "y": 6.719639295760073
+        "x": 7.160659437059615,
+        "y": 5.936240580814495
       },
       "isLocked": false,
-      "linkedName": "Left shoot"
+      "linkedName": "Middle Intake"
     },
     {
       "anchor": {
-        "x": 7.862345247838644,
-        "y": 5.7756058382487145
+        "x": 1.8969469374123935,
+        "y": 6.719639295760073
       },
       "prevControl": {
-        "x": 6.862345247838644,
-        "y": 5.7756058382487145
+        "x": 6.5683596506081905,
+        "y": 6.6638179804137385
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Second Top Intake"
+      "linkedName": "Left shoot"
     }
   ],
   "rotationTargets": [],
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Close Left Note",
+  "folder": "Coming back left",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

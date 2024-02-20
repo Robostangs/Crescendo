@@ -8,19 +8,45 @@
         {
           "type": "path",
           "data": {
-            "pathName": "start to close left"
+            "pathName": "Left collect"
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "Left to top"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left to top"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "toppie"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "Left to second top"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left to second top"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Second top"
+                }
+              }
+            ]
           }
         }
       ]

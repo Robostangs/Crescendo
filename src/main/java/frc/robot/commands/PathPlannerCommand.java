@@ -104,17 +104,17 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     public static Command pickAuto(String startPos){
         switch(startPos){
 			case "left":
-				PathPlannerCommand.publishTrajectory(startPos);
+				// PathPlannerCommand.publishTrajectory(startPos);
                 return AutoBuilder.buildAuto(startPos);
 			case "right":
-            PathPlannerCommand.publishTrajectory(startPos);
+            // PathPlannerCommand.publishTrajectory(startPos);
             return AutoBuilder.buildAuto(startPos);				
 			case "center":
-            PathPlannerCommand.publishTrajectory(startPos);
+            // PathPlannerCommand.publishTrajectory(startPos);
             return AutoBuilder.buildAuto(startPos);				
             
 			default:
-            PathPlannerCommand.publishTrajectory("go");
+            // PathPlannerCommand.publishTrajectory("go");
             return AutoBuilder.buildAuto("go");				
             }
     }

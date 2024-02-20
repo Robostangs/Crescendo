@@ -82,6 +82,8 @@ public class Robot extends TimedRobot {
 		autonTable = NetworkTableInstance.getDefault().getTable("Autonomous");
 		autonTab = Shuffleboard.getTab("Autonomous");
 
+		PathPlannerCommand.registerCommand();
+
 		startPos.setDefaultOption("THE DEFAULT IS LEFT AND GOES FOREWORD", "left");
 		startPos.addOption("Left", "left");
 		startPos.addOption("Right", "right");
@@ -157,6 +159,8 @@ public class Robot extends TimedRobot {
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);
+
+
 	}
 
 	@SuppressWarnings("unused")

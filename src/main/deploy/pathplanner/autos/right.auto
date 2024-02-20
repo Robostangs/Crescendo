@@ -8,7 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right 2 piece far"
+            "pathName": "Right to bottom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right to second bottom"
           }
         },
         {

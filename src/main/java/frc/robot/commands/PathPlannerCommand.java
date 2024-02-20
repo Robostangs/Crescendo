@@ -93,6 +93,14 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         }
     }
 
+    public static void registerCommand() {
+        NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command, PathPlanner"));
+        NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command, PathPlanner"));
+        // new
+        // SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.1));
+        NamedCommands.registerCommand("AimAndShoot", new AimAndShoot(60).withTimeout(0.3));
+        NamedCommands.registerCommand("Stow", new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(0.3));
+    }
     public static Command pickAuto(String startPos){
         switch(startPos){
 			case "left":

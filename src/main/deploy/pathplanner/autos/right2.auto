@@ -8,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left collect"
+            "pathName": "Right start KD"
           }
         },
         {
@@ -18,32 +18,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left to top"
+                  "pathName": "Right to second bottom"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "toppie"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Left to second top"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Second top"
+                  "pathName": "second Bottom to shoot Right"
                 }
               }
             ]
@@ -52,6 +33,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Right paths",
   "choreoAuto": false
 }

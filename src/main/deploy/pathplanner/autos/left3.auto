@@ -6,13 +6,25 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Left collect"
+          }
+        },
+        {
           "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center to center piece"
+                  "pathName": "Left to top"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "toppie"
                 }
               }
             ]
@@ -25,32 +37,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center to center piece far"
+                  "pathName": "Left to second top"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Middle to shoot"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Center to top piece"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Second top to shoot"
+                  "pathName": "Second top"
                 }
               }
             ]
@@ -59,6 +52,6 @@
       ]
     }
   },
-  "folder": "Center paths",
+  "folder": "Left paths",
   "choreoAuto": false
 }

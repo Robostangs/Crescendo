@@ -6,9 +6,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "Right start KD"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right to Middle "
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Middle to shoot Right"
+                }
+              }
+            ]
           }
         },
         {
@@ -29,29 +42,10 @@
               }
             ]
           }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right to bottom"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Bottom to shoot Right"
-                }
-              }
-            ]
-          }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Right paths",
   "choreoAuto": false
 }

@@ -167,7 +167,6 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
-		// PathPlannerCommand.pickAuto(startPos.getSelected(), pieceChooser.getSelected());
 
 		mField.setRobotPose(Drivetrain.getInstance().getPose());
 
@@ -194,7 +193,8 @@ public class Robot extends TimedRobot {
 		// auton = new PathPlannerCommand(startPosition.getString("left"), closePieceCount.getInteger(0),
 		// 		farPieceCount.getInteger(0), false);
 
-		auton = PathPlannerCommand.pickAuto(startPos.getSelected());
+		// auton = PathPlannerCommand.pickAuto(startPos.getSelected());
+		PathPlannerCommand.pickAuto(startPos.getSelected(), pieceChooser.getSelected());
 
 		// auton = new PathPlannerCommand(mChooser.getSelected(),
 		// this.shoot.getBoolean(false));

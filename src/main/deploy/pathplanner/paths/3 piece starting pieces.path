@@ -36,40 +36,24 @@
         "y": 5.587392829361552
       },
       "prevControl": {
-        "x": 0.6182309053606202,
-        "y": 5.617871709143716
+        "x": 0.731706671746677,
+        "y": 6.057087790101507
       },
       "nextControl": {
-        "x": 3.4739245971393764,
-        "y": 5.565124074818238
+        "x": 3.421462075401059,
+        "y": 5.234913610936749
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.1512608696720372,
-        "y": 4.454770735248316
+        "x": 2.553495549699433,
+        "y": 4.07798462356184
       },
       "prevControl": {
-        "x": 0.376065221964649,
-        "y": 5.437479449787709
-      },
-      "nextControl": {
-        "x": 3.6582347569457045,
-        "y": 3.620543604554471
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.016894199338994,
-        "y": 3.490888180623087
-      },
-      "prevControl": {
-        "x": 0.5101126078368229,
-        "y": 4.866475982021905
+        "x": 0.7782999019920447,
+        "y": 5.060693338101233
       },
       "nextControl": null,
       "isLocked": false,
@@ -80,74 +64,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot then IN",
-      "waypointRelativePos": 1.4,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "race",
-              "data": {
-                "commands": [
-                  {
-                    "type": "named",
-                    "data": {
-                      "name": "Intake"
-                    }
-                  },
-                  {
-                    "type": "wait",
-                    "data": {
-                      "waitTime": 0.7
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot then IN",
-      "waypointRelativePos": 1.75,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Shoot"
-              }
-            },
-            {
-              "type": "race",
-              "data": {
-                "commands": [
-                  {
-                    "type": "named",
-                    "data": {
-                      "name": "Intake"
-                    }
-                  },
-                  {
-                    "type": "wait",
-                    "data": {
-                      "waitTime": 0.7
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot then IN",
-      "waypointRelativePos": 2.75,
+      "name": "Intake then shoot",
+      "waypointRelativePos": 0.95,
       "command": {
         "type": "sequential",
         "data": {
@@ -155,26 +73,13 @@
             {
               "type": "named",
               "data": {
-                "name": "Shoot"
+                "name": "Intake"
               }
             },
             {
-              "type": "race",
+              "type": "named",
               "data": {
-                "commands": [
-                  {
-                    "type": "named",
-                    "data": {
-                      "name": "Intake"
-                    }
-                  },
-                  {
-                    "type": "wait",
-                    "data": {
-                      "waitTime": 0.7
-                    }
-                  }
-                ]
+                "name": "Shoot"
               }
             }
           ]
@@ -182,12 +87,41 @@
       }
     },
     {
-      "name": "Shoot",
-      "waypointRelativePos": 4.0,
+      "name": "Intake then shoot",
+      "waypointRelativePos": 2.0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake then shoot",
+      "waypointRelativePos": 3,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            },
             {
               "type": "named",
               "data": {

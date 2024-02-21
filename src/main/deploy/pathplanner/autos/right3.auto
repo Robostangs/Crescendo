@@ -6,13 +6,25 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Right start KD"
+          }
+        },
+        {
           "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center to center piece"
+                  "pathName": "Right to second bottom"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "second Bottom to shoot Right"
                 }
               }
             ]
@@ -25,32 +37,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center to center piece far"
+                  "pathName": "Right to bottom"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Middle to shoot"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Center to top piece"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Second top to shoot"
+                  "pathName": "Bottom to shoot Right"
                 }
               }
             ]
@@ -59,6 +52,6 @@
       ]
     }
   },
-  "folder": "Center paths",
+  "folder": "Right paths",
   "choreoAuto": false
 }

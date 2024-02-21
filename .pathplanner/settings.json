@@ -11,7 +11,10 @@
     "Right start"
   ],
   "autoFolders": [
-    "Misc"
+    "Center paths",
+    "Misc",
+    "Left paths",
+    "Right paths"
   ],
   "defaultMaxVel": 6.0,
   "defaultMaxAccel": 4.0,

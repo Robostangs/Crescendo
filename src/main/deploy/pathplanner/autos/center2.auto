@@ -36,25 +36,6 @@
               }
             ]
           }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Center to top piece"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Second top to shoot"
-                }
-              }
-            ]
-          }
         }
       ]
     }

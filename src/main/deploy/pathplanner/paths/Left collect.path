@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.48912148750223455,
+        "x": 1.8880392807081914,
         "y": 7.031882355431378
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.489121487502235,
-        "y": 7.031882355431378
+        "x": 2.1873959303474173,
+        "y": 7.053023194009351
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.550353248854646,
+        "x": 2.576126068918805,
         "y": 7.031882355431378
       },
       "prevControl": {
-        "x": 1.550353248854646,
-        "y": 7.031882355431378
+        "x": 2.5510658613909825,
+        "y": 7.042096468452195
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,12 +32,42 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
+      "name": "Shoot",
       "waypointRelativePos": 1.0,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake then shoot",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
         }
       }
     }

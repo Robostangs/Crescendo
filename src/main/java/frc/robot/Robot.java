@@ -84,11 +84,10 @@ public class Robot extends TimedRobot {
 
 		PathPlannerCommand.registerCommand();
 
-		startPos.setDefaultOption("THE DEFAULT IS LEFT AND GOES FOREWORD", "left");
+		startPos.setDefaultOption("THE DEFAULT IS it GOES FOREWORD", "go");
 		startPos.addOption("Left", "left");
 		startPos.addOption("Right", "right");
 		startPos.addOption("Center", "center");
-		startPos.addOption("Center", "none");
 		SmartDashboard.putData("Start Position", startPos);
 		
 		pieceChooser.setDefaultOption("DEFAULT IS ONE", "one");

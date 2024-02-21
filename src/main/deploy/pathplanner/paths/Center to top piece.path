@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7311522215637023,
-        "y": 4.981339782124009
+        "x": 3.5573935314537297,
+        "y": 5.795083914241903
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 5.770506477768909
       },
       "prevControl": {
-        "x": 6.926388065739094,
-        "y": 3.430101059276193
+        "x": 6.8531671276305515,
+        "y": 6.820889660297839
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,28 +30,6 @@
   ],
   "rotationTargets": [],
   "constraintZones": [
-    {
-      "name": "Under the Stage",
-      "minWaypointRelativePos": 0.4,
-      "maxWaypointRelativePos": 0.8,
-      "constraints": {
-        "maxVelocity": 4.0,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    },
-    {
-      "name": "Under the stage",
-      "minWaypointRelativePos": 1,
-      "maxWaypointRelativePos": 1,
-      "constraints": {
-        "maxVelocity": 4.0,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    },
     {
       "name": "Intake",
       "minWaypointRelativePos": 0.95,

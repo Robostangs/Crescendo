@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.862345247838649,
-        "y": 5.7756058382487145
+        "x": 7.419278403371622,
+        "y": 5.95791587879472
       },
       "isLocked": false,
       "linkedName": "Second Top Intake"
@@ -20,8 +20,8 @@
         "y": 5.504575536928852
       },
       "prevControl": {
-        "x": 2.9741795548405907,
-        "y": 5.9019164103143025
+        "x": 3.1136140744503713,
+        "y": 6.543267693016868
       },
       "nextControl": null,
       "isLocked": false,

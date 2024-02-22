@@ -68,11 +68,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Shooter": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Start Position": {
         "window": {
           "visible": true

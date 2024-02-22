@@ -8,24 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5119735773325715,
-        "y": 4.229880830483387
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.928486218393568,
-        "y": 5.44019041628113
-      },
-      "prevControl": {
-        "x": 1.7270083238083145,
-        "y": 5.0643964048344765
-      },
-      "nextControl": {
-        "x": 2.1299641129788216,
-        "y": 5.815984427727783
+        "x": 1.534524078307416,
+        "y": 4.11509985982935
       },
       "isLocked": false,
       "linkedName": null
@@ -36,24 +20,8 @@
         "y": 4.103044831089663
       },
       "prevControl": {
-        "x": 1.738642217983841,
-        "y": 3.592324200087388
-      },
-      "nextControl": {
-        "x": 3.1823027224923495,
-        "y": 4.613765462091937
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.6494030657332153,
-        "y": 5.15371779069451
-      },
-      "prevControl": {
-        "x": 2.5941661053709013,
-        "y": 4.835131771268006
+        "x": 1.9968314612555154,
+        "y": 4.085585823949426
       },
       "nextControl": null,
       "isLocked": false,
@@ -65,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Shoot",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "sequential",
         "data": {
@@ -81,8 +49,8 @@
       }
     },
     {
-      "name": "Intake",
-      "waypointRelativePos": 2.0,
+      "name": "Intake then Shoot",
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -92,18 +60,7 @@
               "data": {
                 "name": "Intake"
               }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 3.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
+            },
             {
               "type": "named",
               "data": {

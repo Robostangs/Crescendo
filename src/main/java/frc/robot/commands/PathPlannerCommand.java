@@ -102,6 +102,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         NamedCommands.registerCommand("Stow", new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(0.3));
     }
     public static Command pickAuto(String startPos){
+        startPos.toLowerCase();
         switch(startPos){
 			case "left":
 				// PathPlannerCommand.publishTrajectory(startPos);
@@ -120,62 +121,91 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     }
 
 //TODO prepare to delete this:
-    public static void pickAuto(String startPos, String pieceChooser){
+    public static Command pickAuto(String startPos, String pieceChooser){
         switch(startPos){
         	case "left":
                 switch(pieceChooser){
                     case "1":
-                        PathPlannerCommand.publishTrajectory("left1");
-                        break;
+                        PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                        return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                     case "2":
-                        PathPlannerCommand.publishTrajectory("left2");
-                        break;
+                    PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                    return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                     case "3":
-                        PathPlannerCommand.publishTrajectory("left3");
-                        break;
+                    PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                    return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                     default:
-                        PathPlannerCommand.publishTrajectory("left");
-                        break;
+                    PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                    return AutoBuilder.buildAuto(startPos+"2");
                 }
-				break;
 			case "right":
                 switch(pieceChooser){
                 case "1":
-                    PathPlannerCommand.publishTrajectory("right1");
-                    break;
+                PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                 case "2":
-                    PathPlannerCommand.publishTrajectory("right2");
-                    break;
+                PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                 case "3":
-                    PathPlannerCommand.publishTrajectory("right3");
-                    break;
+                PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                 default:
-                    PathPlannerCommand.publishTrajectory("right");
-                    break;
+                PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                return AutoBuilder.buildAuto(startPos+"2");
             }
-				break;
 			case "center":
                 switch(pieceChooser){
                 case "1":
-                    PathPlannerCommand.publishTrajectory("center1");
-                    break;
+                PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                 case "2":
-                    PathPlannerCommand.publishTrajectory("center2");
-                    break;
+                PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                 case "3":
-                    PathPlannerCommand.publishTrajectory("center3");
-                    break;
+                PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                return AutoBuilder.buildAuto(startPos+pieceChooser);
+
                 default:
-                    PathPlannerCommand.publishTrajectory("center");
-                    break;
-                }
-				break;
+                PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                return AutoBuilder.buildAuto(startPos+"2");
+            }
+				
             case "go":
                 PathPlannerCommand.publishTrajectory("go");
-                break;
-			default:
+                return AutoBuilder.buildAuto(startPos+pieceChooser);
+
+                default:
 				PathPlannerCommand.publishTrajectory("null");
-				break;}
+                return AutoBuilder.buildAuto("center1");
+            }
+    }
+    //TODO RETURN SOMETHING
+    public static void pickAuto(String startPos, String pieceChooser,String startType){
+        switch(startPos){
+        	case "left":
+                switch(startType){
+                    case"start":
+                        PathPlannerCommand.publishTrajectory(startPos+pieceChooser);
+                        AutoBuilder.buildAuto(startPos+pieceChooser);
+                        
+                }
+			case "right":
+                
+			case "center":
+              
+            case "go":
+               
+            default:
+				
+            }
     }
     // @Override
     // public void initialize() {

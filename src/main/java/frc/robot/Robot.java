@@ -91,9 +91,9 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Start Position", startPos);
 		
 		pieceChooser.setDefaultOption("DEFAULT IS ONE", "one");
-		pieceChooser.addOption("One", "one");
-		pieceChooser.addOption("Two", "Two");
-		pieceChooser.addOption("Three", "Three");
+		pieceChooser.addOption("One", "1");
+		pieceChooser.addOption("Two", "2");
+		pieceChooser.addOption("Three", "3");
 		//TODO MAKE SOMETHING FOR THIS OPTION IN PATHPLANNERCOMMAND
 		pieceChooser.addOption("Weird", "uhoh");
 		SmartDashboard.putData("Piece Count", pieceChooser);
@@ -167,6 +167,8 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
+		// auton = PathPlannerCommand.pickAuto(startPos.getSelected());
+
 
 		mField.setRobotPose(Drivetrain.getInstance().getPose());
 
@@ -194,7 +196,7 @@ public class Robot extends TimedRobot {
 		// 		farPieceCount.getInteger(0), false);
 
 		// auton = PathPlannerCommand.pickAuto(startPos.getSelected());
-		PathPlannerCommand.pickAuto(startPos.getSelected(), pieceChooser.getSelected());
+		auton = PathPlannerCommand.pickAuto(startPos.getSelected(), pieceChooser.getSelected());
 
 		// auton = new PathPlannerCommand(mChooser.getSelected(),
 		// this.shoot.getBoolean(false));

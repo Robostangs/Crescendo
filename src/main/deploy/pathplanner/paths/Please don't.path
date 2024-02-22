@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
+        "x": 0.20639246371085362,
         "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
+        "x": 1.2063924637108547,
         "y": 7.0
       },
       "isLocked": false,
@@ -29,22 +29,6 @@
       },
       "isLocked": false,
       "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.9281237358771017,
-        "y": 5.543947379561426
-      },
-      "prevControl": {
-        "x": 2.3551164964846465,
-        "y": 5.651104198227742
-      },
-      "nextControl": {
-        "x": 0.7976920642788166,
-        "y": 5.260257647970278
-      },
-      "isLocked": false,
-      "linkedName": "CloseLeftShootPosition"
     },
     {
       "anchor": {
@@ -151,6 +135,22 @@
         "x": 8.14853331715592,
         "y": 8.58475509361733
       },
+      "nextControl": {
+        "x": 8.133341951207715,
+        "y": 5.974436143440739
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.0610259739037997,
+        "y": 5.292632691746865
+      },
+      "prevControl": {
+        "x": 5.159151561027992,
+        "y": 5.483677939640105
+      },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
@@ -160,7 +160,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
+      "name": "Intake and Shoot",
       "waypointRelativePos": 1.0,
       "command": {
         "type": "parallel",
@@ -171,18 +171,7 @@
               "data": {
                 "name": "Intake"
               }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 2.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
+            },
             {
               "type": "named",
               "data": {
@@ -195,7 +184,7 @@
     },
     {
       "name": "Intake",
-      "waypointRelativePos": 4.0,
+      "waypointRelativePos": 3.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -212,7 +201,7 @@
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 4.5,
+      "waypointRelativePos": 3.5,
       "command": {
         "type": "parallel",
         "data": {

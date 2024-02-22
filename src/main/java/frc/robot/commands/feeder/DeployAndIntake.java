@@ -47,9 +47,11 @@ public class DeployAndIntake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        mIntake.setHolding(true);
+        if (!interrupted) {
+            mIntake.setHolding(true);
+        }
+
         mIntake.setIntake(0);
-        mIntake.setBelt(0);
         mIntake.setExtend(false);
     }
 }

@@ -1,6 +1,8 @@
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj.Timer;
+import java.util.function.Supplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -15,7 +17,6 @@ public class AimAndShoot extends Command {
     private Shooter mShooter;
     private Intake mIntake;
 
-    private Timer timer;
     private double armSetpoint;
     private double shootSpeed = 1;
 
@@ -23,6 +24,46 @@ public class AimAndShoot extends Command {
     private boolean isFinishedBool = false;
 
     private boolean debugMode = false;
+
+    /** when this returns true, this indicates that the user wants to shoot */
+    private Supplier<Boolean> chargeUntil = () -> true;
+
+    /**
+     * Calculates the desired setpoint of the arm using robotPose and then charges
+     * the shooter motors so that when the arm gets to the correct position, it is
+     * ready to feed and shoot
+     */
+    public AimAndShoot() {
+        mArm = Arm.getInstance();
+        mShooter = Shooter.getInstance();
+        mIntake = Intake.getInstance();
+        isFinishedBool = false;
+        autoAim = true;
+
+        this.setName("Auto aim and shoot");
+        this.addRequirements(mArm, mShooter, mIntake);
+    }
+
+    /**
+     * Calculates the desired setpoint of the arm using robotPose and then charges
+     * the shooter motors. When the user presses the defined button, the shooter
+     * will shoot and the command ends
+     * 
+     * @param chargeUntil the boolean supplier that, when returns true, will shoot
+     *                    the piece
+     */
+    public AimAndShoot(Supplier<Boolean> chargeUntil) {
+        mArm = Arm.getInstance();
+        mShooter = Shooter.getInstance();
+        mIntake = Intake.getInstance();
+        isFinishedBool = false;
+        autoAim = true;
+
+        this.chargeUntil = chargeUntil;
+
+        this.setName("Auto aim");
+        this.addRequirements(mArm, mShooter, mIntake);
+    }
 
     /**
      * Set the shooter to a specific position and shoots when within 1 degree
@@ -42,26 +83,29 @@ public class AimAndShoot extends Command {
     }
 
     /**
-     * Calculates the desired setpoint of the arm using robotPose and then charges
-     * the shooter motors so that when the arm gets to the correct position, it is
-     * ready to feed and shoot
+     * Set the shooter to a specific position and shoots when within 1 degree
+     * 
+     * @param target      in degrees of THE SHOOTER, not the extension bar
+     * @param chargeUntil the boolean supplier that, when returns true, will shoot
+     *                    the piece
      */
-    public AimAndShoot() {
+    public AimAndShoot(double target, Supplier<Boolean> chargeUntil) {
         mArm = Arm.getInstance();
         mShooter = Shooter.getInstance();
         mIntake = Intake.getInstance();
+        armSetpoint = target;
         isFinishedBool = false;
-        autoAim = true;
+        autoAim = false;
+        
+        this.chargeUntil = chargeUntil;
 
-        this.setName("Auto aim and shoot");
+        this.setName("Aim and Shoot (Charge Until): " + armSetpoint + " degrees");
         this.addRequirements(mArm, mShooter, mIntake);
     }
 
     @Override
     public void initialize() {
         isFinishedBool = false;
-
-        timer = null;
 
         if (autoAim) {
             armSetpoint = mArm.calculateArmSetpoint();
@@ -80,13 +124,19 @@ public class AimAndShoot extends Command {
 
     @Override
     public void execute() {
-        // TODO: try this (constantly calculates the arm setpoint) main fear is that the
-        // movement needed is so little that motion magic wont care enough
         if (autoAim) {
             armSetpoint = mArm.calculateArmSetpoint();
         }
 
-        if (Math.abs(Constants.Vision.SpeakerCoords[1]
+        Pose2d speakerPose;
+
+        if (Robot.isRed()) {
+            speakerPose = Constants.Vision.SpeakerPoseRed;
+        } else {
+            speakerPose = Constants.Vision.SpeakerPoseBlue;
+        }
+
+        if (Math.abs(speakerPose.getY()
                 - Drivetrain.getInstance().getPose().getY()) < Constants.Vision.SpeakerDeadBand
                 && Drivetrain.getInstance().getPose().getX() < 1.91) {
             shootSpeed = 0.6;
@@ -111,11 +161,16 @@ public class AimAndShoot extends Command {
 
         // else if the arm is within 1.5 degrees of the target and the arm is not moving
         else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.5) {
-            if (mShooter.readyToShoot()) {
-                mShooter.shoot(1, shootSpeed);
+            // TODO: test this
+            // if the shooter is ready to shoot and the user has pressed the button
+            if ((mShooter.readyToShoot() || shootSpeed == 0.6) && chargeUntil.get()) {
+                mShooter.shoot(Constants.ShooterConstants.feederShootValue, shootSpeed);
                 SmartDashboard.putString("Shooter/Status", "Shooting");
                 isFinishedBool = true;
-            } else {
+            }
+            
+            // if the shooter isnt charge up yet or the user has not said to shoot yet
+            else {
                 mShooter.shoot(0, shootSpeed);
                 SmartDashboard.putString("Shooter/Status", "Charging Up");
             }
@@ -123,22 +178,9 @@ public class AimAndShoot extends Command {
 
         // If shooter is loaded but arm is not in position
         else {
-            if (timer == null) {
-                timer = new Timer();
-                timer.restart();
-            }
-
-            // reversing the feed and pushing the note out of the shooter to charge up the
-            // shooter motors
-            if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
-                mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
-                SmartDashboard.putString("Shooter/Status", "Reversing Feed");
-            } else {
-                mShooter.shoot(0, shootSpeed);
                 mArm.setMotionMagic(armSetpoint);
+                mShooter.shoot(0, shootSpeed);
                 SmartDashboard.putString("Shooter/Status", "Traveling to Setpoint");
-            }
-
         }
 
         if (debugMode) {

@@ -12,6 +12,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
@@ -32,30 +33,40 @@ public final class Constants {
 		public static final String llAprilTag = "limelight-nick";
 		public static final String llAprilTagRear = "limelight-rear";
 		public static final String llPython = "limelight-python";
-		
-		public static final String llAprilTagRearIP = "10.5.48.21:5801";
-		public static final String llPythonIP = "10.5.48.22:5801";
-		public static final String llAprilTagIP = "10.5.48.23:5801";
+
+		public static final String llAprilTagRearIP = "http://10.5.48.21:5801";
+		public static final String llPythonIP = "http://10.5.48.22:5801";
+		public static final String llAprilTagIP = "http://10.5.48.23:5801";
 		public static final int llPythonPipelineIndex = 0;
 		public static final int llAprilTagPipelineIndex = 1;
 
 		// This is a publicly available set of confidence values from last year
-		// public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
+		// public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1,
+		// 0.1, Units.degreesToRadians(10));
 		// TODO: tune this
+		// the lower the number, the more odometry will trust the vision
 		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(300));
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 
 		/** This needs to be tuned for the shooter */
 		// public static final double[] SpeakerCoords = { 0.45, 5.55, 1.9 };
-		public static final double[] SpeakerCoords = { 0.3, 5.55, 1.9 };
+		// public static final double[] SpeakerCoordsBlue = { 0.3, 5.55, 1.9 };
+		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
+		// 1.9 };
+		public static final double SpeakerHeight = 1.9;
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.3, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - 0.3, 5.55, Rotation2d.fromDegrees(0));
 
 		/** Highest Y value of the speaker */
+		// public static final double SpeakerYUpperBound = 6.12 + 0.5;
 		public static final double SpeakerYUpperBound = 6.12;
 		/** Lowest Y value of the speaker */
+		// public static final double SpeakerYLowerBound = 4.98 - 0.5;
 		public static final double SpeakerYLowerBound = 4.98;
 
 		/** Should be 0.57 */
 		public static final double SpeakerDeadBand = (SpeakerYUpperBound - SpeakerYLowerBound) / 2;
+		// public static final double SpeakerDeadBand = 0.57;
 	}
 
 	public class SwerveConstants {
@@ -63,8 +74,11 @@ public final class Constants {
 			kSpeaker, kAmp, None
 		}
 
-		public static final double kMaxSpeedMetersPerSecond = 5;
-		public static final double kMaxAngularSpeedMetersPerSecond = 3 * Math.PI;
+		/** Theoretical free speed (m/s) at 12v applied output; */
+		public static final double kSpeedAt12VoltsMetersPerSecond = 4.73;
+
+		public static final double kMaxSpeedMetersPerSecond = kSpeedAt12VoltsMetersPerSecond;
+		public static final double kMaxAngularSpeedMetersPerSecond = 2 * Math.PI;
 
 		// The steer motor uses any SwerveModule.SteerRequestType control request with
 		// the output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
@@ -91,10 +105,9 @@ public final class Constants {
 		/** The stator current at which the wheels start to slip; */
 		private static final double kSlipCurrentA = 300.0;
 
-		/** Theoretical free speed (m/s) at 12v applied output; */
-		public static final double kSpeedAt12VoltsMetersPerSecond = 4.73;
-
-		/** Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns; */
+		/**
+		 * Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
+		 */
 		private static final double kCoupleRatio = 3.5714285714285716;
 
 		private static final double kDriveGearRatio = 6.746031746031747;
@@ -128,12 +141,22 @@ public final class Constants {
 				.withDriveFrictionVoltage(kDriveFrictionVoltage).withFeedbackSource(SteerFeedbackType.FusedCANcoder)
 				.withCouplingGearRatio(kCoupleRatio).withSteerMotorInverted(kSteerMotorReversed);
 
-		/* Picture the front of the robot facing to the right in the XY axis, with the center on the origin (0,0) */
+		/*
+		 * Picture the front of the robot facing to the right in the XY axis, with the
+		 * center on the origin (0,0)
+		 */
 
-		/** Distance between the 2 left side CANcoders */
-		public static final double driveBaseWidth = 24.75;
-		/** Distance between the 2 front side CANcoders */
-		public static final double driveBaseHeight = 24.1;
+		/** Distance (inches) between the 2 left side CANcoders */
+		public static final double driveBaseWidth = Units.inchesToMeters(24.75);
+		/** Distance (inches) between the 2 front side CANcoders */
+		public static final double driveBaseHeight = Units.inchesToMeters(24.1);
+
+		/**
+		 * Picture the front of the robot facing to the right in the XY axis
+		 */
+		// public static final Translation2d centerOfRotation = new
+		// Translation2d(driveBaseWidth / 2, driveBaseHeight / 2);
+		public static final Translation2d centerOfRotation = new Translation2d(0, 0);
 
 		/**
 		 * distance from the center of the robot to the furthest module (meters) should
@@ -151,48 +174,45 @@ public final class Constants {
 		private static final int kFrontLeftSteerMotorId = 12;
 		private static final int kFrontLeftEncoderId = 10;
 		private static final double kFrontLeftEncoderOffset = -0.320556640625;
-		private static final double kFrontLeftXPosInches = driveBaseWidth / 2;
-		private static final double kFrontLeftYPosInches = driveBaseHeight / 2;
+		private static final double kFrontLeftXPos = driveBaseWidth / 2;
+		private static final double kFrontLeftYPos = driveBaseHeight / 2;
 
 		// Front Right
 		private static final int kFrontRightDriveMotorId = 21;
 		private static final int kFrontRightSteerMotorId = 22;
 		private static final int kFrontRightEncoderId = 20;
 		private static final double kFrontRightEncoderOffset = -0.375244140625;
-		private static final double kFrontRightXPosInches = driveBaseWidth / 2;
-		private static final double kFrontRightYPosInches = -driveBaseHeight / 2;
+		private static final double kFrontRightXPos = driveBaseWidth / 2;
+		private static final double kFrontRightYPos = -driveBaseHeight / 2;
 
 		// Back Left
 		private static final int kBackLeftDriveMotorId = 31;
 		private static final int kBackLeftSteerMotorId = 32;
 		private static final int kBackLeftEncoderId = 30;
 		private static final double kBackLeftEncoderOffset = -0.17578125;
-		private static final double kBackLeftXPosInches = -driveBaseWidth / 2;
-		private static final double kBackLeftYPosInches = driveBaseHeight / 2;
+		private static final double kBackLeftXPos = -driveBaseWidth / 2;
+		private static final double kBackLeftYPos = driveBaseHeight / 2;
 
 		// Back Right
 		private static final int kBackRightDriveMotorId = 41;
 		private static final int kBackRightSteerMotorId = 42;
 		private static final int kBackRightEncoderId = 40;
 		private static final double kBackRightEncoderOffset = 0.41455078125;
-		private static final double kBackRightXPosInches = -driveBaseWidth / 2;
-		private static final double kBackRightYPosInches = -driveBaseHeight / 2;
+		private static final double kBackRightXPos = -driveBaseWidth / 2;
+		private static final double kBackRightYPos = -driveBaseHeight / 2;
 
 		public static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
 				kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId,
-				kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches),
-				Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
+				kFrontLeftEncoderOffset, kFrontLeftXPos, kFrontLeftYPos, kInvertLeftSide);
 		public static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
 				kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId,
-				kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches),
-				Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
+				kFrontRightEncoderOffset, kFrontRightXPos, kFrontRightYPos, kInvertRightSide);
 		public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
 				kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
-				Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
+				kBackLeftXPos, kBackLeftYPos, kInvertLeftSide);
 		public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
 				kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
-				Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches),
-				kInvertRightSide).withDriveMotorInverted(true);
+				kBackRightXPos, kBackRightYPos, kInvertRightSide).withDriveMotorInverted(true);
 	}
 
 	public enum AprilTag {
@@ -223,14 +243,19 @@ public final class Constants {
 		public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5, 0.3);
 		public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
 
-		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
-		public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
-		public static final double kMaxAngularAccelerationMetersPerSecondSquared = 2 * kMaxAngularSpeedMetersPerSecond;
+		public static final double kMaxSpeedMetersPerSecond = 1;
+		public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+		public static final double kMaxAngularSpeedMetersPerSecond = Math.PI;
+		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond;
 
-		// TODO: low key we should lower these
-		// public static final double kMaxAngularSpeedRadiansPerSecond = 540d;
-		// public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = 720d;
+		// public static final double kMaxSpeedMetersPerSecond =
+		// SwerveConstants.kMaxSpeedMetersPerSecond;
+		// public static final double kMaxAccelerationMetersPerSecondSquared = 4;
+		// public static final double kMaxAngularSpeedMetersPerSecond =
+		// SwerveConstants.kMaxAngularSpeedMetersPerSecond;
+		// public static final double kMaxAngularAccelerationMetersPerSecondSquared = 2
+		// * kMaxAngularSpeedMetersPerSecond;
+
 		public static final double kMaxAngularSpeedRadiansPerSecond = 360d;
 		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = 540d;
 
@@ -243,20 +268,26 @@ public final class Constants {
 
 		public static class WayPoints {
 			public static class Blue {
-				public static final Pose2d kAmp = new Pose2d(1.81, 7.75, Rotation2d.fromDegrees(-90));
+				public static final Pose2d kAmp = new Pose2d(1.81, 7.75, Rotation2d.fromDegrees(90));
 				public static final Pose2d kHumanPlayer = new Pose2d(13.8, 1.2, Rotation2d.fromDegrees(0));
 				public static final Pose2d kSpeakerLeft = new Pose2d(2.6, 6.45, Rotation2d.fromDegrees(180));
-				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerCoords[1],
+				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseBlue.getY(),
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
+
+				public static class Notes {
+					public static final Pose2d leftStage = new Pose2d(2.9, 7.0, Rotation2d.fromDegrees(0));
+					public static final Pose2d centerStage = new Pose2d(2.9, 5.5, Rotation2d.fromDegrees(0));
+					public static final Pose2d rightStage = new Pose2d(2.9, 4.11, Rotation2d.fromDegrees(0));
+				}
 			}
-			
+
 			public static class Red {
 				// TODO: Add Red Waypoints
 				public static final Pose2d kAmp = new Pose2d(1.81, 1.25, Rotation2d.fromDegrees(90));
 				public static final Pose2d kHumanPlayer = new Pose2d(13.8, 7.8, Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerLeft = new Pose2d(2.6, 2.55, Rotation2d.fromDegrees(0));
-				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerCoords[1],
+				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseRed.getY(),
 						Rotation2d.fromDegrees(0));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 8.35, Rotation2d.fromDegrees(0));
 			}
@@ -284,7 +315,7 @@ public final class Constants {
 		public static final double kDeadzone = 0.06;
 		public static final double kDeadzoneJoystick = 0.07;
 
-		public static final double kManipDeadzone = 0.07;
+		public static final double kManipDeadzone = 0.05;
 
 		public static final double slowDownMultiplier = 0.5;
 
@@ -331,7 +362,7 @@ public final class Constants {
 			public static final double kIntake = kArmMinAngle;
 			public static final double kHorizontal = 0;
 		}
-	}	
+	}
 
 	public static class ShooterConstants {
 		public static final int feedMotor = 60;
@@ -342,11 +373,11 @@ public final class Constants {
 		public static final boolean leftShootIsInverted = false;
 		public static final boolean intakeIsPositive = true;
 
-		// public static final double feederFeedForward = 0.0265;
+		public static final double feederShootValue = 0.1;
 		public static final double feederFeedForward = 0.04;
 		public static final double shooterChargeUpTime = 0.5;
 
-		public static final double feederChargeUpTime = 0.3;
+		public static final double feederChargeUpTime = 0.2;
 		public static final double feederReverseFeed = -0.02;
 		// public static final double feederChargeUpTime = 0.24;
 		// public static final double feederChargeUpTime = 0.23;
@@ -370,8 +401,7 @@ public final class Constants {
 		public static final boolean intakeMotorInverted = false;
 		public static final boolean beltMotorInverted = true;
 	}
- 
-	
+
 	public static class Lights {
 		public static final double blinkTime = 7.5;
 		public static final int blinkinPWM_ID = 0;

@@ -7,7 +7,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.LoggyThings.LoggyTalonFX;
 
 import java.util.List;
@@ -62,7 +61,7 @@ public class Shooter extends SubsystemBase {
 
         Music.getInstance().addFalcon(List.of(shootMotorLeft, shootMotorRight,
                 feedMotor));
-        SmartDashboard.putString("Shooter/.type", "Subsystem");
+        // SmartDashboard.putString("Shooter/.type", "Subsystem");
         SmartDashboard.putString("Shooter/Status", "Idle");
     }
 
@@ -107,7 +106,7 @@ public class Shooter extends SubsystemBase {
         feedMotor.set(0);
     }
 
-    public void setBrake(boolean brake) {
+    public void setShooterBrake(boolean brake) {
         NeutralModeValue mode = NeutralModeValue.Coast;
         if (brake) {
             mode = NeutralModeValue.Brake;
@@ -117,12 +116,35 @@ public class Shooter extends SubsystemBase {
         shootMotorLeft.setNeutralMode(mode);
     }
 
+    public void setFeederBrake(boolean brake) {
+        NeutralModeValue mode = NeutralModeValue.Coast;
+        if (brake) {
+            mode = NeutralModeValue.Brake;
+        }
+
+        feedMotor.setNeutralMode(mode);
+    }
+
     /**
      * Returns true if the shooter motors are fast enough to shoot, this function
      * checks the left motor
      */
     public boolean readyToShoot() {
-        return ((shootMotorLeft.getVelocity().getValueAsDouble() * 60) > ((Robot.pdh.getVoltage() / 12.8)
-                * Constants.MotorConstants.falconShooterLoadRPM));
+        double threshold = (shootMotorLeft.getSupplyVoltage().getValueAsDouble() / 12.8)
+                * Constants.MotorConstants.falconShooterLoadRPM;
+        SmartDashboard.putNumber("Shooter/Ready To Shoot threshold", threshold);
+        return ((shootMotorLeft.getVelocity().getValueAsDouble() * 60) > threshold);
+    }
+
+    /**
+     * Returns true if the shooter motors are fast enough to shoot, this function
+     * checks the left motor and is used when the shooter isnt set to 100%
+     * @param setVal the value that the motor was set to
+     */
+    public boolean readyToShoot(double setVal) {
+        double threshold = (shootMotorLeft.getSupplyVoltage().getValueAsDouble() / 12.8)
+                * Constants.MotorConstants.falconShooterLoadRPM * setVal;
+        SmartDashboard.putNumber("Shooter/Ready To Shoot threshold", threshold);
+        return ((shootMotorLeft.getVelocity().getValueAsDouble() * 60) > threshold);
     }
 }

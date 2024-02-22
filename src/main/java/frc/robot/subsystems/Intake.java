@@ -79,4 +79,9 @@ public class Intake extends SubsystemBase {
     public boolean getHolding() {
         return holding;
     }
+
+    public void stop() {
+        intakeMotor.set(0);
+        beltMotor.set(0);
+    }
 }

@@ -77,7 +77,7 @@ public class Arm extends SubsystemBase {
         }
 
         SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
-        SmartDashboard.putNumber("Arm/VelocityRPS", getVelocityRotations());
+        SmartDashboard.putNumber("Arm/Velocity", getVelocityRotations());
         SmartDashboard.putNumber("Arm/Setpoint",
                 Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble()));
         SmartDashboard.putNumber("Arm/Position Error",
@@ -155,7 +155,7 @@ public class Arm extends SubsystemBase {
                     Units.inchesToMeters(shooterExtensionInches), shooterExtensionAngle, 2, new Color8Bit(Color.kGray));
 
             elbowLigament = new MechanismLigament2d("Shooter", Units.inchesToMeters(shooterLengthInches),
-                    elbowLigamentAngle, 5, new Color8Bit(Color.kWhite));
+                    elbowLigamentAngle, 15, new Color8Bit(Color.kWhite));
 
             armMechanism.getRoot("Root", Units.inchesToMeters(rootXInches), Units.inchesToMeters(rootYInches))
                     .append(shooterLigament).append(shooterExtension).append(elbowLigament);
@@ -173,17 +173,20 @@ public class Arm extends SubsystemBase {
                 shooterExtensionAngle, 2, new Color8Bit(Color.kDarkRed));
 
         simElbowLigament = new MechanismLigament2d("Shooter", Units.inchesToMeters(shooterLengthInches),
-                elbowLigamentAngle, 5, new Color8Bit(Color.kRed));
+                elbowLigamentAngle, 15, new Color8Bit(Color.kRed));
 
         simArmMechanism.getRoot("Root", Units.inchesToMeters(rootXInches), Units.inchesToMeters(rootYInches))
                 .append(simShooterLigament).append(simShooterExtension).append(simElbowLigament);
         SmartDashboard.putData("Arm/Target Profile", simArmMechanism);
 
         motionMagicDutyCycle = new MotionMagicTorqueCurrentFOC(
-                Units.degreesToRotations(Constants.ArmConstants.SetPoints.kSubwoofer));
+                Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
         motionMagicDutyCycle.Slot = 0;
+
         BaseStatusSignal.setUpdateFrequencyForAll(50, armMotor.getClosedLoopError(), armMotor.getClosedLoopReference(),
                 armMotor.getClosedLoopReferenceSlope());
+
+        // SmartDashboard.putString("Arm/.type", "Subsystem");
     }
 
     /**
@@ -337,35 +340,49 @@ public class Arm extends SubsystemBase {
      *         <h1>(in degrees)</h1>
      */
     public double calculateArmSetpoint() {
+        Pose2d speakerPose;
+
+        if (Robot.isRed()) {
+            speakerPose = Constants.Vision.SpeakerPoseRed;
+        } else {
+            speakerPose = Constants.Vision.SpeakerPoseBlue;
+        }
+
         /* Swerve Pose calculated in meters */
         Pose2d currentPose = Drivetrain.getInstance().getPose();
-        double SpeakerY = Constants.Vision.SpeakerCoords[1];
+        double SpeakerY = speakerPose.getY();
 
-        // if (currentPose.getY() <= Constants.Vision.SpeakerYLowerBound) {
-        //     SpeakerY = Constants.Vision.SpeakerYLowerBound;
-        // }
-        // if (currentPose.getY() >= Constants.Vision.SpeakerYUpperBound) {
-        //     SpeakerY = Constants.Vision.SpeakerYUpperBound;
-        // }
+        // TODO: do i need this?
+        if (currentPose.getY() <= Constants.Vision.SpeakerYLowerBound - 0.5) {
+            SpeakerY = Constants.Vision.SpeakerYLowerBound + (Constants.Vision.SpeakerDeadBand / 2);
+        }
+        if (currentPose.getY() >= Constants.Vision.SpeakerYUpperBound + 0.5) {
+            SpeakerY = Constants.Vision.SpeakerYUpperBound - (Constants.Vision.SpeakerDeadBand / 2);
+        }
 
         Robot.mField.getObject("Speaker")
-                .setPose(new Pose2d(Constants.Vision.SpeakerCoords[0], SpeakerY, Rotation2d.fromDegrees(0)));
+                .setPose(new Pose2d(speakerPose.getX(), SpeakerY, Rotation2d.fromDegrees(0)));
 
         double distToSpeakerMeters = Math.sqrt(
-                Math.pow(Constants.Vision.SpeakerCoords[0] - currentPose.getX(), 2)
+                Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)", distToSpeakerMeters);
-
+        // TODO: need to convert these numbers to constants in the Constants class and
+        // then explain what increasing/decreasing these numbers does
         double angleToSpeaker = -1170.66 * Math.pow(distToSpeakerMeters * 39.37, -0.751072) + 1.98502;
 
-        /* Make sure that we dont accidentally return a stupid value print("Hello World")*/
+        SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)", distToSpeakerMeters);
+        SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)", Units.metersToInches(distToSpeakerMeters));
+
+        /*
+         * Make sure that we dont accidentally return a stupid value
+         */
         if (validSetpoint(angleToSpeaker)) {
             return angleToSpeaker;
         } else {
-            // System.out.println(angleToSpeaker + " is not a valid setpoint");
-            if (angleToSpeaker < Constants.ArmConstants.kArmMinAngle) {
-                return Constants.ArmConstants.kArmMinAngle;
+            System.out.println(angleToSpeaker + " is not a valid setpoint");
+            if (angleToSpeaker < Constants.ArmConstants.SetPoints.kSubwoofer) {
+                return Constants.ArmConstants.SetPoints.kSubwoofer;
             } else {
                 return getArmPosition();
             }
@@ -424,7 +441,8 @@ public class Arm extends SubsystemBase {
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
         motionMagicConfigs.MotionMagicAcceleration = 1;
 
-        motionMagicConfigs.MotionMagicJerk = 100;
+        // tune this so that the arm starts moving quicker, 100 -> 1000
+        motionMagicConfigs.MotionMagicJerk = 0;
 
         armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         armMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;

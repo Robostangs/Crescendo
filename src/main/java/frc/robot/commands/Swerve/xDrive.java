@@ -23,13 +23,14 @@ public class xDrive extends Command {
      */
     public xDrive(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> rotate,
             Supplier<Double> howManyBabiesOnBoard) {
+
         drivetrain = Drivetrain.getInstance();
         this.setName("xDrive");
         this.addRequirements(drivetrain);
         this.translateX = translateX;
         this.translateY = translateY;
         this.rotate = rotate;
-        this.howManyBabiesOnBoard = () -> howManyBabiesOnBoard.get();
+        this.howManyBabiesOnBoard = howManyBabiesOnBoard;
     }
 
     @Override
@@ -37,6 +38,7 @@ public class xDrive extends Command {
         if (Math.abs(translateX.get()) <= Constants.OperatorConstants.kDeadzone
                 && Math.abs(translateY.get()) <= Constants.OperatorConstants.kDeadzone
                 && Math.abs(rotate.get()) <= Constants.OperatorConstants.kDeadzone) {
+
             swerveRequest = new SwerveRequest.SwerveDriveBrake();
         } else {
             swerveRequest = new SwerveRequest.FieldCentric()
@@ -52,5 +54,10 @@ public class xDrive extends Command {
         }
 
         drivetrain.setControl(swerveRequest);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
     }
 }

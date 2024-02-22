@@ -46,55 +46,80 @@ public class FeedAndShoot extends Command {
     @Override
     public void execute() {
         if (feedUntil == null) {
+            // if there is a piece in the shooter
             if (mIntake.getShooterSensor()) {
                 if (timer == null) {
                     timer = new Timer();
                     timer.restart();
                 }
 
-                if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
-                    mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
-                    SmartDashboard.putString("Shooter/Status", "Reversing Feed");
-                } else {
-                    mShooter.shoot(0, 1);
-                }
-
+                // if the shooter is already charged up then shoot
                 if (mShooter.readyToShoot()) {
-                    mShooter.shoot(0.5, 1);
+                    mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
                     SmartDashboard.putString("Shooter/Status", "Shooting");
-                    mIntake.setHolding(true);
+                    mIntake.setHolding(false);
                 }
-            } else {
-                mShooter.shoot(0.1, 0);
-                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
-            }
-        }
-        
-        else {
-            if (mIntake.getShooterSensor()) {
-                if (timer == null) {
-                    timer = new Timer();
-                    timer.restart();
-                }
-
-                if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
-                    mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
-                    SmartDashboard.putString("Shooter/Status", "Reversing Feed");
-                } else {
-                    mShooter.shoot(0, 1);
-                }
-
-                if (feedUntil.getAsBoolean()) {
-                    mShooter.shoot(0.5, 1);
-                    SmartDashboard.putString("Shooter/Status", "Shooting");
-                    mIntake.setHolding(true);
+                
+                // // if the shooter is not charged up and the piece has not been reversed yet
+                // else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
+                    //     mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
+                    //     SmartDashboard.putString("Shooter/Status", "Reversing Feed");
+                    // }
+                    
+                    // if the shooter isnt charged up but the pieces has been reversed
+                    else {
+                        mShooter.shoot(0, 1);
+                        SmartDashboard.putString("Shooter/Status", "Charging Up");
                 }
 
                 mIntake.setBelt(0);
-            } else {
-                mShooter.shoot(0.1, 1);
+            }
+
+            // if there is no piece in the shooter
+            else {
+                // mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
+                mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
                 mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
-                SmartDashboard.putString("Shooter/Status", "Charging Up");
+                SmartDashboard.putString("Shooter/Status", "Waiting for piece");
+            }
+        }
+
+        // if we are waiting for user to press shoot button
+        else {
+            // if there is a piece in the shooter
+            if (mIntake.getShooterSensor()) {
+                if (timer == null) {
+                    timer = new Timer();
+                    timer.restart();
+                }
+
+                // if the shooter is ready to shoot and the user is ready then shoot
+                if (feedUntil.getAsBoolean() && mShooter.readyToShoot()) {
+                    mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
+                    SmartDashboard.putString("Shooter/Status", "Shooting");
+                    mIntake.setHolding(false);
+                }
+
+                // // if the shooter is not charged up and the piece has not been reversed yet
+                // else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
+                //     mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
+                //     SmartDashboard.putString("Shooter/Status", "Reversing Feed");
+                // }
+
+                // if the shooter isnt charged up but the pieces has been reversed
+                else {
+                    mShooter.shoot(0, 1);
+                    SmartDashboard.putString("Shooter/Status", "Charging Up");
+                }
+
+                mIntake.setBelt(0);
+            }
+
+            // if there is no piece in the shooter
+            else {
+                mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
+                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+                SmartDashboard.putString("Shooter/Status", "Waiting for piece");
             }
         }
     }

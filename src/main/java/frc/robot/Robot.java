@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		Arm.getInstance().setBrake(false);
-		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kSubwoofer);
+		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 		if (Constants.Vision.UseLimelight) {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
 					Constants.Vision.llAprilTagPipelineIndex);
@@ -137,5 +137,17 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void simulationInit() {
+	}
+
+	public static boolean isRed() {
+		var alliance = DriverStation.getAlliance();
+
+		if (alliance.isEmpty()) {
+			return false;
+		} else if (alliance.get() == DriverStation.Alliance.Red) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

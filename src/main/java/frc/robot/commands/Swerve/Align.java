@@ -63,7 +63,7 @@ public class Align extends Command {
                             .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
                 }
 
-                // TODO: NOT WORKING, when april tag isnt visible the robot kills itself
+                // TODO: NOT WORKING, when april tag isnt visible the robot kills itself (spins very fast in circles)
                 // if the rear april tag isnt seeing a target, use the speaker coords
                 else {
                     // return Rotation2d
@@ -131,7 +131,9 @@ public class Align extends Command {
     @Override
     public void end(boolean interrupted) {
         LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
+        
         if (note) {
+            // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
             mIntake.setIntake(0);
             mIntake.setExtend(false);
             mIntake.setHolding(!interrupted);

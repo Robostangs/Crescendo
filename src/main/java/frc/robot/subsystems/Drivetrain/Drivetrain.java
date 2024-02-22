@@ -49,13 +49,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             Constants.Vision.llAprilTag,
             Constants.Vision.llAprilTagRear);
 
-    private BooleanSupplier isRed = () -> {
-        if (Robot.atComp) {
-            return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
-        } else {
-            return false;
-        }
-    };
+    // public BooleanSupplier isRed = () -> {
+    //     if (Robot.atComp) {
+    //         return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
+    //     } else {
+    //         return false;
+    //     }
+    // };
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
@@ -102,11 +102,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             startSimThread();
         }
 
-        SmartDashboard.putString("Swerve/.type", "Drivetrain");
+        // SmartDashboard.putString("Swerve/.type", "Drivetrain");
 
         mField = Robot.mField;
-        mField.getObject("Speaker").setPose(new Pose2d(Constants.Vision.SpeakerCoords[0],
-                Constants.Vision.SpeakerCoords[1], Rotation2d.fromDegrees(0)));
+        if (Robot.isRed()) {
+            mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseRed);
+        } else {
+            mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseBlue);
+        }
 
     }
 
@@ -122,7 +125,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         SwerveConstants.kSpeedAt12VoltsMetersPerSecond,
                         Constants.SwerveConstants.driveBaseRadius,
                         new ReplanningConfig()),
-                isRed,
+                Robot::isRed,
                 this);
     }
 

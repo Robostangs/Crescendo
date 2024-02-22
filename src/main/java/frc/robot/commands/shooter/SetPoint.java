@@ -68,7 +68,6 @@ public class SetPoint extends Command {
 
     @Override
     public void execute() {
-        // TODO: try this
         if (autoAim) {
             armSetpoint = mArm.calculateArmSetpoint();
         }

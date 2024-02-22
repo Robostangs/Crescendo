@@ -49,10 +49,13 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis, true));
 		xDrive.x().toggleOnTrue(new AimAndShoot());
 
-		// xDrive.x().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
+		// xDrive.x().toggleOnTrue(new
+		// PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
 
-		// Square up to the speaker and press this to reset odometry to the speaker pose, this is consistent af
-		xDrive.povRight().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)))));
+		// Square up to the speaker and press this to reset odometry to the speaker
+		// pose, this is consistent af
+		xDrive.povRight().onTrue(drivetrain
+				.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)))));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// This is basically saying deploy and intake without deploying
@@ -65,6 +68,10 @@ public class RobotContainer {
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
+		new Trigger(() -> xManip.getLeftTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+				.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+				.whileTrue(new FineAdjust(() -> xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis()));
+
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
 
@@ -74,8 +81,9 @@ public class RobotContainer {
 		xManip.y().toggleOnTrue(new SetPoint());
 		xManip.x().whileTrue(new QuickFeed());
 
-		xManip.a().toggleOnTrue(new AimAndShoot());
-		xManip.b().toggleOnTrue(new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp));
+		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getRightBumper()));
+		xManip.b().toggleOnTrue(
+				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xManip.getHID().getRightBumper()));
 
 		xManip.povRight().whileTrue(new Spit());
 		xManip.povDown().whileTrue(new DeployAndIntake());
@@ -115,6 +123,9 @@ public class RobotContainer {
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
 				.whileTrue(new AimAndShoot());
+
+		new Trigger(() -> simController.getRawButtonPressed(4))
+				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
 
 		// new Trigger(() -> simController.getRawButtonPressed(3))
 		// .whileTrue(new AimAndShoot());

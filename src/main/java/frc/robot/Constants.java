@@ -29,19 +29,25 @@ public final class Constants {
 
 	public class Vision {
 		public static final boolean UseLimelight = true;
-		public static final String llAprilTag = "limelight-front";
+		public static final String llAprilTag = "limelight-nick";
 		public static final String llAprilTagRear = "limelight-rear";
+		public static final String llPython = "limelight-python";
+		
+		public static final String llAprilTagRearIP = "10.5.48.21:5801";
+		public static final String llPythonIP = "10.5.48.22:5801";
+		public static final String llAprilTagIP = "10.5.48.23:5801";
+		public static final int llPythonPipelineIndex = 0;
 		public static final int llAprilTagPipelineIndex = 1;
 
-		public static final String llPython = "limelight-python";
-		public static final int llPythonPipelineIndex = 0;
-
+		// This is a publicly available set of confidence values from last year
 		// public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
-		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(180));
+		// TODO: tune this
+		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(300));
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 
 		/** This needs to be tuned for the shooter */
-		public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
+		// public static final double[] SpeakerCoords = { 0.45, 5.55, 1.9 };
+		public static final double[] SpeakerCoords = { 0.3, 5.55, 1.9 };
 
 		/** Highest Y value of the speaker */
 		public static final double SpeakerYUpperBound = 6.12;
@@ -222,8 +228,11 @@ public final class Constants {
 		public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
 		public static final double kMaxAngularAccelerationMetersPerSecondSquared = 2 * kMaxAngularSpeedMetersPerSecond;
 
-		public static final double kMaxAngularSpeedRadiansPerSecond = 540d;
-		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = 720d;
+		// TODO: low key we should lower these
+		// public static final double kMaxAngularSpeedRadiansPerSecond = 540d;
+		// public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = 720d;
+		public static final double kMaxAngularSpeedRadiansPerSecond = 360d;
+		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = 540d;
 
 		public static final String kFieldObjectName = "path";
 
@@ -280,7 +289,7 @@ public final class Constants {
 		public static final double slowDownMultiplier = 0.5;
 
 		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.07;
-		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * kDeadzone;
+		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * 0.07;
 
 		public static final double setpointTimeout = 2;
 	}
@@ -304,7 +313,7 @@ public final class Constants {
 		/** 60 degrees */
 		public static final double kArmMaxAngle = 60;
 		/** 300 degrees */
-		public static final double kArmMinAngle = -57.48;
+		public static final double kArmMinAngle = -58.7;
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
@@ -319,7 +328,7 @@ public final class Constants {
 			public static final double kSpeaker3 = -30;
 			public static final double kSubwoofer = kArmMinAngle;
 			public static final double kAmp = 46;
-			public static final double kIntake = -57.48;
+			public static final double kIntake = kArmMinAngle;
 			public static final double kHorizontal = 0;
 		}
 	}	
@@ -333,10 +342,11 @@ public final class Constants {
 		public static final boolean leftShootIsInverted = false;
 		public static final boolean intakeIsPositive = true;
 
-		public static final double feederFeedForward = 0.0265;
+		// public static final double feederFeedForward = 0.0265;
+		public static final double feederFeedForward = 0.04;
 		public static final double shooterChargeUpTime = 0.5;
 
-		public static final double feederChargeUpTime = 0.2;
+		public static final double feederChargeUpTime = 0.3;
 		public static final double feederReverseFeed = -0.02;
 		// public static final double feederChargeUpTime = 0.24;
 		// public static final double feederChargeUpTime = 0.23;
@@ -355,7 +365,7 @@ public final class Constants {
 		public static final double kDeployTimeSeconds = 0.4;
 		public static final double beltFeedForward = 0.05;
 
-		public static final double beltIntakeSpeed = 0.75;
+		public static final double beltIntakeSpeed = 1;
 
 		public static final boolean intakeMotorInverted = false;
 		public static final boolean beltMotorInverted = true;

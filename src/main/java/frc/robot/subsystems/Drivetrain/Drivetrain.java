@@ -16,6 +16,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
@@ -68,32 +69,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         Timer.getFPGATimestamp());
             }
 
-            // if (LimelightHelpers.getTid(Constants.Vision.llAprilTag) != -1) {
-            //     this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag),
-            //             Timer.getFPGATimestamp());
+            if (LimelightHelpers.getTid(Constants.Vision.llAprilTag) != -1 && LimelightHelpers
+                    .getCurrentPipelineIndex(Constants.Vision.llAprilTag) == Constants.Vision.llAprilTagPipelineIndex) {
+                this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag),
+                        Timer.getFPGATimestamp());
+            }
+
+            // if (LimelightHelpers.getTid(Constants.Vision.llPython) != -1 &&
+            // LimelightHelpers.getCurrentPipelineIndex(Constants.Vision.llPython) ==
+            // Constants.Vision.llAprilTagPipelineIndex) {
+            // this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llPython),
+            // Timer.getFPGATimestamp());
             // }
-
-            // if (LimelightHelpers.getTid(Constants.Vision.llPython) != -1  && LimelightHelpers.getCurrentPipelineIndex(Constants.Vision.llPython) == Constants.Vision.llAprilTagPipelineIndex) {
-            //     this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llPython),
-            //             Timer.getFPGATimestamp());
-            // }
-        }
-    }
-
-    private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
-            SwerveModuleConstants... modules) {
-        super(driveTrainConstants, OdometryUpdateFrequency, modules);
-
-        // if (Constants.Vision.UseLimelight && Robot.isReal()) {
-        //     // LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
-        //     LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
-        //             Constants.Vision.llAprilTagPipelineIndex);
-        //     LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llAprilTagPipelineIndex);
-        // }
-
-        configurePathPlanner();
-        if (Utils.isSimulation()) {
-            startSimThread();
         }
     }
 
@@ -101,13 +88,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         super(driveTrainConstants, modules);
 
         if (Constants.Vision.UseLimelight) {
-            // LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
+                    Constants.Vision.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
                     Constants.Vision.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 
-            // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llAprilTagPipelineIndex);
-            
             super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionOfMyVision);
         }
 
@@ -119,6 +105,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         SmartDashboard.putString("Swerve/.type", "Drivetrain");
 
         mField = Robot.mField;
+        mField.getObject("Speaker").setPose(new Pose2d(Constants.Vision.SpeakerCoords[0],
+                Constants.Vision.SpeakerCoords[1], Rotation2d.fromDegrees(0)));
+
     }
 
     private void configurePathPlanner() {
@@ -180,6 +169,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         return mField;
     }
 
+    // ankur is mine hehehehhehehehehehehhehe
     public Pose2d getPose() {
         return getState().Pose;
     }

@@ -17,7 +17,6 @@ public class Align extends Command {
     private Intake mIntake = Intake.getInstance();
 
     private SwerveRequest.FieldCentricFacingAngle drive;
-    private SwerveRequest.FieldCentric drive2;
     private Timer timer;
 
     private Supplier<Double> translateX, translateY, howManyBabiesOnBoard;
@@ -28,7 +27,11 @@ public class Align extends Command {
     public Align(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard,
             boolean note) {
         this.addRequirements(mDrivetrain);
-        this.setName("Align");
+        if (note) {
+            this.setName("Align to Note");
+        } else {
+            this.setName("Align to Speaker");
+        }
 
         if (howManyBabiesOnBoard == null) {
             this.howManyBabiesOnBoard = () -> 0.0;
@@ -43,47 +46,33 @@ public class Align extends Command {
 
         if (note) {
             // if (LimelightHelpers.getTX(Constants.Vision.llPython) == 0) {
-            //     getTargetRotation = () -> {
-            //         return mDrivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(90));
-            //     };
-            // } else {
-                getTargetRotation = () -> {
-                    return mDrivetrain.getPose().getRotation()
-                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llPython)));
-                };
-            // }
-            // if (LimelightHelpers.getTX(Constants.Vision.llAprilTagRear) != 0) {
-            // return mDrivetrain.getPose().getRotation()
-            // .plus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-            // } else {
-            // return Rotation2d
-            // .fromRadians(-Math.atan2(Constants.Vision.SpeakerCoords[1] -
-            // mDrivetrain.getPose().getY(),
-            // Constants.Vision.SpeakerCoords[0] - mDrivetrain.getPose().getX()));
-            // }
+            // getTargetRotation = () -> {
+            // return mDrivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(90));
             // };
+            // } else {
+            getTargetRotation = () -> {
+                return mDrivetrain.getPose().getRotation()
+                        .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llPython)));
+            };
+
             this.addRequirements(mIntake);
         } else {
             getTargetRotation = () -> {
-                // return mDrivetrain.getPose().getRotation()
-                // .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-                // };
-                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
-                // return mDrivetrain.getPose().getRotation()
-                // .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-                // } else {
-                // return Rotation2d
-                // .fromRadians(-Math.atan2(mDrivetrain.getPose().getY() -
-                // Constants.Vision.SpeakerCoords[1],
-                // Constants.Vision.SpeakerCoords[0] - mDrivetrain.getPose().getX()));
-                // }
+                if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
+                    return mDrivetrain.getPose().getRotation()
+                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                }
 
-                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) == -1) {
-                // return Rotation2d.fromDegrees(0);
-                // } else {
-                return mDrivetrain.getPose().getRotation()
-                        .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-                // }
+                // TODO: NOT WORKING, when april tag isnt visible the robot kills itself
+                // if the rear april tag isnt seeing a target, use the speaker coords
+                else {
+                    // return Rotation2d
+                    //         .fromRadians(Math.atan2(
+                    //                 Constants.Vision.SpeakerCoords[1] - mDrivetrain.getPose().getY(),
+                    //                 Constants.Vision.SpeakerCoords[0] - mDrivetrain.getPose().getX()));
+                    return mDrivetrain.getPose().getRotation()
+                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                }
             };
         }
     }
@@ -92,23 +81,21 @@ public class Align extends Command {
     public void initialize() {
         drive = new SwerveRequest.FieldCentricFacingAngle();
         drive.Deadband = Constants.OperatorConstants.deadband;
-        drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 2;
+        drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.5;
 
-        drive2 = new SwerveRequest.FieldCentric();
-        drive2.Deadband = Constants.OperatorConstants.deadband;
-        drive2.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 2;
         timer.restart();
 
         if (note) {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
         } else {
+            // This pipeline will only look for the Speaker April Tag
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 2);
         }
     }
 
     @Override
     public void execute() {
-        drive.RotationalDeadband = 0;
+        // drive.RotationalDeadband = 0;
 
         if (note) {
             mIntake.setExtend(true);
@@ -122,6 +109,15 @@ public class Align extends Command {
 
         SmartDashboard.putNumber("Swerve/Rotation Error", rotationError);
 
+        if (Math.abs(rotationError) < 5) {
+            SmartDashboard.putString("Swerve/Rotation Status", "In Position");
+        } else {
+            SmartDashboard.putString("Swerve/Rotation Status", "Traveling");
+        }
+        
+        drive.TargetDirection = getTargetRotation.get();
+        SmartDashboard.putNumber("Swerve/Rotation Target", drive.TargetDirection.getDegrees());
+
         drive
                 .withVelocityX(-translateY.get()
                         * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
@@ -129,30 +125,13 @@ public class Align extends Command {
                         * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 
-        // drive2
-        // .withVelocityX(-translateY.get()
-        // * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-        // .withVelocityY(-translateX.get()
-        // * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-        // .withSlowDown(1 - howManyBabiesOnBoard.get());
-
-        if (Math.abs(rotationError) < 5) {
-            SmartDashboard.putString("Swerve/Rotation Status", "In Position");
-            // mDrivetrain.setControl(drive2);
-        } else {
-            SmartDashboard.putString("Swerve/Rotation Status", "Travelling");
-            drive.TargetDirection = getTargetRotation.get();
-        }
-
         mDrivetrain.setControl(drive);
-        SmartDashboard.putNumber("Swerve/Rotation Target", drive.TargetDirection.getDegrees());
     }
 
     @Override
     public void end(boolean interrupted) {
         LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
         if (note) {
-            // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llAprilTagPipelineIndex);
             mIntake.setIntake(0);
             mIntake.setExtend(false);
             mIntake.setHolding(!interrupted);

@@ -14,25 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "start to close left"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "pathName": "Center to center piece far"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left to top"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "pathName": "Left to second top"
           }
         }
       ]

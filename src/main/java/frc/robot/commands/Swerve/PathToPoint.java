@@ -21,7 +21,7 @@ public class PathToPoint extends SequentialCommandGroup {
         this(new Pose2d(8.27, 2.42, Rotation2d.fromDegrees(0)));
     }
 
-    // TODO: display the trajectory onto smartdashboard field using Robot.mField;
+    // TODO (@Hellothere212): display the trajectory onto smartdashboard field using Robot.mField
 
     // How to implement
     // xDrive.a().onTrue(new PathToPoint());
@@ -48,30 +48,7 @@ public class PathToPoint extends SequentialCommandGroup {
                                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared,
                                 Constants.AutoConstants.kMaxAngularSpeedRadiansPerSecond,
                                 Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondPerSecond),
-                        0.0, // Goal end velocity in meters/sec
-                        0.0 // Rotation delay distance in meters. This is how far the robot should travel
-                            // before attempting to rotate.
-                ));
+                        0.0,
+                        0.0));
     }
-
-    // public Command followthePath(Pose2d startPose) {
-    // drivetrain.applyRequest(() -> drive.withRotationalDeadband(
-    // drivetrain.getPose().getRotation().getDegrees() -
-    // drivetrain.getPose().getRotation().getDegrees()));
-
-    // PathConstraints constraints = new PathConstraints(5, 6, 540d, 720d);
-
-    // Pose2d targetPose = new Pose2d(8.27, 2.42, Rotation2d.fromDegrees(0));
-
-    // Command pathfindingCommand = AutoBuilder.pathfindToPose(
-    // targetPose,
-    // constraints,
-    // 0.0, // Goal end velocity in meters/sec
-    // 0.0 // Rotation delay distance in meters. This is how far the robot should
-    // travel
-    // // before attempting to rotate.
-    // );
-    // return pathfindingCommand;
-
-    // }
 }

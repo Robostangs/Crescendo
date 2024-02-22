@@ -4,8 +4,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -43,15 +41,19 @@ public class Shooter extends SubsystemBase {
         fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
         fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
         fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
-        fxConfig.MotorOutput.PeakReverseDutyCycle = -1;
+        fxConfig.MotorOutput.PeakReverseDutyCycle = 0;
 
         fxConfig.Slot0.kP = 0.07;
         fxConfig.Slot0.kI = 0.01;
         fxConfig.Slot0.kV = 10.5 / 88.9;
-        fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         fxConfig.Audio.AllowMusicDurDisable = true;
         shootMotorLeft.getConfigurator().apply(fxConfig);
         shootMotorRight.getConfigurator().apply(fxConfig);
+
+        fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        fxConfig.Audio.AllowMusicDurDisable = true;
+        fxConfig.MotorOutput.PeakReverseDutyCycle = -1;
         feedMotor.getConfigurator().apply(fxConfig);
 
         feedMotor.setInverted(Constants.ShooterConstants.feedIsInverted);
@@ -65,9 +67,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShoot(double feeder, double shooter) {
-        shootMotorRight.set(shooter);
-        shootMotorLeft.set(shooter);
-        feedMotor.set(feeder);
+        setShoot(feeder, shooter, shooter);
     }
 
     public void setShoot(double feeder, double leftShooter, double rightShooter) {
@@ -78,6 +78,9 @@ public class Shooter extends SubsystemBase {
 
     /**
      * Velocity is in RPM, values should be [-1,1]
+     * <p>
+     * feedMotor does not use Velocity PID
+     * 
      */
     public void shoot(double feederSetValue, double shooterSetValue) {
         shoot(feederSetValue, shooterSetValue, shooterSetValue);
@@ -85,6 +88,8 @@ public class Shooter extends SubsystemBase {
 
     /**
      * Velocity is in RPM, values should be [-1,1]
+     * <p>
+     * feedMotor does not use Velocity PID
      */
     public void shoot(double feederSetVal, double leftShooterSetVal, double rightShooterSetVal) {
         shootMotorRight
@@ -112,7 +117,12 @@ public class Shooter extends SubsystemBase {
         shootMotorLeft.setNeutralMode(mode);
     }
 
+    /**
+     * Returns true if the shooter motors are fast enough to shoot, this function
+     * checks the left motor
+     */
     public boolean readyToShoot() {
-        return ((shootMotorRight.getVelocity().getValueAsDouble() * 60) > ((Robot.pdh.getVoltage()/12.8) * Constants.MotorConstants.falconShooterLoadRPM));
+        return ((shootMotorLeft.getVelocity().getValueAsDouble() * 60) > ((Robot.pdh.getVoltage() / 12.8)
+                * Constants.MotorConstants.falconShooterLoadRPM));
     }
 }

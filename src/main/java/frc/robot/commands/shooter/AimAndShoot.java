@@ -8,19 +8,21 @@ import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class AimAndShoot extends Command {
     private Arm mArm;
     private Shooter mShooter;
     private Intake mIntake;
 
-    private double armSetpoint;
     private Timer timer;
-    private boolean debugMode = false;
-    private boolean autoAim = false;
+    private double armSetpoint;
+    private double shootSpeed = 1;
 
+    private boolean autoAim = false;
     private boolean isFinishedBool = false;
-    private double rightShooterVal = 01;
+
+    private boolean debugMode = false;
 
     /**
      * Set the shooter to a specific position and shoots when within 1 degree
@@ -78,9 +80,24 @@ public class AimAndShoot extends Command {
 
     @Override
     public void execute() {
-        // If shooter is empty 
+        // TODO: try this (constantly calculates the arm setpoint) main fear is that the
+        // movement needed is so little that motion magic wont care enough
+        if (autoAim) {
+            armSetpoint = mArm.calculateArmSetpoint();
+        }
+
+        if (Math.abs(Constants.Vision.SpeakerCoords[1]
+                - Drivetrain.getInstance().getPose().getY()) < Constants.Vision.SpeakerDeadBand
+                && Drivetrain.getInstance().getPose().getX() < 1.91) {
+            shootSpeed = 0.6;
+        } else {
+            shootSpeed = 1;
+        }
+
+        // If shooter is empty
         if (!mIntake.getShooterSensor()) {
-            mShooter.shoot(0.1, 0, 0);
+            // Increased the spead of feeder setVal to 0.5 from 0.1
+            mShooter.shoot(0.5, shootSpeed);
 
             mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
             if (!isFinishedBool) {
@@ -93,13 +110,13 @@ public class AimAndShoot extends Command {
         }
 
         // else if the arm is within 1.5 degrees of the target and the arm is not moving
-        else if (mArm.isInRangeOfTarget(armSetpoint) && mArm.getVelocity() < 0.5) {
+        else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.5) {
             if (mShooter.readyToShoot()) {
-                mShooter.shoot(0.5, 1, rightShooterVal);
+                mShooter.shoot(1, shootSpeed);
                 SmartDashboard.putString("Shooter/Status", "Shooting");
                 isFinishedBool = true;
             } else {
-                mShooter.shoot(0, 1, 1);
+                mShooter.shoot(0, shootSpeed);
                 SmartDashboard.putString("Shooter/Status", "Charging Up");
             }
         }
@@ -111,13 +128,13 @@ public class AimAndShoot extends Command {
                 timer.restart();
             }
 
-            // 0.23sec is the time it takes for the note to travel into the shooter but not
-            // hit the shooter wheels
+            // reversing the feed and pushing the note out of the shooter to charge up the
+            // shooter motors
             if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
-                mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0, 0);
+                mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
                 SmartDashboard.putString("Shooter/Status", "Reversing Feed");
             } else {
-                mShooter.shoot(0, 1, 1);
+                mShooter.shoot(0, shootSpeed);
                 mArm.setMotionMagic(armSetpoint);
                 SmartDashboard.putString("Shooter/Status", "Traveling to Setpoint");
             }
@@ -140,12 +157,6 @@ public class AimAndShoot extends Command {
         }
 
         return isFinishedBool && !mArm.isInRangeOfTarget(armSetpoint, 5);
-        // return isFinishedBool &&
-        // mArm.isInRangeOfTarget(Constants.ArmConstants.SetPoints.kIntake, 5);
-
-        // return false;
-        // return (mArm.isInRangeOfTarget(armSetpoint, 1) &&
-        // !mIntake.getShooterSensor());
     }
 
     @Override
@@ -154,8 +165,10 @@ public class AimAndShoot extends Command {
             mIntake.setHolding(false);
         }
 
-        SmartDashboard.putString("Shooter/Status", "Idle");
-        mShooter.stop();
         mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+
+        if (interrupted) {
+            SmartDashboard.putString("Shooter/Status", "Aim And Shoot Interrupted");
+        }
     }
 }

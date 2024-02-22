@@ -52,42 +52,44 @@ public class FeedAndShoot extends Command {
                     timer.restart();
                 }
 
-                if (timer.get() < 0.23) { // 0.23 is the time it takes for the note to travel into the shooter but not
-                                          // hit the shooter wheels
-                    mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
-                    SmartDashboard.putString("Shooter/Status", "Charging Up");
+                if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
+                    mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
+                    SmartDashboard.putString("Shooter/Status", "Reversing Feed");
                 } else {
                     mShooter.shoot(0, 1);
                 }
 
-                if (timer.get() > Constants.ShooterConstants.shooterChargeUpTime) {
-                    mShooter.shoot(0.1, 1);
+                if (mShooter.readyToShoot()) {
+                    mShooter.shoot(0.5, 1);
                     SmartDashboard.putString("Shooter/Status", "Shooting");
+                    mIntake.setHolding(true);
                 }
             } else {
-                mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
+                mShooter.shoot(0.1, 0);
                 mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
-                SmartDashboard.putString("Shooter/Status", "Charging Up");
             }
-        } else {
+        }
+        
+        else {
             if (mIntake.getShooterSensor()) {
                 if (timer == null) {
                     timer = new Timer();
                     timer.restart();
                 }
 
-                if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) { // 0.23 is the time it takes for the note to travel into the shooter but not
-                                          // hit the shooter wheels
-                    mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
-                    SmartDashboard.putString("Shooter/Status", "Charging Up");
+                if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
+                    mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
+                    SmartDashboard.putString("Shooter/Status", "Reversing Feed");
                 } else {
                     mShooter.shoot(0, 1);
                 }
 
                 if (feedUntil.getAsBoolean()) {
-                    mShooter.shoot(0.1, 1);
+                    mShooter.shoot(0.5, 1);
                     SmartDashboard.putString("Shooter/Status", "Shooting");
+                    mIntake.setHolding(true);
                 }
+
                 mIntake.setBelt(0);
             } else {
                 mShooter.shoot(0.1, 1);
@@ -100,7 +102,6 @@ public class FeedAndShoot extends Command {
     @Override
     public void end(boolean interrupted) {
         SmartDashboard.putString("Shooter/Status", "Idle");
-        // mShooter.stop();
     }
 
     @Override

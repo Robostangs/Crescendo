@@ -1,16 +1,20 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
 import frc.robot.commands.Swerve.Align;
+import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
 import frc.robot.commands.feeder.BeltDrive;
 import frc.robot.commands.feeder.BeltFeed;
 import frc.robot.commands.feeder.DeployAndIntake;
 import frc.robot.commands.feeder.QuickFeed;
+import frc.robot.commands.feeder.ShooterCharge;
 import frc.robot.commands.shooter.AimAndShoot;
 import frc.robot.commands.shooter.FeedAndShoot;
 import frc.robot.commands.shooter.FineAdjust;
@@ -19,6 +23,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
+@SuppressWarnings("unused")
 public class RobotContainer {
 	private final CommandXboxController xDrive = new CommandXboxController(0);
 	private final CommandXboxController xManip = new CommandXboxController(1);
@@ -32,50 +37,55 @@ public class RobotContainer {
 	public Field2d field;
 
 	private void configureDriverBinds() {
-		drivetrain.setDefaultCommand(
-				new xDrive(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () -> xDrive.getRightX(),
-						() -> xDrive.getRightTriggerAxis()).ignoringDisable(true));
-
-		xDrive.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
-		xDrive.x().toggleOnTrue(new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(),
-				() -> xDrive.getRightTriggerAxis(), false));
-
-		xDrive.b().toggleOnTrue(new Align(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(),
-				() -> xDrive.getRightTriggerAxis(), true));
-
 		mIntake.setDefaultCommand(new BeltFeed());
 
-		xDrive.leftBumper().whileTrue(new DeployAndIntake());
+		drivetrain.setDefaultCommand(
+				new xDrive(xDrive::getLeftX, xDrive::getLeftY, xDrive::getRightX,
+						xDrive::getRightTriggerAxis).ignoringDisable(true));
+
+		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
+				xDrive::getRightTriggerAxis, false));
+		xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
+				xDrive::getRightTriggerAxis, true));
+		xDrive.x().toggleOnTrue(new AimAndShoot());
+
+		// xDrive.x().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
+
+		// Square up to the speaker and press this to reset odometry to the speaker pose, this is consistent af
+		xDrive.povRight().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)))));
+		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// This is basically saying deploy and intake without deploying
 		xDrive.rightBumper().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
+		xDrive.leftBumper().toggleOnTrue(new DeployAndIntake());
 
 	}
 
 	private void configureManipBinds() {
-		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kArmDeadzone)
+		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
-		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kArmDeadzone)
+		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
 
-		// xManip.x().whileTrue(new
-		// AimAndShoot(Constants.ArmConstants.SetPoints.kSubwoofer));
+		new Trigger(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+				.whileTrue(new ShooterCharge(xManip::getRightTriggerAxis));
 
+		xManip.y().toggleOnTrue(new SetPoint());
 		xManip.x().whileTrue(new QuickFeed());
 
-		xManip.a().whileTrue(new AimAndShoot());
-
-		xManip.b().whileTrue(new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp));
-		// xManip.a().onTrue(new SetPoint(0));
-		// xManip.b().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
+		xManip.a().toggleOnTrue(new AimAndShoot());
+		xManip.b().toggleOnTrue(new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp));
 
 		xManip.povRight().whileTrue(new Spit());
 		xManip.povDown().whileTrue(new DeployAndIntake());
 
 		xManip.leftBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getRightBumper()));
 		xManip.rightBumper().whileTrue(new FeedAndShoot());
+
+		// absolute worst case scenario
+		xManip.start().and(() -> xManip.back().getAsBoolean())
+				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
 	}
 
 	public RobotContainer() {

@@ -11,7 +11,7 @@ public class BeltDrive extends Command {
 
     public BeltDrive(Supplier<Double> manualAdjust) {
         this.manualAdjust = manualAdjust;
-        this.setName("Fine Adjust");
+        this.setName("Belt Drive");
         this.addRequirements(mIntake);
     }
 

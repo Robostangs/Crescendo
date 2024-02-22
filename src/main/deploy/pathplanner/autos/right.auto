@@ -6,33 +6,21 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "Right to bottom"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "start to close left"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "pathName": "Right to second bottom"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left to top"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "pathName": "Right to Middle Collect"
           }
         }
       ]

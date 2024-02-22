@@ -7,7 +7,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -19,9 +18,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class PathPlannerCommand extends SequentialCommandGroup {
-    private Drivetrain swerve;
-    private Command auto;
-    private Pose2d startPose;
+    // private Drivetrain swerve;
+    // private Command auto;
+    // private Pose2d startPose;
 
     private static String lastAutoName;
 
@@ -34,7 +33,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         // SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.1));
         // NamedCommands.registerCommand("Stow", new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(3));
 
-        swerve = Drivetrain.getInstance();
+        // swerve = Drivetrain.getInstance();
 
         if (shoot) {
             this.addCommands(

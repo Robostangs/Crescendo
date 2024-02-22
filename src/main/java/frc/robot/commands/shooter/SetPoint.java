@@ -51,6 +51,7 @@ public class SetPoint extends Command {
         if (autoAim) {
             armSetpoint = mArm.calculateArmSetpoint();
         }
+
         timer.restart();
 
         error = armSetpoint - mArm.getArmPosition();
@@ -67,8 +68,9 @@ public class SetPoint extends Command {
 
     @Override
     public void execute() {
-        if (!mArm.validSetpoint(armSetpoint)) {
-            this.end(true);
+        // TODO: try this
+        if (autoAim) {
+            armSetpoint = mArm.calculateArmSetpoint();
         }
 
         error = armSetpoint - mArm.getArmPosition();

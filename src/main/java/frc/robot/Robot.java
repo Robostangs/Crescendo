@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.PathPlannerCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -98,6 +99,14 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		Arm.getInstance().setBrake(false);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kSubwoofer);
+		if (Constants.Vision.UseLimelight) {
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
+					Constants.Vision.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
+					Constants.Vision.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+		}
+
 	}
 
 	@Override

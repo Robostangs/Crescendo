@@ -21,6 +21,7 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putString("Intake/Status", solenoid.get() ? "Extended" : "Retracted");
         SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
+        SmartDashboard.putBoolean("Intake/Holding", holding);
     }
 
     public static Intake getInstance() {
@@ -33,7 +34,7 @@ public class Intake extends SubsystemBase {
         solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.solenoidID);
         mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
         mCompressor.enableDigital();
-        mCompressor.disable();
+        // mCompressor.disable();
         shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
 
         intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.shooterMotorID, true);

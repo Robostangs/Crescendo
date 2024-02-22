@@ -1,26 +1,29 @@
 package frc.robot;
 
-import java.util.Set;
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
+import frc.robot.commands.Swerve.Align;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
+import frc.robot.commands.feeder.BeltDrive;
+import frc.robot.commands.feeder.BeltFeed;
 import frc.robot.commands.feeder.DeployAndIntake;
+import frc.robot.commands.feeder.QuickFeed;
+import frc.robot.commands.feeder.ShooterCharge;
 import frc.robot.commands.shooter.AimAndShoot;
-import frc.robot.commands.shooter.FeedAndShootVelocity;
+import frc.robot.commands.shooter.FeedAndShoot;
 import frc.robot.commands.shooter.FineAdjust;
 import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
-import frc.robot.subsystems.Drivetrain.SwerveRequest;
-import frc.robot.subsystems.Drivetrain.SwerveModule.DriveRequestType;
 
+@SuppressWarnings("unused")
 public class RobotContainer {
 	private final CommandXboxController xDrive = new CommandXboxController(0);
 	private final CommandXboxController xManip = new CommandXboxController(1);
@@ -28,59 +31,69 @@ public class RobotContainer {
 
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
 	private final Arm mArm = Arm.getInstance();
-
-	private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-	
-	private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
-	private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
-			.withDeadband(Constants.OperatorConstants.deadband)
-			.withRotationalDeadband(Constants.OperatorConstants.rotationalDeadband)
-			.withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+	private final Intake mIntake = Intake.getInstance();
 
 	private final Telemetry logger;
 	public Field2d field;
 
 	private void configureDriverBinds() {
-		/* TODO: Make sure works irl */
+		mIntake.setDefaultCommand(new BeltFeed());
+
 		drivetrain.setDefaultCommand(
-				new xDrive(() -> xDrive.getLeftX(), () -> xDrive.getLeftY(), () -> xDrive.getRightX(),
-						() -> xDrive.getRightTriggerAxis()));
+				new xDrive(xDrive::getLeftX, xDrive::getLeftY, xDrive::getRightX,
+						xDrive::getRightTriggerAxis).ignoringDisable(true));
 
-		// drivetrain.setDefaultCommand(
-		// 		drivetrain.applyRequest(() -> drive
-		// 				.withVelocityX(-xDrive.getLeftY()
-		// 						* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-		// 				.withVelocityY(-xDrive.getLeftX()
-		// 						* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-		// 				.withRotationalRate(
-		// 						-xDrive.getRightX()
-		// 								* Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)
-		// 				.withSlowDown(true, 1 - xDrive.getRightTriggerAxis()))
-		// 				.ignoringDisable(true));
+		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
+				xDrive::getRightTriggerAxis, false));
+		xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
+				xDrive::getRightTriggerAxis, true));
+		xDrive.x().toggleOnTrue(new AimAndShoot());
 
-		xDrive.x().whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(1).withVelocityY(1)));
-		xDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
-		xDrive.b().whileTrue(drivetrain
-				.applyRequest(() -> point.withModuleDirection(
-						new Rotation2d(-xDrive.getLeftY(), xDrive.getLeftX()))));
+		// xDrive.x().toggleOnTrue(new
+		// PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
 
-		xDrive.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-		xDrive.rightBumper().whileTrue(
-				new DeferredCommand(() -> PathToPoint.followthePath(drivetrain.getState().Pose), Set.of(drivetrain)));
+		// Square up to the speaker and press this to reset odometry to the speaker
+		// pose, this is consistent af
+		xDrive.povRight().onTrue(drivetrain
+				.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)))));
+		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+
+		// This is basically saying deploy and intake without deploying
+		xDrive.rightBumper().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
+		xDrive.leftBumper().toggleOnTrue(new DeployAndIntake());
+
 	}
 
 	private void configureManipBinds() {
-		mArm.setDefaultCommand(new FineAdjust(() -> -xManip.getRightY()));
-		xManip.x().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
-		xManip.y().whileTrue(new AimAndShoot(0));
-		xManip.a().onTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
-		xManip.b().onTrue(new SetPoint(0));
+		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
+				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
-		xManip.pov(90).whileTrue(new Spit());
-		xManip.pov(180).whileTrue(new DeployAndIntake());
+		new Trigger(() -> xManip.getLeftTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+				.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+				.whileTrue(new FineAdjust(() -> xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis()));
 
-		xManip.leftBumper().whileTrue(new FeedAndShootVelocity(() -> xManip.getHID().getRightBumper()));
+		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
+				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
+
+		new Trigger(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+				.whileTrue(new ShooterCharge(xManip::getRightTriggerAxis));
+
+		xManip.y().toggleOnTrue(new SetPoint());
+		xManip.x().whileTrue(new QuickFeed());
+
+		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getRightBumper()));
+		xManip.b().toggleOnTrue(
+				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xManip.getHID().getRightBumper()));
+
+		xManip.povRight().whileTrue(new Spit());
+		xManip.povDown().whileTrue(new DeployAndIntake());
+
+		xManip.leftBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getRightBumper()));
+		xManip.rightBumper().whileTrue(new FeedAndShoot());
+
+		// absolute worst case scenario
+		xManip.start().and(() -> xManip.back().getAsBoolean())
+				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
 	}
 
 	public RobotContainer() {
@@ -99,34 +112,29 @@ public class RobotContainer {
 		drivetrain.removeDefaultCommand();
 		mArm.removeDefaultCommand();
 
-		drivetrain.setDefaultCommand(new xDrive(() -> -simController.getRawAxis(1), () -> simController.getRawAxis(0),
-				() -> -simController.getRawAxis(2), () -> 0d));
-
-		// drivetrain.setDefaultCommand(drivetrain
-		// 		.applyRequest(() -> drive
-		// 				.withVelocityX(
-		// 						-simController.getRawAxis(1)
-		// 								* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-		// 				.withVelocityY(
-		// 						-simController.getRawAxis(0)
-		// 								* Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-		// 				.withRotationalRate(-simController.getRawAxis(2)
-		// 						* Constants.SwerveConstants.kMaxAngularSpeedMetersPerSecond)
-		// 				.withSlowDown(simController.getRawButton(5),
-		// 						Constants.OperatorConstants.slowDownMultiplier))
-		// 		.withName("xDrive"));
+		drivetrain.setDefaultCommand(new xDrive(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1),
+				() -> simController.getRawAxis(2), () -> 0d));
 
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint));
+				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSubwoofer));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
 				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
-				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSpeaker));
+				.whileTrue(new AimAndShoot());
 
 		new Trigger(() -> simController.getRawButtonPressed(4))
-				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kHorizontal));
+				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
+
+		// new Trigger(() -> simController.getRawButtonPressed(3))
+		// .whileTrue(new AimAndShoot());
+
+		// new Trigger(() -> simController.getRawButtonPressed(4))
+		// .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kHorizontal));
+
+		// new Trigger(() -> simController.getRawButtonPressed(4)).onTrue(new
+		// InstantCommand(() -> mArm.calculateArmSetpoint(), mArm));
 
 		// new Trigger(() -> simController.getRawButtonPressed(2))
 		// .onTrue(new InstantCommand(() -> drivetrain.seedFieldRelative()));

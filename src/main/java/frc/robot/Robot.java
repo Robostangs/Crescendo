@@ -4,25 +4,10 @@
 
 package frc.robot;
 
-import java.util.Map;
-import java.util.Optional;
-
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,6 +37,8 @@ public class Robot extends TimedRobot {
 
 	/* TODO: Set this value for every auto */
 	public static final boolean shootFirst = true;
+
+	public Command autonCommand;
 
 	@Override
 	public void robotInit() {
@@ -164,6 +151,10 @@ public class Robot extends TimedRobot {
 
 	@SuppressWarnings("unused")
 	@Override
+	public void driverStationConnected() {
+	}
+
+	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
@@ -206,23 +197,24 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("Auto Timer").setDouble(timer.get());
-		if (!CommandScheduler.getInstance().isScheduled(auton)) {
-			timer.stop();
-		}
 	}
 
 	@Override
 	public void autonomousExit() {
-		if (atComp) {
-			PathPlannerCommand.unpublishTrajectory();
-			autonomousExited = true;
-		}
 	}
 
 	@Override
 	public void teleopInit() {
 		Arm.getInstance().setBrake(false);
+		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+		if (Constants.Vision.UseLimelight) {
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
+					Constants.Vision.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
+					Constants.Vision.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+		}
+
 	}
 
 	@Override
@@ -253,5 +245,17 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void simulationInit() {
+	}
+
+	public static boolean isRed() {
+		var alliance = DriverStation.getAlliance();
+
+		if (alliance.isEmpty()) {
+			return false;
+		} else if (alliance.get() == DriverStation.Alliance.Red) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

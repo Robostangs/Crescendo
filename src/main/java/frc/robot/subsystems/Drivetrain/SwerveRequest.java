@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants;
 
 /**
  * Container for all the Swerve Requests. Use this to find all applicable swerve
@@ -140,8 +141,12 @@ public interface SwerveRequest {
          */
         public double RotationalDeadband = 0.05;
 
-        public boolean babyOnBoard = false;
-        public double slowDownRate = 0.5;
+        public double slowDownRate = 1;
+
+        /**
+         * The location (x,y) that the robot should rotate about.
+         */
+        public Translation2d centerOfRotation = Constants.SwerveConstants.centerOfRotation;
 
         /**
          * The type of control request to use for the drive motor.
@@ -158,11 +163,10 @@ public interface SwerveRequest {
         protected SwerveModuleState[] m_lastAppliedState = null;
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
-            if (babyOnBoard) {
-                this.VelocityX *= slowDownRate;
-                this.VelocityY *= slowDownRate;
-                this.RotationalRate *= slowDownRate;
-            }
+            this.VelocityX *= slowDownRate;
+            this.VelocityY *= slowDownRate;
+            this.RotationalRate *= slowDownRate;
+
             double toApplyX = VelocityX;
             double toApplyY = VelocityY;
             double toApplyOmega = RotationalRate;
@@ -178,7 +182,7 @@ public interface SwerveRequest {
                     .discretize(ChassisSpeeds.fromFieldRelativeSpeeds(toApplyX, toApplyY, toApplyOmega,
                             parameters.currentPose.getRotation()), parameters.updatePeriod);
 
-            var states = parameters.kinematics.toSwerveModuleStates(speeds, new Translation2d());
+            var states = parameters.kinematics.toSwerveModuleStates(speeds, centerOfRotation);
 
             for (int i = 0; i < modulesToApply.length; ++i) {
                 modulesToApply[i].apply(states[i], DriveRequestType, SteerRequestType);
@@ -226,14 +230,18 @@ public interface SwerveRequest {
             return this;
         }
 
-        public FieldCentric withSlowDown(boolean babyOnBoard, double slowDownRate) {
-            this.babyOnBoard = babyOnBoard;
+        public FieldCentric withSlowDown(double slowDownRate) {
             if (slowDownRate <= 0.1) {
                 slowDownRate = 0.3;
             } else {
                 this.slowDownRate = slowDownRate;
             }
 
+            return this;
+        }
+
+        public FieldCentric withCenterOfRotation(Translation2d centerOfRotation) {
+            this.centerOfRotation = centerOfRotation;
             return this;
         }
 
@@ -332,9 +340,14 @@ public interface SwerveRequest {
          */
         public double RotationalDeadband = 0;
 
-        public double slowDownRate = 0.5;
+        public double slowDownRate = 1;
 
         public boolean babyOnBoard = false;
+
+        /**
+         * The location (x,y) that the robot should rotate about.
+         */
+        public Translation2d centerOfRotation = Constants.SwerveConstants.centerOfRotation;
 
         /**
          * The type of control request to use for the drive motor.
@@ -353,13 +366,14 @@ public interface SwerveRequest {
          * This PID controller operates on heading radians and outputs a target
          * rotational rate in radians per second.
          */
-        public PhoenixPIDController HeadingController = new PhoenixPIDController(0, 0, 0);
+
+        // TODO: tune this so that it is a little stronger
+        public PhoenixPIDController HeadingController = new PhoenixPIDController(3, // 1.9
+                1.5, 0.1); // increase 0.05 to 0.1
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
-            if (babyOnBoard) {
-                this.VelocityX *= slowDownRate;
-                this.VelocityY *= slowDownRate;
-            }
+            this.VelocityX *= slowDownRate;
+            this.VelocityY *= slowDownRate;
             double toApplyX = VelocityX;
             double toApplyY = VelocityY;
 
@@ -379,7 +393,7 @@ public interface SwerveRequest {
                     .discretize(ChassisSpeeds.fromFieldRelativeSpeeds(toApplyX, toApplyY, toApplyOmega,
                             parameters.currentPose.getRotation()), parameters.updatePeriod);
 
-            var states = parameters.kinematics.toSwerveModuleStates(speeds, new Translation2d());
+            var states = parameters.kinematics.toSwerveModuleStates(speeds, centerOfRotation);
 
             for (int i = 0; i < modulesToApply.length; ++i) {
                 modulesToApply[i].apply(states[i], DriveRequestType, SteerRequestType);
@@ -439,9 +453,7 @@ public interface SwerveRequest {
             return this;
         }
 
-
-        public FieldCentricFacingAngle withSlowDown(boolean babyOnBoard, double slowDownRate) {
-            this.babyOnBoard = babyOnBoard;
+        public FieldCentricFacingAngle withSlowDown(double slowDownRate) {
             if (slowDownRate <= 0.1) {
                 slowDownRate = 0.3;
             } else {
@@ -459,6 +471,17 @@ public interface SwerveRequest {
          */
         public FieldCentricFacingAngle withRotationalDeadband(double rotationalDeadband) {
             this.RotationalDeadband = rotationalDeadband;
+            return this;
+        }
+
+        /**
+         * Sets the center of rotation to rotate around.
+         *
+         * @param centerOfRotation Center of rotation to rotate around
+         * @return this request
+         */
+        public FieldCentricFacingAngle withCenterOfRotation(Translation2d centerOfRotation) {
+            this.centerOfRotation = centerOfRotation;
             return this;
         }
 

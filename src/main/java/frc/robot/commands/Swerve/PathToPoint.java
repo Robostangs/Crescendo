@@ -5,34 +5,127 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
-import frc.robot.subsystems.Drivetrain.SwerveRequest;
-import frc.robot.subsystems.Drivetrain.SwerveModule.DriveRequestType;
 
-public class PathToPoint {
-    private static Drivetrain drivetrain = Drivetrain.getInstance();
-    private static SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-    .withDeadband(Constants.SwerveConstants.kSpeedAt12VoltsMetersPerSecond * 0.08)
-    .withRotationalDeadband(0)
-    .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
-    public static Command followthePath(Pose2d startPose) {
-        drivetrain.applyRequest(() -> drive.withRotationalDeadband(drivetrain.getPose().getRotation().getDegrees() - drivetrain.getPose().getRotation().getDegrees()));
+public class PathToPoint extends SequentialCommandGroup {
+    private Drivetrain drivetrain;
+    private Pose2d targetPose;
 
-        PathConstraints constraints = new PathConstraints(5, 6, 540d, 720d);
+    public enum WayPoints {
+        kAmp,
+        kHumanPlayer,
+        kSpeakerLeft,
+        kSpeakerRight,
+        kSpeakerCenter
+    }
 
-  
-        Pose2d targetPose = new Pose2d(8.27, 2.42, Rotation2d.fromDegrees(0));
+    /**
+     * Command to set the drivetrain to a specific position on the field while
+     * avoiding field obstacles
+     */
+    public PathToPoint() {
+        this(new Pose2d(8.27, 2.42, Rotation2d.fromDegrees(0)));
+    }
 
-        Command pathfindingCommand = AutoBuilder.pathfindToPose(
-        targetPose,
-        constraints,
-        0.0, // Goal end velocity in meters/sec
-        0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-);
-        return pathfindingCommand;
-      
+    // TODO (@Hellothere212): display the trajectory onto smartdashboard field using
+    // Robot.mField
 
+    // How to implement
+
+    /**
+     * Command to set the drivetrain to a specific position on the field while
+     * avoiding field obstacles
+     * 
+     * @param targetPose the position that the robot should move to
+     */
+    public PathToPoint(Pose2d targetPose) {
+        drivetrain = Drivetrain.getInstance();
+
+        this.targetPose = targetPose;
+
+        this.setName("PathToPoint");
+        this.addRequirements(drivetrain);
+
+        this.addCommands(
+                AutoBuilder.pathfindToPoseFlipped(
+                        this.targetPose,
+                        new PathConstraints(
+                                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared,
+                                Constants.AutoConstants.kMaxAngularSpeedMetersPerSecond,
+                                Constants.AutoConstants.kMaxAngularAccelerationMetersPerSecondSquared),
+                        0.0,
+                        0.0));
+    }
+
+    /**
+     * @deprecated Kind of useless now that we have an {@link AutoBuilder#pathfindToPoseFlipped(Pose2d, PathConstraints, double)} constructor available
+     * <p>
+     * Command to set the drivetrain to a specific position on the field while
+     * avoiding field obstacles
+     * 
+     * @param wayPoint the position that the robot should move to
+     */
+    public PathToPoint(WayPoints wayPoint) {
+        drivetrain = Drivetrain.getInstance();
+        boolean isRed = Robot.isRed();
+
+        switch (wayPoint) {
+            case kAmp:
+                if (isRed) {
+                    targetPose = Constants.AutoConstants.WayPoints.Red.kAmp;
+                } else {
+                    targetPose = Constants.AutoConstants.WayPoints.Blue.kAmp;
+                }
+                break;
+            case kHumanPlayer:
+                if (isRed) {
+                    targetPose = Constants.AutoConstants.WayPoints.Red.kHumanPlayer;
+                } else {
+                    targetPose = Constants.AutoConstants.WayPoints.Blue.kHumanPlayer;
+                }
+                break;
+            case kSpeakerLeft:
+                if (isRed) {
+                    targetPose = Constants.AutoConstants.WayPoints.Red.kSpeakerLeft;
+                } else {
+                    targetPose = Constants.AutoConstants.WayPoints.Blue.kSpeakerLeft;
+                }
+                break;
+            case kSpeakerRight:
+                if (isRed) {
+                    targetPose = Constants.AutoConstants.WayPoints.Red.kSpeakerRight;
+                } else {
+                    targetPose = Constants.AutoConstants.WayPoints.Blue.kSpeakerRight;
+                }
+                break;
+            case kSpeakerCenter:
+                if (isRed) {
+                    targetPose = Constants.AutoConstants.WayPoints.Red.kSpeakerCenter;
+                } else {
+                    targetPose = Constants.AutoConstants.WayPoints.Blue.kSpeakerCenter;
+                }
+                break;
+            default:
+                targetPose = drivetrain.getPose();
+                break;
+        }
+
+        this.setName("PathToPoint");
+        this.addRequirements(drivetrain);
+
+        this.addCommands(
+                AutoBuilder.pathfindToPose(
+                        targetPose,
+                        new PathConstraints(
+                                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared,
+                                Constants.AutoConstants.kMaxAngularSpeedMetersPerSecond,
+                                Constants.AutoConstants.kMaxAngularAccelerationMetersPerSecondSquared),
+                        0.0,
+                        0.0));
     }
 }

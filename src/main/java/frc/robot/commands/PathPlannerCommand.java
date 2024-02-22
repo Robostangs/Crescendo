@@ -10,15 +10,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.commands.feeder.DeployAndIntake;
 import frc.robot.commands.shooter.AimAndShoot;
-import frc.robot.commands.shooter.FeedAndShoot;
-import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class PathPlannerCommand extends SequentialCommandGroup {
@@ -30,32 +26,48 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     private static String lastAutoName;
 
     public PathPlannerCommand(String autoName, boolean shoot) {
-        NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command, PathPlanner"));
-        NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command, PathPlanner"));
-        // new
+        NamedCommands.registerCommand("Intake", new DeployAndIntake().withTimeout(0.5));
+        NamedCommands.registerCommand("AimAndShoot", new AimAndShoot().withTimeout(1));
+        NamedCommands.registerCommand("Shoot", new AimAndShoot().withTimeout(3));
+        // NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command,
+        // PathPlanner"));
         // SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.1));
-        NamedCommands.registerCommand("AimAndShoot", new AimAndShoot(60).withTimeout(0.3));
-        NamedCommands.registerCommand("Stow", new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(0.3));
+        // NamedCommands.registerCommand("Stow", new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(3));
 
-        swerve = Drivetrain.getInstance();
-        try {
-            startPose = new Pose2d(PathPlannerAuto.getPathGroupFromAutoFile(autoName).get(0)
-                    .getPreviewStartingHolonomicPose().getTranslation(), Rotation2d.fromDegrees(0));
-            auto = AutoBuilder.buildAuto(autoName);
-        } catch (Exception e) {
-            this.setName("Null Auto");
-            System.out.println("Null auto");
-            auto = new PrintCommand("Null Auto");
-            startPose = new Pose2d(2, 4, Rotation2d.fromDegrees(0));
+        // swerve = Drivetrain.getInstance();
+
+        if (shoot) {
+            this.addCommands(
+                new AimAndShoot().withTimeout(3)
+            );
         }
-        this.setName(autoName);
 
-        swerve.seedFieldRelative(startPose);
+        this.addCommands(
+                AutoBuilder.followPath(
+                        PathPlannerPath.fromPathFile("left start 1 piece")));
 
+        // try {
+        // startPose = new
+        // Pose2d(PathPlannerAuto.getPathGroupFromAutoFile(autoName).get(0)
+        // .getPreviewStartingHolonomicPose().getTranslation(),
+        // Rotation2d.fromDegrees(0));
+        // auto = AutoBuilder.buildAuto(autoName);
+        // } catch (Exception e) {
+        // this.setName("Null Auto");
+        // System.out.println("Null auto");
+        // auto = new PrintCommand("Null Auto");
+        // startPose = new Pose2d(2, 4, Rotation2d.fromDegrees(0));
+        // }
+        // this.setName(autoName);
 
-        this.addCommands(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.5),
-                new FeedAndShoot().withTimeout(0.5),
-                new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(0.5), auto);
+        // swerve.seedFieldRelative(startPose);
+
+        // this.addCommands(new
+        // SetPoint(Constants.ArmConstants.SetPoints.kSubwoofer).withTimeout(Constants.OperatorConstants.setpointTimeout),
+        // new FeedAndShoot().withTimeout(0.5),
+        // new
+        // SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(Constants.OperatorConstants.setpointTimeout),
+        // auto);
 
     }
 

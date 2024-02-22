@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right to bottom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right to second bottom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right to Middle Collect"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

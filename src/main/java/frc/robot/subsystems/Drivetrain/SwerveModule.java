@@ -64,12 +64,14 @@ public class SwerveModule {
     public enum SteerRequestType {
         /**
          * Control the drive motor using a Motion Magic® request.
-         * The control output type is de termined by {@link SwerveModuleConstants#SteerMotorClosedLoopOutput}
+         * The control output type is de termined by
+         * {@link SwerveModuleConstants#SteerMotorClosedLoopOutput}
          */
         MotionMagic,
         /**
          * Control the drive motor using a Motion Magic® Expo request.
-         * The control output type is determined by {@link SwerveModuleConstants#SteerMotorClosedLoopOutput}
+         * The control output type is determined by
+         * {@link SwerveModuleConstants#SteerMotorClosedLoopOutput}
          */
         MotionMagicExpo,
     }
@@ -84,7 +86,8 @@ public class SwerveModule {
         OpenLoopVoltage,
         /**
          * Control the drive motor using a velocity closed-loop request.
-         * The control output type is determined by {@link SwerveModuleConstants#DriveMotorClosedLoopOutput}
+         * The control output type is determined by
+         * {@link SwerveModuleConstants#DriveMotorClosedLoopOutput}
          */
         Velocity,
     }
@@ -122,8 +125,8 @@ public class SwerveModule {
     /**
      * Construct a SwerveModule with the specified constants.
      *
-     * @param constants   Constants used to construct the module
-     * @param canbusName  The name of the CAN bus this module is on
+     * @param constants  Constants used to construct the module
+     * @param canbusName The name of the CAN bus this module is on
      */
     public SwerveModule(SwerveModuleConstants constants, String canbusName) {
         m_driveMotor = new LoggyTalonFX(constants.DriveMotorId, canbusName.equals("*") ? true : false);
@@ -281,7 +284,8 @@ public class SwerveModule {
      *
      * @param state            Speed and direction the module should target
      * @param driveRequestType The {@link DriveRequestType} to apply
-     * @param steerRequestType The {@link SteerRequestType} to apply; defaults to {@link SteerRequestType#MotionMagic}
+     * @param steerRequestType The {@link SteerRequestType} to apply; defaults to
+     *                         {@link SteerRequestType#MotionMagic}
      */
     public void apply(SwerveModuleState state, DriveRequestType driveRequestType, SteerRequestType steerRequestType) {
         var optimized = SwerveModuleState.optimize(state, m_internalState.angle);
@@ -316,13 +320,22 @@ public class SwerveModule {
 
         double velocityToSet = optimized.speedMetersPerSecond * m_driveRotationsPerMeter;
 
-        /* From FRC 900's whitepaper, we add a cosine compensator to the applied drive velocity */
+        /*
+         * From FRC 900's whitepaper, we add a cosine compensator to the applied drive
+         * velocity
+         */
         /* To reduce the "skew" that occurs when changing direction */
         double steerMotorError = angleToSetDeg - m_steerPosition.getValue();
         /* If error is close to 0 rotations, we're already there, so apply full power */
-        /* If the error is close to 0.25 rotations, then we're 90 degrees, so movement doesn't help us at all */
+        /*
+         * If the error is close to 0.25 rotations, then we're 90 degrees, so movement
+         * doesn't help us at all
+         */
         double cosineScalar = Math.cos(Units.rotationsToRadians(steerMotorError));
-        /* Make sure we don't invert our drive, even though we shouldn't ever target over 90 degrees anyway */
+        /*
+         * Make sure we don't invert our drive, even though we shouldn't ever target
+         * over 90 degrees anyway
+         */
         if (cosineScalar < 0.0) {
             cosineScalar = 0.0;
         }
@@ -337,16 +350,20 @@ public class SwerveModule {
 
         switch (driveRequestType) {
             case OpenLoopVoltage:
-                /* Open loop ignores the driveRotationsPerMeter since it only cares about the open loop at the mechanism */
+                /*
+                 * Open loop ignores the driveRotationsPerMeter since it only cares about the
+                 * open loop at the mechanism
+                 */
                 /* But we do care about the backout due to coupling, so we keep it in */
                 velocityToSet /= m_driveRotationsPerMeter;
-                m_driveMotor.setControl(m_voltageOpenLoopSetter.withOutput(velocityToSet / m_speedAt12VoltsMps * 12.0));
+                m_driveMotor.setControl(m_voltageOpenLoopSetter.withOutput(velocityToSet / m_speedAt12VoltsMps * 12.0)
+                        .withEnableFOC(false));
                 break;
 
             case Velocity:
                 switch (m_driveClosedLoopOutput) {
                     case Voltage:
-                        m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet));
+                        m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet).withEnableFOC(false));
                         break;
 
                     case TorqueCurrentFOC:
@@ -377,7 +394,8 @@ public class SwerveModule {
      * @return Current state of the module
      */
     public SwerveModuleState getCurrentState() {
-        return new SwerveModuleState(m_driveVelocity.getValue() / m_driveRotationsPerMeter, Rotation2d.fromRotations(m_steerPosition.getValue()));
+        return new SwerveModuleState(m_driveVelocity.getValue() / m_driveRotationsPerMeter,
+                Rotation2d.fromRotations(m_steerPosition.getValue()));
     }
 
     /**

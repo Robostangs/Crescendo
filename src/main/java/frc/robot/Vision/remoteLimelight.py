@@ -1,33 +1,15 @@
 import cv2
 import numpy as np
-from limelightColorDetection import runPipeline
-# global variables go here:
-testVar = 0
+import os
+from note_finder import runPipeline
 
-
-# To change a global variable inside a function,
-# re-declare it with the 'global' keyword
-def incrementTestVar():
-    global testVar
-    testVar = testVar + 1
-    return testVar
-
-
-# runPipeline() is called every frame by Limelight's backend.
-
-# remote
-
-
+exitCmds = ["e", "exit", "q", "quit"]
 def remoteLoad():
-    path = ""
-
     while True:
-        path = input("Path to file (e to exit): ")
-
-        if path.lower() == "e":
+        path = input("File name in current directory (e to exit): ")
+        if path.lower() in exitCmds:
             return
-
-        original = cv2.imread(path)
+        original = cv2.imread("src\\main\\java\\frc\\robot\\Vision\\" + path)
 
         if original is None:
             print("Invalid/missing/empty path!")

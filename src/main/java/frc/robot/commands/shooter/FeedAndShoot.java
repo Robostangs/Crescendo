@@ -4,54 +4,122 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import java.util.function.BooleanSupplier;
 
 public class FeedAndShoot extends Command {
     private final Shooter mShooter;
+    private final Intake mIntake;
     private Timer timer;
     private BooleanSupplier feedUntil;
 
-    /* TODO: this must require the intake subsytem and set the belt motor to 100% */
-
     /**
-     * This command will activate the feed motor for
+     * This command will wait until a piece is in the shooter and then shoot, but if
+     * there was already a piece in the shooter then it will wait until the shooter
+     * is charged up and then shoot
      */
     public FeedAndShoot() {
         this(null);
     }
 
+    /**
+     * This command will wait until a piece is in the shooter and user speciified
+     * condition is met, then shoot
+     * 
+     * @param feedUntil a supplier that returns true when the shooter should shoot,
+     *                  false means to charge up
+     */
     public FeedAndShoot(BooleanSupplier feedUntil) {
-        timer = new Timer();
         mShooter = Shooter.getInstance();
+        mIntake = Intake.getInstance();
         this.setName("Feed And Shoot");
-        this.addRequirements(mShooter);
+        this.addRequirements(mShooter, mIntake);
         this.feedUntil = feedUntil;
     }
 
     @Override
     public void initialize() {
         SmartDashboard.putString("Shooter/Status", "Charging Up");
-        timer.restart();
     }
 
     @Override
     public void execute() {
         if (feedUntil == null) {
-            if (timer.get() < Constants.ShooterConstants.shooterChargeUpTime) {
-                mShooter.setShoot(Constants.ShooterConstants.kFeederFeedForward, 1);
-                SmartDashboard.putString("Shooter/Status", "Charging Up");
-            } else {
-                mShooter.setShoot(0, 1);
-                SmartDashboard.putString("Shooter/Status", "Shooting");
+            // if there is a piece in the shooter
+            if (mIntake.getShooterSensor()) {
+                if (timer == null) {
+                    timer = new Timer();
+                    timer.restart();
+                }
+
+                // if the shooter is already charged up then shoot
+                if (mShooter.readyToShoot()) {
+                    mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
+                    SmartDashboard.putString("Shooter/Status", "Shooting");
+                    mIntake.setHolding(false);
+                }
+                
+                // // if the shooter is not charged up and the piece has not been reversed yet
+                // else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
+                    //     mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
+                    //     SmartDashboard.putString("Shooter/Status", "Reversing Feed");
+                    // }
+                    
+                    // if the shooter isnt charged up but the pieces has been reversed
+                    else {
+                        mShooter.shoot(0, 1);
+                        SmartDashboard.putString("Shooter/Status", "Charging Up");
+                }
+
+                mIntake.setBelt(0);
             }
-        } else {
-            if (feedUntil.getAsBoolean()) {
-                mShooter.setShoot(1, 1);
-                SmartDashboard.putString("Shooter/Status", "Shooting");
-            } else {
-                mShooter.setShoot(Constants.ShooterConstants.kFeederFeedForward, 1);
-                SmartDashboard.putString("Shooter/Status", "Charging Up");
+
+            // if there is no piece in the shooter
+            else {
+                // mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
+                mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
+                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+                SmartDashboard.putString("Shooter/Status", "Waiting for piece");
+            }
+        }
+
+        // if we are waiting for user to press shoot button
+        else {
+            // if there is a piece in the shooter
+            if (mIntake.getShooterSensor()) {
+                if (timer == null) {
+                    timer = new Timer();
+                    timer.restart();
+                }
+
+                // if the shooter is ready to shoot and the user is ready then shoot
+                if (feedUntil.getAsBoolean() && mShooter.readyToShoot()) {
+                    mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
+                    SmartDashboard.putString("Shooter/Status", "Shooting");
+                    mIntake.setHolding(false);
+                }
+
+                // // if the shooter is not charged up and the piece has not been reversed yet
+                // else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
+                //     mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
+                //     SmartDashboard.putString("Shooter/Status", "Reversing Feed");
+                // }
+
+                // if the shooter isnt charged up but the pieces has been reversed
+                else {
+                    mShooter.shoot(0, 1);
+                    SmartDashboard.putString("Shooter/Status", "Charging Up");
+                }
+
+                mIntake.setBelt(0);
+            }
+
+            // if there is no piece in the shooter
+            else {
+                mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 1);
+                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+                SmartDashboard.putString("Shooter/Status", "Waiting for piece");
             }
         }
     }
@@ -59,9 +127,6 @@ public class FeedAndShoot extends Command {
     @Override
     public void end(boolean interrupted) {
         SmartDashboard.putString("Shooter/Status", "Idle");
-
-        mShooter.setBrake(true);
-        mShooter.stop();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
@@ -12,9 +11,11 @@ public class SetPoint extends Command {
     private double error = 0;
     private Timer timer;
     private boolean debugMode = false;
+    private boolean autoAim = false;
 
     /**
-     * Set the shooter to a specific position
+     * <p>Set the shooter to a specific position
+     * <p>Only use this if the shooter sensor is not working
      * 
      * @param target in degrees of THE SHOOTER, not the extension bar
      */
@@ -23,12 +24,34 @@ public class SetPoint extends Command {
         mArm = Arm.getInstance();
         armSetpoint = target;
 
+        autoAim = false;
+
         this.setName("Setpoint: " + armSetpoint + " degrees");
+        this.addRequirements(mArm);
+    }
+
+    /**
+     * <p>
+     * Set the shooter to a calculated position
+     * <p>
+     * Only use this if the shooter sensor is not working
+     */
+    public SetPoint() {
+        timer = new Timer();
+        mArm = Arm.getInstance();
+
+        autoAim = true;
+
+        this.setName("Auto Setpoint");
         this.addRequirements(mArm);
     }
 
     @Override
     public void initialize() {
+        if (autoAim) {
+            armSetpoint = mArm.calculateArmSetpoint();
+        }
+
         timer.restart();
 
         error = armSetpoint - mArm.getArmPosition();
@@ -40,19 +63,18 @@ public class SetPoint extends Command {
             System.out.println("Error: " + error);
             System.out.println("*************************** Debug Stats (initialize) ***************************\n");
         }
-        mArm.setArmTarget(armSetpoint);
         mArm.setMotionMagic(armSetpoint);
     }
 
     @Override
     public void execute() {
-        if (!mArm.validSetpoint(armSetpoint)) {
-            this.end(true);
+        if (autoAim) {
+            armSetpoint = mArm.calculateArmSetpoint();
         }
 
         error = armSetpoint - mArm.getArmPosition();
 
-        SmartDashboard.putNumber("Arm/Arm Position Error", error);
+        // SmartDashboard.putNumber("Arm/Position Error", error);
 
         if (debugMode) {
             System.out.println("\n*************************** Debug Stats (execute) ***************************");
@@ -68,7 +90,8 @@ public class SetPoint extends Command {
         if (Robot.isSimulation()) {
             return timer.get() > 1;
         } else {
-            return mArm.isInRangeOfTarget(armSetpoint);
+            return false;
+            // return mArm.isInRangeOfTarget(armSetpoint);
         }
     }
 }

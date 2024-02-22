@@ -18,6 +18,11 @@ public class FineAdjust extends Command {
 
     @Override
     public void execute() {
-        mArm.aim(manualAdjust.get() * Constants.ArmConstants.rateOfMotion);
+        mArm.aimRaw(manualAdjust.get() * Constants.ArmConstants.rateOfMotion);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        mArm.setMotionMagic(mArm.getArmPosition());
     }
 }

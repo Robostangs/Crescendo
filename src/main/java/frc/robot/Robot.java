@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Vision.LimelightHelpers;
-import frc.robot.commands.PathPlannerCommand;
+import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Robot extends TimedRobot {
@@ -23,6 +25,7 @@ public class Robot extends TimedRobot {
 	public static Field2d mField = new Field2d();
 	public static PowerDistribution pdh = new PowerDistribution();
 
+	public static RobotContainer robotContainer;
 	public static boolean atComp = false;
 	public static boolean autonomousExited = false;
 
@@ -30,9 +33,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
+		robotContainer = new RobotContainer();
 		// DataLogManager.start(Constants.logDirectory);
-
-		new RobotContainer();
 
 		SmartDashboard.putData("Field", mField);
 
@@ -82,7 +84,12 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		autonCommand = new PathPlannerCommand("thing", true); // Name doesnt matter
+		Intake.getInstance().removeDefaultCommand();
+		Shooter.getInstance().removeDefaultCommand();
+		Arm.getInstance().removeDefaultCommand();
+		Drivetrain.getInstance().removeDefaultCommand();
+
+		autonCommand = new PathPlannerCommand("thing", false); // Name doesnt matter
 
 		autonCommand.schedule();
 	}
@@ -93,6 +100,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousExit() {
+		robotContainer.configureDefaultBinds();
 	}
 
 	@Override
@@ -106,7 +114,6 @@ public class Robot extends TimedRobot {
 					Constants.Vision.llAprilTagPipelineIndex);
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 		}
-
 	}
 
 	@Override

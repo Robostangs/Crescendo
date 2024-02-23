@@ -297,7 +297,7 @@ public class Arm extends SubsystemBase {
      */
     public void setMotionMagic(double position) {
         if (!validSetpoint(position)) {
-            System.out.println(position + " is not a valid setpoint");
+            // System.out.println(position + " is not a valid setpoint");
             if (position < Constants.ArmConstants.kArmMinAngle) {
                 position = Constants.ArmConstants.kArmMinAngle;
             } else {
@@ -380,7 +380,7 @@ public class Arm extends SubsystemBase {
         if (validSetpoint(angleToSpeaker)) {
             return angleToSpeaker;
         } else {
-            System.out.println(angleToSpeaker + " is not a valid setpoint");
+            // System.out.println(angleToSpeaker + " is not a valid setpoint");
             if (angleToSpeaker < Constants.ArmConstants.SetPoints.kSubwoofer) {
                 return Constants.ArmConstants.SetPoints.kSubwoofer;
             } else {

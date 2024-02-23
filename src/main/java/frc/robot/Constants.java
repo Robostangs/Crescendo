@@ -54,8 +54,9 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
 		public static final double SpeakerHeight = 1.9;
+		// TODO: 0.3 works better from the sides, maybe I need to implement that difference by changing x val based on robot Y pose
 		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.3, 5.55, Rotation2d.fromDegrees(0));
-		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - 0.3, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(0));
 
 		/** Highest Y value of the speaker */
 		// public static final double SpeakerYUpperBound = 6.12 + 0.5;
@@ -77,15 +78,15 @@ public final class Constants {
 		/** Theoretical free speed (m/s) at 12v applied output; */
 		public static final double kSpeedAt12VoltsMetersPerSecond = 4.73;
 
-		public static final double kMaxSpeedMetersPerSecond = kSpeedAt12VoltsMetersPerSecond;
-		public static final double kMaxAngularSpeedMetersPerSecond = 2 * Math.PI;
+		// public static final double kMaxSpeedMetersPerSecond = kSpeedAt12VoltsMetersPerSecond;
+		public static final double kMaxSpeedMetersPerSecond = 5;
+		public static final double kMaxAngularSpeedMetersPerSecond = 3 * Math.PI;
 
 		// The steer motor uses any SwerveModule.SteerRequestType control request with
 		// the output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
 		private static final Slot0Configs steerGains = new Slot0Configs().withKP(100).withKI(0).withKD(0.2).withKS(0)
 				.withKV(1.5).withKA(0);
 
-		/* 0.32 is the approx underestimate */
 		// When using closed-loop control, the drive motor uses the control
 		// output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
 		private static final Slot0Configs driveGains = new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0)
@@ -239,9 +240,13 @@ public final class Constants {
 
 	public static final class AutoConstants {
 
-		/* Best so far */
-		public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5, 0.3);
-		public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
+		/* SIM PID */
+		// public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5, 0.3);
+		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
+
+		/* IRL PID */
+		public static final PIDConstants translationPID = new PIDConstants(0.8, 0, 0.3);
+		public static final PIDConstants rotationPID = new PIDConstants(1, 0, 0.5);
 
 		public static final double kMaxSpeedMetersPerSecond = 1;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 1;
@@ -280,16 +285,6 @@ public final class Constants {
 					public static final Pose2d centerStage = new Pose2d(2.9, 5.5, Rotation2d.fromDegrees(0));
 					public static final Pose2d rightStage = new Pose2d(2.9, 4.11, Rotation2d.fromDegrees(0));
 				}
-			}
-
-			public static class Red {
-				// TODO: Add Red Waypoints
-				public static final Pose2d kAmp = new Pose2d(1.81, 1.25, Rotation2d.fromDegrees(90));
-				public static final Pose2d kHumanPlayer = new Pose2d(13.8, 7.8, Rotation2d.fromDegrees(180));
-				public static final Pose2d kSpeakerLeft = new Pose2d(2.6, 2.55, Rotation2d.fromDegrees(0));
-				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseRed.getY(),
-						Rotation2d.fromDegrees(0));
-				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 8.35, Rotation2d.fromDegrees(0));
 			}
 		}
 	}

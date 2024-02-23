@@ -8,19 +8,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right to bottom"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Right to second bottom"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Right to Middle Collect"
+            "pathName": null
           }
         }
       ]

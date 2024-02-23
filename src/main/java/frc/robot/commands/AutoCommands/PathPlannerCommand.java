@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.AutoCommands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -7,11 +7,12 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.commands.feeder.DeployAndIntake;
 import frc.robot.commands.shooter.AimAndShoot;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 import java.util.List;
@@ -25,25 +26,32 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     private static String lastAutoName;
 
     public PathPlannerCommand(String autoName, boolean shoot) {
-        NamedCommands.registerCommand("Intake", new DeployAndIntake().withTimeout(0.5));
-        NamedCommands.registerCommand("AimAndShoot", new AimAndShoot().withTimeout(1));
-        NamedCommands.registerCommand("Shoot", new AimAndShoot().withTimeout(3));
-        // NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command,
-        // PathPlanner"));
-        // SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.1));
-        // NamedCommands.registerCommand("Stow", new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(3));
+        NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command, PathPlanner"));
+        NamedCommands.registerCommand("Shoot", new AutoShoot().withTimeout(2));
+        // NamedCommands.registerCommand("Shoot", new AimAndShoot().withTimeout(2));
+        NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command, PathPlanner"));
+
+        // NamedCommands.registerCommand("AimAndShoot", new AutoShoot().withTimeout(3));
 
         // swerve = Drivetrain.getInstance();
 
+        // Drivetrain.getInstance()
+        // .seedFieldRelative(PathPlannerPath.fromPathFile("Test").getPreviewStartingHolonomicPose());
+
+        Intake.getInstance().setDefaultCommand(new DeployIntake());
+
+        // this.addCommands(new InstantCommand(
+        // () -> Drivetrain.getInstance()
+        // .seedFieldRelative(PathPlannerPath.fromPathFile("Test").getPreviewStartingHolonomicPose())));
+
         if (shoot) {
             this.addCommands(
-                new AimAndShoot().withTimeout(3)
-            );
+                    new AimAndShoot().withTimeout(3));
         }
 
         this.addCommands(
                 AutoBuilder.followPath(
-                        PathPlannerPath.fromPathFile("left start 1 piece")));
+                        PathPlannerPath.fromPathFile("Test")));
 
         // try {
         // startPose = new

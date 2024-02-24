@@ -11,13 +11,13 @@ MAX_RATIO = 0.7
 
 # runPipeline() is called every frame by Limelight's backend.
 def runPipeline(image, llrobot):
-    
+    img = cv2.blur(image, (10,10))
     tic = time.perf_counter()
 
     llpython = [0, 0, 0, 0]  # Default values for tx, ty, ta, tl
 
     # BGR->HSV
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # kSize = 10
     # cv2.blur(image, (kSize, kSize), cv2.BORDER_DEFAULT)
 
@@ -26,11 +26,10 @@ def runPipeline(image, llrobot):
     upper_bound1 = np.array([10, 255, 255])
     mask = cv2.inRange(hsv, lower_bound1, upper_bound1)
 
-    lower_bound2 = np.array([200, 130, 150])
+    lower_bound2 = np.array([230, 130, 150])
     upper_bound2 = np.array([255, 255, 255])
     mask2 = cv2.inRange(hsv, lower_bound2, upper_bound2)
     mask = (255*(mask+mask2)).clip(0, 255).astype("uint8")
-
     # find contours in the mask
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     #contours = np.asarray(contours)
@@ -66,8 +65,9 @@ def runPipeline(image, llrobot):
                 llpython = [x, y, w, h]
                 toc = time.perf_counter()
                 print("1 cycle ran in " + str(toc - tic) + " time")
+                
                 return contour, image, llpython
 
     toc = time.perf_counter()
-    # print("1 cycle ran in " + str(toc - tic) + " time")
+    print("1 cycle ran in " + str(toc - tic) + " time")
     return np.array([[]]), image, llpython # cannot find a contour that meets requirement

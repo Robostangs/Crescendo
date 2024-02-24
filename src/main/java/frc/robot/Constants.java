@@ -54,7 +54,7 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
 		public static final double SpeakerHeight = 1.9;
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.3, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.21, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - 0.3, 5.55, Rotation2d.fromDegrees(0));
 
 		/** Highest Y value of the speaker */

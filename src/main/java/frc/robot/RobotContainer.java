@@ -81,15 +81,15 @@ public class RobotContainer {
 		xManip.y().toggleOnTrue(new SetPoint());
 		xManip.x().whileTrue(new QuickFeed());
 
-		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getRightBumper()));
+		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getLeftBumper()));
 		xManip.b().toggleOnTrue(
-				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xManip.getHID().getRightBumper()));
+				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xManip.getHID().getLeftBumper()));
 
 		xManip.povRight().whileTrue(new Spit());
 		xManip.povDown().whileTrue(new DeployAndIntake());
 
-		xManip.leftBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getRightBumper()));
-		xManip.rightBumper().whileTrue(new FeedAndShoot());
+		xManip.rightBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getLeftBumper()));
+		xManip.leftBumper().whileTrue(new FeedAndShoot());
 
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())

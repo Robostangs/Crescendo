@@ -10,11 +10,14 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.feeder.DeployAndIntake;
 import frc.robot.commands.shooter.AimAndShoot;
+import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class PathPlannerCommand extends SequentialCommandGroup {
@@ -71,39 +74,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
 
     }
 
-    public PathPlannerCommand(String startPosition, long closePieces, long farPieces, boolean shoot) {
-        List<PathPlannerPath> paths = new ArrayList<>();
-        if (shoot) {
-            this.addCommands(new SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(0.5),
-                    new FeedAndShoot().withTimeout(0.5),
-                    new SetPoint(Constants.ArmConstants.SetPoints.kIntake).withTimeout(0.5));
-        }
-
-        if (startPosition.equals("left")) {
-            if (closePieces == 1) {
-                paths.add(PathPlannerPath.fromPathFile("start to close left"));
-            }
-
-            if (farPieces == 1) {
-                paths.add(PathPlannerPath.fromPathFile("close left to far left"));
-            }
-
-            if (farPieces == 2) {
-                paths.add(PathPlannerPath.fromPathFile("close left to middle left"));
-            }
-
-        } else if (startPosition.equals("right")) {
-
-        } else if (startPosition.equals("center")) {
-
-        } else {
-            System.out.println("Invalid start position");
-        }
-
-        for (PathPlannerPath path : paths) {
-            this.addCommands(AutoBuilder.followPath(path));
-        }
-    }
+   
 
     public static void registerCommand() {
         NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command, PathPlanner"));

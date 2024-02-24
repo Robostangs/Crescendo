@@ -10,8 +10,6 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
-      "/Shuffleboard/Autonomous/Field": "Field2d",
-      "/Shuffleboard/Autonomous/Start Position": "String Chooser",
       "/SmartDashboard/Arm": "Subsystem",
       "/SmartDashboard/Arm/Target Profile": "Mechanism2d",
       "/SmartDashboard/Auton Chooser": "String Chooser",
@@ -92,6 +90,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Swerve/Module 3": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/THE Field": {
         "bottom": 1476,
         "height": 8.210550308227539,
@@ -116,12 +119,6 @@
     }
   },
   "NetworkTables Info": {
-    "AdvantageScope@2": {
-      "open": true
-    },
-    "Clients": {
-      "open": true
-    },
     "visible": true
   }
 }

@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center to center piece far"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left to second top"
+            "pathName": null
           }
         }
       ]

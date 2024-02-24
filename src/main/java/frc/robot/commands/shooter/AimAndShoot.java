@@ -138,7 +138,7 @@ public class AimAndShoot extends Command {
 
         if (Math.abs(speakerPose.getY()
                 - Drivetrain.getInstance().getPose().getY()) < Constants.Vision.SpeakerDeadBand
-                && Drivetrain.getInstance().getPose().getX() < 1.91) {
+                && Drivetrain.getInstance().getPose().getX() < 1.6) {
             shootSpeed = 0.6;
         } else {
             shootSpeed = 1;
@@ -161,7 +161,7 @@ public class AimAndShoot extends Command {
 
         // else if the arm is within 1.5 degrees of the target and the arm is not moving
         else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.5) {
-            // TODO: test this
+            
             // if the shooter is ready to shoot and the user has pressed the button
             if ((mShooter.readyToShoot() || shootSpeed == 0.6) && chargeUntil.get()) {
                 mShooter.shoot(Constants.ShooterConstants.feederShootValue, shootSpeed);

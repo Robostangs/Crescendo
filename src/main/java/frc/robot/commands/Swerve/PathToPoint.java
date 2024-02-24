@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class PathToPoint extends SequentialCommandGroup {
@@ -52,74 +51,6 @@ public class PathToPoint extends SequentialCommandGroup {
         this.addCommands(
                 AutoBuilder.pathfindToPoseFlipped(
                         this.targetPose,
-                        new PathConstraints(
-                                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-                                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared,
-                                Constants.AutoConstants.kMaxAngularSpeedMetersPerSecond,
-                                Constants.AutoConstants.kMaxAngularAccelerationMetersPerSecondSquared),
-                        0.0,
-                        0.0));
-    }
-
-    /**
-     * @deprecated Kind of useless now that we have an {@link AutoBuilder#pathfindToPoseFlipped(Pose2d, PathConstraints, double)} constructor available
-     * <p>
-     * Command to set the drivetrain to a specific position on the field while
-     * avoiding field obstacles
-     * 
-     * @param wayPoint the position that the robot should move to
-     */
-    public PathToPoint(WayPoints wayPoint) {
-        drivetrain = Drivetrain.getInstance();
-        boolean isRed = Robot.isRed();
-
-        switch (wayPoint) {
-            case kAmp:
-                if (isRed) {
-                    targetPose = Constants.AutoConstants.WayPoints.Red.kAmp;
-                } else {
-                    targetPose = Constants.AutoConstants.WayPoints.Blue.kAmp;
-                }
-                break;
-            case kHumanPlayer:
-                if (isRed) {
-                    targetPose = Constants.AutoConstants.WayPoints.Red.kHumanPlayer;
-                } else {
-                    targetPose = Constants.AutoConstants.WayPoints.Blue.kHumanPlayer;
-                }
-                break;
-            case kSpeakerLeft:
-                if (isRed) {
-                    targetPose = Constants.AutoConstants.WayPoints.Red.kSpeakerLeft;
-                } else {
-                    targetPose = Constants.AutoConstants.WayPoints.Blue.kSpeakerLeft;
-                }
-                break;
-            case kSpeakerRight:
-                if (isRed) {
-                    targetPose = Constants.AutoConstants.WayPoints.Red.kSpeakerRight;
-                } else {
-                    targetPose = Constants.AutoConstants.WayPoints.Blue.kSpeakerRight;
-                }
-                break;
-            case kSpeakerCenter:
-                if (isRed) {
-                    targetPose = Constants.AutoConstants.WayPoints.Red.kSpeakerCenter;
-                } else {
-                    targetPose = Constants.AutoConstants.WayPoints.Blue.kSpeakerCenter;
-                }
-                break;
-            default:
-                targetPose = drivetrain.getPose();
-                break;
-        }
-
-        this.setName("PathToPoint");
-        this.addRequirements(drivetrain);
-
-        this.addCommands(
-                AutoBuilder.pathfindToPose(
-                        targetPose,
                         new PathConstraints(
                                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
                                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared,

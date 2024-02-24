@@ -21,6 +21,7 @@ import frc.robot.commands.shooter.FineAdjust;
 import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 @SuppressWarnings("unused")
@@ -36,13 +37,21 @@ public class RobotContainer {
 	private final Telemetry logger;
 	public Field2d field;
 
-	private void configureDriverBinds() {
+	public void configureDefaultBinds() {
+		Intake.getInstance().removeDefaultCommand();
+		Shooter.getInstance().removeDefaultCommand();
+		Arm.getInstance().removeDefaultCommand();
+		Drivetrain.getInstance().removeDefaultCommand();
+
 		mIntake.setDefaultCommand(new BeltFeed());
 
 		drivetrain.setDefaultCommand(
 				new xDrive(xDrive::getLeftX, xDrive::getLeftY, xDrive::getRightX,
 						xDrive::getRightTriggerAxis).ignoringDisable(true));
 
+	}
+
+	private void configureDriverBinds() {
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
@@ -102,6 +111,7 @@ public class RobotContainer {
 		drivetrain.registerTelemetry((telemetry) -> logger.telemeterize(telemetry));
 		configureDriverBinds();
 		configureManipBinds();
+		configureDefaultBinds();
 
 		if (Robot.isSimulation()) {
 			configureSimBinds();

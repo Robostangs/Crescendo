@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -82,6 +83,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             // Timer.getFPGATimestamp());
             // }
         }
+
+
+            // System.out.println(Units.radiansToDegrees(Math.atan2(
+            //         getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+            //         getPose().getX() - Constants.Vision.SpeakerPoseRed.getX())));
+                    
+            // SmartDashboard.putNumber("Swerve/Angle To Speaker", 
+                                    
+            //         Units.radiansToDegrees(Math.atan2(
+            //                 getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+            //                 getPose().getX() - Constants.Vision.SpeakerPoseRed.getX())));
     }
 
     private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {

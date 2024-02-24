@@ -2,12 +2,14 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LoggyThings.LoggyTalonFX;
+import frc.robot.Vision.LimelightHelpers;
 
 public class Intake extends SubsystemBase {
     private static Intake mInstance;
@@ -22,6 +24,14 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putString("Intake/Status", solenoid.get() ? "Extended" : "Retracted");
         SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
         SmartDashboard.putBoolean("Intake/Holding", holding);
+
+        if (getShooterSensor() && DriverStation.isEnabled()) {
+            LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
+            LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);          
+        } else {
+            LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
+            LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
+        }
     }
 
     public static Intake getInstance() {
@@ -62,6 +72,7 @@ public class Intake extends SubsystemBase {
 
     /**
      * Returns true if a piece is inside the shooter, false if the shooter is vacant
+     * 
      * @return true = shooter occupied, false = shooter is vacant
      */
     public boolean getShooterSensor() {

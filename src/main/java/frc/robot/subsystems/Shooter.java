@@ -132,6 +132,11 @@ public class Shooter extends SubsystemBase {
     public boolean readyToShoot() {
         double threshold = (shootMotorLeft.getSupplyVoltage().getValueAsDouble() / 12.8)
                 * Constants.MotorConstants.falconShooterLoadRPM;
+
+        if (threshold > Constants.MotorConstants.falconShooterLoadRPM) {
+            threshold = Constants.MotorConstants.falconShooterLoadRPM;
+        }
+        
         SmartDashboard.putNumber("Shooter/Ready To Shoot threshold", threshold);
         return ((shootMotorLeft.getVelocity().getValueAsDouble() * 60) > threshold);
     }

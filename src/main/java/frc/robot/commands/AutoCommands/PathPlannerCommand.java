@@ -7,6 +7,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -27,7 +28,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
 
     public PathPlannerCommand(String autoName, boolean shoot) {
         NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command, PathPlanner"));
-        NamedCommands.registerCommand("Shoot", new AutoShoot().withTimeout(2));
+        // NamedCommands.registerCommand("Shoot", new AutoShoot().withTimeout(2));
         // NamedCommands.registerCommand("Shoot", new AimAndShoot().withTimeout(2));
         NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command, PathPlanner"));
 

@@ -2,7 +2,6 @@ package frc.robot.commands.shooter;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -10,7 +9,6 @@ import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class AimAndShoot extends Command {
     private Arm mArm;
@@ -128,42 +126,48 @@ public class AimAndShoot extends Command {
             armSetpoint = mArm.calculateArmSetpoint();
         }
 
-        Pose2d speakerPose;
+        // Pose2d speakerPose;
 
-        if (Robot.isRed()) {
-            speakerPose = Constants.Vision.SpeakerPoseRed;
-        } else {
-            speakerPose = Constants.Vision.SpeakerPoseBlue;
-        }
+        // if (Robot.isRed()) {
+        //     speakerPose = Constants.Vision.SpeakerPoseRed;
+        // } else {
+        //     speakerPose = Constants.Vision.SpeakerPoseBlue;
+        // }
 
-        if (Math.abs(speakerPose.getY()
-                - Drivetrain.getInstance().getPose().getY()) < Constants.Vision.SpeakerDeadBand
-                && Drivetrain.getInstance().getPose().getX() < 1.6) {
-            shootSpeed = 0.6;
-        } else {
-            shootSpeed = 1;
-        }
+        // if (Math.abs(speakerPose.getY()
+        //         - Drivetrain.getInstance().getPose().getY()) < Constants.Vision.SpeakerDeadBand
+        //         && Drivetrain.getInstance().getPose().getX() < 1.6) {
+        //     shootSpeed = 0.6;
+        // } else {
+        //     shootSpeed = 1;
+        // }
 
         // If shooter is empty
         if (!mIntake.getShooterSensor()) {
             // Increased the spead of feeder setVal to 0.5 from 0.1
-            mShooter.shoot(0.5, shootSpeed);
+            // mShooter.shoot(0.5, shootSpeed);
 
-            mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
-            if (!isFinishedBool) {
-                SmartDashboard.putString("Shooter/Status", "Waiting for note");
-                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+            if (isFinishedBool) {
+                end(false);
             } else {
-                SmartDashboard.putString("Shooter/Status", "Returning to Idle");
-                mIntake.setBelt(0);
+                end(true);
             }
+
+            // mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+            // if (!isFinishedBool) {
+            //     SmartDashboard.putString("Shooter/Status", "Waiting for note");
+            //     mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+            // } else {
+            //     SmartDashboard.putString("Shooter/Status", "Returning to Idle");
+            //     mIntake.setBelt(0);
+            // }
         }
 
         // else if the arm is within 1.5 degrees of the target and the arm is not moving
-        else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.5) {
+        else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.1) {
             
             // if the shooter is ready to shoot and the user has pressed the button
-            if ((mShooter.readyToShoot() || shootSpeed == 0.6) && chargeUntil.get()) {
+            if ((mShooter.readyToShoot()) && chargeUntil.get()) {
                 mShooter.shoot(Constants.ShooterConstants.feederShootValue, shootSpeed);
                 SmartDashboard.putString("Shooter/Status", "Shooting");
                 isFinishedBool = true;

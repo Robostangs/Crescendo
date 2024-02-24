@@ -369,7 +369,7 @@ public interface SwerveRequest {
 
         // TODO: tune this so that it is a little stronger
         public PhoenixPIDController HeadingController = new PhoenixPIDController(3, // 1.9
-                1.5, 0.1); // increase 0.05 to 0.1
+                5, 0.5); // increase 0.05 to 0.1
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
             this.VelocityX *= slowDownRate;

@@ -39,6 +39,7 @@ public final class Constants {
 		public static final String llAprilTagIP = "http://10.5.48.23:5801";
 		public static final int llPythonPipelineIndex = 0;
 		public static final int llAprilTagPipelineIndex = 1;
+		public static final int llAprilTagWithLightsPipelineIndex = 2;
 
 		// This is a publicly available set of confidence values from last year
 		// public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1,
@@ -54,8 +55,7 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
 		public static final double SpeakerHeight = 1.9;
-		// TODO: 0.3 works better from the sides, maybe I need to implement that difference by changing x val based on robot Y pose
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.3, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.17, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(0));
 
 		/** Highest Y value of the speaker */
@@ -248,9 +248,9 @@ public final class Constants {
 		public static final PIDConstants translationPID = new PIDConstants(0.8, 0, 0.3);
 		public static final PIDConstants rotationPID = new PIDConstants(1, 0, 0.5);
 
-		public static final double kMaxSpeedMetersPerSecond = 1;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 1;
-		public static final double kMaxAngularSpeedMetersPerSecond = Math.PI;
+		public static final double kMaxSpeedMetersPerSecond = 5;
+		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
+		public static final double kMaxAngularSpeedMetersPerSecond = 2 * Math.PI;
 		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond;
 
 		// public static final double kMaxSpeedMetersPerSecond =
@@ -273,7 +273,7 @@ public final class Constants {
 
 		public static class WayPoints {
 			public static class Blue {
-				public static final Pose2d kAmp = new Pose2d(1.81, 7.75, Rotation2d.fromDegrees(90));
+				public static final Pose2d kAmp = new Pose2d(1.81, 7.75, Rotation2d.fromDegrees(-90));
 				public static final Pose2d kHumanPlayer = new Pose2d(13.8, 1.2, Rotation2d.fromDegrees(0));
 				public static final Pose2d kSpeakerLeft = new Pose2d(2.6, 6.45, Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseBlue.getY(),

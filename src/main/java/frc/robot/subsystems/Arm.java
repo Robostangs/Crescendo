@@ -118,11 +118,9 @@ public class Arm extends SubsystemBase {
          */
         armCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         armCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        // armCoderConfig.MagnetSensor.MagnetOffset = -0.339599609375;
-
-        // TODO: try it the charlie way and see if it works by just using the hard stop
-        // to zero the arm
+        armCoderConfig.MagnetSensor.MagnetOffset = -0.339599609375;
         armCoderConfig.MagnetSensor.MagnetOffset = 0;
+        
         /* Do not apply */
         // armCoder.getConfigurator().apply(armCoderConfig);
 

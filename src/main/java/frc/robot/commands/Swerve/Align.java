@@ -7,14 +7,15 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class Align extends Command {
-    private Drivetrain mDrivetrain = Drivetrain.getInstance();
-    private Intake mIntake = Intake.getInstance();
+    private Drivetrain mDrivetrain;
+    private Intake mIntake;
 
     private SwerveRequest.FieldCentricFacingAngle drive;
     private Timer timer;
@@ -26,6 +27,8 @@ public class Align extends Command {
     /** Test this soon af */
     public Align(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard,
             boolean note) {
+        mDrivetrain = Drivetrain.getInstance();
+        mIntake = Intake.getInstance();
         this.addRequirements(mDrivetrain);
         if (note) {
             this.setName("Align to Note");
@@ -58,20 +61,26 @@ public class Align extends Command {
             this.addRequirements(mIntake);
         } else {
             getTargetRotation = () -> {
-                if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
-                    return mDrivetrain.getPose().getRotation()
-                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                // just use the pose for everything, dont look for the rear april tag
+
+                if (Robot.isRed()) {
+                    return Rotation2d
+                            .fromRadians(Math.atan2(
+                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+
+                    // return Rotation2d
+                    // .fromRadians(-Math.atan2(
+                    // Constants.Vision.SpeakerPoseRed.getY() - mDrivetrain.getPose().getY(),
+                    // Constants.Vision.SpeakerPoseRed.getX() -
+                    // mDrivetrain.getPose().getX())).minus(Rotation2d.fromDegrees());
                 }
 
-                // TODO: NOT WORKING, when april tag isnt visible the robot kills itself (spins very fast in circles)
-                // if the rear april tag isnt seeing a target, use the speaker coords
                 else {
-                    // return Rotation2d
-                    //         .fromRadians(Math.atan2(
-                    //                 Constants.Vision.SpeakerCoords[1] - mDrivetrain.getPose().getY(),
-                    //                 Constants.Vision.SpeakerCoords[0] - mDrivetrain.getPose().getX()));
-                    return mDrivetrain.getPose().getRotation()
-                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                    return Rotation2d
+                            .fromRadians(Math.atan2(
+                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
+                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
                 }
             };
         }
@@ -95,8 +104,6 @@ public class Align extends Command {
 
     @Override
     public void execute() {
-        // drive.RotationalDeadband = 0;
-
         if (note) {
             mIntake.setExtend(true);
             if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
@@ -114,7 +121,7 @@ public class Align extends Command {
         } else {
             SmartDashboard.putString("Swerve/Rotation Status", "Traveling");
         }
-        
+
         drive.TargetDirection = getTargetRotation.get();
         SmartDashboard.putNumber("Swerve/Rotation Target", drive.TargetDirection.getDegrees());
 
@@ -131,13 +138,16 @@ public class Align extends Command {
     @Override
     public void end(boolean interrupted) {
         LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
-        
+
         if (note) {
-            // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+            // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython,
+            // Constants.Vision.llPythonPipelineIndex);
             mIntake.setIntake(0);
             mIntake.setExtend(false);
             mIntake.setHolding(!interrupted);
         }
+
+        mDrivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
     }
 
     @Override

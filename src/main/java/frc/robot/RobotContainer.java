@@ -24,7 +24,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
-@SuppressWarnings("unused")
 public class RobotContainer {
 	private final CommandXboxController xDrive = new CommandXboxController(0);
 	private final CommandXboxController xManip = new CommandXboxController(1);
@@ -58,8 +57,7 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis, true));
 		xDrive.x().toggleOnTrue(new AimAndShoot());
 
-		// xDrive.x().toggleOnTrue(new
-		// PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
 
 		// Square up to the speaker and press this to reset odometry to the speaker
 		// pose, this is consistent af
@@ -126,16 +124,16 @@ public class RobotContainer {
 				() -> simController.getRawAxis(2), () -> 0d));
 
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kSubwoofer));
+				.toggleOnTrue(new Align(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1), () -> 0d, false));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
-				.whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
+				.whileTrue(new SetPoint());
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
-				.whileTrue(new AimAndShoot());
-
-		new Trigger(() -> simController.getRawButtonPressed(4))
 				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
+
+		new Trigger(() -> simController.getRawButtonPressed(3))
+				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSpeakerRight));
 
 		// new Trigger(() -> simController.getRawButtonPressed(3))
 		// .whileTrue(new AimAndShoot());

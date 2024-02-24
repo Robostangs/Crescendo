@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
@@ -40,7 +41,7 @@ public class BeltFeed extends Command {
             if (timer.get() < FeedForwardTime) {
                 mShooter.shoot(0.1, 0);
             }
-            
+
             // reversing the feed and pushing the note out of the shooter to charge up the
             // shooter motors
             else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime + FeedForwardTime) {
@@ -69,5 +70,7 @@ public class BeltFeed extends Command {
     @Override
     public void end(boolean interrupted) {
         mIntake.setBelt(0);
+        LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag, Constants.Vision.llAprilTagPipelineIndex);
+        LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
     }
 }

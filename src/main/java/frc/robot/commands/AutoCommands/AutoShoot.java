@@ -7,6 +7,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
+// TODO: this doesnt work with DeployIntake command
 public class AutoShoot extends Command {
     private Arm mArm;
     private Shooter mShooter;
@@ -15,7 +16,7 @@ public class AutoShoot extends Command {
     private double armSetpoint;
     private boolean isFinished;
 
-    private static final double feedTime = 01;
+    private static final double feedTime = 1;
 
     public AutoShoot() {
         mArm = Arm.getInstance();
@@ -41,7 +42,7 @@ public class AutoShoot extends Command {
 
         // feed the piece further into the shooter if there is nothing in the shooter
         // TODO: tune the feedTime and feederSetValue
-        if (timer.get() < feedTime) {
+        if (timer.get() < feedTime && mIntake.getShooterSensor()) {
             mShooter.shoot(0.04, 1);
             mIntake.setBelt(0.5);
         }
@@ -49,6 +50,7 @@ public class AutoShoot extends Command {
         // if at the setpoint and the shooters are charged up and the piece has been fed
         else if (mArm.isInRangeOfTarget(armSetpoint) && mShooter.readyToShoot()) {
             mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
+            System.out.println("Shooting");
             isFinished = true;
         }
 
@@ -65,6 +67,7 @@ public class AutoShoot extends Command {
     public boolean isFinished() {
         // System.out.println(isFinished);
         if (isFinished) {
+            System.out.println("AutoShoot Finished");
             return true;
         } else {
             return false;
@@ -76,6 +79,8 @@ public class AutoShoot extends Command {
         // get it out of the shooter to avoid penalties
         if (interrupted) {
             mShooter.shoot(1, 1);
+        } else {
+            System.out.println("AutoShoot Ended without Interruption");
         }
 
         mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);

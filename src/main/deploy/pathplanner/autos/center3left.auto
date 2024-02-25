@@ -28,6 +28,24 @@
           "data": {
             "name": "Shoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center to center piece"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center coming back "
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
         }
       ]
     }

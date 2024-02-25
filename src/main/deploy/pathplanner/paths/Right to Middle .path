@@ -1,0 +1,93 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.659026660645914,
+        "y": 2.839107729141384
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.9949970131421746,
+        "y": 3.150697560654381
+      },
+      "isLocked": false,
+      "linkedName": "RIGHT GO"
+    },
+    {
+      "anchor": {
+        "x": 7.862345247838644,
+        "y": 4.12376997902144
+      },
+      "prevControl": {
+        "x": 7.076850802965826,
+        "y": 4.019515582330604
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Middle Intake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Under the stage",
+      "minWaypointRelativePos": 0.35,
+      "maxWaypointRelativePos": 0.65,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    },
+    {
+      "name": "Intake",
+      "minWaypointRelativePos": 0.85,
+      "maxWaypointRelativePos": 1,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "intake",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Right start",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

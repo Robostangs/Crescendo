@@ -22,13 +22,13 @@ public class DeployIntake extends Command {
         mIntake.setExtend(true);
 
         // if (mShooter.getCurrentCommand() != null) {
-            // }
-            
-            // if shooter is empty
-            if (!mIntake.getShooterSensor()) {
-                mIntake.setIntake(1);
-                mIntake.setBelt(0.5);
-                mShooter.shoot(-0.2, 0);
+        // }
+
+        // if shooter is empty
+        if (!mIntake.getShooterSensor()) {
+            mIntake.setIntake(1);
+            mIntake.setBelt(0.2);
+            mShooter.shoot(-0.08, 0);
         }
 
         // if shooter has a piece
@@ -36,7 +36,7 @@ public class DeployIntake extends Command {
             mIntake.setIntake(0);
         }
     }
-    
+
     @Override
     public void end(boolean interrupted) {
         mIntake.setIntake(0);

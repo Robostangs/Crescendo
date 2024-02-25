@@ -1,0 +1,38 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left collect"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left to top"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "toppie"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Left paths",
+  "choreoAuto": false
+}

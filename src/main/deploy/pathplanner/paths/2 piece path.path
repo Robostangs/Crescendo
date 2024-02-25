@@ -1,0 +1,197 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.9255537078782494,
+        "y": 4.017586298751467
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.5697787020633895,
+        "y": 2.172748740958267
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.011666801793426,
+        "y": 5.67830065533643
+      },
+      "prevControl": {
+        "x": 7.2127259451691526,
+        "y": 4.384486630766417
+      },
+      "nextControl": {
+        "x": 8.410455046954741,
+        "y": 6.324102932370334
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.9255537078782494,
+        "y": 3.5950163408878115
+      },
+      "prevControl": {
+        "x": 1.3729317915063786,
+        "y": 1.4349147912870497
+      },
+      "nextControl": {
+        "x": 1.9418988484554351,
+        "y": 3.6589066109679838
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.044144541786109,
+        "y": 4.171951729320125
+      },
+      "prevControl": {
+        "x": 4.322009799088381,
+        "y": 2.873842012660627
+      },
+      "nextControl": {
+        "x": 6.409843025229206,
+        "y": 4.447607717760079
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.011666801793426,
+        "y": 4.171951729320125
+      },
+      "prevControl": {
+        "x": 6.963366403481319,
+        "y": 4.177528306693518
+      },
+      "nextControl": {
+        "x": 9.059967200105532,
+        "y": 4.166375151946732
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.9255537078782494,
+        "y": 3.5950163408878115
+      },
+      "prevControl": {
+        "x": 2.2314962803288703,
+        "y": 2.6994949330300444
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.9,
+      "command": {
+        "type": "race",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            },
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 0.4
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 1.95,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 3.8,
+      "command": {
+        "type": "race",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            },
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 0.5
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 5.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

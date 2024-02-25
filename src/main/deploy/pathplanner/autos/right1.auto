@@ -8,12 +8,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center to center piece"
+            "pathName": "Right start KD"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Right paths",
   "choreoAuto": false
 }

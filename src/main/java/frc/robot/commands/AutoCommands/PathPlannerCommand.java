@@ -52,7 +52,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
 
         this.addCommands(
                 new DeployIntake().raceWith(
-                        AutoBuilder.buildAuto("center1")));
+                        AutoBuilder.buildAuto("center1left")));
 
         // try {
         // startPose = new

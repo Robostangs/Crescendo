@@ -14,18 +14,24 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center to center piece far"
+            "pathName": "Center to left piece"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left to second top"
+            "pathName": "Left to speaker shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Center paths",
   "choreoAuto": false
 }

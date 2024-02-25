@@ -8,12 +8,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center to center piece"
+            "pathName": "Left collect"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Left paths",
   "choreoAuto": false
 }

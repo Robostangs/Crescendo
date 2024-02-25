@@ -8,12 +8,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "2 piece path"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Misc",
   "choreoAuto": false
 }

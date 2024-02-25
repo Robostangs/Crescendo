@@ -3,64 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.8533258779480525,
-        "y": 6.5293717485583125
+        "x": 2.762830553438885,
+        "y": 5.0268282156934685
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.8679789901869691,
-        "y": 7.388786817749027
-      },
-      "isLocked": false,
-      "linkedName": "LeftStart"
-    },
-    {
-      "anchor": {
-        "x": 2.68,
-        "y": 4.16
-      },
-      "prevControl": {
-        "x": 2.68,
-        "y": 5.43
-      },
-      "nextControl": {
-        "x": 2.68,
-        "y": 3.690867182144829
+        "x": 3.5573935314537297,
+        "y": 5.795083914241903
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.8974445036756058,
-        "y": 3.9030039049011016
+        "x": 7.873983029402071,
+        "y": 5.770506477768909
       },
       "prevControl": {
-        "x": 2.2305836150087743,
-        "y": 3.004550726126613
+        "x": 6.8531671276305515,
+        "y": 6.820889660297839
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.95,
-      "rotationDegrees": -46.0,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
-      "name": "Pickup Zone",
-      "minWaypointRelativePos": 0.9,
-      "maxWaypointRelativePos": 1.25,
+      "name": "Intake",
+      "minWaypointRelativePos": 0.95,
+      "maxWaypointRelativePos": 1,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 2.0,
         "maxAcceleration": 1.0,
-        "maxAngularVelocity": 120.0,
-        "maxAngularAcceleration": 120.0
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
       }
     }
   ],
@@ -69,7 +47,7 @@
       "name": "Intake",
       "waypointRelativePos": 0.9,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
@@ -91,14 +69,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -32.76999999999998,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Center start",
   "previewStartingState": {
-    "rotation": 143.48676814343222,
-    "velocity": 0.0
+    "rotation": 0,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

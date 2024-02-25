@@ -42,9 +42,9 @@ public class AutoShoot extends Command {
 
         // feed the piece further into the shooter if there is a piece in the shooter
         // TODO: tune the feedTime and feederSetValue
-        if (timer.get() < feedTime && mIntake.getShooterSensor()) {
-            mShooter.shoot(0.04, 1);
-            mIntake.setBelt(0.7);
+        if (mIntake.getShooterSensor()) {
+            mShooter.shoot(0, 1);
+            mIntake.setBelt(0);
         }
 
         // if at the setpoint and the shooters are charged up and the piece has been fed
@@ -58,7 +58,8 @@ public class AutoShoot extends Command {
         // position, or the shooter is not charged up
         else {
             mArm.setMotionMagic(armSetpoint);
-            mShooter.shoot(0, 1);
+            mShooter.shoot(0.04, 1);
+            mIntake.setBelt(0.7);
         }
 
     }

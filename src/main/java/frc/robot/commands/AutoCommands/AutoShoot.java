@@ -14,7 +14,7 @@ public class AutoShoot extends Command {
     private Intake mIntake;
     private Timer timer;
     private double armSetpoint;
-    private boolean isFinished;
+    private boolean isFinished = false;
 
     private static final double feedTime = 1;
 
@@ -27,7 +27,7 @@ public class AutoShoot extends Command {
         timer = new Timer();
 
         this.setName("Auto Shoot");
-        this.addRequirements(mArm, mShooter, mIntake);
+        this.addRequirements(mArm, mShooter);
     }
 
     @Override
@@ -40,11 +40,11 @@ public class AutoShoot extends Command {
     public void execute() {
         armSetpoint = mArm.calculateArmSetpoint();
 
-        // feed the piece further into the shooter if there is nothing in the shooter
+        // feed the piece further into the shooter if there is a piece in the shooter
         // TODO: tune the feedTime and feederSetValue
         if (timer.get() < feedTime && mIntake.getShooterSensor()) {
             mShooter.shoot(0.04, 1);
-            mIntake.setBelt(0.5);
+            mIntake.setBelt(0.7);
         }
 
         // if at the setpoint and the shooters are charged up and the piece has been fed

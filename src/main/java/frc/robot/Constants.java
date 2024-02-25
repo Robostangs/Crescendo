@@ -46,7 +46,7 @@ public final class Constants {
 		// 0.1, Units.degreesToRadians(10));
 		// TODO: tune this
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(300));
+		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(300));
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 
 		/** This needs to be tuned for the shooter */

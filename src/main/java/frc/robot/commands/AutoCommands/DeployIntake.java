@@ -20,18 +20,20 @@ public class DeployIntake extends Command {
     @Override
     public void execute() {
         mIntake.setExtend(true);
-        mShooter.shoot(-0.5, 0);
 
-        // if shooter is empty
-        if (!mIntake.getShooterSensor()) {
-            mIntake.setIntake(1);
-            mIntake.setBelt(0.3);
+        // if (mShooter.getCurrentCommand() != null) {
+            // }
+            
+            // if shooter is empty
+            if (!mIntake.getShooterSensor()) {
+                mIntake.setIntake(1);
+                mIntake.setBelt(0.5);
+                mShooter.shoot(-0.2, 0);
         }
 
         // if shooter has a piece
         else {
             mIntake.setIntake(0);
-            mIntake.setBelt(0);
         }
     }
     

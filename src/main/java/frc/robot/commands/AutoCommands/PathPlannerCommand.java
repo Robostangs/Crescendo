@@ -30,7 +30,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command, PathPlanner"));
         // NamedCommands.registerCommand("Shoot", new AutoShoot().withTimeout(2));
         // NamedCommands.registerCommand("Shoot", new AimAndShoot().withTimeout(2));
-        NamedCommands.registerCommand("Shoot", new PrintCommand("Shoot Command, PathPlanner"));
+        NamedCommands.registerCommand("Shoot", new AutoShoot().withTimeout(2));
 
         // NamedCommands.registerCommand("AimAndShoot", new AutoShoot().withTimeout(3));
 
@@ -39,20 +39,20 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         // Drivetrain.getInstance()
         // .seedFieldRelative(PathPlannerPath.fromPathFile("Test").getPreviewStartingHolonomicPose());
 
-        Intake.getInstance().setDefaultCommand(new DeployIntake());
+        // Intake.getInstance().setDefaultCommand(new DeployIntake());
 
         // this.addCommands(new InstantCommand(
         // () -> Drivetrain.getInstance()
         // .seedFieldRelative(PathPlannerPath.fromPathFile("Test").getPreviewStartingHolonomicPose())));
 
-        if (shoot) {
-            this.addCommands(
-                    new AimAndShoot().withTimeout(3));
-        }
+        // if (shoot) {
+        // this.addCommands(
+        // new AimAndShoot().withTimeout(3));
+        // }
 
         this.addCommands(
-                AutoBuilder.followPath(
-                        PathPlannerPath.fromPathFile("Test")));
+                new DeployIntake().raceWith(
+                        AutoBuilder.buildAuto("center1")));
 
         // try {
         // startPose = new

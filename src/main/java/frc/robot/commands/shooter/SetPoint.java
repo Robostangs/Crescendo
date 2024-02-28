@@ -1,17 +1,14 @@
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 
 public class SetPoint extends Command {
-    private final Arm mArm;
+    private Arm mArm;
     private double armSetpoint;
-    private double error = 0;
-    private Timer timer;
+    private double error;
     private boolean debugMode = false;
-    private boolean autoAim = false;
+    private boolean autoAim;
 
     /**
      * <p>Set the shooter to a specific position
@@ -20,7 +17,6 @@ public class SetPoint extends Command {
      * @param target in degrees of THE SHOOTER, not the extension bar
      */
     public SetPoint(double target) {
-        timer = new Timer();
         mArm = Arm.getInstance();
         armSetpoint = target;
 
@@ -37,7 +33,6 @@ public class SetPoint extends Command {
      * Only use this if the shooter sensor is not working
      */
     public SetPoint() {
-        timer = new Timer();
         mArm = Arm.getInstance();
 
         autoAim = true;
@@ -51,8 +46,6 @@ public class SetPoint extends Command {
         if (autoAim) {
             armSetpoint = mArm.calculateArmSetpoint();
         }
-
-        timer.restart();
 
         error = armSetpoint - mArm.getArmPosition();
 
@@ -87,11 +80,6 @@ public class SetPoint extends Command {
 
     @Override
     public boolean isFinished() {
-        if (Robot.isSimulation()) {
-            return timer.get() > 1;
-        } else {
-            return false;
-            // return mArm.isInRangeOfTarget(armSetpoint);
-        }
+        return false;
     }
 }

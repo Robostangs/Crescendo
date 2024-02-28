@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2798244809452584,
+      "x": 1.2711543617531682,
       "y": 5.55
     },
     "rotation": 0
@@ -26,7 +26,31 @@
         {
           "type": "path",
           "data": {
+            "pathName": "center to far left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "center mid left far"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "center to close left"
           }
         },
         {
@@ -38,6 +62,6 @@
       ]
     }
   },
-  "folder": "Center",
+  "folder": null,
   "choreoAuto": false
 }

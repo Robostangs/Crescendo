@@ -224,7 +224,7 @@ public class LoggyTalonFX extends TalonFX implements ILoggyMotor {
 
                 switch (thisLogItem) {
                     case SET_FUNCTION_CONTROL_MODE:
-                        thisEntry.logStringIfChanged(getControlMode().toString(), now);
+                        // thisEntry.logStringIfChanged(getControlMode().toString(), now);
                         break;
                     case SET_FUNCTION_VALUE:
                         thisEntry.logDoubleIfChanged(speed, now);

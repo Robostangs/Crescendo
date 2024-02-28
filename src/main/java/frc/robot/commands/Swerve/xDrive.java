@@ -35,9 +35,9 @@ public class xDrive extends Command {
 
     @Override
     public void execute() {
-        if (Math.abs(translateX.get()) <= Constants.OperatorConstants.kDeadzone
-                && Math.abs(translateY.get()) <= Constants.OperatorConstants.kDeadzone
-                && Math.abs(rotate.get()) <= Constants.OperatorConstants.kDeadzone) {
+        if (Math.abs(translateX.get()) <= Constants.OperatorConstants.kDriverDeadzone
+                && Math.abs(translateY.get()) <= Constants.OperatorConstants.kDriverDeadzone
+                && Math.abs(rotate.get()) <= Constants.OperatorConstants.kDriverDeadzone) {
 
             swerveRequest = new SwerveRequest.SwerveDriveBrake();
         } else {

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2798244809452584,
-      "y": 5.55
+      "x": 0.76,
+      "y": 4.52
     },
-    "rotation": 0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "close center"
+            "pathName": "close right"
           }
         },
         {
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center mid left far"
+            "pathName": "mid right far"
           }
         },
         {
@@ -34,10 +34,16 @@
           "data": {
             "name": "shoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "far mid"
+          }
         }
       ]
     }
   },
-  "folder": "Center",
+  "folder": "Right",
   "choreoAuto": false
 }

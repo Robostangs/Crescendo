@@ -10,8 +10,18 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
+      "/Shuffleboard/Auto/Field": "Field2d",
+      "/Shuffleboard/Auto/Intake Always Out": "String Chooser",
+      "/Shuffleboard/Auto/Path Selector": "String Chooser",
+      "/Shuffleboard/Auto/Shoot Selector": "String Chooser",
+      "/Shuffleboard/Auto/Starting Pose Selector": "String Chooser",
+      "/Shuffleboard/Teleop/Field": "Field2d",
       "/SmartDashboard/Arm": "Subsystem",
       "/SmartDashboard/Arm/Target Profile": "Mechanism2d",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Auto/Shoot Chooser": "String Chooser",
+      "/SmartDashboard/Auto/Starting Pose Selector": "String Chooser",
+      "/SmartDashboard/Auto/Trajectory Chooser": "String Chooser",
       "/SmartDashboard/Auton Chooser": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Module 0": "Mechanism2d",
@@ -25,6 +35,67 @@
       "/SmartDashboard/Swerve/Module 3": "Mechanism2d"
     },
     "windows": {
+      "/Shuffleboard/Auto/Field": {
+        "Robot": {
+          "arrowSize": 64,
+          "arrowWeight": 3.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "length": 0.7200000286102295,
+          "weight": 1.0,
+          "width": 0.7200000286102295
+        },
+        "Speaker": {
+          "arrowSize": 100
+        },
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "path": {
+          "arrowSize": 0,
+          "style": "Line"
+        },
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Auto/Path Selector": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Auto/Shoot Selector": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Auto/Starting Pose Selector": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Teleop/Field": {
+        "Speaker": {
+          "arrowSize": 100
+        },
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "path": {
+          "arrowSize": 0,
+          "style": "Line"
+        },
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875
+      },
       "/SmartDashboard/Arm/Target Profile": {
         "window": {
           "visible": true
@@ -57,47 +128,45 @@
         },
         "right": 2961,
         "top": 79,
-        "width": 16.541748046875,
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Swerve/Module 0": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Swerve/Module 1": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Swerve/Module 2": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Swerve/Module 3": {
-        "window": {
-          "visible": true
-        }
+        "width": 16.541748046875
       }
     }
   },
   "NetworkTables": {
     "transitory": {
-      "SmartDashboard": {
-        "Arm": {
-          "open": true
+      "Shuffleboard": {
+        ".metadata": {
+          "Auto": {
+            "open": true
+          }
         },
+        "Teleop": {
+          "Field": {
+            "open": true
+          }
+        },
+        "open": true
+      },
+      "SmartDashboard": {
         "Swerve": {
           "open": true
-        },
+        }
+      },
+      "limelight-nick": {
+        "open": true
+      },
+      "limelight-python": {
+        "open": true
+      },
+      "limelight-rear": {
         "open": true
       }
     }
   },
   "NetworkTables Info": {
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

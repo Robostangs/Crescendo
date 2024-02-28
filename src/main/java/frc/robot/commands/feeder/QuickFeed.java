@@ -14,7 +14,7 @@ public class QuickFeed extends Command {
         mShooter = Shooter.getInstance();
 
         this.setName("Quick Feed");
-        this.addRequirements();
+        this.addRequirements(mIntake, mShooter);
     }
 
     @Override
@@ -22,6 +22,6 @@ public class QuickFeed extends Command {
         SmartDashboard.putString("Intake/Status", "Quick Feed");
         SmartDashboard.putString("Shooter/Status", "Quick Feed");
         mIntake.setBelt(0.5);
-        mShooter.shoot(0.1, 0);
+        mShooter.shoot(0.5, 0);
     }
 }

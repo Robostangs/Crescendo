@@ -44,9 +44,9 @@ public final class Constants {
 		// This is a publicly available set of confidence values from last year
 		// public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.1,
 		// 0.1, Units.degreesToRadians(10));
-		// TODO: tune this
+
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(300));
+		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.75, 0.75, Units.degreesToRadians(300));
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 
 		/** This needs to be tuned for the shooter */
@@ -54,8 +54,9 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsBlue = { 0.3, 5.55, 1.9 };
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
+		/** The height (in meters) of the speaker */
 		public static final double SpeakerHeight = 1.9;
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.17, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.13, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(0));
 
 		/** Highest Y value of the speaker */
@@ -104,7 +105,7 @@ public final class Constants {
 		private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
 		/** The stator current at which the wheels start to slip; */
-		private static final double kSlipCurrentA = 300.0;
+		private static final double kSlipCurrentA = 150.0;
 
 		/**
 		 * Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
@@ -245,8 +246,8 @@ public final class Constants {
 		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
 
 		/* IRL PID */
-		public static final PIDConstants translationPID = new PIDConstants(0.8, 0, 0.3);
-		public static final PIDConstants rotationPID = new PIDConstants(1, 0, 0.5);
+		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.01);
+		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4);
 
 		public static final double kMaxSpeedMetersPerSecond = 5;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
@@ -291,7 +292,7 @@ public final class Constants {
 
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
-		public static final double falconShooterLoadRPM = 6400;
+		public static final double falconShooterLoadRPM = 6200;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -307,10 +308,9 @@ public final class Constants {
 	}
 
 	public static class OperatorConstants {
-		public static final double kDeadzone = 0.06;
-		public static final double kDeadzoneJoystick = 0.07;
+		public static final double kDriverDeadzone = 0.04;
 
-		public static final double kManipDeadzone = 0.05;
+		public static final double kManipDeadzone = 0.07;
 
 		public static final double slowDownMultiplier = 0.5;
 
@@ -346,7 +346,7 @@ public final class Constants {
 		public static final double shooterOffset = 58.8;
 		public static final double hardStopOffset = shooterOffset + kArmMinAngle;
 
-		public static final double kInRangeThreshold = 1.5;
+		public static final double kInRangeThreshold = 2.5;
 
 		public static class SetPoints {
 			public static final double kSpeaker1 = -45;
@@ -368,11 +368,13 @@ public final class Constants {
 		public static final boolean leftShootIsInverted = false;
 		public static final boolean intakeIsPositive = true;
 
-		public static final double feederShootValue = 0.1;
+		public static final double feederShootValue = 0.5;
 		public static final double feederFeedForward = 0.04;
 		public static final double shooterChargeUpTime = 0.5;
+		public static final double feederIntakeValue = 0.2;
 
-		public static final double feederChargeUpTime = 0.2;
+
+		public static final double feederChargeUpTime = 0.13;
 		public static final double feederReverseFeed = -0.02;
 		// public static final double feederChargeUpTime = 0.24;
 		// public static final double feederChargeUpTime = 0.23;
@@ -388,13 +390,25 @@ public final class Constants {
 		public static final int shooterSensorPWM_ID = 9;
 		public static final int beltSensorPWM_ID = 1;
 
-		public static final double kDeployTimeSeconds = 0.4;
+		public static final double kDeployTimeSeconds = 0.25;
 		public static final double beltFeedForward = 0.05;
 
-		public static final double beltIntakeSpeed = 1;
+		public static final double beltIntakeSpeed = 0.7;
 
 		public static final boolean intakeMotorInverted = false;
 		public static final boolean beltMotorInverted = true;
+	}
+
+	public static class ClimberConstants {
+		public static final int leftClimberMotorID = 54;
+		public static final int rightClimberMotorID = 55;
+
+		public static final int leftClimberBrakeID = 4;
+		public static final int rightClimberBrakeID = 7;
+
+		public static final double climberMaxExtensionRotations = 0;
+		public static final double climberMinExtensionRotations = 2;
+		public static final double climberSpeed = 0.2;
 	}
 
 	public static class Lights {

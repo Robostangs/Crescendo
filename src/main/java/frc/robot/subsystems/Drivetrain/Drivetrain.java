@@ -51,11 +51,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             Constants.Vision.llAprilTagRear);
 
     // public BooleanSupplier isRed = () -> {
-    //     if (Robot.atComp) {
-    //         return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
-    //     } else {
-    //         return false;
-    //     }
+    // if (Robot.atComp) {
+    // return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
+    // } else {
+    // return false;
+    // }
     // };
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -84,16 +84,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             // }
         }
 
+        // SmartDashboard.putNumber("Rotation Error", (angleToSpeaker() -
+        // getPose().getRotation().getDegrees()));
 
-            // System.out.println(Units.radiansToDegrees(Math.atan2(
-            //         getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-            //         getPose().getX() - Constants.Vision.SpeakerPoseRed.getX())));
-                    
-            // SmartDashboard.putNumber("Swerve/Angle To Speaker", 
-                                    
-            //         Units.radiansToDegrees(Math.atan2(
-            //                 getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-            //                 getPose().getX() - Constants.Vision.SpeakerPoseRed.getX())));
+        // System.out.println(Units.radiansToDegrees(Math.atan2(
+        // getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+        // getPose().getX() - Constants.Vision.SpeakerPoseRed.getX())));
+
+        // SmartDashboard.putNumber("Swerve/Angle To Speaker",
+
+        // Units.radiansToDegrees(Math.atan2(
+        // getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+        // getPose().getX() - Constants.Vision.SpeakerPoseRed.getX())));
     }
 
     private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
@@ -198,6 +200,58 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         }
     }
 
+    public double getDistanceToSpeaker() {
+        Pose2d speakerPose;
+
+        if (Robot.isRed()) {
+            speakerPose = Constants.Vision.SpeakerPoseRed;
+        } else {
+            speakerPose = Constants.Vision.SpeakerPoseBlue;
+        }
+
+        /* Swerve Pose calculated in meters */
+        Pose2d currentPose = Drivetrain.getInstance().getPose();
+        double SpeakerY = speakerPose.getY();
+
+        double Ydeadband = 1;
+
+        // TODO: do i need this?
+        // if (currentPose.getY() <= Constants.Vision.SpeakerYLowerBound - Ydeadband) {
+        //     SpeakerY = Constants.Vision.SpeakerYLowerBound + (Constants.Vision.SpeakerDeadBand / 2);
+        // }
+        // if (currentPose.getY() >= Constants.Vision.SpeakerYUpperBound + Ydeadband) {
+        //     SpeakerY = Constants.Vision.SpeakerYUpperBound - (Constants.Vision.SpeakerDeadBand / 2);
+        // }
+
+        double distToSpeakerMeters = Math.sqrt(
+                Math.pow(speakerPose.getX() - currentPose.getX(), 2)
+                        + Math.pow(SpeakerY - currentPose.getY(), 2));
+
+        return Math.abs(distToSpeakerMeters);
+    }
+
+    public double angleToSpeaker() {
+        if (Robot.isRed()) {
+            return Rotation2d
+                    .fromRadians(Math.atan2(
+                            getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+                            getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()))
+                    .getDegrees();
+        }
+
+        else {
+            return Rotation2d
+                    .fromRadians(Math.atan2(
+                            getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
+                            getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()))
+                    .getDegrees();
+        }
+    }
+
+    public boolean isInRangeOfTarget(double range) {
+        return Math.abs(angleToSpeaker() - getPose().getRotation().getDegrees()) < range;
+    }
+
     private static Drivetrain mInstance;
 
     public static Drivetrain getInstance() {
@@ -207,5 +261,4 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         }
         return mInstance;
     }
-
 }

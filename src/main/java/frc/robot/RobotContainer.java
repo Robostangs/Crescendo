@@ -3,7 +3,9 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Spit;
@@ -20,6 +22,7 @@ import frc.robot.commands.shooter.FeedAndShoot;
 import frc.robot.commands.shooter.FineAdjust;
 import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -32,22 +35,32 @@ public class RobotContainer {
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
 	private final Arm mArm = Arm.getInstance();
 	private final Intake mIntake = Intake.getInstance();
+	private final Climber mClimber = Climber.getInstance();
 
 	private final Telemetry logger;
 	public Field2d field;
 
 	public void configureDefaultBinds() {
+		removeDefaultCommands();
+
+		mIntake.setDefaultCommand(new BeltFeed());
+
+		if (Robot.isSimulation()) {
+			drivetrain
+					.setDefaultCommand(new xDrive(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1),
+							() -> simController.getRawAxis(2), () -> 0d));
+		} else {
+			drivetrain.setDefaultCommand(
+					new xDrive(xDrive::getLeftX, xDrive::getLeftY, xDrive::getRightX,
+							xDrive::getRightTriggerAxis).ignoringDisable(true));
+		}
+	}
+
+	public void removeDefaultCommands() {
 		Intake.getInstance().removeDefaultCommand();
 		Shooter.getInstance().removeDefaultCommand();
 		Arm.getInstance().removeDefaultCommand();
 		Drivetrain.getInstance().removeDefaultCommand();
-
-		mIntake.setDefaultCommand(new BeltFeed());
-
-		drivetrain.setDefaultCommand(
-				new xDrive(xDrive::getLeftX, xDrive::getLeftY, xDrive::getRightX,
-						xDrive::getRightTriggerAxis).ignoringDisable(true));
-
 	}
 
 	private void configureDriverBinds() {
@@ -57,10 +70,11 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis, true));
 		xDrive.x().toggleOnTrue(new AimAndShoot());
 
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
+		xDrive.getHID().setRumble(RumbleType.kBothRumble, xDrive.getHID().getRightTriggerAxis());
+
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSpeakerCenter));
 
 		// Square up to the speaker and press this to reset odometry to the speaker
-		// pose, this is consistent af
 		xDrive.povRight().onTrue(drivetrain
 				.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)))));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
@@ -69,6 +83,8 @@ public class RobotContainer {
 		xDrive.rightBumper().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
 		xDrive.leftBumper().toggleOnTrue(new DeployAndIntake());
 
+		xDrive.back().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
+		xDrive.start().toggleOnTrue(new DeployAndIntake());
 	}
 
 	private void configureManipBinds() {
@@ -101,6 +117,11 @@ public class RobotContainer {
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())
 				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
+
+		
+		new Trigger(() -> xManip.getHID().getRightStickButton()).whileTrue(new RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
+		new Trigger(() -> xManip.getHID().getLeftStickButton()).whileTrue(new RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
+
 	}
 
 	public RobotContainer() {
@@ -117,14 +138,11 @@ public class RobotContainer {
 	}
 
 	private void configureSimBinds() {
-		drivetrain.removeDefaultCommand();
-		mArm.removeDefaultCommand();
-
-		drivetrain.setDefaultCommand(new xDrive(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1),
-				() -> simController.getRawAxis(2), () -> 0d));
+		// removeDefaultCommands();
 
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.toggleOnTrue(new Align(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1), () -> 0d, false));
+				.toggleOnTrue(new Align(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1), null,
+						false));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
 				.whileTrue(new SetPoint());

@@ -24,7 +24,11 @@ public class Align extends Command {
     private Supplier<Rotation2d> getTargetRotation;
     private boolean note;
 
-    /** Test this soon af */
+    public Align(boolean note) {
+        this(() -> 0.0, () -> 0.0, () -> 0.0, note);
+    }
+
+
     public Align(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard,
             boolean note) {
         mDrivetrain = Drivetrain.getInstance();
@@ -39,13 +43,16 @@ public class Align extends Command {
         if (howManyBabiesOnBoard == null) {
             this.howManyBabiesOnBoard = () -> 0.0;
         }
+        
+        else {
+            this.howManyBabiesOnBoard = howManyBabiesOnBoard;
+        }
 
         timer = new Timer();
         this.note = note;
 
         this.translateX = translateX;
         this.translateY = translateY;
-        this.howManyBabiesOnBoard = howManyBabiesOnBoard;
 
         if (note) {
             // if (LimelightHelpers.getTX(Constants.Vision.llPython) == 0) {
@@ -90,7 +97,7 @@ public class Align extends Command {
     public void initialize() {
         drive = new SwerveRequest.FieldCentricFacingAngle();
         drive.Deadband = Constants.OperatorConstants.deadband;
-        drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.5;
+        drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.1;
 
         timer.restart();
 
@@ -109,6 +116,7 @@ public class Align extends Command {
             if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
                 mIntake.setIntake(1);
                 mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+                SmartDashboard.putString("Intake/Status", "Align and Intaking");
             }
         }
 
@@ -140,8 +148,6 @@ public class Align extends Command {
         LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
 
         if (note) {
-            // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython,
-            // Constants.Vision.llPythonPipelineIndex);
             mIntake.setIntake(0);
             mIntake.setExtend(false);
             mIntake.setHolding(!interrupted);

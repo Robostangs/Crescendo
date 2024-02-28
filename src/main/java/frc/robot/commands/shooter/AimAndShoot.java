@@ -19,12 +19,12 @@ public class AimAndShoot extends Command {
     private double shootSpeed = 1;
 
     private boolean autoAim = false;
-    private boolean isFinishedBool = false;
+    private boolean pieceHasBeenLoaded;
 
     private boolean debugMode = false;
 
     /** when this returns true, this indicates that the user wants to shoot */
-    private Supplier<Boolean> chargeUntil = () -> true;
+    private Supplier<Boolean> chargeUntil;
 
     /**
      * Calculates the desired setpoint of the arm using robotPose and then charges
@@ -35,8 +35,9 @@ public class AimAndShoot extends Command {
         mArm = Arm.getInstance();
         mShooter = Shooter.getInstance();
         mIntake = Intake.getInstance();
-        isFinishedBool = false;
+        
         autoAim = true;
+        chargeUntil = () -> true;
 
         this.setName("Auto aim and shoot");
         this.addRequirements(mArm, mShooter, mIntake);
@@ -54,7 +55,6 @@ public class AimAndShoot extends Command {
         mArm = Arm.getInstance();
         mShooter = Shooter.getInstance();
         mIntake = Intake.getInstance();
-        isFinishedBool = false;
         autoAim = true;
 
         this.chargeUntil = chargeUntil;
@@ -72,9 +72,10 @@ public class AimAndShoot extends Command {
         mArm = Arm.getInstance();
         mShooter = Shooter.getInstance();
         mIntake = Intake.getInstance();
+
         armSetpoint = target;
-        isFinishedBool = false;
         autoAim = false;
+        chargeUntil = () -> true;
 
         this.setName("Aim and Shoot: " + armSetpoint + " degrees");
         this.addRequirements(mArm, mShooter, mIntake);
@@ -91,10 +92,9 @@ public class AimAndShoot extends Command {
         mArm = Arm.getInstance();
         mShooter = Shooter.getInstance();
         mIntake = Intake.getInstance();
+
         armSetpoint = target;
-        isFinishedBool = false;
         autoAim = false;
-        
         this.chargeUntil = chargeUntil;
 
         this.setName("Aim and Shoot (Charge Until): " + armSetpoint + " degrees");
@@ -103,10 +103,10 @@ public class AimAndShoot extends Command {
 
     @Override
     public void initialize() {
-        isFinishedBool = false;
+        pieceHasBeenLoaded = false;
 
-        if (autoAim) {
-            armSetpoint = mArm.calculateArmSetpoint();
+        if (mIntake.getShooterSensor()) {
+            pieceHasBeenLoaded = true;
         }
 
         SmartDashboard.putString("Shooter/Status", "Charging Up");
@@ -147,30 +147,27 @@ public class AimAndShoot extends Command {
             // Increased the spead of feeder setVal to 0.5 from 0.1
             // mShooter.shoot(0.5, shootSpeed);
 
-            if (isFinishedBool) {
-                end(false);
-            } else {
-                end(true);
-            }
+            // end(true);
 
-            // mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
-            // if (!isFinishedBool) {
-            //     SmartDashboard.putString("Shooter/Status", "Waiting for note");
-            //     mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+            // if (pieceHasBeenLoaded) {
+            //     end(false);
             // } else {
-            //     SmartDashboard.putString("Shooter/Status", "Returning to Idle");
-            //     mIntake.setBelt(0);
+            //     end(true);
             // }
+
+            mShooter.shoot(0.4, 0);
+            mIntake.setBelt(0.75);
+            SmartDashboard.putString("Shooter/Status", "Feeding");
         }
 
         // else if the arm is within 1.5 degrees of the target and the arm is not moving
-        else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.1) {
+        else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.5) {
+            pieceHasBeenLoaded = true;
             
             // if the shooter is ready to shoot and the user has pressed the button
             if ((mShooter.readyToShoot()) && chargeUntil.get()) {
                 mShooter.shoot(Constants.ShooterConstants.feederShootValue, shootSpeed);
                 SmartDashboard.putString("Shooter/Status", "Shooting");
-                isFinishedBool = true;
             }
             
             // if the shooter isnt charge up yet or the user has not said to shoot yet
@@ -182,9 +179,10 @@ public class AimAndShoot extends Command {
 
         // If shooter is loaded but arm is not in position
         else {
-                mArm.setMotionMagic(armSetpoint);
-                mShooter.shoot(0, shootSpeed);
-                SmartDashboard.putString("Shooter/Status", "Traveling to Setpoint");
+            pieceHasBeenLoaded = true;
+            mArm.setMotionMagic(armSetpoint);
+            mShooter.shoot(0, shootSpeed);
+            SmartDashboard.putString("Shooter/Status", "Traveling to Setpoint");
         }
 
         if (debugMode) {
@@ -202,12 +200,12 @@ public class AimAndShoot extends Command {
             return false;
         }
 
-        return isFinishedBool && !mArm.isInRangeOfTarget(armSetpoint, 5);
+        return pieceHasBeenLoaded && !mIntake.getShooterSensor();
     }
 
     @Override
     public void end(boolean interrupted) {
-        if (isFinishedBool) {
+        if (pieceHasBeenLoaded && !mIntake.getShooterSensor()) {
             mIntake.setHolding(false);
         }
 

@@ -10,48 +10,56 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LoggyThings.LoggyTalonFX;
 import frc.robot.Vision.LimelightHelpers;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Intake extends SubsystemBase {
-    private static Intake mInstance;
     private Compressor mCompressor;
     private Solenoid solenoid;
     private LoggyTalonFX intakeMotor, beltMotor;
     private DigitalInput shooterSensor;
     private boolean holding = true;
-
+    
     @Override
     public void periodic() {
-        SmartDashboard.putString("Intake/Status", solenoid.get() ? "Extended" : "Retracted");
+        SmartDashboard.putString("Intake/Crashbar Status", solenoid.get() ? "Extended" : "Retracted");
         SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
         SmartDashboard.putBoolean("Intake/Holding", holding);
 
         if (getShooterSensor() && DriverStation.isEnabled()) {
-            LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
-            LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);          
-        } else {
+
+            // LEDs will blink when the arm is at the right setpoint to score
+            if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
+                    && Drivetrain.getInstance().isInRangeOfTarget(4)) {
+                LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
+                LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
+            }
+
+            // LEDs will be on when the arm is not at the right setpoint to score, but the shooter is occupied
+            else {
+                LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTag);
+                LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTagRear);
+            }
+        }
+
+        // LEDs will be off when the shooter is not occupied or robot is off
+        else {
             LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
             LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
         }
     }
-
-    public static Intake getInstance() {
-        if (mInstance == null)
-            mInstance = new Intake();
-        return mInstance;
-    }
-
+    
     private Intake() {
         solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.solenoidID);
         mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
-        mCompressor.enableDigital();
-        // mCompressor.disable();
         shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
-
+        
         intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.shooterMotorID, true);
         beltMotor = new LoggyTalonFX(Constants.IntakeConstants.beltMotorID, true);
-
+        
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorInverted);
         beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);
+
+        mCompressor.enableDigital();
     }
 
     public void setExtend(boolean deploy) {
@@ -91,8 +99,25 @@ public class Intake extends SubsystemBase {
         return holding;
     }
 
+    /**
+     * Stops the intake and belt motors, and retracts the intake
+     */
     public void stop() {
-        intakeMotor.set(0);
-        beltMotor.set(0);
+        setIntake(0);
+        setBelt(0);
+        setExtend(false);
     }
+
+
+
+
+    
+    private static Intake mInstance;
+
+    public static Intake getInstance() {
+        if (mInstance == null)
+            mInstance = new Intake();
+        return mInstance;
+    }
+
 }

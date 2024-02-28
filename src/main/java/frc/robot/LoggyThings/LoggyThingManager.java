@@ -83,7 +83,7 @@ public class LoggyThingManager {
     /**
      * Call this from robot periodic, don't crash the robot
      */
-    public void periodic() {
+public void periodic() {
         try {
             // Slow down logging if disabled
             mMinGlobalLogPeriod = DriverStation.isEnabled() ? mUserMinGlobalLogPeriod : 10000000;

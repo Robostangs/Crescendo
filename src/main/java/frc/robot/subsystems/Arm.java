@@ -33,27 +33,18 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
  * ground, then, in tuner X, zero the armCoder
  */
 public class Arm extends SubsystemBase {
-    private static Arm mInstance;
     private LoggyTalonFX armMotor;
     private LoggyCANcoder armCoder;
     private double shooterExtensionSetpoint = 0;
 
+    public boolean ArmIsBroken = false;
+    
     private MotionMagicTorqueCurrentFOC motionMagicDutyCycle;
-
+    
     private Mechanism2d armMechanism, simArmMechanism;
     private MechanismLigament2d shooterLigament, shooterExtension, elbowLigament;
     private MechanismLigament2d simShooterLigament, simShooterExtension, simElbowLigament;
-
-    public static Arm getInstance() {
-        if (mInstance == null) {
-            mInstance = new Arm();
-        }
-
-        return mInstance;
-    }
-
-    public boolean ArmIsBroken = false;
-
+     
     @Override
     public void periodic() {
 
@@ -68,20 +59,25 @@ public class Arm extends SubsystemBase {
 
         if (Robot.isReal()) {
             if (isInRangeOfTarget(getArmTarget())) {
-                elbowLigament.setColor(new Color8Bit(Color.kGreen));
+                // elbowLigament.setColor(new Color8Bit(Color.kGreen));
                 SmartDashboard.putBoolean("Arm/At Setpoint", true);
             } else {
-                elbowLigament.setColor(new Color8Bit(Color.kWhite));
+                // elbowLigament.setColor(new Color8Bit(Color.kWhite));
                 SmartDashboard.putBoolean("Arm/At Setpoint", false);
             }
         }
 
         SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
         SmartDashboard.putNumber("Arm/Velocity", getVelocityRotations());
-        SmartDashboard.putNumber("Arm/Setpoint",
-                Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble()));
-        SmartDashboard.putNumber("Arm/Position Error",
-                Units.rotationsToDegrees(armMotor.getClosedLoopError().getValueAsDouble()));
+        
+        SmartDashboard.putNumber("Arm/Setpoint", Units.rotationsToDegrees(motionMagicDutyCycle.Position));
+        // SmartDashboard.putNumber("Arm/Setpoint",
+        //         Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble()));
+
+        SmartDashboard.putNumber("Arm/Position Error", Units.rotationsToDegrees(motionMagicDutyCycle.Position - getArmPosition()));
+
+        // SmartDashboard.putNumber("Arm/Position Error",
+        //         Units.rotationsToDegrees(armMotor.getClosedLoopError().getValueAsDouble()));
         SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
 
         if (Shooter.getInstance().getCurrentCommand() == null) {
@@ -233,7 +229,7 @@ public class Arm extends SubsystemBase {
      * @param setVal the value to set the arm motor to [-1,1]
      */
     public void aim(double setVal) {
-        if (!(Math.abs(setVal) <= Constants.OperatorConstants.kDeadzone)) {
+        if (!(Math.abs(setVal) <= Constants.OperatorConstants.kManipDeadzone)) {
             armMotor.set(setVal);
         }
     }
@@ -269,7 +265,7 @@ public class Arm extends SubsystemBase {
      * @param target in degrees
      */
     public void setArmTarget(double target) {
-        shooterExtensionSetpoint = target + Constants.ArmConstants.shooterOffset;
+        shooterExtensionSetpoint = getExtensionFromArmPosition(target);
     }
 
     public double getArmTarget() {
@@ -295,10 +291,10 @@ public class Arm extends SubsystemBase {
      */
     public void setMotionMagic(double position) {
         if (!validSetpoint(position)) {
-            // System.out.println(position + " is not a valid setpoint");
             if (position < Constants.ArmConstants.kArmMinAngle) {
                 position = Constants.ArmConstants.kArmMinAngle;
             } else {
+                System.out.println(position + " is not a valid setpoint");
                 position = getArmPosition();
             }
         }
@@ -351,12 +347,12 @@ public class Arm extends SubsystemBase {
         double SpeakerY = speakerPose.getY();
 
         // TODO: do i need this?
-        if (currentPose.getY() <= Constants.Vision.SpeakerYLowerBound - 0.5) {
-            SpeakerY = Constants.Vision.SpeakerYLowerBound + (Constants.Vision.SpeakerDeadBand / 2);
-        }
-        if (currentPose.getY() >= Constants.Vision.SpeakerYUpperBound + 0.5) {
-            SpeakerY = Constants.Vision.SpeakerYUpperBound - (Constants.Vision.SpeakerDeadBand / 2);
-        }
+        // if (currentPose.getY() <= Constants.Vision.SpeakerYLowerBound - 0.5) {
+        //     SpeakerY = Constants.Vision.SpeakerYLowerBound + (Constants.Vision.SpeakerDeadBand / 2);
+        // }
+        // if (currentPose.getY() >= Constants.Vision.SpeakerYUpperBound + 0.5) {
+        //     SpeakerY = Constants.Vision.SpeakerYUpperBound - (Constants.Vision.SpeakerDeadBand / 2);
+        // }
 
         Robot.mField.getObject("Speaker")
                 .setPose(new Pose2d(speakerPose.getX(), SpeakerY, Rotation2d.fromDegrees(0)));
@@ -365,8 +361,6 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        // TODO: need to convert these numbers to constants in the Constants class and
-        // then explain what increasing/decreasing these numbers does
         double angleToSpeaker = -1170.66 * Math.pow(distToSpeakerMeters * 39.37, -0.751072) + 1.98502;
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)", distToSpeakerMeters);
@@ -422,7 +416,7 @@ public class Arm extends SubsystemBase {
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
         armMotorConfig.Slot0.kP = 500;
-        armMotorConfig.Slot0.kI = 0.02;
+        armMotorConfig.Slot0.kI = 0.05;
 
         armMotorConfig.Slot1.kP = 0;
         armMotorConfig.Slot1.kI = 0;
@@ -476,5 +470,19 @@ public class Arm extends SubsystemBase {
 
     public void toggleArmMotorLimits() {
         lastDitchEffortSetArmMotorWithoutSoftLimits(!ArmIsBroken);
+    }
+
+    public boolean atSetpoint() {
+        return isInRangeOfTarget(getArmTarget());
+    }
+
+    private static Arm mInstance;
+
+    public static Arm getInstance() {
+        if (mInstance == null) {
+            mInstance = new Arm();
+        }
+
+        return mInstance;
     }
 }

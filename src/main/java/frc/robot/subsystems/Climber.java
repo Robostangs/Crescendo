@@ -9,6 +9,7 @@ import frc.robot.LoggyThings.LoggyTalonFX;
 public class Climber extends SubsystemBase {
     private LoggyTalonFX leftClimber, rightClimber;
     private Solenoid leftClimberBrake, rightClimberBrake;
+    public boolean leftSelected = true;
 
     @Override
     public void periodic() {
@@ -30,7 +31,7 @@ public class Climber extends SubsystemBase {
         rightClimber = new LoggyTalonFX(Constants.ClimberConstants.rightClimberMotorID, true);
 
         leftClimber.setInverted(true);
-        rightClimber.setInverted(false);
+        rightClimber.setInverted(true);
 
         leftClimberBrake = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClimberConstants.leftClimberBrakeID);
         rightClimberBrake = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClimberConstants.rightClimberBrakeID);
@@ -65,6 +66,24 @@ public class Climber extends SubsystemBase {
 
     public void stop() {
         setSpeed(0);
+    }
+
+    public void moveSelected(double value) {
+        if (leftSelected) {
+            leftClimber.set(value);
+        }
+
+        else {
+            rightClimber.set(value);
+        }
+    }
+
+    public void toggleSelected() {
+        leftSelected = !leftSelected;
+    }
+
+    public boolean getLeftSelected() {
+        return leftSelected;
     }
 
     private static Climber mInstance;

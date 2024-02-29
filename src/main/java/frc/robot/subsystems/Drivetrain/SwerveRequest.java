@@ -15,7 +15,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 /**
  * Container for all the Swerve Requests. Use this to find all applicable swerve
@@ -367,8 +370,10 @@ public interface SwerveRequest {
          * rotational rate in radians per second.
          */
 
-        public PhoenixPIDController HeadingController = new PhoenixPIDController(5.0, // 1.9
+        public PhoenixPIDController radianController = new PhoenixPIDController(5.0, // 1.9
                 20, 0.5);
+
+        public PhoenixPIDController degreeController = new PhoenixPIDController(0.1, 0.0, 0.0);
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
             this.VelocityX *= slowDownRate;
@@ -376,9 +381,42 @@ public interface SwerveRequest {
 
             double toApplyX = VelocityX;
             double toApplyY = VelocityY;
+            
+            SmartDashboard.putNumber("Target Direction Before", TargetDirection.getRadians());
+            SmartDashboard.putNumber("Target Direction Before Degrees", TargetDirection.getDegrees());
+            
+            // 180 -> -180
 
-            double rotationRate = HeadingController.calculate(parameters.currentPose.getRotation().getRadians(),
-                    TargetDirection.getRadians(), parameters.timestamp);
+            // facing left is -2pi
+
+            double rotationRate = 0;
+
+            // this is dealing with the rotation target being plus minus half, insted of unsigned 0 to 360
+            if (Robot.isRed()) {
+                double Radians = TargetDirection.getRadians();
+                double PoseRadians = parameters.currentPose.getRotation().getRadians();
+
+                Radians = Units.degreesToRadians(180 + (180 + TargetDirection.getDegrees()));
+                PoseRadians = Units.degreesToRadians(180 + (180 + parameters.currentPose.getRotation().getDegrees()));
+
+                if (Radians >= 2 * Math.PI) {
+                    Radians -= 2 * Math.PI;
+                }
+
+                if (PoseRadians >= 2 * Math.PI) {
+                    PoseRadians -= 2 * Math.PI;
+                }
+
+                SmartDashboard.putNumber("Target Direction", Radians);
+
+                rotationRate = radianController.calculate(PoseRadians,
+                        Radians, parameters.timestamp);
+            }
+            
+            else {
+                rotationRate = radianController.calculate(parameters.currentPose.getRotation().getRadians(),
+                        TargetDirection.getRadians(), parameters.timestamp);
+            }
 
             double toApplyOmega = rotationRate;
             if (Math.sqrt(toApplyX * toApplyX + toApplyY * toApplyY) < Deadband) {

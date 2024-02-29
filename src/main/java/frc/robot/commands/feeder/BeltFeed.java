@@ -12,7 +12,9 @@ public class BeltFeed extends Command {
     private Intake mIntake;
     private Shooter mShooter;
     private Timer timer = null;
+    
     private double FeedForwardTime = 0.5;
+    private double chargeBufferTime = 0.25;
 
     /**
      * Default command for the belt and the shooter
@@ -32,12 +34,12 @@ public class BeltFeed extends Command {
         // if there is nothing in the shooter but the robot has something in the intake
         if (!mIntake.getShooterSensor() && mIntake.getHolding()) {
             mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
-            mShooter.shoot(Constants.ShooterConstants.feederIntakeValue, 0);
+            mShooter.setShoot(Constants.ShooterConstants.feederIntakeValue, Constants.ShooterConstants.shooterReverseSpeed);
         }
 
         // if there is a piece in the shooter
         else if (mIntake.getShooterSensor()) {
-        
+            mIntake.setIntakeExtend(false);
             mIntake.setBelt(0);
 
             if (timer == null) {
@@ -47,17 +49,20 @@ public class BeltFeed extends Command {
 
             // first push the piece all the way in
             if (timer.get() < FeedForwardTime) {
-                mShooter.shoot(0.3, 0);
+                mShooter.setShoot(0.15, Constants.ShooterConstants.shooterReverseSpeed);
             }
 
             // reversing the feed and pushing the note out of the shooter to charge up the
             // shooter motors
             else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime + FeedForwardTime) {
-                mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
+                mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 
+                        Constants.ShooterConstants.shooterReverseSpeed);
                 SmartDashboard.putString("Shooter/Status", "Reversing Feed");
                 SmartDashboard.putString("Intake/Status", "Waiting to Shoot");
                 SmartDashboard.putString("Arm/Status", "Waiting to Shoot");
 
+            } else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime + FeedForwardTime + chargeBufferTime) {
+                mShooter.stop();
             }
 
             // piece has been reversed

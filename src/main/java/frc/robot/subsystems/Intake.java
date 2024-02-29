@@ -17,7 +17,7 @@ public class Intake extends SubsystemBase {
     private Solenoid solenoid;
     private LoggyTalonFX intakeMotor, beltMotor;
     private DigitalInput shooterSensor;
-    private boolean holding = true;
+    private boolean holding = true, setExtend = false;
     
     @Override
     public void periodic() {
@@ -26,6 +26,7 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Intake/Holding", holding);
 
         if (getShooterSensor() && DriverStation.isEnabled()) {
+            // setHolding(true);
 
             // LEDs will blink when the arm is at the right setpoint to score
             if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
@@ -46,6 +47,20 @@ public class Intake extends SubsystemBase {
             LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
             LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
         }
+
+        // if (getShooterSensor()) {
+        //     setExtend = false;
+        // }
+
+        // if (setExtend) {
+        //     setExtend(true);
+        //     setIntake(1);
+        // }
+
+        // else {
+        //     setExtend(false);
+        //     setIntake(0);
+        // }
     }
     
     private Intake() {
@@ -60,6 +75,7 @@ public class Intake extends SubsystemBase {
         beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);
 
         mCompressor.enableDigital();
+        holding = false;
     }
 
     public void setExtend(boolean deploy) {
@@ -108,10 +124,16 @@ public class Intake extends SubsystemBase {
         setExtend(false);
     }
 
+    public void setIntakeExtend(boolean extend) {
+        setExtend = extend;
+        setHolding(!extend);
+    }
 
+    public void extendIntakeToggle() {
+        setExtend = !setExtend;
+        setHolding(setExtend);
+    }
 
-
-    
     private static Intake mInstance;
 
     public static Intake getInstance() {
@@ -119,5 +141,4 @@ public class Intake extends SubsystemBase {
             mInstance = new Intake();
         return mInstance;
     }
-
 }

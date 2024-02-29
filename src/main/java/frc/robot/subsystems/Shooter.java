@@ -32,12 +32,12 @@ public class Shooter extends SubsystemBase {
         fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
         fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
         fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
-        fxConfig.MotorOutput.PeakReverseDutyCycle = 0;
+        fxConfig.MotorOutput.PeakReverseDutyCycle = -1;
 
         fxConfig.Slot0.kP = 0.1;
         fxConfig.Slot0.kI = 0.01;
         fxConfig.Slot0.kV = 10.5 / 88.9;
-        fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         fxConfig.Audio.AllowMusicDurDisable = true;
         shootMotorLeft.getConfigurator().apply(fxConfig);
         shootMotorRight.getConfigurator().apply(fxConfig);

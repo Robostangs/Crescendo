@@ -57,7 +57,7 @@ public final class Constants {
 		/** The height (in meters) of the speaker */
 		public static final double SpeakerHeight = 1.9;
 		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.13, 5.55, Rotation2d.fromDegrees(0));
-		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
 		/** Highest Y value of the speaker */
 		// public static final double SpeakerYUpperBound = 6.12 + 0.5;
@@ -282,9 +282,9 @@ public final class Constants {
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
 
 				// these are called "edge positions" in path planner because they are on the edge of the wing line
-				public static final Pose2d kCenterStartPoint = new Pose2d(1.53, 5.55, Rotation2d.fromDegrees(0));
-				public static final Pose2d kLeftStartPoint = new Pose2d(1.53, 6.51, Rotation2d.fromDegrees(0));
-				public static final Pose2d kRightStartPoint = new Pose2d(1.53, 4.59, Rotation2d.fromDegrees(0));
+				public static final Pose2d CenterStartPosition = new Pose2d(1.37, 5.55, Rotation2d.fromDegrees(0));
+				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));
+				public static final Pose2d StageStartPosition = new Pose2d(0.74, 4.40, Rotation2d.fromDegrees(-60));
 
 				public static class Notes {
 					public static final Pose2d leftStage = new Pose2d(2.9, 7.0, Rotation2d.fromDegrees(0));
@@ -297,7 +297,7 @@ public final class Constants {
 
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
-		public static final double falconShooterLoadRPM = 6200;
+		public static final double falconShooterLoadRPM = 5900;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -373,14 +373,16 @@ public final class Constants {
 		public static final boolean leftShootIsInverted = false;
 		public static final boolean intakeIsPositive = true;
 
-		public static final double feederShootValue = 0.5;
+		public static final double feederShootValue = 1;
 		public static final double feederFeedForward = 0.04;
 		public static final double shooterChargeUpTime = 0.5;
-		public static final double feederIntakeValue = 0.2;
+		public static final double feederIntakeValue = 0.1;
 
 
 		public static final double feederChargeUpTime = 0.13;
 		public static final double feederReverseFeed = -0.02;
+		
+		public static final double shooterReverseSpeed = -0.05;
 		// public static final double feederChargeUpTime = 0.24;
 		// public static final double feederChargeUpTime = 0.23;
 	}
@@ -398,7 +400,7 @@ public final class Constants {
 		public static final double kDeployTimeSeconds = 0.25;
 		public static final double beltFeedForward = 0.05;
 
-		public static final double beltIntakeSpeed = 0.7;
+		public static final double beltIntakeSpeed = 0.6;
 
 		public static final boolean intakeMotorInverted = false;
 		public static final boolean beltMotorInverted = true;
@@ -413,7 +415,7 @@ public final class Constants {
 
 		public static final double climberMaxExtensionRotations = 0;
 		public static final double climberMinExtensionRotations = 2;
-		public static final double climberSpeed = 0.2;
+		public static final double climberSpeed = 0.35;
 	}
 
 	public static class Lights {

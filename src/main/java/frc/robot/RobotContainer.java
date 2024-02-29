@@ -83,17 +83,17 @@ public class RobotContainer {
 		xDrive.rightBumper().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
 		xDrive.leftBumper().toggleOnTrue(new DeployAndIntake());
 
-		xDrive.back().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
-		xDrive.start().toggleOnTrue(new DeployAndIntake());
+		xDrive.leftStick().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
+		xDrive.rightStick().onTrue(mIntake.runOnce(mIntake::extendIntakeToggle));
 	}
 
 	private void configureManipBinds() {
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
-		new Trigger(() -> xManip.getLeftTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
-				.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
-				.whileTrue(new FineAdjust(() -> xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis()));
+		// new Trigger(() -> xManip.getLeftTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+		// 		.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+		// 		.whileTrue(new FineAdjust(() -> xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis()));
 
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
@@ -101,7 +101,7 @@ public class RobotContainer {
 		new Trigger(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new ShooterCharge(xManip::getRightTriggerAxis));
 
-		xManip.y().toggleOnTrue(new SetPoint());
+		// xManip.y().toggleOnTrue(new SetPoint());
 		xManip.x().whileTrue(new QuickFeed());
 
 		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getLeftBumper()));
@@ -118,9 +118,17 @@ public class RobotContainer {
 		xManip.start().and(() -> xManip.back().getAsBoolean())
 				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
 
-		
-		new Trigger(() -> xManip.getHID().getRightStickButton()).whileTrue(new RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
-		new Trigger(() -> xManip.getHID().getLeftStickButton()).whileTrue(new RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
+		xManip.leftStick().whileTrue(new RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
+		xManip.rightStick().whileTrue(new RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
+
+		new Trigger(() -> xManip.getLeftTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+				.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+				.whileTrue(mClimber.run(() -> mClimber.moveSelected(
+						xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis())).finallyDo(mClimber::stop));
+						
+		xManip.y().onTrue(mClimber.runOnce(mClimber::toggleSelected));
+		// new Trigger(() -> xManip.getHID().getRightStickButton()).whileTrue(new RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
+		// new Trigger(() -> xManip.getHID().getLeftStickButton()).whileTrue(new RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
 
 	}
 

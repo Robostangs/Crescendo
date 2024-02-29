@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,6 +33,7 @@ import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -41,14 +43,15 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<String> autoChooser = new SendableChooser<>();
 	public static SendableChooser<Boolean> autoShoot = new SendableChooser<>();
 	public static SendableChooser<Boolean> intakeAlwaysOut = new SendableChooser<>();
+	public static NetworkTableEntry pathDelayEntry;
 
 	public static ShuffleboardTab autoTab, teleopTab;
 
 	public static Field2d teleopField = new Field2d(), autoField = new Field2d();
 	public static PowerDistribution pdh = new PowerDistribution();
 	public static Timer timer = new Timer();
-
 	public static RobotContainer robotContainer;
+
 	public static boolean atComp = false;
 
 	public SequentialCommandGroup autonCommand;
@@ -65,9 +68,29 @@ public class Robot extends TimedRobot {
 
 		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
 
-		startingPose.setDefaultOption("Center", "center");
-		startingPose.addOption("Left", "left");
-		startingPose.addOption("Right", "right");
+		if (DriverStation.isFMSAttached()) {
+			atComp = true;
+			DataLogManager.start(Constants.logDirectory);
+			CommandScheduler.getInstance()
+					.onCommandInitialize((action) -> DataLogManager.log(action.getName() + "Command Initialized"));
+			CommandScheduler.getInstance()
+					.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + "Command Interrupted"));
+			CommandScheduler.getInstance()
+					.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
+
+			Shuffleboard.startRecording();
+		} else {
+			CommandScheduler.getInstance()
+					.onCommandInitialize((action) -> System.out.println(action.getName() + " Command Initialized"));
+			CommandScheduler.getInstance()
+					.onCommandInterrupt((action) -> System.out.println(action.getName() + " Command Interrupted"));
+			CommandScheduler.getInstance()
+					.onCommandFinish((action) -> System.out.println(action.getName() + " Command Finished"));
+		}
+
+		startingPose.setDefaultOption("Center", "center"); //center
+		startingPose.addOption("Amp Side", "amp"); //left
+		startingPose.addOption("Stage Side", "stage"); //right
 
 		// this could be literally whatever it doesnt matter cuz the path is null and
 		// means nothing
@@ -95,51 +118,50 @@ public class Robot extends TimedRobot {
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 		autoTab.add("Shoot Selector", autoShoot).withSize(2, 1).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
-		autoTab.add("Field", autoField).withSize(6, 4).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
-		autoTab.addNumber("Inacuracy",
-				() -> NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("inaccuracy").getDouble(0.0))
-				.withSize(1, 1).withPosition(2, 0);
-		autoTab.addNumber("Auto Timer",
-				() -> timer.get())
-				.withSize(1, 1).withPosition(3, 0);
-
+		autoTab.add("Field", autoField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
+		// autoTab.addNumber("Inacuracy",
+		// 		() -> NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("inaccuracy").getDouble(0.0))
+		// 		.withSize(2, 1).withPosition(2, 0);
+		// autoTab.addNumber("Auto Timer",
+		// 		() -> timer.get())
+		// 		.withSize(1, 1).withPosition(3, 0);
 		autoTab.add("Intake Always Out", intakeAlwaysOut).withSize(2, 1).withPosition(0, 3)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
+		autoTab.addNumber("Auto Countdown", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 2)
+				.withWidget(BuiltInWidgets.kDial)
+				.withProperties(Map.of("min", -1, "max", 15, "show value", true));
+		autoTab.add("Path Delay", 0).withSize(2, 1).withWidget(BuiltInWidgets.kNumberSlider).withPosition(0, 4)
+				.withProperties(Map.of("min", 0, "max", 15, "block increment", 1));
+
+		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
+				.getEntry("Path Delay");
+
+		autoField.setRobotPose(Drivetrain.getInstance().getPose());
 
 		Shuffleboard.selectTab(autoTab.getTitle());
 
-		teleopTab.add("Field", teleopField).withSize(5, 3).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
-		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(0, 0)
-				.withWidget(BuiltInWidgets.kAccelerometer)
-				.withProperties(Map.of("min", 0, "max", 2.25 * 60, "precision", 0, "show text", true));
+		teleopTab.add("Field", teleopField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
+		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 0)
+				.withWidget(BuiltInWidgets.kDial)
+				.withProperties(Map.of("min", -1, "max", 135, "show value", true));
 
 		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getHolding()).withSize(2, 2).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
+		teleopTab.addBoolean("Ready To Shoot", () -> Shooter.getInstance().readyToShootAdvanced()).withSize(2, 2)
+				.withPosition(0, 0);
+		
+		teleopTab.addString("Selected Climber", () -> Climber.getInstance().getLeftSelected() ? "Left" : "Right").withSize(2, 2)
+				.withPosition(2, 2).withWidget(BuiltInWidgets.kTextView);
 
-		if (Robot.isReal()) {
-			teleopTab.add("Front LL", CameraServer.getServer(Constants.Vision.llAprilTag).getSource())
-					.withPosition(2, 0).withSize(2, 2).withWidget(BuiltInWidgets.kCameraStream);
-			teleopTab.add("Rear LL", CameraServer.getServer(Constants.Vision.llAprilTagRear).getSource())
-					.withPosition(2, 2).withSize(2, 2).withWidget(BuiltInWidgets.kCameraStream);
-		}
-
-		if (DriverStation.isFMSAttached()) {
-			atComp = true;
-			DataLogManager.start(Constants.logDirectory);
-			CommandScheduler.getInstance()
-					.onCommandInitialize((action) -> DataLogManager.log(action.getName() + "Command Initialized"));
-			CommandScheduler.getInstance()
-					.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + "Command Interrupted"));
-			CommandScheduler.getInstance()
-					.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
-
-		} else {
-			CommandScheduler.getInstance()
-					.onCommandInitialize((action) -> System.out.println(action.getName() + " Command Initialized"));
-			CommandScheduler.getInstance()
-					.onCommandInterrupt((action) -> System.out.println(action.getName() + " Command Interrupted"));
-			CommandScheduler.getInstance()
-					.onCommandFinish((action) -> System.out.println(action.getName() + " Command Finished"));
+		if (Robot.isReal() && Constants.Vision.UseLimelight) {
+			try {
+				teleopTab.add("Front LL", CameraServer.getServer(Constants.Vision.llAprilTag).getSource())
+						.withPosition(2, 0).withSize(2, 2).withWidget(BuiltInWidgets.kCameraStream);
+				teleopTab.add("Rear LL", CameraServer.getServer(Constants.Vision.llAprilTagRear).getSource())
+						.withPosition(2, 2).withSize(2, 2).withWidget(BuiltInWidgets.kCameraStream);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);
@@ -188,6 +210,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		PathPlannerCommand.publishTrajectory(startingPose.getSelected() + autoChooser.getSelected());
+		autoField.setRobotPose(Drivetrain.getInstance().getPose());
 	}
 
 	@Override
@@ -197,7 +220,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		Shuffleboard.selectTab(autoTab.getTitle());
-		Shooter.getInstance().setShooterBrake(false);
+		Shooter.getInstance().setShooterBrake(true);
 
 		if (autoManager == null) {
 			autoManager = new AutoManager();
@@ -219,6 +242,7 @@ public class Robot extends TimedRobot {
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(() -> Robot.autoManager.shoot = autoShoot.getSelected())
 						.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)),
+				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				pathPlannerCommand);
 
 		autonCommand.schedule();
@@ -229,6 +253,10 @@ public class Robot extends TimedRobot {
 		autoManager.execute();
 		autoField.setRobotPose(Drivetrain.getInstance().getPose());
 		NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("Auto Timer").setDouble(timer.get());
+
+		if (timer.get() < pathDelayEntry.getDouble(0)) {
+			autoManager.postAutoStatus("Path Delay");
+		}
 	}
 
 	@Override

@@ -84,8 +84,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             // }
         }
 
-        // SmartDashboard.putNumber("Rotation Error", (angleToSpeaker() -
-        // getPose().getRotation().getDegrees()));
+        SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
+        SmartDashboard.putNumber("Swerve/Rotation Error", (angleToSpeaker() -
+                getPose().getRotation().getDegrees()));
 
         // System.out.println(Units.radiansToDegrees(Math.atan2(
         // getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
@@ -242,6 +243,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Whether the robot is within a certain range of the speaker
+     * 
      * @param range the range in degrees
      * @return true if the robot is within the range, false otherwise
      */
@@ -251,9 +253,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     /**
      * Whether the robot is within 15 degrees of the speaker
+     * 
      * @return true if the robot is within 15 degrees, false otherwise
      */
     public boolean isInRangeOfTarget() {
+        // TODO: tune this, all info is now in smart dashboard, write a function to calculate the allowable range of the drivetrain given the pose.
         return isInRangeOfTarget(15);
     }
 

@@ -33,7 +33,7 @@ public class DeployAndIntake extends Command {
             mIntake.setIntake(1);
         }
         // Maybe I need to change this
-        mIntake.setBelt(1);
+        mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
     }
 
     @Override

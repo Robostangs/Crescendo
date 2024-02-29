@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7070356964788005,
-        "y": 4.872488217198657
+        "x": 2.115600217311546,
+        "y": 5.927807999134517
       },
       "isLocked": false,
       "linkedName": "Right Shoot Position"
@@ -20,28 +20,28 @@
         "y": 4.32122303596459
       },
       "prevControl": {
-        "x": 4.233512251856698,
-        "y": 5.375321957243517
+        "x": 4.29494750656168,
+        "y": 5.139420996434586
       },
       "nextControl": {
-        "x": 5.785495395064864,
-        "y": 3.4498760571595217
+        "x": 5.485639905815886,
+        "y": 3.9034261288896097
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.287121703873037,
-        "y": 4.093602714983208
+        "x": 7.93550680156916,
+        "y": 4.111239875257528
       },
       "prevControl": {
-        "x": 8.287121703873037,
-        "y": 4.353602714983208
+        "x": 7.93550680156916,
+        "y": 4.371239875257528
       },
       "nextControl": {
-        "x": 8.287121703873037,
-        "y": 4.033602714983209
+        "x": 7.93550680156916,
+        "y": 4.0512398752575285
       },
       "isLocked": false,
       "linkedName": "Far Middle Note"
@@ -52,12 +52,12 @@
         "y": 4.32122303596459
       },
       "prevControl": {
-        "x": 5.772965291300953,
-        "y": 3.4293884467398565
+        "x": 5.48459707153343,
+        "y": 3.889718885103255
       },
       "nextControl": {
-        "x": 4.115809514328578,
-        "y": 5.571878586079658
+        "x": 4.308427760374039,
+        "y": 5.1539701690514494
       },
       "isLocked": false,
       "linkedName": null
@@ -68,8 +68,8 @@
         "y": 4.52
       },
       "prevControl": {
-        "x": 1.6972555019423452,
-        "y": 4.557916925370887
+        "x": 2.1066331762293156,
+        "y": 5.907557926226964
       },
       "nextControl": null,
       "isLocked": false,
@@ -80,6 +80,11 @@
     {
       "waypointRelativePos": 2,
       "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -11.901636954116002,
       "rotateFast": false
     }
   ],
@@ -97,7 +102,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Right Paths",
+  "folder": "Stage Side Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

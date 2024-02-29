@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.5199999999999996,
-        "y": 4.13451855144451
+        "x": 2.33,
+        "y": 4.14
       },
       "prevControl": {
-        "x": 2.5199999999999996,
-        "y": 3.9845185514445105
+        "x": 2.33,
+        "y": 3.99
       },
       "nextControl": {
-        "x": 2.5199999999999996,
-        "y": 4.324518551444511
+        "x": 2.33,
+        "y": 4.33
       },
       "isLocked": false,
       "linkedName": "Close Right Note"
@@ -36,8 +36,8 @@
         "y": 4.52
       },
       "prevControl": {
-        "x": 1.902487912407166,
-        "y": 4.012460426938193
+        "x": 2.119282048749283,
+        "y": 4.406142696544653
       },
       "nextControl": null,
       "isLocked": false,
@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Right Paths",
+  "folder": "Stage Side Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

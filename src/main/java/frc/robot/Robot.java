@@ -37,6 +37,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
+import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class Robot extends TimedRobot {
 	public static SendableChooser<String> startingPose = new SendableChooser<>();
@@ -94,8 +95,8 @@ public class Robot extends TimedRobot {
 
 		// this could be literally whatever it doesnt matter cuz the path is null and
 		// means nothing
-		autoChooser.setDefaultOption("Shoot Only", " null");
-
+		autoChooser.setDefaultOption("Sit and Shit", " null");
+		autoChooser.addOption("Simple Reverse", "back-up");
 		autoChooser.addOption("1 Piece", " 1 piece");
 		autoChooser.addOption("2 Piece", " 2 piece");
 		autoChooser.addOption("3 Piece", " 3 piece");
@@ -232,7 +233,14 @@ public class Robot extends TimedRobot {
 			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
 		} catch (Exception e) {
 			e.printStackTrace();
-			pathPlannerCommand = new PrintCommand("Null Command");
+			if (autoChooser.getSelected().equals("back-up")) {
+				pathPlannerCommand = Drivetrain.getInstance()
+						.applyRequest(() -> new SwerveRequest.FieldCentric().withVelocityX(0.5));
+			}
+
+			else {
+				pathPlannerCommand = new PrintCommand("Null Command");
+			}
 		}
 
 		autoManager.initialize();

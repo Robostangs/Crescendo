@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 8.28,
-        "y": 0.77
+        "x": 7.905814612555151,
+        "y": 0.8956351894185275
       },
       "prevControl": {
-        "x": 8.286824781982897,
-        "y": 0.9868495940695589
+        "x": 7.912639394538049,
+        "y": 1.1124847834880862
       },
       "nextControl": {
-        "x": 8.27406051049252,
-        "y": 0.5812795556099964
+        "x": 7.899875123047671,
+        "y": 0.7069147450285239
       },
       "isLocked": false,
       "linkedName": "Far Right Note"
@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Right Paths",
+  "folder": "Stage Side Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

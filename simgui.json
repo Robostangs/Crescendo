@@ -23,7 +23,6 @@
       "/SmartDashboard/Auto/Starting Pose Selector": "String Chooser",
       "/SmartDashboard/Auto/Trajectory Chooser": "String Chooser",
       "/SmartDashboard/Auton Chooser": "String Chooser",
-      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
@@ -45,9 +44,9 @@
             1.0,
             255.0
           ],
-          "length": 0.7200000286102295,
+          "length": 0.9200000166893005,
           "weight": 1.0,
-          "width": 0.7200000286102295
+          "width": 0.9200000166893005
         },
         "Speaker": {
           "arrowSize": 100
@@ -90,9 +89,9 @@
             1.0,
             255.0
           ],
-          "length": 0.7200000286102295,
+          "length": 0.9200000166893005,
           "weight": 2.0,
-          "width": 0.7200000286102295
+          "width": 0.9200000166893005
         },
         "Speaker": {
           "arrowColor": [
@@ -127,35 +126,6 @@
         "window": {
           "visible": true
         }
-      },
-      "/SmartDashboard/Field": {
-        "Robot": {
-          "color": [
-            1.0,
-            1.0,
-            1.0,
-            255.0
-          ],
-          "length": 0.7200000286102295,
-          "weight": 1.0,
-          "width": 0.7200000286102295
-        },
-        "Speaker": {
-          "arrowSize": 100,
-          "style": "Box/Image"
-        },
-        "bottom": 1476,
-        "height": 8.210550308227539,
-        "left": 150,
-        "path": {
-          "arrowSize": 42,
-          "arrows": false,
-          "selectable": false,
-          "style": "Line"
-        },
-        "right": 2961,
-        "top": 79,
-        "width": 16.541748046875
       }
     }
   },

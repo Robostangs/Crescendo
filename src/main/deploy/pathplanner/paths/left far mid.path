@@ -4,40 +4,72 @@
     {
       "anchor": {
         "x": 1.9045481377999796,
-        "y": 5.856546745500898
+        "y": 6.532875426861965
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.939024003048006,
-        "y": 5.060158176767967
+        "x": 3.2097573824777283,
+        "y": 6.645111901334914
       },
       "isLocked": false,
       "linkedName": "Left Shoot Position"
     },
     {
       "anchor": {
-        "x": 8.287121703873037,
-        "y": 4.093602714983208
+        "x": 5.139393362120058,
+        "y": 4.330011923912737
       },
       "prevControl": {
-        "x": 7.287121703873037,
-        "y": 4.093602714983208
+        "x": 4.187936857355196,
+        "y": 5.040783544530052
       },
       "nextControl": {
-        "x": 9.287121703873037,
-        "y": 4.093602714983208
+        "x": 5.967511599935385,
+        "y": 3.7113783458069047
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.93550680156916,
+        "y": 4.111239875257528
+      },
+      "prevControl": {
+        "x": 7.915197344283579,
+        "y": 4.5516938070913175
+      },
+      "nextControl": {
+        "x": 7.94715389509952,
+        "y": 3.858647791296466
       },
       "isLocked": false,
       "linkedName": "Far Middle Note"
     },
     {
       "anchor": {
-        "x": 1.9045481377999796,
-        "y": 5.856546745500898
+        "x": 5.139393362120058,
+        "y": 4.330011923912737
       },
       "prevControl": {
-        "x": 4.409270096766,
-        "y": 4.332276192778193
+        "x": 6.068165034478217,
+        "y": 3.9422913197678255
+      },
+      "nextControl": {
+        "x": 4.040841037240094,
+        "y": 4.788608351607192
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.9045481377999796,
+        "y": 6.532875426861965
+      },
+      "prevControl": {
+        "x": 3.1908137658867908,
+        "y": 6.628543659865098
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,9 +78,19 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 0,
       "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -40.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 3,
+      "rotationDegrees": -40.0,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
@@ -61,14 +103,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 31.83171823019352,
+    "rotation": 28.96,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Left Paths",
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "folder": "Amp Side Paths",
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

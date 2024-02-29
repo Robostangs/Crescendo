@@ -4,8 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "Center Paths",
-    "Left Paths",
-    "Right Paths",
+    "Amp Side Paths",
+    "Stage Side Paths",
     "Starting Notes"
   ],
   "autoFolders": [

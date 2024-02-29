@@ -4,40 +4,40 @@
     {
       "anchor": {
         "x": 1.9045481377999796,
-        "y": 5.856546745500898
+        "y": 6.532875426861965
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6730456091421937,
-        "y": 6.73876646673854
+        "x": 3.238974496467512,
+        "y": 7.154273558547118
       },
       "isLocked": false,
       "linkedName": "Left Shoot Position"
     },
     {
       "anchor": {
-        "x": 8.29,
-        "y": 7.44
+        "x": 7.9398418611652035,
+        "y": 7.45
       },
       "prevControl": {
-        "x": 8.011815727330102,
-        "y": 7.726976500254491
+        "x": 7.661657588495307,
+        "y": 7.736976500254491
       },
       "nextControl": {
-        "x": 8.534972618032155,
-        "y": 7.187284834234787
+        "x": 8.184814479197357,
+        "y": 7.197284834234787
       },
       "isLocked": false,
-      "linkedName": "Far left Note"
+      "linkedName": null
     },
     {
       "anchor": {
         "x": 1.9045481377999796,
-        "y": 5.856546745500898
+        "y": 6.532875426861965
       },
       "prevControl": {
-        "x": 2.631056618589663,
-        "y": 6.235953536727083
+        "x": 3.24800092192777,
+        "y": 7.1630030621172365
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,11 +61,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 10.139999999999986,
+    "rotation": 28.28,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Left Paths",
+  "folder": "Amp Side Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

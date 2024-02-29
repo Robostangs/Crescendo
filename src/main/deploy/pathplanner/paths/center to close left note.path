@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.89,
+        "x": 1.584228802716865,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3697653552714515,
-        "y": 6.233756314734851
+        "x": 2.0484958701398885,
+        "y": 6.197353691003679
       },
       "isLocked": false,
-      "linkedName": "Close Center Note"
+      "linkedName": "Center Shoot Position"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 7.0
       },
       "prevControl": {
-        "x": 2.2532532055804855,
-        "y": 6.988531759470926
+        "x": 2.432772180359176,
+        "y": 6.575275872773968
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 27.080000000000013,
+    "rotation": 27.460000000000008,
     "rotateFast": true
   },
   "reversed": false,

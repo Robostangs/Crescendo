@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import java.util.Map;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,74 +21,81 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Vision.LimelightHelpers;
+import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
+import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Robot extends TimedRobot {
-	public SendableChooser<String> startingPose = new SendableChooser<>();
-	public SendableChooser<String> autoChooser = new SendableChooser<>();
-	public SendableChooser<Boolean> autoShoot = new SendableChooser<>();
+	public static SendableChooser<String> startingPose = new SendableChooser<>();
+	public static SendableChooser<String> autoChooser = new SendableChooser<>();
+	public static SendableChooser<Boolean> autoShoot = new SendableChooser<>();
 	public static SendableChooser<Boolean> intakeAlwaysOut = new SendableChooser<>();
 
-	public static ShuffleboardTab autoTab;
-	public static ShuffleboardTab teleopTab;
+	public static ShuffleboardTab autoTab, teleopTab;
 
-	public static Field2d mField = new Field2d();
+	public static Field2d teleopField = new Field2d(), autoField = new Field2d();
 	public static PowerDistribution pdh = new PowerDistribution();
 	public static Timer timer = new Timer();
 
 	public static RobotContainer robotContainer;
 	public static boolean atComp = false;
-	public static boolean autonomousExited = false;
 
-	public PathPlannerCommand autonCommand;
+	public SequentialCommandGroup autonCommand;
+	public Command pathPlannerCommand;
+	public static AutoManager autoManager;
 
 	@SuppressWarnings("resource")
 	@Override
 	public void robotInit() {
 		autoTab = Shuffleboard.getTab("Auto");
 		teleopTab = Shuffleboard.getTab("Teleop");
-		
-		robotContainer = new RobotContainer();
 
-		SmartDashboard.putData("Field", mField);
+		robotContainer = new RobotContainer();
 
 		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
 
-		startingPose.setDefaultOption("Shoot Only", "null");
+		startingPose.setDefaultOption("Center", "center");
 		startingPose.addOption("Left", "left");
-		startingPose.addOption("Center", "center");
 		startingPose.addOption("Right", "right");
-		startingPose.addOption("All Close Notes", "all close pieces");
-		startingPose.addOption("Center Line Sprint", "centerline sprint");
-		startingPose.addOption("Center 4 Piece", "center 4 piece");
-		
-		autoChooser.setDefaultOption("None Selected", "");
+
+		// this could be literally whatever it doesnt matter cuz the path is null and
+		// means nothing
+		autoChooser.setDefaultOption("Shoot Only", " null");
+
 		autoChooser.addOption("1 Piece", " 1 piece");
 		autoChooser.addOption("2 Piece", " 2 piece");
 		autoChooser.addOption("3 Piece", " 3 piece");
-		
+
+		// TODO: only center things rn gonna convert later
+		autoChooser.addOption("4 Piece", " 4 piece");
+		autoChooser.addOption("All Close Notes", " all close notes");
+		autoChooser.addOption("All Close Notes Fast", " all close notes shoot in place");
+		autoChooser.addOption("Center Line Sprint", " centerline sprint");
+
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);
 
 		intakeAlwaysOut.setDefaultOption("Intake Always Out", true);
 		intakeAlwaysOut.addOption("Intake Retracts When Holding", false);
-		
-		// SmartDashboard.putData("Auto/Starting Pose Selector", startingPose);
-		// SmartDashboard.putData("Auto/Trajectory Chooser", autoChooser);
-		// SmartDashboard.putData("Auto/Shoot Chooser", autoShoot);
 
-		autoTab.add("Starting Pose Selector", startingPose).withSize(2, 1).withPosition(0, 0).withWidget(BuiltInWidgets.kComboBoxChooser);
+		autoTab.add("Starting Pose Selector", startingPose).withSize(2, 1).withPosition(0, 0)
+				.withWidget(BuiltInWidgets.kComboBoxChooser);
 		autoTab.add("Path Selector", autoChooser).withSize(2, 1).withPosition(0, 1)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 		autoTab.add("Shoot Selector", autoShoot).withSize(2, 1).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
-		autoTab.add("Field", mField).withSize(6, 4).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
+		autoTab.add("Field", autoField).withSize(6, 4).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
 		autoTab.addNumber("Inacuracy",
 				() -> NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("inaccuracy").getDouble(0.0))
 				.withSize(1, 1).withPosition(2, 0);
@@ -95,8 +108,20 @@ public class Robot extends TimedRobot {
 
 		Shuffleboard.selectTab(autoTab.getTitle());
 
-		// teleopTab.getLayout("", )
+		teleopTab.add("Field", teleopField).withSize(5, 3).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
+		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(0, 0)
+				.withWidget(BuiltInWidgets.kAccelerometer)
+				.withProperties(Map.of("min", 0, "max", 2.25 * 60, "precision", 0, "show text", true));
 
+		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getHolding()).withSize(2, 2).withPosition(0, 2)
+				.withWidget(BuiltInWidgets.kBooleanBox);
+
+		if (Robot.isReal()) {
+			teleopTab.add("Front LL", CameraServer.getServer(Constants.Vision.llAprilTag).getSource())
+					.withPosition(2, 0).withSize(2, 2).withWidget(BuiltInWidgets.kCameraStream);
+			teleopTab.add("Rear LL", CameraServer.getServer(Constants.Vision.llAprilTagRear).getSource())
+					.withPosition(2, 2).withSize(2, 2).withWidget(BuiltInWidgets.kCameraStream);
+		}
 
 		if (DriverStation.isFMSAttached()) {
 			atComp = true;
@@ -118,6 +143,9 @@ public class Robot extends TimedRobot {
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);
+
+		NamedCommands.registerCommand("shoot", new InstantCommand(() -> Robot.autoManager.shoot = true)
+				.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)).raceWith(new Align(false)));
 	}
 
 	@Override
@@ -127,14 +155,13 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
-		// LoggyThingManager.getInstance().periodic();
 
+		if (Intake.getInstance().getShooterSensor() && DriverStation.isEnabled()) {
 
- 		if (Intake.getInstance().getShooterSensor() && DriverStation.isEnabled()) {
-
-			// LEDs will blink when the arm is at the right setpoint to score and swerve is facing correct angle
+			// LEDs will blink when the arm is at the right setpoint to score and swerve is
+			// facing correct angle
 			if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
-					&& Drivetrain.getInstance().isInRangeOfTarget(30)) {
+					&& Drivetrain.getInstance().isInRangeOfTarget()) {
 				LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
 				LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
 			}
@@ -170,40 +197,54 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		Shuffleboard.selectTab(autoTab.getTitle());
+		Shooter.getInstance().setShooterBrake(false);
+
+		if (autoManager == null) {
+			autoManager = new AutoManager();
+		}
 
 		robotContainer.removeDefaultCommands();
 
-		// this will end up being something like "left 1 piece" or "right 3 piece"
-		// System.out.println("Path to run: " +  startingPose.getSelected() + " " + autoChooser.getSelected());
-
-		if (autonCommand == null) {
-			autonCommand = new PathPlannerCommand(startingPose.getSelected() + autoChooser.getSelected(), autoShoot.getSelected());
+		try {
+			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
+		} catch (Exception e) {
+			e.printStackTrace();
+			pathPlannerCommand = new PrintCommand("Null Command");
 		}
 
+		autoManager.initialize();
+
 		timer.restart();
+
+		autonCommand = new SequentialCommandGroup(
+				new InstantCommand(() -> Robot.autoManager.shoot = autoShoot.getSelected())
+						.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)),
+				pathPlannerCommand);
 
 		autonCommand.schedule();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
-		if (autonCommand.isFinished()) {
-			timer.stop();
-		}
-
+		autoManager.execute();
+		autoField.setRobotPose(Drivetrain.getInstance().getPose());
 		NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("Auto Timer").setDouble(timer.get());
 	}
 
 	@Override
 	public void autonomousExit() {
-		robotContainer.configureDefaultBinds();
+		autoManager.end(false);
 		timer.stop();
 	}
 
 	@Override
 	public void teleopInit() {
+		robotContainer.configureDefaultBinds();
+
 		Arm.getInstance().setBrake(false);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+
+		Shooter.getInstance().setShooterBrake(true);
 
 		if (Constants.Vision.UseLimelight) {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
@@ -213,12 +254,9 @@ public class Robot extends TimedRobot {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 		}
 
-		PathPlannerCommand.publishTrajectory(null);
-		// PathPlannerCommand.unpublishTrajectory();
+		PathPlannerCommand.unpublishTrajectory();
 
-		// teleopTab.add("Field", mField).withSize(5, 3).withPosition(4, 0);
 		Shuffleboard.selectTab(teleopTab.getTitle());
-		// Shuffleboard.selectTab(0);
 	}
 
 	@Override
@@ -251,6 +289,12 @@ public class Robot extends TimedRobot {
 	public void simulationInit() {
 	}
 
+	/**
+	 * Returns the alliance color of the robot
+	 * 
+	 * @return will only return true if the robot is set to red, otherwise it
+	 *         returns false (blue)
+	 */
 	public static boolean isRed() {
 		var alliance = DriverStation.getAlliance();
 

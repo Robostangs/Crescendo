@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LoggyThings.LoggyTalonFX;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class Shooter extends SubsystemBase {
         fxConfig.Slot0.kP = 0.1;
         fxConfig.Slot0.kI = 0.01;
         fxConfig.Slot0.kV = 10.5 / 88.9;
-        fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         fxConfig.Audio.AllowMusicDurDisable = true;
         shootMotorLeft.getConfigurator().apply(fxConfig);
         shootMotorRight.getConfigurator().apply(fxConfig);
@@ -174,12 +175,11 @@ public class Shooter extends SubsystemBase {
      * enough, and the robot is aligned with the target
      * 
      * @return returns true if ready to feed (and shoot) right now
-     *         TODO: the drivetrain thing is weird, maybe consider removing
      */
     public boolean readyToShootAdvanced() {
         return Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint(), 3)
-                && readyToShoot();
-                // && Drivetrain.getInstance().isInRangeOfTarget(10) && readyToShoot();
+                // && readyToShoot();
+                && Drivetrain.getInstance().isInRangeOfTarget() && readyToShoot();
     }
 
     private static Shooter mInstance;

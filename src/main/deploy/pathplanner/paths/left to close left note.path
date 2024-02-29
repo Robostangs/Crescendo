@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.89,
-        "y": 5.55
+        "x": 1.53,
+        "y": 6.51
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3697653552714515,
-        "y": 6.233756314734851
+        "x": 2.724279226521416,
+        "y": 6.712975804099756
       },
       "isLocked": false,
-      "linkedName": "Close Center Note"
+      "linkedName": "Left Edge Start Position"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 7.0
       },
       "prevControl": {
-        "x": 2.2532532055804855,
-        "y": 6.988531759470926
+        "x": 2.278491566242392,
+        "y": 6.761742819781936
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,8 +39,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 27.080000000000013,
-    "rotateFast": true
+    "rotation": 28.0,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Starting Notes",

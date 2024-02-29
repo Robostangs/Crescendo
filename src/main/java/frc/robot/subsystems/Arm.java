@@ -346,15 +346,7 @@ public class Arm extends SubsystemBase {
         Pose2d currentPose = Drivetrain.getInstance().getPose();
         double SpeakerY = speakerPose.getY();
 
-        // TODO: do i need this?
-        // if (currentPose.getY() <= Constants.Vision.SpeakerYLowerBound - 0.5) {
-        //     SpeakerY = Constants.Vision.SpeakerYLowerBound + (Constants.Vision.SpeakerDeadBand / 2);
-        // }
-        // if (currentPose.getY() >= Constants.Vision.SpeakerYUpperBound + 0.5) {
-        //     SpeakerY = Constants.Vision.SpeakerYUpperBound - (Constants.Vision.SpeakerDeadBand / 2);
-        // }
-
-        Robot.mField.getObject("Speaker")
+        Robot.teleopField.getObject("Speaker")
                 .setPose(new Pose2d(speakerPose.getX(), SpeakerY, Rotation2d.fromDegrees(0)));
 
         double distToSpeakerMeters = Math.sqrt(

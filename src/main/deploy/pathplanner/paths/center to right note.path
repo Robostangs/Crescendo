@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.870759461518923,
-        "y": 4.878753472023073
+        "x": 2.155090828700176,
+        "y": 4.8762888173924495
       },
       "isLocked": false,
       "linkedName": "Close Center Note"
     },
     {
       "anchor": {
-        "x": 2.6941209124353738,
-        "y": 4.14069835800962
+        "x": 2.5199999999999996,
+        "y": 4.13451855144451
       },
       "prevControl": {
-        "x": 2.85268103302037,
-        "y": 4.7776805656837125
+        "x": 2.3233189399712124,
+        "y": 4.688337260933781
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,18 +32,18 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -92.79575077025308,
+    "rotation": -28.889999999999986,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "starting notes",
+  "folder": "Starting Notes",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

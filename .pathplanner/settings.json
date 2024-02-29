@@ -5,17 +5,18 @@
   "pathFolders": [
     "Center Paths",
     "Left Paths",
-    "starting notes",
-    "Right Paths"
+    "Right Paths",
+    "Starting Notes"
   ],
   "autoFolders": [
     "Center",
     "Left",
+    "All Close Notes",
     "Right"
   ],
-  "defaultMaxVel": 2.0,
-  "defaultMaxAccel": 2.0,
+  "defaultMaxVel": 5.0,
+  "defaultMaxAccel": 4.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
-  "maxModuleSpeed": 5.0
+  "maxModuleSpeed": 4.73
 }

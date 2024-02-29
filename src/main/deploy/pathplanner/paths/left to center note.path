@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.869320152618801,
-        "y": 6.3369255286897666
+        "x": 2.0441608105438434,
+        "y": 6.234290774137104
       },
       "isLocked": false,
       "linkedName": "Close Left Note"
@@ -20,8 +20,8 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.9009133161814713,
-        "y": 6.083407724073513
+        "x": 2.2338938983433523,
+        "y": 5.244234423654032
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,18 +32,18 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -89.21674243963304,
+    "rotation": 0.0,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "starting notes",
+  "folder": "Starting Notes",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

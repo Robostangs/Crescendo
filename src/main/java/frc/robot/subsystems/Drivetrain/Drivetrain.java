@@ -118,7 +118,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         // SmartDashboard.putString("Swerve/.type", "Drivetrain");
 
-        mField = Robot.mField;
+        mField = Robot.teleopField;
         if (Robot.isRed()) {
             mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseRed);
         } else {
@@ -215,14 +215,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         double Ydeadband = 1;
 
-        // TODO: do i need this?
-        // if (currentPose.getY() <= Constants.Vision.SpeakerYLowerBound - Ydeadband) {
-        //     SpeakerY = Constants.Vision.SpeakerYLowerBound + (Constants.Vision.SpeakerDeadBand / 2);
-        // }
-        // if (currentPose.getY() >= Constants.Vision.SpeakerYUpperBound + Ydeadband) {
-        //     SpeakerY = Constants.Vision.SpeakerYUpperBound - (Constants.Vision.SpeakerDeadBand / 2);
-        // }
-
         double distToSpeakerMeters = Math.sqrt(
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
@@ -248,8 +240,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         }
     }
 
+    /**
+     * Whether the robot is within a certain range of the speaker
+     * @param range the range in degrees
+     * @return true if the robot is within the range, false otherwise
+     */
     public boolean isInRangeOfTarget(double range) {
         return Math.abs(angleToSpeaker() - getPose().getRotation().getDegrees()) < range;
+    }
+
+    /**
+     * Whether the robot is within 15 degrees of the speaker
+     * @return true if the robot is within 15 degrees, false otherwise
+     */
+    public boolean isInRangeOfTarget() {
+        return isInRangeOfTarget(15);
     }
 
     private static Drivetrain mInstance;

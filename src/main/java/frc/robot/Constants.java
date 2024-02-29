@@ -281,6 +281,11 @@ public final class Constants {
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
 
+				// these are called "edge positions" in path planner because they are on the edge of the wing line
+				public static final Pose2d kCenterStartPoint = new Pose2d(1.53, 5.55, Rotation2d.fromDegrees(0));
+				public static final Pose2d kLeftStartPoint = new Pose2d(1.53, 6.51, Rotation2d.fromDegrees(0));
+				public static final Pose2d kRightStartPoint = new Pose2d(1.53, 4.59, Rotation2d.fromDegrees(0));
+
 				public static class Notes {
 					public static final Pose2d leftStage = new Pose2d(2.9, 7.0, Rotation2d.fromDegrees(0));
 					public static final Pose2d centerStage = new Pose2d(2.9, 5.5, Rotation2d.fromDegrees(0));

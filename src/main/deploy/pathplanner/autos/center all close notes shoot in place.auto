@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.3073194479722294,
-      "y": 5.55
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center to far left"
+            "pathName": "center to close right note"
           }
         },
         {
@@ -26,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center mid left far"
+            "pathName": "right to center note"
           }
         },
         {
@@ -38,12 +32,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "far center mid"
+            "pathName": "center to left note"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "All Close Notes",
   "choreoAuto": false
 }

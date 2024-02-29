@@ -8,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center to close left"
+            "pathName": "left to close left note"
           }
         },
         {
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "close center"
+            "pathName": "left to center note"
           }
         },
         {
@@ -32,18 +32,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center to close right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
+            "pathName": "center to right"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "All Close Notes",
   "choreoAuto": false
 }

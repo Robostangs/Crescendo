@@ -1,5 +1,8 @@
 package frc.robot.commands.AutoCommands;
 
+import com.pathplanner.lib.util.GeometryUtil;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -9,12 +12,14 @@ import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class AutoManager extends Command {
     private Timer shootTimer, intakeTimer, feedTimer;
     private Intake mIntake;
     private Shooter mShooter;
     private Arm mArm;
+    // private List<SuppliedValueWidget> widgets;
 
     private String status = "Intaking";
 
@@ -25,7 +30,7 @@ public class AutoManager extends Command {
     private static final double feederHandoffSpeed = 0.7;
 
     private static final double shooterHandoffTimeout = 1;
-    private static final double shootTimeout = 5;
+    private static final double shootTimeout = 2d;
 
     // the piece will start reversed at the start since we put the piece in
     // properly, or we can manually reverse it, this allows for felxibility
@@ -42,37 +47,61 @@ public class AutoManager extends Command {
      */
     private boolean intakeAlwaysDeployed;
 
-    // private boolean holdingRing = false;
-    // public boolean shoot = true;
-    // private boolean hasBeenReversed = true;
-
     public AutoManager() {
         mIntake = Intake.getInstance();
         mShooter = Shooter.getInstance();
         mArm = Arm.getInstance();
 
-        // holdingRing = true;
-        // shoot = true;
-        // hasBeenReversed = true;
-
         this.setName("Auto Manager");
         this.addRequirements(mIntake, mShooter, mArm);
+
         Robot.autoTab.addString("Auto Status", () -> status).withPosition(2, 2).withSize(2, 1);
         Robot.autoTab.addBoolean("Shoot", () -> shoot).withPosition(2, 1).withSize(1, 1).withSize(1, 1)
                 .withWidget(BuiltInWidgets.kBooleanBox);
         Robot.autoTab.addBoolean("Ready To Shoot", () -> mShooter.readyToShootAdvanced()).withPosition(3, 1)
                 .withSize(1, 1).withWidget(BuiltInWidgets.kBooleanBox);
 
+        // widgets.add(Robot.autoTab.addString("Auto Status", () -> status).withPosition(2, 2).withSize(2, 1));
+        // widgets.add(Robot.autoTab.addBoolean("Shoot", () -> shoot).withPosition(2, 1).withSize(1, 1).withSize(1, 1)
+        //         .withWidget(BuiltInWidgets.kBooleanBox));
+        // widgets.add(Robot.autoTab.addBoolean("Ready To Shoot", () -> mShooter.readyToShootAdvanced()).withPosition(3, 1)
+        //         .withSize(1, 1).withWidget(BuiltInWidgets.kBooleanBox));
+
         // Robot.autoTab.addPersistent("Status", () -> status);
     }
 
     @Override
     public void initialize() {
+        Pose2d startPose;
+
+        shoot = false;
         hasBeenReversed = true;
+        
         intakeAlwaysDeployed = Robot.intakeAlwaysOut.getSelected();
         shootTimer = null;
-        // intakeTimer = null;
 
+        if (Robot.startingPose.getSelected().equals("left")) {
+            startPose = Constants.AutoConstants.WayPoints.Blue.kLeftStartPoint;
+        }
+        
+        else if (Robot.startingPose.getSelected().equals("center")) {
+            startPose = Constants.AutoConstants.WayPoints.Blue.kCenterStartPoint;
+        }
+        
+        else if (Robot.startingPose.getSelected().equals("right")) {
+            startPose = Constants.AutoConstants.WayPoints.Blue.kRightStartPoint;
+        }
+        
+        else {
+            // default to center start point
+            startPose = Constants.AutoConstants.WayPoints.Blue.kCenterStartPoint;
+        }
+
+        if (Robot.isRed()) {
+            startPose = GeometryUtil.flipFieldPose(startPose);
+        }
+
+        Drivetrain.getInstance().seedFieldRelative(startPose);
     }
 
     @Override
@@ -120,7 +149,6 @@ public class AutoManager extends Command {
                     // wait until the shooter is ready to shoot and the arm is in range of the
                     // setpoint, also wait until the timeout is done to ensure that we at least spit
                     // the note out
-
                     if ((mShooter.readyToShootAdvanced())
                             || shootTimer.get() > shootTimeout) {
 
@@ -131,7 +159,7 @@ public class AutoManager extends Command {
                         // return back to intaking status when the shot has been fired
                         shoot = false;
 
-                        feederSpeed = 1;
+                        feederSpeed = Constants.ShooterConstants.feederShootValue;
 
                         if (shootTimer.get() > shootTimeout) {
                             // make sure that we at least shoot the piece out so that we dont get penalties
@@ -157,6 +185,7 @@ public class AutoManager extends Command {
             // set the shooter and belt to pass the piece into shooter, once in shooter the
             // above if statement will be triggered in the next loop will be called
             else {
+                hasBeenReversed = false;
                 shootTimer = null;
 
                 if (intakeTimer == null) {
@@ -205,11 +234,29 @@ public class AutoManager extends Command {
                 // if the piece has not been reversed, and the timer indicates that it still has
                 // not been reversed
                 if (feedTimer.get() < Constants.ShooterConstants.feederChargeUpTime && !hasBeenReversed) {
-                    // TODO: this is problematic because when read properly, the feeder motor will
-                    // shoot the piece out at full speed, but then in the next loop set the feed
-                    // motor to reverseFeed, this only happens when the shoot timeout occurs btw
-                    mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
-                    postAutoStatus("Positioning Note");
+
+                    if (shootTimer != null) {
+                        // get it out since there will still be problems since the last period because
+                        // the timeout forced it out
+                        if (shootTimer.get() > shootTimeout) {
+                            mShooter.shoot(1, 1);
+                            postAutoStatus("Shooter Timed Out");
+                        }
+
+                        // if the timeout was not actually triggered then just keep shooting for one
+                        // more loop
+                        else {
+                            mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
+                            postAutoStatus("Positioning Note");
+                        }
+                    }
+
+                    // if the timeout was not actually triggered then just keep shooting for one
+                    // more loop
+                    else {
+                        mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
+                        postAutoStatus("Positioning Note");
+                    }
                 }
 
                 // if the piece has been reversed then start charging the shooter motors
@@ -217,7 +264,8 @@ public class AutoManager extends Command {
                     hasBeenReversed = true;
                     feedTimer = null;
 
-                    // if this is causing problems, removing it will result in a slower auto but ig it will work at least
+                    // if this is causing problems, removing it will result in a slower auto but ig
+                    // it will work at least
                     mShooter.shoot(0, 1);
 
                     mArm.setMotionMagic(mArm.calculateArmSetpoint());
@@ -241,6 +289,8 @@ public class AutoManager extends Command {
                 mShooter.shoot(feederHandoffSpeed, 0);
                 // postAutoStatus("Intaking");
             }
+
+            shootTimer = null;
         }
     }
 
@@ -251,7 +301,6 @@ public class AutoManager extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        // mShooter.stop();
         mIntake.stop();
         mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
     }

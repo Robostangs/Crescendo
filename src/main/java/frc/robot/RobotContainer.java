@@ -126,7 +126,7 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		logger = new Telemetry();
-		field = Robot.mField;
+		field = Robot.teleopField;
 		drivetrain.registerTelemetry((telemetry) -> logger.telemeterize(telemetry));
 		configureDriverBinds();
 		configureManipBinds();

@@ -82,8 +82,32 @@
         }
       },
       "/Shuffleboard/Teleop/Field": {
+        "Robot": {
+          "arrowSize": 72,
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "length": 0.7200000286102295,
+          "weight": 2.0,
+          "width": 0.7200000286102295
+        },
         "Speaker": {
-          "arrowSize": 100
+          "arrowColor": [
+            0.0,
+            0.0,
+            0.0,
+            255.0
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0,
+            255.0
+          ],
+          "style": "Box/Image"
         },
         "bottom": 1476,
         "height": 8.210550308227539,
@@ -94,7 +118,10 @@
         },
         "right": 2961,
         "top": 79,
-        "width": 16.541748046875
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
       },
       "/SmartDashboard/Arm/Target Profile": {
         "window": {

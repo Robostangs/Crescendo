@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase {
 
             // LEDs will blink when the arm is at the right setpoint to score
             if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
-                    && Drivetrain.getInstance().isInRangeOfTarget(4)) {
+                    && Drivetrain.getInstance().isInRangeOfTarget()) {
                 LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
                 LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
             }

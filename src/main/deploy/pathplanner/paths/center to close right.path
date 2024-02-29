@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.4749944731370945,
-        "y": 4.11
+        "x": 2.5199999999999996,
+        "y": 4.13451855144451
       },
       "prevControl": {
-        "x": 2.4669775821033126,
-        "y": 3.861179456062617
+        "x": 2.5119831089662177,
+        "y": 3.885698007507127
       },
       "nextControl": {
-        "x": 2.4857204460216438,
-        "y": 4.442902417676023
+        "x": 2.530725972884549,
+        "y": 4.467420969120533
       },
       "isLocked": false,
       "linkedName": "Close Right Note"
@@ -66,8 +66,8 @@
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

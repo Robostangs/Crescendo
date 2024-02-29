@@ -353,6 +353,19 @@ public final class Constants {
 
 		public static final double kInRangeThreshold = 2.5;
 
+
+		/* 
+		Interpolation between distance vs shooting angle (horizontal dist. to speaker, angle to shoot)
+		Y = a*x^b + c
+		
+		A decrease in C will shoot further up a constant amount, any distance
+		A decrease in B "bows" the curve in, closer distances will shoot further up and further values will shoot futher down
+		A decrease in A shifts curve up, no matter the distance, it will shoot lower, but closer distances will be effected greater than further distances
+		*/
+		public static final double a = -1170.66;
+		public static final double b = -0.751072;
+		public static final double c = 1.98502;
+
 		public static class SetPoints {
 			public static final double kSpeaker1 = -45;
 			public static final double kSpeaker2 = -40;

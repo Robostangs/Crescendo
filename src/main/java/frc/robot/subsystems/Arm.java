@@ -353,7 +353,7 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        double angleToSpeaker = -1170.66 * Math.pow(distToSpeakerMeters * 39.37, -0.751072) + 1.98502;
+        double angleToSpeaker = Constants.ArmConstants.a * Math.pow(Units.metersToFeet(distToSpeakerMeters), Constants.ArmConstants.b) + Constants.ArmConstants.c;
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)", distToSpeakerMeters);
         SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)", Units.metersToInches(distToSpeakerMeters));

@@ -46,7 +46,7 @@ public final class Constants {
 		// 0.1, Units.degreesToRadians(10));
 
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.75, 0.75, Units.degreesToRadians(300));
+		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(01, 01, Units.degreesToRadians(360));
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 
 		/** This needs to be tuned for the shooter */
@@ -386,7 +386,7 @@ public final class Constants {
 
 
 		public static final double feederChargeUpTime = 0.13;
-		public static final double feederReverseFeed = -0.03;
+		public static final double feederReverseFeed = -0.025;
 		
 		public static final double shooterReverseSpeed = -0.1;
 		// public static final double feederChargeUpTime = 0.24;

@@ -39,7 +39,7 @@ public class AutoManager extends Command {
      * the timeout that occurs when the time between activating shoot and the
      * shooter sensor being triggered is too long
      */
-    private static final double shooterHandoffTimeout = 1;
+    private static final double shooterHandoffTimeout = 2;
 
     /**
      * the timeout that occurs when the shooter is taking too long to reach the
@@ -108,9 +108,12 @@ public class AutoManager extends Command {
         }
 
         else {
-            // just dont seed the pose, instead set it to be the robot pose
+            // just dont seed the pose, insted set it to be the robot pose
             System.out.println("Starting Position Undefined");
             startPose = Drivetrain.getInstance().getPose();
+
+            // default to center start point
+            // startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
         }
 
         // TODO: the flipFieldPose function does not flip the rotation for some reason,
@@ -132,7 +135,7 @@ public class AutoManager extends Command {
         if (shoot) {
 
             // if there is a piece in the shooter
-            if (mIntake.getShooterSensor()) {
+            if (mIntake.getShooterSensor() || Robot.isSimulation()) {
                 mIntake.setHolding(true);
                 intakeTimer = null;
 
@@ -195,13 +198,13 @@ public class AutoManager extends Command {
 
             // this says that if the shooter shooting and there is no piece in the
             // shooter, then we can go ahead and end the shoot command saying it worked
-            else if (status.equals("Shooting") || status.equals("Shooter Timed Out")) {
+            else if (status.equalsIgnoreCase("Shooting")|| status.equalsIgnoreCase("Shooter Timed Out")) {
                 shoot = false;
                 // shootTimer = null;
                 feedTimer = null;
 
                 if (shootTimer.get() > shootTimeout) {
-                    postAutoStatus("Shooter Actually Timed Out");
+                    postAutoStatus("Shooter Timed Out");
                 }
 
                 else {

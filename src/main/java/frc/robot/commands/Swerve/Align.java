@@ -28,7 +28,6 @@ public class Align extends Command {
         this(() -> 0.0, () -> 0.0, () -> 0.0, note);
     }
 
-
     public Align(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard,
             boolean note) {
         mDrivetrain = Drivetrain.getInstance();
@@ -43,7 +42,7 @@ public class Align extends Command {
         if (howManyBabiesOnBoard == null) {
             this.howManyBabiesOnBoard = () -> 0.0;
         }
-        
+
         else {
             this.howManyBabiesOnBoard = howManyBabiesOnBoard;
         }
@@ -68,20 +67,25 @@ public class Align extends Command {
             this.addRequirements(mIntake);
         } else {
             getTargetRotation = () -> {
-                // just use the pose for everything, dont look for the rear april tag
-
-                if (Robot.isRed()) {
-                    return Rotation2d
-                            .fromRadians(Math.atan2(
-                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+                if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
+                    return mDrivetrain.getPose().getRotation()
+                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
                 }
 
                 else {
-                    return Rotation2d
-                            .fromRadians(Math.atan2(
-                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                    if (Robot.isRed()) {
+                        return Rotation2d
+                                .fromRadians(Math.atan2(
+                                        mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+                                        mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+                    }
+
+                    else {
+                        return Rotation2d
+                                .fromRadians(Math.atan2(
+                                        mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
+                                        mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                    }
                 }
             };
         }

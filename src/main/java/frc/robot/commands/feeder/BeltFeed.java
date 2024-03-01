@@ -32,6 +32,7 @@ public class BeltFeed extends Command {
 
     @Override
     public void initialize() {
+        if (mShooter.readyToShoot()) {}
         // deployIntake = false;
         timer = null;
     }
@@ -48,6 +49,7 @@ public class BeltFeed extends Command {
             else {
                 mIntake.setIntake(0);
             }
+            
             mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
             mShooter.setShoot(Constants.ShooterConstants.feederIntakeValue, Constants.ShooterConstants.shooterReverseSpeed);
         }
@@ -55,6 +57,7 @@ public class BeltFeed extends Command {
         // if there is a piece in the shooter
         else if (mIntake.getShooterSensor()) {
             mIntake.setExtend(false);
+            deployIntake = false;
             mIntake.setIntake(0);
             mIntake.setBelt(0);
 
@@ -114,5 +117,7 @@ public class BeltFeed extends Command {
     @Override
     public void end(boolean interrupted) {
         mIntake.setBelt(0);
+        deployIntake = false;
+        mIntake.setIntake(0);
     }
 }

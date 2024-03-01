@@ -109,6 +109,7 @@ public class Arm extends SubsystemBase {
     }
 
     private Arm() {
+        
         armCoder = new LoggyCANcoder(Constants.ArmConstants.armEncoderID, false);
         CANcoderConfiguration armCoderConfig = new CANcoderConfiguration();
 

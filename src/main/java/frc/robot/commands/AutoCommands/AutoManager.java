@@ -200,7 +200,7 @@ public class AutoManager extends Command {
             // shooter, then we can go ahead and end the shoot command saying it worked
             else if (status.equalsIgnoreCase("Shooting")|| status.equalsIgnoreCase("Shooter Timed Out")) {
                 shoot = false;
-                shootTimer = null;
+                // shootTimer = null;
                 feedTimer = null;
 
                 if (shootTimer.get() > shootTimeout) {

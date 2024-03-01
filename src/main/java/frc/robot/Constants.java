@@ -290,7 +290,7 @@ public final class Constants {
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
 		public static final double falconShooterLoadRPM = 6200;
-		public static final double falconShooterThresholdRPM = falconFreeSpeedRPM * 0.95;
+		public static final double falconShooterThresholdRPM = falconFreeSpeedRPM * 0.9;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -386,7 +386,7 @@ public final class Constants {
 
 
 		public static final double feederChargeUpTime = 0.13;
-		public static final double feederReverseFeed = -0.02;
+		public static final double feederReverseFeed = -0.03;
 		
 		public static final double shooterReverseSpeed = -0.1;
 		// public static final double feederChargeUpTime = 0.24;

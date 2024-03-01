@@ -31,6 +31,12 @@ public class BeltFeed extends Command {
     }
 
     @Override
+    public void initialize() {
+        deployIntake = false;
+        timer = null;
+    }
+
+    @Override
     public void execute() {
         // if there is nothing in the shooter but the robot has something in the intake
         if (!mIntake.getShooterSensor() && mIntake.getHolding()) {
@@ -77,12 +83,12 @@ public class BeltFeed extends Command {
 
             // piece has been reversed
             else {
-                if (Drivetrain.getInstance().getDistanceToSpeaker() < 5) {
-                    mShooter.shoot(0, 0.6);
-                }
+                // if (Drivetrain.getInstance().getDistanceToSpeaker() < 5) {
+                //     mShooter.shoot(0, 0.6);
+                // }
                 // if the thing above doesnt work then try the thing below
 
-                // mShooter.stop();
+                mShooter.stop();
                 
                 SmartDashboard.putString("Shooter/Status", "Waiting to Shoot");
                 SmartDashboard.putString("Intake/Status", "Waiting to Shoot");

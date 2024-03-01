@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.902487912407166,
-        "y": 4.52
+        "y": 4.0715963419002765
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.024920272062767,
-        "y": 2.3341623627691703
+        "y": 1.8857587046694473
       },
       "isLocked": false,
       "linkedName": "Right Shoot Position"
@@ -65,11 +65,11 @@
     {
       "anchor": {
         "x": 1.902487912407166,
-        "y": 4.52
+        "y": 4.0715963419002765
       },
       "prevControl": {
         "x": 2.005917271093802,
-        "y": 2.3522152136896866
+        "y": 1.9038115555899635
       },
       "nextControl": null,
       "isLocked": false,
@@ -93,7 +93,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -27.50999999999999,
+    "rotation": -38.64999999999998,
     "rotateFast": false
   },
   "reversed": false,

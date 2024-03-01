@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class BeltFeed extends Command {
     private Intake mIntake;
@@ -28,11 +27,12 @@ public class BeltFeed extends Command {
         this.addRequirements(mIntake, mShooter);
 
         timer = null;
+        deployIntake = false;
     }
 
     @Override
     public void initialize() {
-        deployIntake = false;
+        // deployIntake = false;
         timer = null;
     }
 

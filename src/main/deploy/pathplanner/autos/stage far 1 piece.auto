@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7336018872360849,
+      "y": 4.410144858254176
+    },
+    "rotation": -59.771621492167505
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "mid right far"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Stage",
+  "choreoAuto": false
+}

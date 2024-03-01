@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.902487912407166,
-        "y": 4.52
+        "y": 4.0715963419002765
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.115600217311546,
-        "y": 5.927807999134517
+        "y": 5.479404341034794
       },
       "isLocked": false,
       "linkedName": "Right Shoot Position"

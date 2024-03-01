@@ -104,6 +104,7 @@ public class Robot extends TimedRobot {
 		// TODO: only center things rn gonna convert later
 		autoChooser.addOption("4 Piece", " 4 piece");
 		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
+		autoChooser.addOption("Far 1 Piece (Only Stage)", " far 1 piece");
 		autoChooser.addOption("All Close Notes", " all close notes");
 		autoChooser.addOption("All Close Notes Fast", " all close notes shoot in place");
 		autoChooser.addOption("Center Line Sprint", " centerline sprint");

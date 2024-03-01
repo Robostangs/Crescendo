@@ -370,10 +370,9 @@ public interface SwerveRequest {
          * rotational rate in radians per second.
          */
 
+        // TODO: tune this
         public PhoenixPIDController radianController = new PhoenixPIDController(5.0, // 1.9
-                20, 0.5);
-
-        public PhoenixPIDController degreeController = new PhoenixPIDController(0.1, 0.0, 0.0);
+                20, 0.3);
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
             this.VelocityX *= slowDownRate;

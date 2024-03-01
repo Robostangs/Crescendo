@@ -6,6 +6,9 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.MountPoseConfigs;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.configs.Pigeon2FeaturesConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -80,7 +83,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             // LimelightHelpers.getCurrentPipelineIndex(Constants.Vision.llPython) ==
             // Constants.Vision.llAprilTagPipelineIndex) {
             // this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llPython),
-            // Timer.getFPGATimestamp());
+            // Timer.getFPGATimestampz());
             // }
         }
 
@@ -101,6 +104,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+
+        // TODO: configure this
+        // super.getPigeon2().getConfigurator().apply(new MountPoseConfigs().withMountPosePitch(___).withMountPoseRoll(____));
 
         if (Constants.Vision.UseLimelight) {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
@@ -258,7 +264,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
      */
     public boolean isInRangeOfTarget() {
         // TODO: tune this, all info is now in smart dashboard, write a function to calculate the allowable range of the drivetrain given the pose.
-        return isInRangeOfTarget(15);
+        return isInRangeOfTarget(10);
     }
 
     private static Drivetrain mInstance;

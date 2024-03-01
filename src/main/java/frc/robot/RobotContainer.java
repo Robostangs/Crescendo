@@ -73,7 +73,7 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis, true));
 		xDrive.x().toggleOnTrue(new AimAndShoot());
 
-		xDrive.getHID().setRumble(RumbleType.kBothRumble, xDrive.getHID().getRightTriggerAxis());
+		// xDrive.getHID().setRumble(RumbleType.kBothRumble, xDrive.getHID().getRightTriggerAxis());
 
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSpeakerCenter));
 
@@ -82,16 +82,22 @@ public class RobotContainer {
 				.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)))));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
-		// This is basically saying deploy and intake without deploying
-		xDrive.rightBumper().onTrue(new InstantCommand(() -> beltFeed.deployIntake = !beltFeed.deployIntake));
-		xDrive.leftBumper().toggleOnTrue(new DeployAndIntake());
-
 		xDrive.leftStick().onTrue(mIntake.runOnce(() -> {
 			mIntake.setHolding(!mIntake.getHolding());
 			beltFeed.deployIntake = false;
 		}));
 
 		xDrive.rightStick().onTrue(new InstantCommand(() -> {
+			beltFeed.deployIntake = true;
+			mIntake.setHolding(!mIntake.getHolding());
+		}));
+
+		xDrive.leftBumper().onTrue(mIntake.runOnce(() -> {
+			mIntake.setHolding(!mIntake.getHolding());
+			beltFeed.deployIntake = false;
+		}));
+
+		xDrive.rightBumper().onTrue(new InstantCommand(() -> {
 			beltFeed.deployIntake = true;
 			mIntake.setHolding(!mIntake.getHolding());
 		}));

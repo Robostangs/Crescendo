@@ -79,6 +79,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         Timer.getFPGATimestamp());
             }
 
+            if (DriverStation.isEnabled()) {
+                LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
+            } else {
+                LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
+            }
+
             // if (LimelightHelpers.getTid(Constants.Vision.llPython) != -1 &&
             // LimelightHelpers.getCurrentPipelineIndex(Constants.Vision.llPython) ==
             // Constants.Vision.llAprilTagPipelineIndex) {

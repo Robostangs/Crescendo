@@ -37,6 +37,8 @@ public class Arm extends SubsystemBase {
     private LoggyCANcoder armCoder;
     private double shooterExtensionSetpoint = 0;
 
+    private double armPosition;
+
     public boolean ArmIsBroken = false;
     
     private MotionMagicTorqueCurrentFOC motionMagicDutyCycle;
@@ -47,7 +49,8 @@ public class Arm extends SubsystemBase {
      
     @Override
     public void periodic() {
-
+        updateArmPosition();
+        
         simShooterExtension.setAngle(shooterExtensionSetpoint - 90);
 
         if (Robot.isReal()) {
@@ -249,10 +252,20 @@ public class Arm extends SubsystemBase {
      * @return position in degrees
      */
     public double getArmPosition() {
+        // if (Robot.isSimulation()) {
+        //     return simShooterExtension.getAngle() - Constants.ArmConstants.shooterOffset + 90;
+        // }
+        // return Units.rotationsToDegrees(armMotor.getPosition().getValueAsDouble());
+
+        return armPosition;
+    }
+
+    private void updateArmPosition() {
         if (Robot.isSimulation()) {
-            return simShooterExtension.getAngle() - Constants.ArmConstants.shooterOffset + 90;
+            armPosition = simShooterExtension.getAngle() - Constants.ArmConstants.shooterOffset + 90;
+        } else {
+            armPosition = Units.rotationsToDegrees(armMotor.getPosition().getValueAsDouble());
         }
-        return Units.rotationsToDegrees(armMotor.getPosition().getValueAsDouble());
     }
 
     public double getShooterExtensionPosition() {

@@ -21,7 +21,6 @@ public class Intake extends SubsystemBase {
     
     @Override
     public void periodic() {
-        SmartDashboard.putString("Intake/Crashbar Status", solenoid.get() ? "Extended" : "Retracted");
         SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
         SmartDashboard.putBoolean("Intake/Holding", holding);
 
@@ -66,6 +65,7 @@ public class Intake extends SubsystemBase {
 
     public void setExtend(boolean deploy) {
         solenoid.set(deploy);
+        SmartDashboard.putString("Intake/Crashbar Status", deploy ? "Extended" : "Retracted");
     }
 
     public void setIntake(double speed) {

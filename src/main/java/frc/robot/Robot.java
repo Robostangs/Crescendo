@@ -171,7 +171,7 @@ public class Robot extends TimedRobot {
 		NamedCommands.registerCommand("shoot", new InstantCommand(() -> Robot.autoManager.shoot = true)
 				.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)).raceWith(new Align(false)));
 		
-		SmartDashboard.putData("PDH", pdh);
+		//SmartDashboard.putData("PDH", pdh);
 
 	}
 

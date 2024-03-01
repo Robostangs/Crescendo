@@ -95,7 +95,7 @@ public class AutoManager extends Command {
         intakeAlwaysDeployed = Robot.intakeAlwaysOut.getSelected();
         shootTimer = null;
 
-        if (Robot.startingPose.getSelected().equals("left")) {
+        if (Robot.startingPose.getSelected().equals("amp")) {
             startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
         }
 
@@ -103,13 +103,17 @@ public class AutoManager extends Command {
             startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
         }
 
-        else if (Robot.startingPose.getSelected().equals("right")) {
+        else if (Robot.startingPose.getSelected().equals("stage")) {
             startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
         }
 
         else {
+            // just dont seed the pose, insted set it to be the robot pose
+            System.out.println("Starting Position Undefined");
+            startPose = Drivetrain.getInstance().getPose();
+
             // default to center start point
-            startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+            // startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
         }
 
         // TODO: the flipFieldPose function does not flip the rotation for some reason,
@@ -191,9 +195,9 @@ public class AutoManager extends Command {
                 }
             }
 
-            // this says that if the shooter is ready to shoot and there is no piece in the
+            // this says that if the shooter shooting and there is no piece in the
             // shooter, then we can go ahead and end the shoot command saying it worked
-            else if (mShooter.readyToShootAdvanced() || status.equals("Shooter Timed Out")) {
+            else if (status.equals("Shooting")|| status.equals("Shooter Timed Out")) {
                 shoot = false;
                 shootTimer = null;
                 feedTimer = null;
@@ -300,9 +304,11 @@ public class AutoManager extends Command {
                 hasBeenReversed = false;
                 feedTimer = null;
 
-                mIntake.setExtend(true);
-                mIntake.setIntake(1);
-
+                if (!intakeAlwaysDeployed) {
+                    mIntake.setExtend(true);
+                    mIntake.setIntake(1);
+                }
+                
                 // this code must pull the piece off the ground and into the shooter
                 mIntake.setBelt(beltIntakeAndHandoffSpeed);
                 mShooter.shoot(feederHandoffSpeed, Constants.ShooterConstants.shooterReverseSpeed);
@@ -325,6 +331,7 @@ public class AutoManager extends Command {
     }
 
     public void postAutoStatus(String status) {
+        System.out.println("Auto Status" + status);
         this.status = status;
 
         if (status.contains("time")) {

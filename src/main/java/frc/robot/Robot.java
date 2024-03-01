@@ -59,7 +59,6 @@ public class Robot extends TimedRobot {
 	public Command pathPlannerCommand;
 	public static AutoManager autoManager;
 
-	@SuppressWarnings("resource")
 	@Override
 	public void robotInit() {
 		autoTab = Shuffleboard.getTab("Auto");

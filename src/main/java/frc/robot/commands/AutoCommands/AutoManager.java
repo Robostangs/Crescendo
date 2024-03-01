@@ -45,7 +45,7 @@ public class AutoManager extends Command {
      * the timeout that occurs when the shooter is taking too long to reach the
      * desired swerve rotation, shooter RPM, and arm position
      */
-    private static final double shootTimeout = 5;
+    private static final double shootTimeout = 3;
 
     /**
      * the amount of time that should be used after the shooterHandoffTimeout to
@@ -135,7 +135,8 @@ public class AutoManager extends Command {
         if (shoot) {
 
             // if there is a piece in the shooter
-            if (mIntake.getShooterSensor()) {
+            if (mIntake.getShooterSensor() || Robot.isSimulation()) {
+                mIntake.setHolding(true);
                 intakeTimer = null;
 
                 // reset the timer if it has not been reset
@@ -197,7 +198,7 @@ public class AutoManager extends Command {
 
             // this says that if the shooter shooting and there is no piece in the
             // shooter, then we can go ahead and end the shoot command saying it worked
-            else if (status.equals("Shooting")|| status.equals("Shooter Timed Out")) {
+            else if (status.equalsIgnoreCase("Shooting")|| status.equalsIgnoreCase("Shooter Timed Out")) {
                 shoot = false;
                 shootTimer = null;
                 feedTimer = null;
@@ -235,7 +236,8 @@ public class AutoManager extends Command {
                     // we need to remove the note from the intake in this event
                     if (intakeTimer.get() > shooterHandoffTimeout + spitTime) {
                         shoot = false;
-                        // intakeTimer = null;
+                        mIntake.setHolding(false);
+                        intakeTimer = null;
                         postAutoStatus("Shooter Handoff Timed Out");
                     }
 
@@ -255,9 +257,10 @@ public class AutoManager extends Command {
 
         // this is for when we are running standard operation (intake)
         else {
-
+            mIntake.setHolding(true);
+            intakeTimer = null;
             if (mIntake.getShooterSensor()) {
-                intakeTimer = null;
+                // intakeTimer = null;
 
                 // if we dont want to always have the intake deployed, then we can retract it rn
                 // cuz there is a piece in the shooter
@@ -297,7 +300,9 @@ public class AutoManager extends Command {
 
             // if we are trying to intake and there is no piece in our shooter
             else {
-                intakeTimer = null;
+                // intakeTimer = null;
+                shootTimer = null;
+
                 // always be going to intake setpoint when trying to intake
                 mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
@@ -312,7 +317,7 @@ public class AutoManager extends Command {
                 // this code must pull the piece off the ground and into the shooter
                 mIntake.setBelt(beltIntakeAndHandoffSpeed);
                 mShooter.shoot(feederHandoffSpeed, Constants.ShooterConstants.shooterReverseSpeed);
-                // postAutoStatus("Intaking");
+                postAutoStatus("Intaking");
             }
 
             shootTimer = null;
@@ -331,7 +336,7 @@ public class AutoManager extends Command {
     }
 
     public void postAutoStatus(String status) {
-        System.out.println("Auto Status" + status);
+        System.out.println("Auto Status: " + status);
         this.status = status;
 
         if (status.contains("time")) {

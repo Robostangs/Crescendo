@@ -150,7 +150,7 @@ public class Shooter extends SubsystemBase {
         // * Constants.MotorConstants.falconShooterLoadRPM;
 
         // if (threshold > Constants.MotorConstants.falconShooterLoadRPM) {
-        threshold = Constants.MotorConstants.falconShooterLoadRPM;
+        threshold = Constants.MotorConstants.falconShooterThresholdRPM;
         // }
 
         SmartDashboard.putNumber("Shooter/Ready To Shoot threshold", threshold);

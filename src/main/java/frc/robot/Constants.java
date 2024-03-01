@@ -249,18 +249,10 @@ public final class Constants {
 		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.01);
 		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4);
 
-		public static final double kMaxSpeedMetersPerSecond = 5;
+		public static final double kMaxSpeedMetersPerSecond = 4;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
-		public static final double kMaxAngularSpeedMetersPerSecond = 2 * Math.PI;
+		public static final double kMaxAngularSpeedMetersPerSecond = 2.5 * Math.PI;
 		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond;
-
-		// public static final double kMaxSpeedMetersPerSecond =
-		// SwerveConstants.kMaxSpeedMetersPerSecond;
-		// public static final double kMaxAccelerationMetersPerSecondSquared = 4;
-		// public static final double kMaxAngularSpeedMetersPerSecond =
-		// SwerveConstants.kMaxAngularSpeedMetersPerSecond;
-		// public static final double kMaxAngularAccelerationMetersPerSecondSquared = 2
-		// * kMaxAngularSpeedMetersPerSecond;
 
 		public static final double kMaxAngularSpeedRadiansPerSecond = 360d;
 		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = 540d;
@@ -297,7 +289,8 @@ public final class Constants {
 
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
-		public static final double falconShooterLoadRPM = 5900;
+		public static final double falconShooterLoadRPM = 6200;
+		public static final double falconShooterThresholdRPM = falconFreeSpeedRPM * 0.95;
 
 		/* Kraken x60 Info */
 		public static class Kraken {

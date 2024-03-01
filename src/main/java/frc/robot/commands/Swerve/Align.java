@@ -155,6 +155,7 @@ public class Align extends Command {
         if (note) {
             return mIntake.getShooterSensor();
         } else {
+            // return false;
             return !mIntake.getHolding();
         }
     }

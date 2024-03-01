@@ -9,13 +9,13 @@
     "Starting Notes"
   ],
   "autoFolders": [
-    "Center",
-    "Left",
     "All Close Notes",
-    "Right"
+    "Center",
+    "Amp",
+    "Stage"
   ],
   "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 4.0,
+  "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.73

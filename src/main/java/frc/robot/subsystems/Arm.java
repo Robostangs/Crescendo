@@ -353,7 +353,8 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        double angleToSpeaker = Constants.ArmConstants.a * Math.pow(Units.metersToFeet(distToSpeakerMeters), Constants.ArmConstants.b) + Constants.ArmConstants.c;
+        // double angleToSpeaker = Constants.ArmConstants.a * Math.pow(Units.metersToFeet(distToSpeakerMeters), Constants.ArmConstants.b) + Constants.ArmConstants.c;
+        double angleToSpeaker = -1170.66 * Math.pow(distToSpeakerMeters * 39.37, -0.751072) + 1.98502;
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)", distToSpeakerMeters);
         SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)", Units.metersToInches(distToSpeakerMeters));
@@ -408,7 +409,7 @@ public class Arm extends SubsystemBase {
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
         armMotorConfig.Slot0.kP = 500;
-        armMotorConfig.Slot0.kI = 0.05;
+        armMotorConfig.Slot0.kI = 0.03;
 
         armMotorConfig.Slot1.kP = 0;
         armMotorConfig.Slot1.kI = 0;

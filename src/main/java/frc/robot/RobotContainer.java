@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -37,13 +38,15 @@ public class RobotContainer {
 	private final Intake mIntake = Intake.getInstance();
 	private final Climber mClimber = Climber.getInstance();
 
+	private BeltFeed beltFeed = new BeltFeed();
+
 	private final Telemetry logger;
 	public Field2d field;
 
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
-		mIntake.setDefaultCommand(new BeltFeed());
+		mIntake.setDefaultCommand(beltFeed);
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -80,20 +83,30 @@ public class RobotContainer {
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		// This is basically saying deploy and intake without deploying
-		xDrive.rightBumper().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
+		xDrive.rightBumper().onTrue(new InstantCommand(() -> beltFeed.deployIntake = !beltFeed.deployIntake));
 		xDrive.leftBumper().toggleOnTrue(new DeployAndIntake());
 
-		xDrive.leftStick().onTrue(mIntake.runOnce(() -> mIntake.setHolding(!mIntake.getHolding())));
-		xDrive.rightStick().onTrue(mIntake.runOnce(mIntake::extendIntakeToggle));
+		xDrive.leftStick().onTrue(mIntake.runOnce(() -> {
+			mIntake.setHolding(!mIntake.getHolding());
+			beltFeed.deployIntake = false;
+		}));
+
+		xDrive.rightStick().onTrue(new InstantCommand(() -> {
+			beltFeed.deployIntake = true;
+			mIntake.setHolding(!mIntake.getHolding());
+		}));
 	}
 
 	private void configureManipBinds() {
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
-		// new Trigger(() -> xManip.getLeftTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
-		// 		.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
-		// 		.whileTrue(new FineAdjust(() -> xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis()));
+		// new Trigger(() -> xManip.getLeftTriggerAxis() >
+		// Constants.OperatorConstants.kManipDeadzone)
+		// .or(() -> xManip.getRightTriggerAxis() >
+		// Constants.OperatorConstants.kManipDeadzone)
+		// .whileTrue(new FineAdjust(() -> xManip.getRightTriggerAxis() -
+		// xManip.getLeftTriggerAxis()));
 
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
@@ -125,10 +138,12 @@ public class RobotContainer {
 				.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(mClimber.run(() -> mClimber.moveSelected(
 						xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis())).finallyDo(mClimber::stop));
-						
+
 		xManip.y().onTrue(mClimber.runOnce(mClimber::toggleSelected));
-		// new Trigger(() -> xManip.getHID().getRightStickButton()).whileTrue(new RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
-		// new Trigger(() -> xManip.getHID().getLeftStickButton()).whileTrue(new RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
+		// new Trigger(() -> xManip.getHID().getRightStickButton()).whileTrue(new
+		// RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
+		// new Trigger(() -> xManip.getHID().getLeftStickButton()).whileTrue(new
+		// RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
 
 	}
 

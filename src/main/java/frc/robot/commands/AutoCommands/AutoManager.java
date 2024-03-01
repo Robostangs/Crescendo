@@ -39,7 +39,7 @@ public class AutoManager extends Command {
      * the timeout that occurs when the time between activating shoot and the
      * shooter sensor being triggered is too long
      */
-    private static final double shooterHandoffTimeout = 5;
+    private static final double shooterHandoffTimeout = 2;
 
     /**
      * the timeout that occurs when the shooter is taking too long to reach the

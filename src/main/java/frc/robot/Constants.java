@@ -395,7 +395,7 @@ public final class Constants {
 		public static final double feederChargeUpTime = 0.13;
 		public static final double feederReverseFeed = -0.02;
 		
-		public static final double shooterReverseSpeed = -0.05;
+		public static final double shooterReverseSpeed = -0.1;
 		// public static final double feederChargeUpTime = 0.24;
 		// public static final double feederChargeUpTime = 0.23;
 	}
@@ -413,7 +413,7 @@ public final class Constants {
 		public static final double kDeployTimeSeconds = 0.25;
 		public static final double beltFeedForward = 0.05;
 
-		public static final double beltIntakeSpeed = 0.6;
+		public static final double beltIntakeSpeed = 0.8;
 
 		public static final boolean intakeMotorInverted = false;
 		public static final boolean beltMotorInverted = true;

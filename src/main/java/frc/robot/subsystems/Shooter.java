@@ -178,6 +178,7 @@ public class Shooter extends SubsystemBase {
      */
     public boolean readyToShootAdvanced() {
         return Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint(), 3)
+                && Math.abs(Arm.getInstance().getVelocity()) < 0.25
                 // && readyToShoot();
                 && Drivetrain.getInstance().isInRangeOfTarget() && readyToShoot();
     }

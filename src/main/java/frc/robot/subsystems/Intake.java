@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Intake/Holding", holding);
 
         if (getShooterSensor() && DriverStation.isEnabled()) {
-            // setHolding(true);
+            setHolding(true);
 
             // LEDs will blink when the arm is at the right setpoint to score
             if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
@@ -47,20 +47,6 @@ public class Intake extends SubsystemBase {
             LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
             LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
         }
-
-        // if (getShooterSensor()) {
-        //     setExtend = false;
-        // }
-
-        // if (setExtend) {
-        //     setExtend(true);
-        //     setIntake(1);
-        // }
-
-        // else {
-        //     setExtend(false);
-        //     setIntake(0);
-        // }
     }
     
     private Intake() {

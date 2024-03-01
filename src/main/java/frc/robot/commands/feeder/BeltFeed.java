@@ -15,6 +15,7 @@ public class BeltFeed extends Command {
     
     private double FeedForwardTime = 0.5;
     private double chargeBufferTime = 0.25;
+    public boolean deployIntake = false;
 
     /**
      * Default command for the belt and the shooter
@@ -33,13 +34,22 @@ public class BeltFeed extends Command {
     public void execute() {
         // if there is nothing in the shooter but the robot has something in the intake
         if (!mIntake.getShooterSensor() && mIntake.getHolding()) {
+            mIntake.setExtend(deployIntake);
+            if (deployIntake) {
+                mIntake.setIntake(1);
+            } 
+            
+            else {
+                mIntake.setIntake(0);
+            }
             mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
             mShooter.setShoot(Constants.ShooterConstants.feederIntakeValue, Constants.ShooterConstants.shooterReverseSpeed);
         }
 
         // if there is a piece in the shooter
         else if (mIntake.getShooterSensor()) {
-            mIntake.setIntakeExtend(false);
+            mIntake.setExtend(false);
+            mIntake.setIntake(0);
             mIntake.setBelt(0);
 
             if (timer == null) {
@@ -86,6 +96,8 @@ public class BeltFeed extends Command {
             SmartDashboard.putString("Intake/Status", "Waiting For Note");
             SmartDashboard.putString("Arm/Status", "Waiting For Note");
 
+            mIntake.setExtend(false);
+            mIntake.setIntake(0);
             mShooter.shoot(0, 0);
             timer = null;
             mIntake.setBelt(0);

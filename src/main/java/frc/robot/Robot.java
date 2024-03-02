@@ -170,7 +170,7 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		NamedCommands.registerCommand("shoot", new InstantCommand(() -> Robot.autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false).raceWith(new Align(false))));
+				.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)));
 		
 		//SmartDashboard.putData("PDH", pdh);
 

@@ -12,16 +12,16 @@
         "y": 6.016511947958288
       },
       "isLocked": false,
-      "linkedName": "Amp Start Position"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.0,
-        "y": 5.0
+        "x": 15.172527232353213,
+        "y": 5.492445188825977
       },
       "prevControl": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 14.172527232353213,
+        "y": 6.492445188825977
       },
       "nextControl": null,
       "isLocked": false,

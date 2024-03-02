@@ -77,8 +77,7 @@ public class Align extends Command {
                     return Rotation2d
                             .fromRadians(Math.atan2(
                                     mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()))
-                            .minus(Rotation2d.fromDegrees(180));
+                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
                 }
 
                 else {

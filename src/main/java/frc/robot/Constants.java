@@ -56,7 +56,7 @@ public final class Constants {
 		// 1.9 };
 		/** The height (in meters) of the speaker */
 		public static final double SpeakerHeight = 1.9;
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.13, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.1, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
 		/** Highest Y value of the speaker */

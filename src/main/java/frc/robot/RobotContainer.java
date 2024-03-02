@@ -78,10 +78,10 @@ public class RobotContainer {
 
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain
-				.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)))));
+				.runOnce(() -> drivetrain.seedFieldRelative(!Robot.isRed() ? new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)) : new Pose2d(Constants.fieldLength - 1.25, 5.55, Rotation2d.fromDegrees(180)))));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
-		xDrive.leftStick().onTrue(mIntake.runOnce(() -> {
+		xDrive.leftStick().onTrue(new InstantCommand(() -> {
 			mIntake.setHolding(!mIntake.getHolding());
 			beltFeed.deployIntake = false;
 		}));
@@ -91,7 +91,7 @@ public class RobotContainer {
 			mIntake.setHolding(!mIntake.getHolding());
 		}));
 
-		xDrive.leftBumper().onTrue(mIntake.runOnce(() -> {
+		xDrive.leftBumper().onTrue(new InstantCommand(() -> {
 			mIntake.setHolding(!mIntake.getHolding());
 			beltFeed.deployIntake = false;
 		}));

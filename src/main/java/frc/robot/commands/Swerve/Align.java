@@ -67,25 +67,26 @@ public class Align extends Command {
             this.addRequirements(mIntake);
         } else {
             getTargetRotation = () -> {
-                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
-                //     return mDrivetrain.getPose().getRotation()
-                //             .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-                // }
+                if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
+                    return mDrivetrain.getPose().getRotation()
+                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                }
 
                 // else {
-                    if (Robot.isRed()) {
-                        return Rotation2d
-                                .fromRadians(Math.atan2(
-                                        mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                        mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
-                    }
+                if (Robot.isRed()) {
+                    return Rotation2d
+                            .fromRadians(Math.atan2(
+                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()))
+                            .minus(Rotation2d.fromDegrees(180));
+                }
 
-                    else {
-                        return Rotation2d
-                                .fromRadians(Math.atan2(
-                                        mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                                        mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
-                    }
+                else {
+                    return Rotation2d
+                            .fromRadians(Math.atan2(
+                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
+                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                }
                 // }
             };
         }

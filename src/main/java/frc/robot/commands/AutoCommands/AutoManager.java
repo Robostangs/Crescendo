@@ -111,13 +111,8 @@ public class AutoManager extends Command {
             // just dont seed the pose, insted set it to be the robot pose
             System.out.println("Starting Position Undefined");
             startPose = Drivetrain.getInstance().getPose();
-
-            // default to center start point
-            // startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
         }
 
-        // TODO: the flipFieldPose function does not flip the rotation for some reason,
-        // its probably actually the seedFieldRelative function ngl
         if (Robot.isRed()) {
             startPose = GeometryUtil.flipFieldPose(startPose);
         }
@@ -135,7 +130,7 @@ public class AutoManager extends Command {
         if (shoot) {
 
             // if there is a piece in the shooter
-            if (mIntake.getShooterSensor() || Robot.isSimulation()) {
+            if (mIntake.getShooterSensor()) {
                 mIntake.setHolding(true);
                 intakeTimer = null;
 

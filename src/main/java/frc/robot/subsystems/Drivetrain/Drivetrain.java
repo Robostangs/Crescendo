@@ -201,6 +201,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     // ankur is mine hehehehhehehehehehehhehe
     public Pose2d getPose() {
+        Pose2d pose = getState().Pose;
+
         return getState().Pose;
     }
 

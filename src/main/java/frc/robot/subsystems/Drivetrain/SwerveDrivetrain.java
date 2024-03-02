@@ -444,7 +444,6 @@ public class SwerveDrivetrain {
 
     public void seedFieldRelative(Pose2d location) {
         try {
-            System.out.println(location);
             m_stateLock.writeLock().lock();
 
             // for (SwerveModulePosition pos : m_modulePositions) {

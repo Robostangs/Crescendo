@@ -46,7 +46,7 @@ public final class Constants {
 		// 0.1, Units.degreesToRadians(10));
 
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(01, 01, Units.degreesToRadians(360));
+		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.75, 0.75, Units.degreesToRadians(250));
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 
 		/** This needs to be tuned for the shooter */
@@ -274,9 +274,9 @@ public final class Constants {
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
 
 				// these are called "edge positions" in path planner because they are on the edge of the wing line
-				public static final Pose2d CenterStartPosition = new Pose2d(1.37, 5.55, Rotation2d.fromDegrees(0));
+				public static final Pose2d CenterStartPosition = new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(0));
 				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));
-				public static final Pose2d StageStartPosition = new Pose2d(0.74, 4.40, Rotation2d.fromDegrees(-60));
+				public static final Pose2d StageStartPosition = new Pose2d(0.74, 4.41, Rotation2d.fromDegrees(-60));
 
 				public static class Notes {
 					public static final Pose2d leftStage = new Pose2d(2.9, 7.0, Rotation2d.fromDegrees(0));

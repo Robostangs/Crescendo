@@ -444,14 +444,17 @@ public class SwerveDrivetrain {
 
     public void seedFieldRelative(Pose2d location) {
         try {
+            System.out.println(location);
             m_stateLock.writeLock().lock();
 
-            for (SwerveModulePosition pos : m_modulePositions) {
-                pos.distanceMeters = 0.0;
-                pos.angle = location.getRotation();
-            }
+            // for (SwerveModulePosition pos : m_modulePositions) {
+            //     pos.distanceMeters = 0.0;
+            //     pos.angle = location.getRotation();
+            // }
 
-            m_odometry.resetPosition(location.getRotation(), m_modulePositions, location);
+            m_fieldRelativeOffset = location.getRotation();
+
+            m_odometry.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
             /* We need to update our cached pose immediately so that race conditions don't happen */
             m_cachedState.Pose = location;
         } finally {
@@ -459,6 +462,7 @@ public class SwerveDrivetrain {
         }
     }
 
+    
     /**
      * Check if the odometry is currently valid
      *

@@ -212,6 +212,7 @@ public class AimAndShoot extends Command {
         mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
         if (interrupted) {
+            
             SmartDashboard.putString("Shooter/Status", "Aim And Shoot Interrupted");
         }
     }

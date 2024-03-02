@@ -67,12 +67,12 @@ public class Align extends Command {
             this.addRequirements(mIntake);
         } else {
             getTargetRotation = () -> {
-                if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
-                    return mDrivetrain.getPose().getRotation()
-                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-                }
+                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
+                //     return mDrivetrain.getPose().getRotation()
+                //             .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                // }
 
-                else {
+                // else {
                     if (Robot.isRed()) {
                         return Rotation2d
                                 .fromRadians(Math.atan2(
@@ -86,7 +86,7 @@ public class Align extends Command {
                                         mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
                                         mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
                     }
-                }
+                // }
             };
         }
     }

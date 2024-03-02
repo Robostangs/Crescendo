@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.74,
-        "y": 6.7
+        "x": 0.7218158264581296,
+        "y": 4.4057046969192335
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9761327717099881,
-        "y": 7.260037135815013
+        "x": 0.9579485981681177,
+        "y": 4.965741832734246
       },
       "isLocked": false,
       "linkedName": "Amp Start Position"

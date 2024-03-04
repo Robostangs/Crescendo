@@ -271,7 +271,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
      * @return true if the robot is within 15 degrees, false otherwise
      */
     public boolean isInRangeOfTarget() {
-        // TODO: tune this, all info is now in smart dashboard, write a function to calculate the allowable range of the drivetrain given the pose.
         return isInRangeOfTarget(10);
     }
 

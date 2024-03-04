@@ -246,6 +246,7 @@ public final class Constants {
 		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
 
 		/* IRL PID */
+		// TODO: tune these
 		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.01);
 		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4);
 

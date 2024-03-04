@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.LoggyThings.LoggyTalonFX;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -61,6 +62,10 @@ public class Intake extends SubsystemBase {
 
         mCompressor.enableDigital();
         holding = false;
+
+        if (Robot.isSimulation()) {
+            SmartDashboard.putBoolean("Shooter/Simulated Shooter Sensor", false);
+        }
     }
 
     public void setExtend(boolean deploy) {
@@ -86,6 +91,10 @@ public class Intake extends SubsystemBase {
      * @return true = shooter occupied, false = shooter is vacant
      */
     public boolean getShooterSensor() {
+        if (Robot.isSimulation()) {
+            return SmartDashboard.getBoolean("Shooter/Simulated Shooter Sensor", false);
+        }
+        
         return !shooterSensor.get();
     }
 

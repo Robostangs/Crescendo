@@ -31,7 +31,8 @@ public class AutoManager extends Command {
     private static final double beltIntakeAndHandoffSpeed = 1;
 
     /**
-     * this variable will be used to pull the note from the belt into the shooter so that we can position the note
+     * this variable will be used to pull the note from the belt into the shooter so
+     * that we can position the note
      */
     private static final double feederHandoffSpeed = 0.7;
 
@@ -63,6 +64,8 @@ public class AutoManager extends Command {
      */
     public boolean shoot = false, hasBeenReversed = true;
 
+    public boolean shotsFired = false;
+
     /**
      * If we are going under stage this should defo be off, it should be on
      * regardless tho, maybe this needs to be a SendableChooser
@@ -87,37 +90,57 @@ public class AutoManager extends Command {
 
     @Override
     public void initialize() {
-        Pose2d startPose;
-
         shoot = false;
         hasBeenReversed = true;
+        shotsFired = false;
 
         intakeAlwaysDeployed = Robot.intakeAlwaysOut.getSelected();
         shootTimer = null;
 
-        if (Robot.startingPose.getSelected().equals("amp")) {
-            startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
+        Pose2d startPose;
+
+        switch (Robot.startingPose.getSelected()) {
+            case "amp":
+                startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
+                break;
+            case "center":
+                startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+                break;
+            case "stage":
+                startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
+                break;
+            default:
+                // just dont seed the pose, insted set it to be the robot pose
+                System.out.println("Starting Position Undefined");
+                startPose = Drivetrain.getInstance().getPose();
+
+                // default to center start point
+                // startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+
+                break;
         }
 
-        else if (Robot.startingPose.getSelected().equals("center")) {
-            startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
-        }
+        // if (Robot.startingPose.getSelected().equals("amp")) {
+        //     startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
+        // }
 
-        else if (Robot.startingPose.getSelected().equals("stage")) {
-            startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
-        }
+        // else if (Robot.startingPose.getSelected().equals("center")) {
+        //     startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+        // }
 
-        else {
-            // just dont seed the pose, insted set it to be the robot pose
-            System.out.println("Starting Position Undefined");
-            startPose = Drivetrain.getInstance().getPose();
+        // else if (Robot.startingPose.getSelected().equals("stage")) {
+        //     startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
+        // }
 
-            // default to center start point
-            // startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
-        }
+        // else {
+        //     // just dont seed the pose, insted set it to be the robot pose
+        //     System.out.println("Starting Position Undefined");
+        //     startPose = Drivetrain.getInstance().getPose();
 
-        // TODO: the flipFieldPose function does not flip the rotation for some reason,
-        // its probably actually the seedFieldRelative function ngl
+        //     // default to center start point
+        //     // startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+        // }
+
         if (Robot.isRed()) {
             startPose = GeometryUtil.flipFieldPose(startPose);
         }
@@ -135,8 +158,10 @@ public class AutoManager extends Command {
         if (shoot) {
 
             // if there is a piece in the shooter
-            if (mIntake.getShooterSensor() || Robot.isSimulation()) {
-                mIntake.setHolding(true);
+            // if (mIntake.getShooterSensor() || Robot.isSimulation()) {
+            if (mIntake.getShooterSensor()) {
+
+                // mIntake.setHolding(true);
                 intakeTimer = null;
 
                 // reset the timer if it has not been reset
@@ -148,6 +173,8 @@ public class AutoManager extends Command {
                 // if the piece has not been reversed, and the timer indicates that it still has
                 // not been reversed
                 if (feedTimer.get() < Constants.ShooterConstants.feederChargeUpTime && !hasBeenReversed) {
+                    shootTimer = null;
+                    shotsFired = false;
                     mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
                     postAutoStatus("Positioning Note to Shoot");
                 }
@@ -170,26 +197,30 @@ public class AutoManager extends Command {
                     // wait until the shooter is ready to shoot and the arm is in range of the
                     // setpoint, also wait until the timeout is done to ensure that we at least spit
                     // the note out
-                    if ((mShooter.readyToShootAdvanced())
-                            || shootTimer.get() > shootTimeout) {
+                    if (mShooter.readyToShootAdvanced() || shootTimer.get() > shootTimeout) {
+
+                        shootTimer.stop();
 
                         // if the timeout has been triggered
                         if (shootTimer.get() > shootTimeout) {
                             // make sure that we at least shoot the piece out so that we dont get penalties
                             postAutoStatus("Shooter Timed Out");
                             feederSpeed = 1;
+                            shotsFired = true;
                         }
 
                         // this means that the shooter is ready to shoot
                         else {
                             feederSpeed = Constants.ShooterConstants.feederShootValue;
                             postAutoStatus("Shooting");
+                            shotsFired = true;
                         }
                     }
 
                     else {
                         postAutoStatus("Preparing Shooter");
                         feederSpeed = 0;
+                        shotsFired = false;
                     }
 
                     mShooter.shoot(feederSpeed, 1);
@@ -198,9 +229,8 @@ public class AutoManager extends Command {
 
             // this says that if the shooter shooting and there is no piece in the
             // shooter, then we can go ahead and end the shoot command saying it worked
-            else if (status.equalsIgnoreCase("Shooting")|| status.equalsIgnoreCase("Shooter Timed Out")) {
+            else if (shotsFired || mShooter.readyToShoot()) {
                 shoot = false;
-                // shootTimer = null;
                 feedTimer = null;
 
                 if (shootTimer.get() > shootTimeout) {
@@ -211,6 +241,9 @@ public class AutoManager extends Command {
                     postAutoStatus("Successfully Shot");
                 }
             }
+
+            // if there is not a piece in the shooter and there was never anything shot out
+            // of it.
 
             // set the shooter and belt to pass the piece into shooter, once in shooter the
             // above if statement will be triggered in the next loop will be called
@@ -257,6 +290,7 @@ public class AutoManager extends Command {
 
         // this is for when we are running standard operation (intake)
         else {
+            shotsFired = false;
             mIntake.setHolding(true);
             intakeTimer = null;
             if (mIntake.getShooterSensor()) {
@@ -313,7 +347,7 @@ public class AutoManager extends Command {
                     mIntake.setExtend(true);
                     mIntake.setIntake(1);
                 }
-                
+
                 // this code must pull the piece off the ground and into the shooter
                 mIntake.setBelt(beltIntakeAndHandoffSpeed);
                 mShooter.shoot(feederHandoffSpeed, Constants.ShooterConstants.shooterReverseSpeed);

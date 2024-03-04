@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -89,9 +88,9 @@ public class Robot extends TimedRobot {
 					.onCommandFinish((action) -> System.out.println(action.getName() + " Command Finished"));
 		}
 
-		startingPose.setDefaultOption("Center", "center"); //center
-		startingPose.addOption("Amp Side", "amp"); //left
-		startingPose.addOption("Stage Side", "stage"); //right
+		startingPose.setDefaultOption("Center", "center"); // center
+		startingPose.addOption("Amp Side", "amp"); // left
+		startingPose.addOption("Stage Side", "stage"); // right
 
 		// this could be literally whatever it doesnt matter cuz the path is null and
 		// means nothing
@@ -100,11 +99,9 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("1 Piece", " 1 piece");
 		autoChooser.addOption("2 Piece", " 2 piece");
 		autoChooser.addOption("3 Piece", " 3 piece");
-		
-		// TODO: only center things rn gonna convert later
 		autoChooser.addOption("4 Piece", " 4 piece");
 		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
-		autoChooser.addOption("Far 1 Piece (Only Stage)", " far 1 piece");
+		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("All Close Notes", " all close notes");
 		autoChooser.addOption("All Close Notes Fast", " all close notes shoot in place");
 		autoChooser.addOption("Center Line Sprint", " centerline sprint");
@@ -122,12 +119,6 @@ public class Robot extends TimedRobot {
 		autoTab.add("Shoot Selector", autoShoot).withSize(2, 1).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 		autoTab.add("Field", autoField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
-		// autoTab.addNumber("Inacuracy",
-		// 		() -> NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("inaccuracy").getDouble(0.0))
-		// 		.withSize(2, 1).withPosition(2, 0);
-		// autoTab.addNumber("Auto Timer",
-		// 		() -> timer.get())
-		// 		.withSize(1, 1).withPosition(3, 0);
 		autoTab.add("Intake Always Out", intakeAlwaysOut).withSize(2, 1).withPosition(0, 3)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 		autoTab.addNumber("Auto Countdown", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 2)
@@ -138,8 +129,6 @@ public class Robot extends TimedRobot {
 
 		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
 				.getEntry("Path Delay");
-
-		autoField.setRobotPose(Drivetrain.getInstance().getPose());
 
 		Shuffleboard.selectTab(autoTab.getTitle());
 
@@ -152,8 +141,9 @@ public class Robot extends TimedRobot {
 				.withWidget(BuiltInWidgets.kBooleanBox);
 		teleopTab.addBoolean("Ready To Shoot", () -> Shooter.getInstance().readyToShootAdvanced()).withSize(2, 2)
 				.withPosition(0, 0);
-		
-		teleopTab.addString("Selected Climber", () -> Climber.getInstance().getLeftSelected() ? "Left" : "Right").withSize(2, 2)
+
+		teleopTab.addString("Selected Climber", () -> Climber.getInstance().getLeftSelected() ? "Left" : "Right")
+				.withSize(2, 2)
 				.withPosition(2, 2).withWidget(BuiltInWidgets.kTextView);
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
@@ -170,9 +160,9 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		NamedCommands.registerCommand("shoot", new InstantCommand(() -> Robot.autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)));
-		
-		//SmartDashboard.putData("PDH", pdh);
+				.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false).raceWith(new Align(false))));
+
+		// SmartDashboard.putData("PDH", pdh);
 
 	}
 
@@ -237,20 +227,17 @@ public class Robot extends TimedRobot {
 		try {
 			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			if (autoChooser.getSelected().equals("back-up")) {
 				pathPlannerCommand = Drivetrain.getInstance()
-						.applyRequest(() -> new SwerveRequest.FieldCentric().withVelocityX(0.5));
+				.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.5));
 			}
-
+			
 			else {
 				pathPlannerCommand = new PrintCommand("Null Command");
+				System.out.println("Invalid Auto");
 			}
 		}
-
-		autoManager.initialize();
-
-		timer.restart();
 
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(() -> Robot.autoManager.shoot = autoShoot.getSelected())
@@ -258,7 +245,9 @@ public class Robot extends TimedRobot {
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				pathPlannerCommand);
 
+		autoManager.initialize();
 		autonCommand.schedule();
+		timer.restart();
 	}
 
 	@Override

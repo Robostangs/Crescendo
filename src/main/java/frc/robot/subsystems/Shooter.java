@@ -123,6 +123,7 @@ public class Shooter extends SubsystemBase {
 
     public void setShooterBrake(boolean brake) {
         NeutralModeValue mode = NeutralModeValue.Coast;
+        
         if (brake) {
             mode = NeutralModeValue.Brake;
         }

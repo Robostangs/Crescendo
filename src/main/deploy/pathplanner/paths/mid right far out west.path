@@ -3,31 +3,31 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.364593006245786,
-        "y": 4.892453456150855
+        "x": 1.5745077047504663,
+        "y": 4.230483610401793
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.657967183462639,
-        "y": 2.7221683764853806
+        "x": 1.3715427414176198,
+        "y": 1.7488159021552296
       },
       "isLocked": false,
-      "linkedName": "Right Shoot Position"
+      "linkedName": "Close Right Shoot Position"
     },
     {
       "anchor": {
-        "x": 4.210679059484129,
-        "y": 2.3094344775119278
+        "x": 2.549900430980184,
+        "y": 1.9755484502891465
       },
       "prevControl": {
-        "x": 3.9442691204997087,
-        "y": 2.529722433746234
+        "x": 1.9808949741974553,
+        "y": 2.093310113149489
       },
       "nextControl": {
-        "x": 6.132090830417526,
-        "y": 0.7206654033663478
+        "x": 3.136389758239937,
+        "y": 1.8541683165757283
       },
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": null
     },
     {
@@ -37,7 +37,7 @@
       },
       "prevControl": {
         "x": 7.949166455683477,
-        "y": 2.3766686253566367
+        "y": 0.9966686253566368
       },
       "nextControl": {
         "x": 7.949166455683477,
@@ -72,13 +72,13 @@
         "y": 3.9293904234012027
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "Right Shoot Position"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 0.0,
       "rotateFast": false
     }

@@ -3,67 +3,55 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0783068279099526,
+        "x": 2.0650533667787854,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0483298049405905,
-        "y": 3.919547390791066
+        "x": 1.830012109135689,
+        "y": 4.784594540917676
       },
       "isLocked": false,
-      "linkedName": "Center Shoot Position"
+      "linkedName": "Close Center Shoot Position"
     },
     {
       "anchor": {
-        "x": 2.3944098721530778,
-        "y": 4.292184075108891
+        "x": 2.43546222552844,
+        "y": 4.116356237564284
       },
       "prevControl": {
-        "x": 2.515494618952201,
-        "y": 4.432153054120924
+        "x": 2.4273652150931757,
+        "y": 3.9314582402384857
       },
       "nextControl": {
-        "x": 2.1764967138835747,
-        "y": 4.040285441444731
+        "x": 2.4612613320541668,
+        "y": 4.705487641993055
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Close Right Note"
     },
     {
       "anchor": {
-        "x": 2.0783068279099526,
+        "x": 2.0650533667787854,
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.7221787128759445,
-        "y": 4.2538811512808214
+        "x": 1.8249351765262498,
+        "y": 4.791018414831661
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center Shoot Position"
+      "linkedName": "Close Center Shoot Position"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -21.698915255911086,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     }
   ],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.55,
-      "maxWaypointRelativePos": 1.25,
-      "constraints": {
-        "maxVelocity": 1.25,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
@@ -73,14 +61,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Center Paths",
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

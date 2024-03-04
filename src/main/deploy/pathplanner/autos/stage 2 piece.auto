@@ -14,19 +14,19 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "align and shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "mid right far"
+            "pathName": "mid right far out west"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "align and shoot"
           }
         }
       ]

@@ -9,7 +9,7 @@ import java.util.Map;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -148,22 +148,27 @@ public class Robot extends TimedRobot {
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			try {
-				teleopTab.add("Front LL", CameraServer.getServer(Constants.Vision.llAprilTag).getSource())
-						.withPosition(2, 0).withSize(2, 2).withWidget(BuiltInWidgets.kCameraStream);
-				teleopTab.add("Rear LL", CameraServer.getServer(Constants.Vision.llAprilTagRear).getSource())
-						.withPosition(2, 2).withSize(2, 2).withWidget(BuiltInWidgets.kCameraStream);
+				// front camera (intake cam)
+				teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP)).withWidget(BuiltInWidgets.kCameraStream).withSize(2, 2).withPosition(0, 4);
+				// rear camera (shooting cam)
+				teleopTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP)).withWidget(BuiltInWidgets.kCameraStream).withSize(2, 2).withPosition(2, 4);
+				
+				// auto generated, look into SendableCameraWrapper
+				// SendableCameraWrapper frontLL = new SendableCameraWrapper(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP));
+				// LimelightHelpers.getLimelightURLString(null, null).toURI()
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println("Failed to add camera to Shuffleboard");
 			}
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);
 
-		NamedCommands.registerCommand("shoot", new InstantCommand(() -> Robot.autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false).raceWith(new Align(false))));
+		NamedCommands.registerCommand("align and shoot", new InstantCommand(() -> autoManager.shoot = true)
+				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
 
-		// SmartDashboard.putData("PDH", pdh);
-
+		// use this for on the fly shooting
+		NamedCommands.registerCommand("shoot", new InstantCommand(() -> autoManager.shoot = true)
+				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 	}
 
 	@Override
@@ -230,9 +235,9 @@ public class Robot extends TimedRobot {
 			// e.printStackTrace();
 			if (autoChooser.getSelected().equals("back-up")) {
 				pathPlannerCommand = Drivetrain.getInstance()
-				.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.5));
+						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.5));
 			}
-			
+
 			else {
 				pathPlannerCommand = new PrintCommand("Null Command");
 				System.out.println("Invalid Auto");

@@ -34,9 +34,9 @@ public final class Constants {
 		public static final String llAprilTagRear = "limelight-rear";
 		public static final String llPython = "limelight-python";
 
-		public static final String llAprilTagRearIP = "http://10.5.48.21:5801";
-		public static final String llPythonIP = "http://10.5.48.22:5801";
-		public static final String llAprilTagIP = "http://10.5.48.23:5801";
+		public static final String llAprilTagRearIP = "http://10.5.48.21:5801/stream.mjpg";
+		public static final String llPythonIP = "http://10.5.48.22:5801/stream.mjpg";
+		public static final String llAprilTagIP = "http://10.5.48.23:5801/stream.mjpg";
 		public static final int llPythonPipelineIndex = 0;
 		public static final int llAprilTagPipelineIndex = 1;
 		public static final int llAprilTagWithLightsPipelineIndex = 2;

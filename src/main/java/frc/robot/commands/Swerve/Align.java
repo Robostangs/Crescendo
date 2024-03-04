@@ -72,21 +72,21 @@ public class Align extends Command {
                             .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
                 }
 
-                // else {
-                if (Robot.isRed()) {
-                    return Rotation2d
-                            .fromRadians(Math.atan2(
-                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
-                }
-
                 else {
-                    return Rotation2d
-                            .fromRadians(Math.atan2(
-                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                    if (Robot.isRed()) {
+                        return Rotation2d
+                                .fromRadians(Math.atan2(
+                                        mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+                                        mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+                    }
+
+                    else {
+                        return Rotation2d
+                                .fromRadians(Math.atan2(
+                                        mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
+                                        mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                    }
                 }
-                // }
             };
         }
     }

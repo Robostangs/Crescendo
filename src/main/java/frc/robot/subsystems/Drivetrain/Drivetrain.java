@@ -112,7 +112,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         super(driveTrainConstants, modules);
 
         // TODO: configure this
-        // super.getPigeon2().getConfigurator().apply(new MountPoseConfigs().withMountPosePitch(___).withMountPoseRoll(____));
+        // super.getPigeon2().getConfigurator().apply(new MountPoseConfigs().withMountPosePitch(___).withMountPoseRoll(___));
 
         if (Constants.Vision.UseLimelight) {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,

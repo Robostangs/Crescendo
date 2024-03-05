@@ -8,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "close right"
+            "pathName": "far left"
           }
         },
         {
@@ -20,6 +20,6 @@
       ]
     }
   },
-  "folder": "Stage",
+  "folder": "Amp",
   "choreoAuto": false
 }

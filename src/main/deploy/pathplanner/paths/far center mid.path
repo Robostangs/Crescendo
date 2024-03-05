@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0783068279099526,
-        "y": 5.55
+        "x": 3.9443991246625467,
+        "y": 6.023158875881564
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6190939002248377,
-        "y": 5.19494538989078
+        "x": 3.7955621105103283,
+        "y": 5.0440879637817435
       },
       "isLocked": false,
       "linkedName": "Center Shoot Position"
@@ -36,24 +36,24 @@
         "y": 4.111239875257528
       },
       "prevControl": {
-        "x": 7.930157518721909,
-        "y": 3.687181113759347
+        "x": 8.165931045386579,
+        "y": 3.7552074105980187
       },
       "nextControl": {
-        "x": 7.9665054468997845,
-        "y": 6.568624822434829
+        "x": 6.18757445107782,
+        "y": 6.812000231431804
       },
       "isLocked": false,
       "linkedName": "Far Middle Note"
     },
     {
       "anchor": {
-        "x": 2.0783068279099526,
-        "y": 5.55
+        "x": 3.9443991246625467,
+        "y": 6.023158875881564
       },
       "prevControl": {
-        "x": 5.688639474501172,
-        "y": 7.609098509863688
+        "x": 5.81053449667481,
+        "y": 7.263173763019577
       },
       "nextControl": null,
       "isLocked": false,
@@ -68,7 +68,7 @@
     },
     {
       "waypointRelativePos": 2.0,
-      "rotationDegrees": 38.316604142024325,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     },
     {
@@ -87,14 +87,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 7.639999999999986,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Center Paths",
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

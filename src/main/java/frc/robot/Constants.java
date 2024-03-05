@@ -11,7 +11,9 @@ import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -55,9 +57,12 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
 		/** The height (in meters) of the speaker */
-		public static final double SpeakerHeight = 1.9;
 		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.1, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
+		
+		public static final double SpeakerHeight = 1.9;
+		public static final Pose3d SpeakerPoseBlue3d = new Pose3d(SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseBlue.getRotation().getRadians()));
+		public static final Pose3d SpeakerPoseRed3d = new Pose3d(SpeakerPoseRed.getX(), SpeakerPoseRed.getY(), SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseRed.getRotation().getRadians()));
 
 		/** Highest Y value of the speaker */
 		// public static final double SpeakerYUpperBound = 6.12 + 0.5;
@@ -246,7 +251,7 @@ public final class Constants {
 		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
 
 		/* IRL PID */
-		// TODO: tune these
+		// TODO: tune these for auto paths to work better
 		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.01);
 		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4);
 
@@ -255,8 +260,8 @@ public final class Constants {
 		public static final double kMaxAngularSpeedMetersPerSecond = 2.5 * Math.PI;
 		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond;
 
-		public static final double kMaxAngularSpeedRadiansPerSecond = 360d;
-		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = 540d;
+		public static final double kMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(360d * 2.5);
+		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = Units.degreesToRadians(360 * 2.5);
 
 		public static final String kFieldObjectName = "path";
 

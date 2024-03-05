@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.7336018872360849,
-      "y": 4.410144858254176
-    },
-    "rotation": -59.771621492167505
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,7 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid right far"
+            "pathName": "right far"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "align and shoot"
           }
         }
       ]

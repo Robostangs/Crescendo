@@ -1,12 +1,10 @@
-/*
- * Copyright (C) Cross The Road Electronics.  All rights reserved.
- * License information can be found in CTRE_LICENSE.txt
- * For support and suggestions contact support@ctr-electronics.com or file
- * an issue tracker at https://github.com/CrossTheRoadElec/Phoenix-Releases
- */
 package frc.robot.subsystems.Drivetrain;
 
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.MutableMeasure.mutable;
+
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,7 +14,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Voltage;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -30,14 +30,42 @@ import frc.robot.Robot;
  */
 public interface SwerveRequest {
 
+    /**
+     * The reference for "forward" is sometimes different if you're talking
+     * about field relative. This addresses which forward to use.
+     */
+    public enum ForwardReference {
+        /**
+         * This forward reference makes it so "forward" (positive X) is always towards
+         * the red alliance.
+         * This is important in situations such as path following where positive X is
+         * always towards the
+         * red alliance wall, regardless of where the operator physically are located.
+         */
+        RedAlliance,
+        /**
+         * This forward references makes it so "forward" (positive X) is determined from
+         * the operator's
+         * perspective. This is important for most teleop driven field-centric requests,
+         * where positive
+         * X really means to drive away from the operator.
+         * <p>
+         * <b>Important</b>: Users must specify the OperatorPerspective with
+         * {@link SwerveDrivetrain} object
+         */
+        OperatorPerspective
+    }
+
     /*
      * Contains everything the control requests need to calculate the module state.
      */
     public class SwerveControlRequestParameters {
         public SwerveDriveKinematics kinematics;
+        public ChassisSpeeds currentChassisSpeed;
         public Pose2d currentPose;
         public double timestamp;
         public Translation2d[] swervePositions;
+        public Rotation2d operatorForwardDirection;
         public double updatePeriod;
     }
 
@@ -369,10 +397,12 @@ public interface SwerveRequest {
          * This PID controller operates on heading radians and outputs a target
          * rotational rate in radians per second.
          */
+        public PhoenixPIDController HeadingController = new PhoenixPIDController(0, 0, 0);
 
-        // TODO: tune this
-        public PhoenixPIDController radianController = new PhoenixPIDController(5.0, // 1.9
-                20, 0.3);
+        /**
+         * The perspective to use when determining which direction is forward.
+         */
+        public ForwardReference ForwardReference = SwerveRequest.ForwardReference.OperatorPerspective;
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
             this.VelocityX *= slowDownRate;
@@ -380,17 +410,25 @@ public interface SwerveRequest {
 
             double toApplyX = VelocityX;
             double toApplyY = VelocityY;
-            
-            SmartDashboard.putNumber("Target Direction Before", TargetDirection.getRadians());
-            SmartDashboard.putNumber("Target Direction Before Degrees", TargetDirection.getDegrees());
-            
+            Rotation2d angleToFace = TargetDirection;
+            if (ForwardReference == SwerveRequest.ForwardReference.OperatorPerspective) {
+                /* If we're operator perspective, modify the X/Y translation by the angle */
+                Translation2d tmp = new Translation2d(toApplyX, toApplyY);
+                tmp = tmp.rotateBy(parameters.operatorForwardDirection);
+                toApplyX = tmp.getX();
+                toApplyY = tmp.getY();
+                /* And rotate the direction we want to face by the angle */
+                angleToFace = angleToFace.rotateBy(parameters.operatorForwardDirection);
+            }
+
             // 180 -> -180
 
             // facing left is -2pi
 
             double rotationRate = 0;
 
-            // this is dealing with the rotation target being plus minus half, insted of unsigned 0 to 360
+            // this is dealing with the rotation target being plus minus half, insted of
+            // unsigned 0 to 360
             if (Robot.isRed()) {
                 double Radians = TargetDirection.getRadians();
                 double PoseRadians = parameters.currentPose.getRotation().getRadians();
@@ -406,14 +444,11 @@ public interface SwerveRequest {
                     PoseRadians -= 2 * Math.PI;
                 }
 
-                SmartDashboard.putNumber("Target Direction", Radians);
-
-                rotationRate = radianController.calculate(PoseRadians,
-                        Radians, parameters.timestamp);
+                rotationRate = HeadingController.calculate(PoseRadians, Radians, parameters.timestamp);
             }
-            
+
             else {
-                rotationRate = radianController.calculate(parameters.currentPose.getRotation().getRadians(),
+                rotationRate = HeadingController.calculate(parameters.currentPose.getRotation().getRadians(),
                         TargetDirection.getRadians(), parameters.timestamp);
             }
 
@@ -856,6 +891,106 @@ public interface SwerveRequest {
          */
         public ApplyChassisSpeeds withSteerRequestType(SwerveModule.SteerRequestType steerRequestType) {
             this.SteerRequestType = steerRequestType;
+            return this;
+        }
+    }
+
+    /**
+     * SysId-specific SwerveRequest to characterize the translational
+     * characteristics of a swerve drivetrain.
+     */
+    public class SysIdSwerveTranslation implements SwerveRequest {
+        /*
+         * Voltage to apply to drive wheels. This is final to enforce mutating the value
+         */
+        public final MutableMeasure<Voltage> VoltsToApply = mutable(Volts.of(0));
+
+        /* Local reference to a voltage request to drive the motors with */
+        private VoltageOut m_voltRequest = new VoltageOut(0);
+
+        public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
+            for (int i = 0; i < modulesToApply.length; ++i) {
+                modulesToApply[i].applyCharacterization(Rotation2d.fromDegrees(0),
+                        m_voltRequest.withOutput(VoltsToApply.in(Volts)));
+            }
+            return StatusCode.OK;
+        }
+
+        /**
+         * Update the voltage to apply to the drive wheels.
+         *
+         * @param Volts Voltage to apply
+         * @return this request
+         */
+        public SysIdSwerveTranslation withVolts(Measure<Voltage> Volts) {
+            VoltsToApply.mut_replace(Volts);
+            return this;
+        }
+    }
+
+    /**
+     * SysId-specific SwerveRequest to characterize the rotational
+     * characteristics of a swerve drivetrain.
+     */
+    public class SysIdSwerveRotation implements SwerveRequest {
+        /*
+         * Voltage to apply to drive wheels. This is final to enforce mutating the value
+         */
+        public final MutableMeasure<Voltage> VoltsToApply = mutable(Volts.of(0));
+
+        /* Local reference to a voltage request to drive the motors with */
+        private VoltageOut m_voltRequest = new VoltageOut(0);
+
+        public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
+            for (int i = 0; i < modulesToApply.length; ++i) {
+                modulesToApply[i].applyCharacterization(
+                        parameters.swervePositions[i].getAngle().plus(Rotation2d.fromDegrees(90)),
+                        m_voltRequest.withOutput(VoltsToApply.in(Volts)));
+            }
+            return StatusCode.OK;
+        }
+
+        /**
+         * Update the voltage to apply to the drive wheels.
+         *
+         * @param Volts Voltage to apply
+         * @return this request
+         */
+        public SysIdSwerveRotation withVolts(Measure<Voltage> Volts) {
+            VoltsToApply.mut_replace(Volts);
+            return this;
+        }
+    }
+
+    /**
+     * SysId-specific SwerveRequest to characterize the steer module
+     * characteristics of a swerve drivetrain.
+     */
+    public class SysIdSwerveSteerGains implements SwerveRequest {
+        /*
+         * Voltage to apply to drive wheels. This is final to enforce mutating the value
+         */
+        public final MutableMeasure<Voltage> VoltsToApply = mutable(Volts.of(0));
+
+        /* Local reference to a voltage request to drive the motors with */
+        private VoltageOut m_voltRequest = new VoltageOut(0);
+
+        public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
+            for (int i = 0; i < modulesToApply.length; ++i) {
+                modulesToApply[i].getSteerMotor().setControl(m_voltRequest.withOutput(VoltsToApply.in(Volts)));
+                modulesToApply[i].getDriveMotor().setControl(m_voltRequest.withOutput(0));
+            }
+            return StatusCode.OK;
+        }
+
+        /**
+         * Update the voltage to apply to the drive wheels.
+         *
+         * @param Volts Voltage to apply
+         * @return this request
+         */
+        public SysIdSwerveSteerGains withVolts(Measure<Voltage> Volts) {
+            VoltsToApply.mut_replace(Volts);
             return this;
         }
     }

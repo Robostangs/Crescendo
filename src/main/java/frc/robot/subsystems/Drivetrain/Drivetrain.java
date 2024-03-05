@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * so it can be used in command-based projects easily.
  */
 public class Drivetrain extends SwerveDrivetrain implements Subsystem {
+
     private static final double kSimLoopPeriod = 0.005;
 
     private Notifier m_simNotifier = null;
@@ -52,14 +53,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     private AprilTagLimelight aprilTagReader = new AprilTagLimelight(
             Constants.Vision.llAprilTag,
             Constants.Vision.llAprilTagRear);
-
-    // public BooleanSupplier isRed = () -> {
-    // if (Robot.atComp) {
-    // return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
-    // } else {
-    // return false;
-    // }
-    // };
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
@@ -84,35 +77,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             } else {
                 LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
             }
-
-            // if (LimelightHelpers.getTid(Constants.Vision.llPython) != -1 &&
-            // LimelightHelpers.getCurrentPipelineIndex(Constants.Vision.llPython) ==
-            // Constants.Vision.llAprilTagPipelineIndex) {
-            // this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llPython),
-            // Timer.getFPGATimestampz());
-            // }
         }
 
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
         SmartDashboard.putNumber("Swerve/Rotation Error", (angleToSpeaker() -
                 getPose().getRotation().getDegrees()));
-
-        // System.out.println(Units.radiansToDegrees(Math.atan2(
-        // getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-        // getPose().getX() - Constants.Vision.SpeakerPoseRed.getX())));
-
-        // SmartDashboard.putNumber("Swerve/Angle To Speaker",
-
-        // Units.radiansToDegrees(Math.atan2(
-        // getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-        // getPose().getX() - Constants.Vision.SpeakerPoseRed.getX())));
     }
 
     private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
-
-        // TODO: configure this
-        // super.getPigeon2().getConfigurator().apply(new MountPoseConfigs().withMountPosePitch(___).withMountPoseRoll(___));
 
         if (Constants.Vision.UseLimelight) {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
@@ -124,12 +97,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionOfMyVision);
         }
 
+        super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
+
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
-
-        // SmartDashboard.putString("Swerve/.type", "Drivetrain");
 
         mField = Robot.teleopField;
         if (Robot.isRed()) {

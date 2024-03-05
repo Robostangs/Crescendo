@@ -10,12 +10,10 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
-      "/Shuffleboard/Auto/Field": "Field2d",
       "/Shuffleboard/Auto/Intake Always Out": "String Chooser",
       "/Shuffleboard/Auto/Path Selector": "String Chooser",
       "/Shuffleboard/Auto/Shoot Selector": "String Chooser",
       "/Shuffleboard/Auto/Starting Pose Selector": "String Chooser",
-      "/Shuffleboard/Teleop/Field": "Field2d",
       "/SmartDashboard/Arm": "Subsystem",
       "/SmartDashboard/Arm/Target Profile": "Mechanism2d",
       "/SmartDashboard/Auto Chooser": "String Chooser",
@@ -23,6 +21,7 @@
       "/SmartDashboard/Auto/Starting Pose Selector": "String Chooser",
       "/SmartDashboard/Auto/Trajectory Chooser": "String Chooser",
       "/SmartDashboard/Auton Chooser": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
@@ -34,37 +33,6 @@
       "/SmartDashboard/Swerve/Module 3": "Mechanism2d"
     },
     "windows": {
-      "/Shuffleboard/Auto/Field": {
-        "Robot": {
-          "arrowSize": 64,
-          "arrowWeight": 3.0,
-          "color": [
-            1.0,
-            1.0,
-            1.0,
-            255.0
-          ],
-          "length": 0.9200000166893005,
-          "weight": 1.0,
-          "width": 0.9200000166893005
-        },
-        "Speaker": {
-          "arrowSize": 100
-        },
-        "bottom": 1476,
-        "height": 8.210550308227539,
-        "left": 150,
-        "path": {
-          "arrowSize": 0,
-          "style": "Line"
-        },
-        "right": 2961,
-        "top": 79,
-        "width": 16.541748046875,
-        "window": {
-          "visible": true
-        }
-      },
       "/Shuffleboard/Auto/Path Selector": {
         "window": {
           "visible": true
@@ -80,49 +48,43 @@
           "visible": true
         }
       },
-      "/Shuffleboard/Teleop/Field": {
+      "/SmartDashboard/Arm/Target Profile": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
         "Robot": {
-          "arrowSize": 72,
-          "color": [
-            1.0,
-            1.0,
-            1.0,
-            255.0
-          ],
+          "arrowSize": 58,
           "length": 0.9200000166893005,
-          "weight": 2.0,
           "width": 0.9200000166893005
         },
         "Speaker": {
-          "arrowColor": [
-            0.0,
-            0.0,
-            0.0,
-            255.0
-          ],
-          "color": [
-            0.0,
-            0.0,
-            0.0,
-            255.0
-          ],
+          "arrowSize": 100,
           "style": "Box/Image"
         },
         "bottom": 1476,
         "height": 8.210550308227539,
         "left": 150,
         "path": {
+          "arrowColor": [
+            0.9607843160629272,
+            0.6941306591033936,
+            0.13658206164836884,
+            255.0
+          ],
           "arrowSize": 0,
+          "color": [
+            0.906862735748291,
+            0.42675891518592834,
+            0.0,
+            255.0
+          ],
           "style": "Line"
         },
         "right": 2961,
         "top": 79,
         "width": 16.541748046875,
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Arm/Target Profile": {
         "window": {
           "visible": true
         }

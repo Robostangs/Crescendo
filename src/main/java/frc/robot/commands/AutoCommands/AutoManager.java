@@ -14,6 +14,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
+import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class AutoManager extends Command {
     private Timer shootTimer, intakeTimer, feedTimer;
@@ -120,27 +121,6 @@ public class AutoManager extends Command {
                 break;
         }
 
-        // if (Robot.startingPose.getSelected().equals("amp")) {
-        //     startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
-        // }
-
-        // else if (Robot.startingPose.getSelected().equals("center")) {
-        //     startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
-        // }
-
-        // else if (Robot.startingPose.getSelected().equals("stage")) {
-        //     startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
-        // }
-
-        // else {
-        //     // just dont seed the pose, insted set it to be the robot pose
-        //     System.out.println("Starting Position Undefined");
-        //     startPose = Drivetrain.getInstance().getPose();
-
-        //     // default to center start point
-        //     // startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
-        // }
-
         if (Robot.isRed()) {
             startPose = GeometryUtil.flipFieldPose(startPose);
         }
@@ -194,33 +174,24 @@ public class AutoManager extends Command {
 
                     double feederSpeed = 0;
 
-                    // wait until the shooter is ready to shoot and the arm is in range of the
-                    // setpoint, also wait until the timeout is done to ensure that we at least spit
-                    // the note out
-                    if (mShooter.readyToShootAdvanced() || shootTimer.get() > shootTimeout) {
-
-                        shootTimer.stop();
-
-                        // if the timeout has been triggered
-                        if (shootTimer.get() > shootTimeout) {
-                            // make sure that we at least shoot the piece out so that we dont get penalties
-                            postAutoStatus("Shooter Timed Out");
-                            feederSpeed = 1;
-                            shotsFired = true;
-                        }
-
-                        // this means that the shooter is ready to shoot
-                        else {
-                            feederSpeed = Constants.ShooterConstants.feederShootValue;
-                            postAutoStatus("Shooting");
-                            shotsFired = true;
-                        }
-                    }
-
+                    // if the shooter is ready to shoot, and has been ready to shoot
+                    if (mShooter.readyToShootAdvanced()) {
+                        feederSpeed = Constants.ShooterConstants.feederShootValue;
+                        postAutoStatus("Shooting");
+                        shotsFired = true;
+                    } 
+                    
+                    // if the shooter has been trying to prepare for a while, cancel the shoot command and then just shoot
+                    else if (shootTimer.get() > shootTimeout) {
+                        postAutoStatus("Shooter Timed Out");
+                        feederSpeed = 1;
+                        shotsFired = true;
+                    } 
+                    
+                    // if the timeout has not been triggered and the shooter is still being charged then keep charging
                     else {
                         postAutoStatus("Preparing Shooter");
                         feederSpeed = 0;
-                        shotsFired = false;
                     }
 
                     mShooter.shoot(feederSpeed, 1);
@@ -300,8 +271,9 @@ public class AutoManager extends Command {
                 // cuz there is a piece in the shooter
                 if (!intakeAlwaysDeployed) {
                     mIntake.setExtend(false);
-                    mIntake.setIntake(0);
                 }
+
+                mIntake.setIntake(0);
 
                 // reset the timer if it has not been reset
                 if (feedTimer == null) {
@@ -345,13 +317,14 @@ public class AutoManager extends Command {
 
                 if (!intakeAlwaysDeployed) {
                     mIntake.setExtend(true);
-                    mIntake.setIntake(1);
                 }
+                
+                mIntake.setIntake(1);
 
                 // this code must pull the piece off the ground and into the shooter
                 mIntake.setBelt(beltIntakeAndHandoffSpeed);
                 mShooter.shoot(feederHandoffSpeed, Constants.ShooterConstants.shooterReverseSpeed);
-                postAutoStatus("Intaking");
+                // postAutoStatus("Intaking");
             }
 
             shootTimer = null;
@@ -367,16 +340,16 @@ public class AutoManager extends Command {
     public void end(boolean interrupted) {
         mIntake.stop();
         mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+        Drivetrain.getInstance().setControl(new SwerveRequest.SwerveDriveBrake());
     }
 
     public void postAutoStatus(String status) {
-        System.out.println("Auto Status: " + status);
         this.status = status;
 
-        if (status.contains("time")) {
-            Shuffleboard.addEventMarker(status, "Auto Status", EventImportance.kCritical);
-        } else {
-            Shuffleboard.addEventMarker(status, "Auto Status", EventImportance.kLow);
+        System.out.println("Auto Status @ " + Timer.getMatchTime() + ": " + status);
+
+        if (status.contains("Time") || status.contains("time") || status.contains("Shooting")) {
+            Shuffleboard.addEventMarker(status, "Auto Status @ " + Timer.getMatchTime(), EventImportance.kCritical);
         }
     }
 }

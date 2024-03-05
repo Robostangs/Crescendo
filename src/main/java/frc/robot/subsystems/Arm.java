@@ -40,47 +40,36 @@ public class Arm extends SubsystemBase {
     private double armPosition;
 
     public boolean ArmIsBroken = false;
-    
+
     private MotionMagicTorqueCurrentFOC motionMagicDutyCycle;
-    
+
     private Mechanism2d armMechanism, simArmMechanism;
     private MechanismLigament2d shooterLigament, shooterExtension, elbowLigament;
     private MechanismLigament2d simShooterLigament, simShooterExtension, simElbowLigament;
-     
+
     @Override
     public void periodic() {
         updateArmPosition();
-        
-        simShooterExtension.setAngle(shooterExtensionSetpoint - 90);
 
         if (Robot.isReal()) {
             shooterExtension.setAngle(getShooterExtensionPosition() - 90);
             simShooterExtension.setAngle(
                     getExtensionFromArmPosition(
                             Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble())) - 90);
+        } else {
+            simShooterExtension.setAngle(shooterExtensionSetpoint - 90);
+
         }
 
-        if (Robot.isReal()) {
-            if (isInRangeOfTarget(getArmTarget())) {
-                // elbowLigament.setColor(new Color8Bit(Color.kGreen));
-                SmartDashboard.putBoolean("Arm/At Setpoint", true);
-            } else {
-                // elbowLigament.setColor(new Color8Bit(Color.kWhite));
-                SmartDashboard.putBoolean("Arm/At Setpoint", false);
-            }
-        }
+        // if (Robot.isReal()) {
+        SmartDashboard.putBoolean("Arm/At Setpoint", isInRangeOfTarget(getArmTarget()));
+        // }
 
         SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
         SmartDashboard.putNumber("Arm/Velocity", getVelocityRotations());
-        
         SmartDashboard.putNumber("Arm/Setpoint", Units.rotationsToDegrees(motionMagicDutyCycle.Position));
-        // SmartDashboard.putNumber("Arm/Setpoint",
-        //         Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble()));
-
-        SmartDashboard.putNumber("Arm/Position Error", Units.rotationsToDegrees(motionMagicDutyCycle.Position - getArmPosition()));
-
-        // SmartDashboard.putNumber("Arm/Position Error",
-        //         Units.rotationsToDegrees(armMotor.getClosedLoopError().getValueAsDouble()));
+        SmartDashboard.putNumber("Arm/Position Error",
+                Units.rotationsToDegrees(motionMagicDutyCycle.Position - getArmPosition()));
         SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
 
         if (Shooter.getInstance().getCurrentCommand() == null) {
@@ -109,7 +98,7 @@ public class Arm extends SubsystemBase {
     }
 
     private Arm() {
-        
+
         armCoder = new LoggyCANcoder(Constants.ArmConstants.armEncoderID, false);
         CANcoderConfiguration armCoderConfig = new CANcoderConfiguration();
 
@@ -120,7 +109,7 @@ public class Arm extends SubsystemBase {
         armCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         armCoderConfig.MagnetSensor.MagnetOffset = -0.339599609375;
         armCoderConfig.MagnetSensor.MagnetOffset = 0;
-        
+
         /* Do not apply */
         // armCoder.getConfigurator().apply(armCoderConfig);
 
@@ -254,7 +243,8 @@ public class Arm extends SubsystemBase {
      */
     public double getArmPosition() {
         // if (Robot.isSimulation()) {
-        //     return simShooterExtension.getAngle() - Constants.ArmConstants.shooterOffset + 90;
+        // return simShooterExtension.getAngle() - Constants.ArmConstants.shooterOffset
+        // + 90;
         // }
         // return Units.rotationsToDegrees(armMotor.getPosition().getValueAsDouble());
 
@@ -367,7 +357,9 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        // double angleToSpeaker = Constants.ArmConstants.a * Math.pow(Units.metersToFeet(distToSpeakerMeters), Constants.ArmConstants.b) + Constants.ArmConstants.c;
+        // double angleToSpeaker = Constants.ArmConstants.a *
+        // Math.pow(Units.metersToFeet(distToSpeakerMeters), Constants.ArmConstants.b) +
+        // Constants.ArmConstants.c;
         double angleToSpeaker = -1170.66 * Math.pow(distToSpeakerMeters * 39.37, -0.751072) + 1.98502;
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)", distToSpeakerMeters);
@@ -422,6 +414,8 @@ public class Arm extends SubsystemBase {
 
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
+        // TODO: tune these values for less ocsilation
+
         armMotorConfig.Slot0.kP = 500;
         armMotorConfig.Slot0.kI = 0.03;
 
@@ -438,7 +432,7 @@ public class Arm extends SubsystemBase {
 
         // going higher causes oscillation
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
-        motionMagicConfigs.MotionMagicAcceleration = 1;
+        motionMagicConfigs.MotionMagicAcceleration = 0.5;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000
         motionMagicConfigs.MotionMagicJerk = 0;

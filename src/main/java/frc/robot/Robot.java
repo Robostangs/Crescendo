@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -88,6 +89,8 @@ public class Robot extends TimedRobot {
 					.onCommandFinish((action) -> System.out.println(action.getName() + " Command Finished"));
 		}
 
+		SmartDashboard.putData("Field", teleopField);
+		
 		startingPose.setDefaultOption("Center", "center"); // center
 		startingPose.addOption("Amp Side", "amp"); // left
 		startingPose.addOption("Stage Side", "stage"); // right
@@ -99,12 +102,14 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("1 Piece", " 1 piece");
 		autoChooser.addOption("2 Piece", " 2 piece");
 		autoChooser.addOption("3 Piece", " 3 piece");
-		autoChooser.addOption("4 Piece", " 4 piece");
+		autoChooser.addOption("4 Piece (Center Only)", " 4 piece");
+		autoChooser.addOption("Center Line Sprint (Center Only)", " centerline sprint");
+		autoChooser.addOption("All Close Notes (Center Only)", " all close notes");
+		autoChooser.addOption("All Close Notes Fast", " all close notes shoot in place");
 		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
-		autoChooser.addOption("All Close Notes", " all close notes");
-		autoChooser.addOption("All Close Notes Fast", " all close notes shoot in place");
-		autoChooser.addOption("Center Line Sprint", " centerline sprint");
+		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
+		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
 
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);
@@ -118,7 +123,6 @@ public class Robot extends TimedRobot {
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 		autoTab.add("Shoot Selector", autoShoot).withSize(2, 1).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
-		autoTab.add("Field", autoField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
 		autoTab.add("Intake Always Out", intakeAlwaysOut).withSize(2, 1).withPosition(0, 3)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 		autoTab.addNumber("Auto Countdown", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 2)
@@ -126,13 +130,12 @@ public class Robot extends TimedRobot {
 				.withProperties(Map.of("min", -1, "max", 15, "show value", true));
 		autoTab.add("Path Delay", 0).withSize(2, 1).withWidget(BuiltInWidgets.kNumberSlider).withPosition(0, 4)
 				.withProperties(Map.of("min", 0, "max", 15, "block increment", 1));
+		// autoTab.add("Field", autoField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
 
 		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
 				.getEntry("Path Delay");
 
-		Shuffleboard.selectTab(autoTab.getTitle());
-
-		teleopTab.add("Field", teleopField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
+		// teleopTab.add("Field", teleopField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
 		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 0)
 				.withWidget(BuiltInWidgets.kDial)
 				.withProperties(Map.of("min", -1, "max", 135, "show value", true));
@@ -149,17 +152,24 @@ public class Robot extends TimedRobot {
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			try {
 				// front camera (intake cam)
-				teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP)).withWidget(BuiltInWidgets.kCameraStream).withSize(2, 2).withPosition(0, 4);
+				teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(4, 0);
 				// rear camera (shooting cam)
-				teleopTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP)).withWidget(BuiltInWidgets.kCameraStream).withSize(2, 2).withPosition(2, 4);
-				
-				// auto generated, look into SendableCameraWrapper
-				// SendableCameraWrapper frontLL = new SendableCameraWrapper(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP));
-				// LimelightHelpers.getLimelightURLString(null, null).toURI()
+				teleopTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP))
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0);
+
+
+				autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(4, 0);
+				// rear camera (shooting cam)
+				autoTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP))
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0);
 			} catch (Exception e) {
 				System.out.println("Failed to add camera to Shuffleboard");
 			}
 		}
+
+		Shuffleboard.selectTab(autoTab.getTitle());
 
 		DriverStation.silenceJoystickConnectionWarning(true);
 

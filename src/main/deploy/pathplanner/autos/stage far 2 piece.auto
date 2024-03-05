@@ -8,7 +8,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "close right"
+            "pathName": "right far"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "align and shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "mid right far"
           }
         },
         {

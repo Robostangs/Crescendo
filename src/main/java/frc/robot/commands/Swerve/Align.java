@@ -2,6 +2,8 @@ package frc.robot.commands.Swerve;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,47 +34,40 @@ public class Align extends Command {
             boolean note) {
         mDrivetrain = Drivetrain.getInstance();
         mIntake = Intake.getInstance();
-        this.addRequirements(mDrivetrain);
-        if (note) {
-            this.setName("Align to Note");
-        } else {
-            this.setName("Align to Speaker");
-        }
 
         if (howManyBabiesOnBoard == null) {
             this.howManyBabiesOnBoard = () -> 0.0;
         }
-
+        
         else {
             this.howManyBabiesOnBoard = howManyBabiesOnBoard;
         }
-
+        
         timer = new Timer();
         this.note = note;
-
+        
         this.translateX = translateX;
         this.translateY = translateY;
-
+        
         if (note) {
-            // if (LimelightHelpers.getTX(Constants.Vision.llPython) == 0) {
-            // getTargetRotation = () -> {
-            // return mDrivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(90));
-            // };
-            // } else {
+            this.setName("Align to Note");
+            this.addRequirements(mDrivetrain, mIntake);
+
             getTargetRotation = () -> {
                 return mDrivetrain.getPose().getRotation()
                         .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llPython)));
             };
 
-            this.addRequirements(mIntake);
         } else {
+            this.setName("Align to Speaker");
+            this.addRequirements(mDrivetrain);
             getTargetRotation = () -> {
-                if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
-                    return mDrivetrain.getPose().getRotation()
-                            .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-                }
+                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1 && Robot.isReal()) {
+                //     return mDrivetrain.getPose().getRotation()
+                //             .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                // }
 
-                else {
+                // else {
                     if (Robot.isRed()) {
                         return Rotation2d
                                 .fromRadians(Math.atan2(
@@ -86,7 +81,7 @@ public class Align extends Command {
                                         mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
                                         mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
                     }
-                }
+                // }
             };
         }
     }
@@ -94,6 +89,8 @@ public class Align extends Command {
     @Override
     public void initialize() {
         drive = new SwerveRequest.FieldCentricFacingAngle();
+        // TODO: tune this so that note align and speaker align work better
+        drive.HeadingController = new PhoenixPIDController(5.0, 20, 0.3);
         drive.Deadband = Constants.OperatorConstants.deadband;
         drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.1;
 
@@ -118,17 +115,10 @@ public class Align extends Command {
             }
         }
 
+        drive.TargetDirection = getTargetRotation.get();
         double rotationError = drive.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees();
 
         SmartDashboard.putNumber("Swerve/Rotation Error", rotationError);
-
-        if (Math.abs(rotationError) < 5) {
-            SmartDashboard.putString("Swerve/Rotation Status", "In Position");
-        } else {
-            SmartDashboard.putString("Swerve/Rotation Status", "Traveling");
-        }
-
-        drive.TargetDirection = getTargetRotation.get();
         SmartDashboard.putNumber("Swerve/Rotation Target", drive.TargetDirection.getDegrees());
 
         drive

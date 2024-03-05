@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "align and shoot"
           }
         },
         {
@@ -26,13 +26,19 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "align and shoot"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "far center mid"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "align and shoot"
           }
         }
       ]

@@ -18,6 +18,8 @@ public class PathPlannerCommand {
         if (autoName == null) {
             Robot.autoField.getObject(Constants.AutoConstants.kFieldObjectName)
                     .setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
+            Robot.teleopField.getObject(Constants.AutoConstants.kFieldObjectName)
+                    .setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
             lastAutoName = "null";
             return;
         } else if (autoName.equals(lastAutoName)) {
@@ -44,6 +46,7 @@ public class PathPlannerCommand {
         }
 
         Robot.autoField.getObject(Constants.AutoConstants.kFieldObjectName).setPoses(poses);
+        Robot.teleopField.getObject(Constants.AutoConstants.kFieldObjectName).setPoses(poses);
     }
 
     public static void unpublishTrajectory() {

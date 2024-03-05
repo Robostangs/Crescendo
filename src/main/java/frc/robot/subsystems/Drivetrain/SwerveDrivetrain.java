@@ -1,9 +1,3 @@
-/*
- * Copyright (C) Cross The Road Electronics.  All rights reserved.
- * License information can be found in CTRE_LICENSE.txt
- * For support and suggestions contact support@ctr-electronics.com or file
- * an issue tracker at https://github.com/CrossTheRoadElec/Phoenix-Releases
- */
 package frc.robot.subsystems.Drivetrain;
 
 import java.util.concurrent.locks.ReadWriteLock;
@@ -18,8 +12,10 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.MedianFilter;
@@ -27,6 +23,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -67,9 +64,11 @@ public class SwerveDrivetrain {
     protected SwerveDriveKinematics m_kinematics;
     protected SwerveDrivePoseEstimator m_odometry;
     protected SwerveModulePosition[] m_modulePositions;
+    protected SwerveModuleState[] m_moduleStates;
     protected Translation2d[] m_moduleLocations;
     protected OdometryThread m_odometryThread;
     protected Rotation2d m_fieldRelativeOffset;
+    protected Rotation2d m_operatorForwardDirection;
 
     protected SwerveRequest m_requestToApply = new SwerveRequest.Idle();
     protected SwerveControlRequestParameters m_requestParameters = new SwerveControlRequestParameters();
@@ -90,6 +89,8 @@ public class SwerveDrivetrain {
         public int FailedDaqs;
         /** The current pose of the robot */
         public Pose2d Pose;
+        /** The current velocity of the robot */
+        public ChassisSpeeds speeds;
         /** The current module states */
         public SwerveModuleState[] ModuleStates;
         /** The target module states */
@@ -104,9 +105,9 @@ public class SwerveDrivetrain {
     /* Perform swerve module updates in a separate thread to minimize latency */
     public class OdometryThread {
         protected static final int START_THREAD_PRIORITY = 1; // Testing shows 1 (minimum realtime) is sufficient for tighter
-                                                              // odometry loops.
-                                                              // If the odometry period is far away from the desired frequency,
-                                                              // increasing this may help
+                                                            // odometry loops.
+                                                            // If the odometry period is far away from the desired frequency,
+                                                            // increasing this may help
 
         protected final Thread m_thread;
         protected volatile boolean m_running = false;
@@ -209,6 +210,7 @@ public class SwerveDrivetrain {
                     /* Keep track of the change in azimuth rotations */
                     for (int i = 0; i < ModuleCount; ++i) {
                         m_modulePositions[i] = Modules[i].getPosition(false);
+                        m_moduleStates[i] = Modules[i].getCurrentState();
                     }
                     double yawDegrees = BaseStatusSignal.getLatencyCompensatedValue(
                             m_yawGetter, m_angularVelocity);
@@ -216,13 +218,17 @@ public class SwerveDrivetrain {
                     /* Keep track of previous and current pose to account for the carpet vector */
                     m_odometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
 
+                    ChassisSpeeds speeds = m_kinematics.toChassisSpeeds(m_moduleStates);
+
                     /* And now that we've got the new odometry, update the controls */
                     m_requestParameters.currentPose = m_odometry.getEstimatedPosition()
                             .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset));
                     m_requestParameters.kinematics = m_kinematics;
                     m_requestParameters.swervePositions = m_moduleLocations;
+                    m_requestParameters.currentChassisSpeed = speeds;
                     m_requestParameters.timestamp = currentTime;
                     m_requestParameters.updatePeriod = 1.0 / UpdateFrequency;
+                    m_requestParameters.operatorForwardDirection = m_operatorForwardDirection;
 
                     m_requestToApply.apply(m_requestParameters, Modules);
 
@@ -230,6 +236,7 @@ public class SwerveDrivetrain {
                     m_cachedState.FailedDaqs = FailedDaqs;
                     m_cachedState.SuccessfulDaqs = SuccessfulDaqs;
                     m_cachedState.Pose = m_odometry.getEstimatedPosition();
+                    m_cachedState.speeds = speeds;
                     m_cachedState.OdometryPeriod = averageLoopTime;
 
                     if (m_cachedState.ModuleStates == null) {
@@ -295,6 +302,28 @@ public class SwerveDrivetrain {
     public SwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         this(driveTrainConstants, 0, modules);
     }
+    /**
+     * Constructs a CTRSwerveDrivetrain using the specified constants.
+     * <p>
+     * This constructs the underlying hardware devices, so user should not construct
+     * the devices themselves. If they need the devices, they can access them
+     * through
+     * getters in the classes.
+     *
+     * @param driveTrainConstants        Drivetrain-wide constants for the swerve drive
+     * @param OdometryUpdateFrequency    The frequency to run the odometry loop. If
+     *                                   unspecified, this is 250 Hz on CAN FD, and
+     *                                   100 Hz on CAN 2.0.
+     * @param modules                    Constants for each specific module
+     */
+    public SwerveDrivetrain(
+            SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
+        this(driveTrainConstants, OdometryUpdateFrequency,
+        VecBuilder.fill(0.1, 0.1, 0.1),
+        VecBuilder.fill(0.9, 0.9, 0.9),
+        modules);
+    }
 
     /**
      * Constructs a CTRSwerveDrivetrain using the specified constants.
@@ -304,14 +333,17 @@ public class SwerveDrivetrain {
      * through
      * getters in the classes.
      *
-     * @param driveTrainConstants     Drivetrain-wide constants for the swerve drive
-     * @param OdometryUpdateFrequency The frequency to run the odometry loop. If
-     *                                unspecified, this is 250 Hz on CAN FD, and
-     *                                100 Hz on CAN 2.0.
-     * @param modules                 Constants for each specific module
+     * @param driveTrainConstants        Drivetrain-wide constants for the swerve drive
+     * @param OdometryUpdateFrequency    The frequency to run the odometry loop. If
+     *                                   unspecified, this is 250 Hz on CAN FD, and
+     *                                   100 Hz on CAN 2.0.
+     * @param odometryStandardDeviation  The standard deviation for odometry calculation
+     * @param visionStandardDeviation    The standard deviation for vision calculation
+     * @param modules                    Constants for each specific module
      */
     public SwerveDrivetrain(
             SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            Matrix<N3, N1> odometryStandardDeviation, Matrix<N3, N1> visionStandardDeviation,
             SwerveModuleConstants... modules) {
         IsOnCANFD = checkIsOnCanFD(driveTrainConstants.CANbusName);
 
@@ -328,6 +360,7 @@ public class SwerveDrivetrain {
 
         Modules = new SwerveModule[ModuleCount];
         m_modulePositions = new SwerveModulePosition[ModuleCount];
+        m_moduleStates = new SwerveModuleState[ModuleCount];
         m_moduleLocations = new Translation2d[ModuleCount];
 
         int iteration = 0;
@@ -335,13 +368,15 @@ public class SwerveDrivetrain {
             Modules[iteration] = new SwerveModule(module, driveTrainConstants.CANbusName);
             m_moduleLocations[iteration] = new Translation2d(module.LocationX, module.LocationY);
             m_modulePositions[iteration] = Modules[iteration].getPosition(true);
+            m_moduleStates[iteration] = Modules[iteration].getCurrentState();
 
             iteration++;
         }
         m_kinematics = new SwerveDriveKinematics(m_moduleLocations);
-        m_odometry = new SwerveDrivePoseEstimator(m_kinematics, new Rotation2d(), m_modulePositions, new Pose2d());
+        m_odometry = new SwerveDrivePoseEstimator(m_kinematics, new Rotation2d(), m_modulePositions, new Pose2d(), odometryStandardDeviation, visionStandardDeviation);
 
         m_fieldRelativeOffset = new Rotation2d();
+        m_operatorForwardDirection = new Rotation2d();
 
         m_simDrive = new SimSwerveDrivetrain(m_moduleLocations, m_pigeon2, driveTrainConstants, modules);
 
@@ -371,6 +406,23 @@ public class SwerveDrivetrain {
         } finally {
             m_stateLock.writeLock().unlock();
         }
+    }
+
+    /**
+     * Configures the neutral mode to use for all modules' drive motors.
+     *
+     * @param neutralMode The drive motor neutral mode
+     * @return Status code of the first failed config call, or OK if all succeeded
+     */
+    public StatusCode configNeutralMode(NeutralModeValue neutralMode) {
+        var status = StatusCode.OK;
+        for (var module : Modules) {
+            var moduleStatus = module.configNeutralMode(neutralMode);
+            if (status.isOK()) {
+                status = moduleStatus;
+            }
+        }
+        return status;
     }
 
     /**
@@ -408,50 +460,30 @@ public class SwerveDrivetrain {
     }
 
     /**
+     * Takes the {@link SwerveRequest.ForwardReference#RedAlliance} perpective direction
+     * and treats it as the forward direction for
+     * {@link SwerveRequest.ForwardReference#OperatorPerspective}.
+     * <p>
+     * If the operator is in the Blue Alliance Station, this should be 0 degrees.
+     * <p>
+     * If the operator is in the Red Alliance Station, this should be 180 degrees.
+     *
+     * @param fieldDirection Heading indicating which direction is forward from
+     *                       the {@link SwerveRequest.ForwardReference#RedAlliance} perspective.
+     */
+    public void setOperatorPerspectiveForward(Rotation2d fieldDirection) {
+        m_operatorForwardDirection = fieldDirection;
+    }
+
+    /**
      * Takes the specified location and makes it the current pose for
      * field-relative maneuvers
      *
      * @param location Pose to make the current pose at.
      */
-    // public void seedFieldRelative(Pose2d location) {
-    //     try {
-    //         m_stateLock.writeLock().lock();
-
-    //         m_odometry.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
-    //         /* We need to update our cached pose immediately so that race conditions don't happen */
-    //         m_cachedState.Pose = location;
-    //     } finally {
-    //         m_stateLock.writeLock().unlock();
-    //     }
-    // }
-
-    public void seedFieldRelative(Pose2d location, Rotation2d rotationOfWheels) {
-        try {
-            m_stateLock.writeLock().lock();
-
-            for (SwerveModulePosition pos : m_modulePositions) {
-                pos.distanceMeters = 0.0;
-                pos.angle = rotationOfWheels;
-            }
-
-            m_odometry.resetPosition(location.getRotation(), m_modulePositions, location);
-            /* We need to update our cached pose immediately so that race conditions don't happen */
-            m_cachedState.Pose = location;
-        } finally {
-            m_stateLock.writeLock().unlock();
-        }
-    }
-
     public void seedFieldRelative(Pose2d location) {
         try {
             m_stateLock.writeLock().lock();
-
-            // for (SwerveModulePosition pos : m_modulePositions) {
-            //     pos.distanceMeters = 0.0;
-            //     pos.angle = location.getRotation();
-            // }
-
-            m_fieldRelativeOffset = location.getRotation();
 
             m_odometry.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
             /* We need to update our cached pose immediately so that race conditions don't happen */
@@ -461,7 +493,6 @@ public class SwerveDrivetrain {
         }
     }
 
-    
     /**
      * Check if the odometry is currently valid
      *
@@ -648,6 +679,7 @@ public class SwerveDrivetrain {
     public void updateSimState(double dtSeconds, double supplyVoltage) {
         m_simDrive.update(dtSeconds, supplyVoltage, Modules);
     }
+
 
     /**
      * Register the specified lambda to be executed whenever our SwerveDriveState function

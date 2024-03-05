@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0783068279099526,
+        "x": 2.0650533667787854,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5425738953329757,
-        "y": 6.197353691003679
+        "x": 1.8118284015243316,
+        "y": 6.247683630262253
       },
       "isLocked": false,
-      "linkedName": "Center Shoot Position"
+      "linkedName": "Close Center Shoot Position"
     },
     {
       "anchor": {

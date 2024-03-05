@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.76,
-        "y": 4.52
+        "x": 1.5745077047504663,
+        "y": 4.230483610401793
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3518577314932412,
-        "y": 4.091702414886312
+        "x": 1.7890858156514378,
+        "y": 4.0132358023359025
       },
       "isLocked": false,
-      "linkedName": "Right Start Position"
+      "linkedName": "Close Right Shoot Position"
     },
     {
       "anchor": {
-        "x": 2.33,
-        "y": 4.14
+        "x": 2.43546222552844,
+        "y": 4.116356237564284
       },
       "prevControl": {
-        "x": 1.733721460220698,
-        "y": 4.485082620720797
+        "x": 2.2860035461589505,
+        "y": 4.251620227796191
       },
       "nextControl": null,
       "isLocked": false,

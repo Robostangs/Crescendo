@@ -1,9 +1,3 @@
-/*
- * Copyright (C) Cross The Road Electronics.  All rights reserved.
- * License information can be found in CTRE_LICENSE.txt
- * For support and suggestions contact support@ctr-electronics.com or file
- * an issue tracker at https://github.com/CrossTheRoadElec/Phoenix-Releases
- */
 package frc.robot.subsystems.Drivetrain;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -11,12 +5,14 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -31,11 +27,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import frc.robot.LoggyThings.LoggyCANcoder;
-import frc.robot.LoggyThings.LoggyTalonFX;
-import frc.robot.subsystems.Music;
-
-import java.util.List;
 
 /**
  * Swerve Module class that encapsulates a swerve module powered by CTR
@@ -64,14 +55,12 @@ public class SwerveModule {
     public enum SteerRequestType {
         /**
          * Control the drive motor using a Motion Magic® request.
-         * The control output type is de termined by
-         * {@link SwerveModuleConstants#SteerMotorClosedLoopOutput}
+         * The control output type is determined by {@link SwerveModuleConstants#SteerMotorClosedLoopOutput}
          */
         MotionMagic,
         /**
          * Control the drive motor using a Motion Magic® Expo request.
-         * The control output type is determined by
-         * {@link SwerveModuleConstants#SteerMotorClosedLoopOutput}
+         * The control output type is determined by {@link SwerveModuleConstants#SteerMotorClosedLoopOutput}
          */
         MotionMagicExpo,
     }
@@ -86,15 +75,14 @@ public class SwerveModule {
         OpenLoopVoltage,
         /**
          * Control the drive motor using a velocity closed-loop request.
-         * The control output type is determined by
-         * {@link SwerveModuleConstants#DriveMotorClosedLoopOutput}
+         * The control output type is determined by {@link SwerveModuleConstants#DriveMotorClosedLoopOutput}
          */
         Velocity,
     }
 
-    private final LoggyTalonFX m_driveMotor;
-    private final LoggyTalonFX m_steerMotor;
-    private final LoggyCANcoder m_cancoder;
+    private final TalonFX m_driveMotor;
+    private final TalonFX m_steerMotor;
+    private final CANcoder m_cancoder;
 
     private final StatusSignal<Double> m_drivePosition;
     private final StatusSignal<Double> m_driveVelocity;
@@ -114,10 +102,11 @@ public class SwerveModule {
     /* drive motor controls */
     private final VoltageOut m_voltageOpenLoopSetter = new VoltageOut(0);
     private final VelocityVoltage m_velocityVoltageSetter = new VelocityVoltage(0);
-    private final VelocityTorqueCurrentFOC m_velocityTorqueSetter = new VelocityTorqueCurrentFOC(0);
+    /* Velocity Torque current neutral should always be coast, as neutral corresponds to 0-current or maintain velocity, not 0-velocity */
+    private final VelocityTorqueCurrentFOC m_velocityTorqueSetter = new VelocityTorqueCurrentFOC(0).withOverrideCoastDurNeutral(true);
 
-    com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType m_steerClosedLoopOutput;
-    com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType m_driveClosedLoopOutput;
+    private final com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType m_steerClosedLoopOutput;
+    private final com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType m_driveClosedLoopOutput;
 
     private final SwerveModulePosition m_internalState = new SwerveModulePosition();
     private SwerveModuleState m_targetState = new SwerveModuleState();
@@ -125,13 +114,13 @@ public class SwerveModule {
     /**
      * Construct a SwerveModule with the specified constants.
      *
-     * @param constants  Constants used to construct the module
-     * @param canbusName The name of the CAN bus this module is on
+     * @param constants   Constants used to construct the module
+     * @param canbusName  The name of the CAN bus this module is on
      */
     public SwerveModule(SwerveModuleConstants constants, String canbusName) {
-        m_driveMotor = new LoggyTalonFX(constants.DriveMotorId, canbusName.equals("*") ? true : false);
-        m_steerMotor = new LoggyTalonFX(constants.SteerMotorId, canbusName.equals("*") ? true : false);
-        m_cancoder = new LoggyCANcoder(constants.CANcoderId, canbusName.equals("*") ? true : false);
+        m_driveMotor = new TalonFX(constants.DriveMotorId, canbusName);
+        m_steerMotor = new TalonFX(constants.SteerMotorId, canbusName);
+        m_cancoder = new CANcoder(constants.CANcoderId, canbusName);
 
         TalonFXConfiguration talonConfigs = new TalonFXConfiguration();
 
@@ -142,17 +131,13 @@ public class SwerveModule {
         talonConfigs.TorqueCurrent.PeakReverseTorqueCurrent = -constants.SlipCurrent;
         talonConfigs.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
         talonConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonConfigs.Audio.AllowMusicDurDisable = true;
 
         talonConfigs.MotorOutput.Inverted = constants.DriveMotorInverted ? InvertedValue.Clockwise_Positive
                 : InvertedValue.CounterClockwise_Positive;
         StatusCode response = m_driveMotor.getConfigurator().apply(talonConfigs);
-
-        Music.getInstance().addFalcon(List.of(m_driveMotor, m_steerMotor));
-
         if (!response.isOK()) {
-            System.out
-                    .println("Talon ID " + constants.DriveMotorId + " failed config with error " + response.toString());
+            System.out.println(
+                    "TalonFX ID " + m_driveMotor.getDeviceID() + " failed config with error " + response.toString());
         }
 
         /* Undo changes for torqueCurrent */
@@ -188,8 +173,8 @@ public class SwerveModule {
                 : InvertedValue.CounterClockwise_Positive;
         response = m_steerMotor.getConfigurator().apply(talonConfigs);
         if (!response.isOK()) {
-            System.out
-                    .println("Talon ID " + constants.DriveMotorId + " failed config with error " + response.toString());
+            System.out.println(
+                    "TalonFX ID " + m_steerMotor.getDeviceID() + " failed config with error " + response.toString());
         }
 
         CANcoderConfiguration cancoderConfigs = new CANcoderConfiguration();
@@ -197,7 +182,7 @@ public class SwerveModule {
         response = m_cancoder.getConfigurator().apply(cancoderConfigs);
         if (!response.isOK()) {
             System.out.println(
-                    "CANcoder ID " + constants.DriveMotorId + " failed config with error " + response.toString());
+                    "CANcoder ID " + m_cancoder.getDeviceID() + " failed config with error " + response.toString());
         }
 
         m_drivePosition = m_driveMotor.getPosition().clone();
@@ -284,8 +269,7 @@ public class SwerveModule {
      *
      * @param state            Speed and direction the module should target
      * @param driveRequestType The {@link DriveRequestType} to apply
-     * @param steerRequestType The {@link SteerRequestType} to apply; defaults to
-     *                         {@link SteerRequestType#MotionMagic}
+     * @param steerRequestType The {@link SteerRequestType} to apply; defaults to {@link SteerRequestType#MotionMagic}
      */
     public void apply(SwerveModuleState state, DriveRequestType driveRequestType, SteerRequestType steerRequestType) {
         var optimized = SwerveModuleState.optimize(state, m_internalState.angle);
@@ -320,22 +304,13 @@ public class SwerveModule {
 
         double velocityToSet = optimized.speedMetersPerSecond * m_driveRotationsPerMeter;
 
-        /*
-         * From FRC 900's whitepaper, we add a cosine compensator to the applied drive
-         * velocity
-         */
+        /* From FRC 900's whitepaper, we add a cosine compensator to the applied drive velocity */
         /* To reduce the "skew" that occurs when changing direction */
         double steerMotorError = angleToSetDeg - m_steerPosition.getValue();
         /* If error is close to 0 rotations, we're already there, so apply full power */
-        /*
-         * If the error is close to 0.25 rotations, then we're 90 degrees, so movement
-         * doesn't help us at all
-         */
+        /* If the error is close to 0.25 rotations, then we're 90 degrees, so movement doesn't help us at all */
         double cosineScalar = Math.cos(Units.rotationsToRadians(steerMotorError));
-        /*
-         * Make sure we don't invert our drive, even though we shouldn't ever target
-         * over 90 degrees anyway
-         */
+        /* Make sure we don't invert our drive, even though we shouldn't ever target over 90 degrees anyway */
         if (cosineScalar < 0.0) {
             cosineScalar = 0.0;
         }
@@ -346,18 +321,14 @@ public class SwerveModule {
         double azimuthTurnRps = m_steerVelocity.getValue();
         /* Azimuth turn rate multiplied by coupling ratio provides back-out rps */
         double driveRateBackOut = azimuthTurnRps * m_couplingRatioDriveRotorToCANcoder;
-        velocityToSet -= driveRateBackOut;
+        velocityToSet += driveRateBackOut;
 
         switch (driveRequestType) {
             case OpenLoopVoltage:
-                /*
-                 * Open loop ignores the driveRotationsPerMeter since it only cares about the
-                 * open loop at the mechanism
-                 */
+                /* Open loop ignores the driveRotationsPerMeter since it only cares about the open loop at the mechanism */
                 /* But we do care about the backout due to coupling, so we keep it in */
                 velocityToSet /= m_driveRotationsPerMeter;
-                m_driveMotor.setControl(m_voltageOpenLoopSetter.withOutput(velocityToSet / m_speedAt12VoltsMps * 12.0)
-                        .withEnableFOC(false));
+                m_driveMotor.setControl(m_voltageOpenLoopSetter.withOutput(velocityToSet / m_speedAt12VoltsMps * 12.0));
                 break;
 
             case Velocity:
@@ -372,6 +343,81 @@ public class SwerveModule {
                 }
                 break;
         }
+    }
+
+    /**
+     * Controls this module to the specified steer target, and applies the specific drive request.
+     * <p>
+     * This is intended only to be used for characterization of the robot, do not use this for normal use.
+     *
+     * @param steerTarget The angle the wheels should face for characterization
+     * @param driveRequest The direct voltage to apply to the motor for use during characterization
+     */
+    public void applyCharacterization(Rotation2d steerTarget, VoltageOut driveRequest)
+    {
+        double angleToSetDeg = steerTarget.getRotations();
+        /* Use the configured closed loop output mode */
+        switch (m_steerClosedLoopOutput) {
+            case Voltage:
+                m_steerMotor.setControl(m_angleVoltageSetter.withPosition(angleToSetDeg));
+                break;
+
+            case TorqueCurrentFOC:
+                m_steerMotor.setControl(m_angleTorqueSetter.withPosition(angleToSetDeg));
+                break;
+        }
+
+        /* And apply the high-level drive request */
+        m_driveMotor.setControl(driveRequest);
+    }
+
+    /**
+     * Controls this module to the specified steer target, and applies the specific drive request.
+     * <p>
+     * This is intended only to be used for characterization of the robot, do not use this for normal use.
+     *
+     * @param steerTarget The angle the wheels should face for characterization
+     * @param driveRequest The direct Torque Current to apply to the motor for use during characterization
+     */
+    public void applyCharacterization(Rotation2d steerTarget, TorqueCurrentFOC driveRequest)
+    {
+        double angleToSetDeg = steerTarget.getRotations();
+        /* Use the configured closed loop output mode */
+        switch (m_steerClosedLoopOutput) {
+            case Voltage:
+                m_steerMotor.setControl(m_angleVoltageSetter.withPosition(angleToSetDeg));
+                break;
+
+            case TorqueCurrentFOC:
+                m_steerMotor.setControl(m_angleTorqueSetter.withPosition(angleToSetDeg));
+                break;
+        }
+
+        /* And apply the high-level drive request */
+        m_driveMotor.setControl(driveRequest);
+    }
+
+    /**
+     * Configures the neutral mode to use for the module's drive motor.
+     *
+     * @param neutralMode The drive motor neutral mode
+     * @return Status code response of the request
+     */
+    public StatusCode configNeutralMode(NeutralModeValue neutralMode) {
+        var configs = new MotorOutputConfigs();
+
+        /* First read the configs so they're up-to-date */
+        StatusCode status = m_driveMotor.getConfigurator().refresh(configs);
+        if (status.isOK()) {
+            /* Then set the neutral mode config to the appropriate value */
+            configs.NeutralMode = neutralMode;
+            status = m_driveMotor.getConfigurator().apply(configs);
+        }
+        if (!status.isOK()) {
+            System.out.println(
+                    "TalonFX ID " + m_driveMotor.getDeviceID() + " failed config neutral mode with error " + status.toString());
+        }
+        return status;
     }
 
     /**
@@ -394,8 +440,7 @@ public class SwerveModule {
      * @return Current state of the module
      */
     public SwerveModuleState getCurrentState() {
-        return new SwerveModuleState(m_driveVelocity.getValue() / m_driveRotationsPerMeter,
-                Rotation2d.fromRotations(m_steerPosition.getValue()));
+        return new SwerveModuleState(m_driveVelocity.getValue() / m_driveRotationsPerMeter, Rotation2d.fromRotations(m_steerPosition.getValue()));
     }
 
     /**

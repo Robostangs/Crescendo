@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0783068279099526,
+        "x": 2.0650533667787854,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5332505479825778,
-        "y": 6.4695716798841
+        "x": 1.6612818080240364,
+        "y": 6.374347918324269
       },
       "isLocked": false,
-      "linkedName": "Center Shoot Position"
+      "linkedName": "Close Center Shoot Position"
     },
     {
       "anchor": {
@@ -20,35 +20,35 @@
         "y": 6.6644712085720474
       },
       "prevControl": {
-        "x": 2.794217763773289,
-        "y": 6.4709684108766945
+        "x": 2.295328524421185,
+        "y": 6.608042234662822
       },
       "nextControl": {
-        "x": 2.5286185664963927,
-        "y": 6.799095593561558
+        "x": 2.960611519830317,
+        "y": 6.717728425204754
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0783068279099526,
+        "x": 2.0650533667787854,
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.3929252627023776,
-        "y": 6.6180326249541395
+        "x": 1.6667213786770063,
+        "y": 6.374296112889479
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center Shoot Position"
+      "linkedName": "Close Center Shoot Position"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
       "rotationDegrees": 53.001924090332395,
-      "rotateFast": true
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
@@ -61,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,

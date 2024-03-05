@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0441608105438434,
-        "y": 6.234290774137104
+        "x": 1.685479167254631,
+        "y": 6.428299537154631
       },
       "isLocked": false,
       "linkedName": "Close Left Note"
@@ -20,8 +20,8 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.9264738287150245,
-        "y": 5.122676808358463
+        "x": 2.143926565630909,
+        "y": 5.471260900855135
       },
       "nextControl": null,
       "isLocked": false,

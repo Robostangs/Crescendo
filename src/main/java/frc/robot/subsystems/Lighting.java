@@ -1,44 +1,43 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.Lights;
-import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
-// TODO
-/*
-* has a piece -> solid orange
-* shooter @ position -> blinking green
-* shooter ready to shoot -> solid green
-* empty/idle -> cool pattern
-*/
-
 public class Lighting extends SubsystemBase {
-    private static Lighting mLighting;
-    public static Shooter mShooter = Shooter.getInstance();
-    public static Intake mIntake =  Intake.getInstance();
+    public Shooter mShooter;
+    public Intake mIntake;
     
-    private static Spark blinkin;
+    private Spark blinkin;
+    
+    @Override
+    public void periodic() {
+        if (DriverStation.isDisabled()) {
+            setLights(Lights.kOrange);
+        } 
+        
+        else if (mIntake.getShooterSensor()) {
+            if (mShooter.readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot()) {
+                setLights(Lights.kGreen);
+            }
 
-    public static double lastLight;
-
-    public static double PWMVal;
-    public static Timer timer;
-
-    public static Lighting getInstance() {
-        if (mLighting == null) {
-            mLighting = new Lighting();
+            else {
+                setLights(Lights.kBlue);
+            }
         }
-        return mLighting;
+
+        else {
+            setLights(Lights.kRed);
+        }
     }
 
-    public Lighting() {
+    private Lighting() {
+        mShooter = Shooter.getInstance();
+        mIntake = Intake.getInstance();
+
         blinkin = new Spark(Lights.blinkinPWM_ID);
-        timer = new Timer();
     }
 
     public void setLights(double PWMVal) {
@@ -46,36 +45,21 @@ public class Lighting extends SubsystemBase {
     }
 
     public void lightsOff() {
-        blinkin.set(Lights.kBlack);
+        blinkin.set(Lights.kOff);
     }
 
-    public static double getPWM() {
+    public double getPWM() {
         return blinkin.get();
     }
-    @Override
-    public void periodic() {
-        if (mIntake.getShooterSensor() && DriverStation.isEnabled()) {
-            // mIntake.setHolding(true);
 
-            // LEDs will blink when the arm is at the right setpoint to score
-            if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
-                    && Drivetrain.getInstance().isInRangeOfTarget()) {
-                if (mShooter.readyToShoot()){
-                    blinkin.set(Constants.Lights.kGreen);
-                }else{
-                    blinkin.set(Constants.Lights.kBlink);
-                }
-            }
-
-            // LEDs will be on when the arm is not at the right setpoint to score, but the shooter is occupied
-            else {
-                blinkin.set(Constants.Lights.kOrange);
-            }
+    private static Lighting mLighting;
+    
+    public static Lighting getInstance() {
+        if (mLighting == null) {
+            mLighting = new Lighting();
         }
 
-        // LEDs will be off when the shooter is not occupied or robot is off
-        else {
-            blinkin.set(Constants.Lights.kLavaPalette);
-        }
+        return mLighting;
     }
+
 }

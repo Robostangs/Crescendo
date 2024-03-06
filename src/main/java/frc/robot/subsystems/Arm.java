@@ -172,7 +172,6 @@ public class Arm extends SubsystemBase {
         BaseStatusSignal.setUpdateFrequencyForAll(50, armMotor.getClosedLoopError(), armMotor.getClosedLoopReference(),
                 armMotor.getClosedLoopReferenceSlope());
 
-        // TODO: try this, we dont even need a CANcoder
         armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
     }
 
@@ -334,8 +333,9 @@ public class Arm extends SubsystemBase {
     /**
      * Calculates the arm setpoint based on the current robot pose
      * 
-     * @return the desired arm angle to shoot into the speaker
+     * @return the desired arm angle
      *         <h1>(in degrees)</h1>
+     *         to shoot into the speaker
      */
     public double calculateArmSetpoint() {
         Pose2d speakerPose;
@@ -401,11 +401,10 @@ public class Arm extends SubsystemBase {
         TalonFXConfiguration armMotorConfig = new TalonFXConfiguration();
         armMotorConfig.Feedback.SensorToMechanismRatio = 100;
 
-        // TODO: try to not have to use a CANcoder at all
-        
         // armMotorConfig.Feedback.RotorToSensorRatio = 50;
         // armMotorConfig.Feedback.SensorToMechanismRatio = 2;
-        // armMotorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
+        // armMotorConfig.Feedback.FeedbackSensorSource =
+        // FeedbackSensorSourceValue.SyncCANcoder;
         // armMotorConfig.Feedback.FeedbackRemoteSensorID = armCoder.getDeviceID();
 
         armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
@@ -435,8 +434,8 @@ public class Arm extends SubsystemBase {
         // armMotorConfig.Slot0.kV = 04;
 
         // going higher causes oscillation
-        motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
-        motionMagicConfigs.MotionMagicAcceleration = 0.75;
+        motionMagicConfigs.MotionMagicCruiseVelocity = 1;
+        motionMagicConfigs.MotionMagicAcceleration = 0.5;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000
         motionMagicConfigs.MotionMagicJerk = 0;

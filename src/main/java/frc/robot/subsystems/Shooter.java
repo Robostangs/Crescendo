@@ -8,9 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LoggyThings.LoggyTalonFX;
-import frc.robot.subsystems.Drivetrain.Drivetrain;
-
-import java.util.List;
 
 public class Shooter extends SubsystemBase {
     /** shootMotorRight is the master motor */
@@ -49,10 +46,9 @@ public class Shooter extends SubsystemBase {
         shootMotorRight.setInverted(Constants.ShooterConstants.rightShootIsInverted);
         shootMotorLeft.setInverted(Constants.ShooterConstants.leftShootIsInverted);
 
-        Music.getInstance().addFalcon(List.of(shootMotorLeft, shootMotorRight,
-                feedMotor));
-        // SmartDashboard.putString("Shooter/.type", "Subsystem");
         SmartDashboard.putString("Shooter/Status", "Idle");
+
+        Music.getInstance().addFalcon(shootMotorLeft, shootMotorRight, feedMotor);
     }
 
     public void setShoot(double feeder, double shooter) {
@@ -177,13 +173,8 @@ public class Shooter extends SubsystemBase {
      * @return returns true if ready to feed (and shoot) right now
      */
     public boolean readyToShootAdvanced() {
-        // SmartDashboard.putNumber("Omega Radians Per Second",
-        // Drivetrain.getInstance().getState().speeds.omegaRadiansPerSecond);
-
         return Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint(), 3) &&
-                Math.abs(Arm.getInstance().getVelocity()) < 0.25 &&
-                Drivetrain.getInstance().isInRangeOfTarget() && readyToShoot() &&
-                Math.abs(Drivetrain.getInstance().getState().speeds.omegaRadiansPerSecond) < 0.15;
+                Math.abs(Arm.getInstance().getVelocity()) < 0.25 && readyToShoot();
     }
 
     private static Shooter mInstance;

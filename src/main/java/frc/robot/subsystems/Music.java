@@ -24,15 +24,14 @@ public class Music extends SubsystemBase {
     }
 
     public Consumer<String> queueMusic;
-    private boolean playPause;
+    private boolean play;
 
-    public Music() {
+    private Music() {
         mOrchestra = new Orchestra();
         queueMusic = (chrpFile) -> mOrchestra.loadMusic(chrpFile);
         queueMusic.accept("twinkle.chrp");
         SmartDashboard.putBoolean("Music/Play Music", false);
         SmartDashboard.putString("Music/Music File", "twinkle.chrp");
-        SmartDashboard.putString("Music/.type", "Aesthetic");
     }
 
     public void addFalcon(TalonFX... falcons) {
@@ -49,13 +48,19 @@ public class Music extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // playPause = SmartDashboard.getBoolean("Play Music", false);
+        play = SmartDashboard.getBoolean("Play Music", false);
 
-        // if (playPause && !mOrchestra.isPlaying()) {
+        if (play) {
+            mOrchestra.play();
+        } else {
+            mOrchestra.pause();
+        }
+
+        // if (play && !mOrchestra.isPlaying()) {
         //     playMusic(SmartDashboard.getString("Music File", ""));
         // }
 
-        // if (playPause) {
+        // if (!play) {
         //     mOrchestra.pause();
         // }
     }

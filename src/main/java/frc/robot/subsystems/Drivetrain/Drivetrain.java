@@ -33,6 +33,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Robot;
 import frc.robot.Vision.AprilTagLimelight;
 import frc.robot.Vision.LimelightHelpers;
+import frc.robot.subsystems.Music;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -111,6 +112,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseBlue);
         }
 
+        for (SwerveModule module : Modules) {
+            Music.getInstance().addFalcon(module.getDriveMotor(), module.getSteerMotor());
+        }
     }
 
     private void configurePathPlanner() {
@@ -245,6 +249,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
      */
     public boolean isInRangeOfTarget() {
         return isInRangeOfTarget(10);
+    }
+
+    public boolean readyToShoot() {
+        return this.isInRangeOfTarget() &&
+                Math.abs(this.getState().speeds.omegaRadiansPerSecond) < 0.05;
     }
 
     private static Drivetrain mInstance;

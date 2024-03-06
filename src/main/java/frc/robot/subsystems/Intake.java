@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -14,7 +13,6 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Intake extends SubsystemBase {
-    private Compressor mCompressor;
     private Solenoid solenoid;
     private LoggyTalonFX intakeMotor, beltMotor;
     private DigitalInput shooterSensor;
@@ -29,8 +27,7 @@ public class Intake extends SubsystemBase {
             setHolding(true);
 
             // LEDs will blink when the arm is at the right setpoint to score
-            if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
-                    && Drivetrain.getInstance().isInRangeOfTarget()) {
+            if (Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot()) {
                 LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
                 LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
             }
@@ -51,7 +48,6 @@ public class Intake extends SubsystemBase {
     
     private Intake() {
         solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.solenoidID);
-        mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
         shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
         
         intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.shooterMotorID, true);
@@ -60,7 +56,6 @@ public class Intake extends SubsystemBase {
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorInverted);
         beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);
 
-        mCompressor.enableDigital();
         holding = false;
 
         if (Robot.isSimulation()) {

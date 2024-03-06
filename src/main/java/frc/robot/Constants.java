@@ -251,9 +251,8 @@ public final class Constants {
 		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
 
 		/* IRL PID */
-		// TODO: tune these for auto paths to work better
-		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.05, 2);
-		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4, 10);
+		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.05, 0.5);
+		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4, 3);
 
 		public static final double kMaxSpeedMetersPerSecond = 4;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
@@ -435,8 +434,15 @@ public final class Constants {
 
 		public static final double kGreen = 0.73;
 		public static final double kBlink = 0.43;
+
+		/** Robostangs Color */
 		public static final double kOrange = 0.65;
-		public static final double kBlack = 0.99;
+
+		// TODO: get these led values
+		public static final double kRed = 0.61;
+		public static final double kBlue = 0.87;
+
+		public static final double kOff = 0.99;
 		public static final double kLavaPalette = -0.39;
 	}
 }

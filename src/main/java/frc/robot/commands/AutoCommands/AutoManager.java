@@ -48,7 +48,7 @@ public class AutoManager extends Command {
      * displayed to the shuffleboard display for the drivers to see during the auto
      * phase
      */
-    private String status = "Intaking";
+    private String status = "Starting";
 
     /**
      * this variable must push the note all the way into the shooter, touching the

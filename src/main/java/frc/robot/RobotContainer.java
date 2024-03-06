@@ -3,20 +3,19 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.Lights;
 import frc.robot.commands.Spit;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
 import frc.robot.commands.feeder.BeltDrive;
 import frc.robot.commands.feeder.BeltFeed;
-import frc.robot.commands.feeder.DeployAndIntake;
 import frc.robot.commands.feeder.QuickFeed;
 import frc.robot.commands.feeder.ShooterCharge;
 import frc.robot.commands.shooter.AimAndShoot;
@@ -43,8 +42,6 @@ public class RobotContainer {
 
 	private final Telemetry logger;
 	public Field2d field;
-	private Spark blinkin = new Spark(Lights.blinkinPWM_ID);
-
 
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
@@ -70,24 +67,28 @@ public class RobotContainer {
 	}
 
 	private void configureDriverBinds() {
+		new Trigger(() -> Timer.getMatchTime() > 25 && Timer.getMatchTime() < 30)
+				.onTrue(new InstantCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
+						.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)));
+
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, true));
 		xDrive.x().toggleOnTrue(new AimAndShoot());
 
-		// xDrive.getHID().setRumble(RumbleType.kBothRumble, xDrive.getHID().getRightTriggerAxis());
-
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSpeakerCenter));
 
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain
-				.runOnce(() -> drivetrain.seedFieldRelative(!Robot.isRed() ? new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0)) : new Pose2d(Constants.fieldLength - 1.25, 5.55, Rotation2d.fromDegrees(180)))));
+				.runOnce(() -> drivetrain
+						.seedFieldRelative(!Robot.isRed() ? new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0))
+								: new Pose2d(Constants.fieldLength - 1.25, 5.55, Rotation2d.fromDegrees(180)))));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
 		xDrive.leftStick().onTrue(new InstantCommand(() -> {
-			mIntake.setHolding(!mIntake.getHolding());
 			beltFeed.deployIntake = false;
+			mIntake.setHolding(!mIntake.getHolding());
 		}));
 
 		xDrive.rightStick().onTrue(new InstantCommand(() -> {
@@ -96,8 +97,8 @@ public class RobotContainer {
 		}));
 
 		xDrive.leftBumper().onTrue(new InstantCommand(() -> {
-			mIntake.setHolding(!mIntake.getHolding());
 			beltFeed.deployIntake = false;
+			mIntake.setHolding(!mIntake.getHolding());
 		}));
 
 		xDrive.rightBumper().onTrue(new InstantCommand(() -> {
@@ -110,20 +111,17 @@ public class RobotContainer {
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
-		// new Trigger(() -> xManip.getLeftTriggerAxis() >
-		// Constants.OperatorConstants.kManipDeadzone)
-		// .or(() -> xManip.getRightTriggerAxis() >
-		// Constants.OperatorConstants.kManipDeadzone)
-		// .whileTrue(new FineAdjust(() -> xManip.getRightTriggerAxis() -
-		// xManip.getLeftTriggerAxis()));
-
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
 
 		new Trigger(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new ShooterCharge(xManip::getRightTriggerAxis));
 
-		// xManip.y().toggleOnTrue(new SetPoint());
+		new Trigger(() -> Timer.getMatchTime() > 25 && Timer.getMatchTime() < 30)
+				.onTrue(new InstantCommand(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 1))
+						.finallyDo(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 0)));
+
+		xManip.y().onTrue(mClimber.runOnce(mClimber::toggleSelected));
 		xManip.x().whileTrue(new QuickFeed());
 
 		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getLeftBumper()));
@@ -131,9 +129,12 @@ public class RobotContainer {
 				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xManip.getHID().getLeftBumper()));
 
 		xManip.povRight().whileTrue(new Spit());
-		xManip.povDown().whileTrue(new DeployAndIntake());
-		//TODO SOMETHIHRJIHFIEHWFHWEIOHFO
-		// xManip.povLeft().onTrue(new InstantCommand(() -> blinkin.set(Lights.k)));
+
+		xManip.povDown().onTrue(new InstantCommand(() -> {
+			beltFeed.deployIntake = true;
+			mIntake.setHolding(!mIntake.getHolding());
+		}));
+
 
 		xManip.rightBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getLeftBumper()));
 		xManip.leftBumper().whileTrue(new FeedAndShoot());
@@ -149,13 +150,6 @@ public class RobotContainer {
 				.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(mClimber.run(() -> mClimber.moveSelected(
 						xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis())).finallyDo(mClimber::stop));
-
-		xManip.y().onTrue(mClimber.runOnce(mClimber::toggleSelected));
-		// new Trigger(() -> xManip.getHID().getRightStickButton()).whileTrue(new
-		// RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
-		// new Trigger(() -> xManip.getHID().getLeftStickButton()).whileTrue(new
-		// RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
-
 	}
 
 	public RobotContainer() {
@@ -172,8 +166,6 @@ public class RobotContainer {
 	}
 
 	private void configureSimBinds() {
-		// removeDefaultCommands();
-
 		new Trigger(() -> simController.getRawButtonPressed(1))
 				.toggleOnTrue(new Align(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1), null,
 						false));

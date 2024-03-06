@@ -33,6 +33,7 @@ public class Spit extends Command {
     public void end(boolean interrupted) {
         mShooter.stop();
         mIntake.stop();
+        mIntake.setHolding(false);
         
         SmartDashboard.putString("Intake/Status", "Idle");
         SmartDashboard.putString("Shooter/Status", "Idle");

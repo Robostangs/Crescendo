@@ -32,11 +32,9 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
-import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -141,7 +139,7 @@ public class Robot extends TimedRobot {
 
 		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getHolding()).withSize(2, 2).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
-		teleopTab.addBoolean("Ready To Shoot", () -> Shooter.getInstance().readyToShootAdvanced()).withSize(2, 2)
+		teleopTab.addBoolean("Ready To Shoot", () -> Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot()).withSize(2, 2)
 				.withPosition(0, 0);
 
 		teleopTab.addString("Selected Climber", () -> Climber.getInstance().getLeftSelected() ? "Left" : "Right")
@@ -178,7 +176,8 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		NamedCommands.registerCommand("align and shoot", new InstantCommand(() -> autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
+				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
+				// .alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
 
 		// use this for on the fly shooting
 		NamedCommands.registerCommand("shoot", new InstantCommand(() -> autoManager.shoot = true)
@@ -192,7 +191,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
-		
+
 		if (Intake.getInstance().getShooterSensor() && DriverStation.isEnabled()) {
 
 			// LEDs will blink when the arm is at the right setpoint to score and swerve is
@@ -258,6 +257,7 @@ public class Robot extends TimedRobot {
 		}
 
 		autonCommand = new SequentialCommandGroup(
+				// new FeedAndShoot().until(() -> !Intake.getInstance().getShooterSensor()),
 				new InstantCommand(() -> Robot.autoManager.shoot = autoShoot.getSelected())
 						.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
@@ -309,7 +309,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		new InstantCommand(() -> Lighting.getInstance());
 	}
 
 	@Override

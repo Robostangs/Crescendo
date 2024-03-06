@@ -57,7 +57,7 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
 		/** The height (in meters) of the speaker */
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.1, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.15, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 		
 		public static final double SpeakerHeight = 1.9;
@@ -252,8 +252,8 @@ public final class Constants {
 
 		/* IRL PID */
 		// TODO: tune these for auto paths to work better
-		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.01);
-		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4);
+		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.05, 2);
+		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4, 10);
 
 		public static final double kMaxSpeedMetersPerSecond = 4;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;

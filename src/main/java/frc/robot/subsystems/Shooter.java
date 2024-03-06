@@ -32,7 +32,6 @@ public class Shooter extends SubsystemBase {
         fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
         fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
         fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
-        fxConfig.MotorOutput.PeakReverseDutyCycle = -1;
 
         fxConfig.Slot0.kP = 0.1;
         fxConfig.Slot0.kI = 0.01;
@@ -44,7 +43,6 @@ public class Shooter extends SubsystemBase {
 
         fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         fxConfig.Audio.AllowMusicDurDisable = true;
-        fxConfig.MotorOutput.PeakReverseDutyCycle = -1;
         feedMotor.getConfigurator().apply(fxConfig);
 
         feedMotor.setInverted(Constants.ShooterConstants.feedIsInverted);
@@ -123,7 +121,7 @@ public class Shooter extends SubsystemBase {
 
     public void setShooterBrake(boolean brake) {
         NeutralModeValue mode = NeutralModeValue.Coast;
-        
+
         if (brake) {
             mode = NeutralModeValue.Brake;
         }
@@ -173,15 +171,19 @@ public class Shooter extends SubsystemBase {
 
     /**
      * If the shooter is at the right angle, the shooter wheels are spinning fast
-     * enough, and the robot is aligned with the target
+     * enough, and the robot is aligned with the target and not currently rotating
+     * much
      * 
      * @return returns true if ready to feed (and shoot) right now
      */
     public boolean readyToShootAdvanced() {
-        return Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint(), 3)
-                && Math.abs(Arm.getInstance().getVelocity()) < 0.25
-                // && readyToShoot();
-                && Drivetrain.getInstance().isInRangeOfTarget() && readyToShoot();
+        // SmartDashboard.putNumber("Omega Radians Per Second",
+        // Drivetrain.getInstance().getState().speeds.omegaRadiansPerSecond);
+
+        return Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint(), 3) &&
+                Math.abs(Arm.getInstance().getVelocity()) < 0.25 &&
+                Drivetrain.getInstance().isInRangeOfTarget() && readyToShoot() &&
+                Math.abs(Drivetrain.getInstance().getState().speeds.omegaRadiansPerSecond) < 0.15;
     }
 
     private static Shooter mInstance;

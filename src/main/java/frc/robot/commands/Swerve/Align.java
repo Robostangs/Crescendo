@@ -90,18 +90,18 @@ public class Align extends Command {
     public void initialize() {
         drive = new SwerveRequest.FieldCentricFacingAngle();
         // TODO: tune this so that note align and speaker align work better
-        drive.HeadingController = new PhoenixPIDController(5.0, 20, 0.3);
+        drive.HeadingController = new PhoenixPIDController(4.0, 20, 0.3);
         drive.Deadband = Constants.OperatorConstants.deadband;
-        drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.1;
+        drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
 
         timer.restart();
 
-        if (note) {
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
-        } else {
-            // This pipeline will only look for the Speaker April Tag
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 2);
-        }
+        // if (note) {
+        //     LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+        // } else {
+        //     // This pipeline will only look for the Speaker April Tag
+        //     LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 2);
+        // }
     }
 
     @Override
@@ -119,7 +119,6 @@ public class Align extends Command {
         double rotationError = drive.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees();
 
         SmartDashboard.putNumber("Swerve/Rotation Error", rotationError);
-        SmartDashboard.putNumber("Swerve/Rotation Target", drive.TargetDirection.getDegrees());
 
         drive
                 .withVelocityX(-translateY.get()

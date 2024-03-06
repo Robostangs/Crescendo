@@ -34,6 +34,12 @@
           "data": {
             "pathName": "center to left note"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "align and shoot"
+          }
         }
       ]
     }

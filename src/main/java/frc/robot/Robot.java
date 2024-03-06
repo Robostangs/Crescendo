@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
 		}
 
 		SmartDashboard.putData("Field", teleopField);
-		
+
 		startingPose.setDefaultOption("Center", "center"); // center
 		startingPose.addOption("Amp Side", "amp"); // left
 		startingPose.addOption("Stage Side", "stage"); // right
@@ -130,12 +130,10 @@ public class Robot extends TimedRobot {
 				.withProperties(Map.of("min", -1, "max", 15, "show value", true));
 		autoTab.add("Path Delay", 0).withSize(2, 1).withWidget(BuiltInWidgets.kNumberSlider).withPosition(0, 4)
 				.withProperties(Map.of("min", 0, "max", 15, "block increment", 1));
-		// autoTab.add("Field", autoField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
 
 		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
 				.getEntry("Path Delay");
 
-		// teleopTab.add("Field", teleopField).withSize(9, 5).withPosition(4, 0).withWidget(BuiltInWidgets.kField);
 		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 0)
 				.withWidget(BuiltInWidgets.kDial)
 				.withProperties(Map.of("min", -1, "max", 135, "show value", true));
@@ -153,17 +151,22 @@ public class Robot extends TimedRobot {
 			try {
 				// front camera (intake cam)
 				teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(4, 0);
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(4, 0)
+						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 				// rear camera (shooting cam)
 				teleopTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0);
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0)
+						.withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
 
-
+				// front camera (intake cam)
 				autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(4, 0);
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(4, 0)
+						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 				// rear camera (shooting cam)
 				autoTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0);
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0)
+						.withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
+
 			} catch (Exception e) {
 				System.out.println("Failed to add camera to Shuffleboard");
 			}
@@ -242,14 +245,13 @@ public class Robot extends TimedRobot {
 		try {
 			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
 		} catch (Exception e) {
-			// e.printStackTrace();
 			if (autoChooser.getSelected().equals("back-up")) {
 				pathPlannerCommand = Drivetrain.getInstance()
 						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.5));
 			}
 
 			else {
-				pathPlannerCommand = new PrintCommand("Null Command");
+				pathPlannerCommand = new PrintCommand("Null Path");
 				System.out.println("Invalid Auto");
 			}
 		}

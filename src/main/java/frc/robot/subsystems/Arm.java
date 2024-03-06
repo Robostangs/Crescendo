@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -98,8 +97,8 @@ public class Arm extends SubsystemBase {
     }
 
     private Arm() {
-
         armCoder = new LoggyCANcoder(Constants.ArmConstants.armEncoderID, false);
+        armCoder.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
         CANcoderConfiguration armCoderConfig = new CANcoderConfiguration();
 
         /*
@@ -111,7 +110,7 @@ public class Arm extends SubsystemBase {
         armCoderConfig.MagnetSensor.MagnetOffset = 0;
 
         /* Do not apply */
-        // armCoder.getConfigurator().apply(armCoderConfig);
+        armCoder.getConfigurator().apply(armCoderConfig);
 
         // armCoder.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
         // armCoder.setPosition(Units.degreesToRotations(0));
@@ -173,7 +172,8 @@ public class Arm extends SubsystemBase {
         BaseStatusSignal.setUpdateFrequencyForAll(50, armMotor.getClosedLoopError(), armMotor.getClosedLoopReference(),
                 armMotor.getClosedLoopReferenceSlope());
 
-        // SmartDashboard.putString("Arm/.type", "Subsystem");
+        // TODO: try this, we dont even need a CANcoder
+        armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
     }
 
     /**
@@ -399,10 +399,14 @@ public class Arm extends SubsystemBase {
 
     public TalonFXConfiguration getArmMotorConfig() {
         TalonFXConfiguration armMotorConfig = new TalonFXConfiguration();
-        armMotorConfig.Feedback.SensorToMechanismRatio = 2;
-        armMotorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
-        armMotorConfig.Feedback.RotorToSensorRatio = 50;
-        armMotorConfig.Feedback.FeedbackRemoteSensorID = armCoder.getDeviceID();
+        armMotorConfig.Feedback.SensorToMechanismRatio = 100;
+
+        // TODO: try to not have to use a CANcoder at all
+        
+        // armMotorConfig.Feedback.RotorToSensorRatio = 50;
+        // armMotorConfig.Feedback.SensorToMechanismRatio = 2;
+        // armMotorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
+        // armMotorConfig.Feedback.FeedbackRemoteSensorID = armCoder.getDeviceID();
 
         armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
@@ -432,7 +436,7 @@ public class Arm extends SubsystemBase {
 
         // going higher causes oscillation
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
-        motionMagicConfigs.MotionMagicAcceleration = 0.5;
+        motionMagicConfigs.MotionMagicAcceleration = 0.75;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000
         motionMagicConfigs.MotionMagicJerk = 0;

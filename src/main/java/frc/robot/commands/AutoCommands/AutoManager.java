@@ -17,11 +17,37 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class AutoManager extends Command {
-    private Timer shootTimer, intakeTimer, feedTimer;
     private Intake mIntake;
     private Shooter mShooter;
     private Arm mArm;
 
+    /**
+     * This timer will handle the time between the shooter being ready to shoot and
+     * saying that it has beeing trying to shoot for too long, and it is time to
+     * just force a shot and leave
+     */
+    private Timer shootTimer;
+
+    /**
+     * This timer will handle the time between telling the robot to shoot and the
+     * shooter not having a piece, if the timeout is reached, then the robot will
+     * spit the piece out and just move on to the next piece
+     */
+    private Timer intakeTimer;
+
+    /**
+     * This timer will handle positioning the note, and does not have a timeout. It
+     * is used in order to be able to keep track of the position of the note using
+     * time, even if we want to shoot but the piece has not been positioned yet.
+     */
+    private Timer feedTimer;
+
+    /**
+     * The current status of this auto command, this will say whether we are trying
+     * to shoot or position the note or anything important, this info will also be
+     * displayed to the shuffleboard display for the drivers to see during the auto
+     * phase
+     */
     private String status = "Intaking";
 
     /**
@@ -56,20 +82,33 @@ public class AutoManager extends Command {
      */
     private static final double spitTime = 0.5;
 
-    // the piece will start reversed at the start since we put the piece in
-    // properly, or we can manually reverse it, this allows for felxibility
-
     /**
-     * These values are based on the original state of the shooter, like what do we
-     * decide to be the starting position of the note
+     * This variable is user enabled and will be turned off through a set of if
+     * statements and conditionals, this is to make sure that the robot shoots when
+     * it is supposed to. This variable will start false as we are unsure of the
+     * starting state of the robot
      */
-    public boolean shoot = false, hasBeenReversed = true;
-
-    public boolean shotsFired = false;
+    public boolean shoot = false;
 
     /**
-     * If we are going under stage this should defo be off, it should be on
-     * regardless tho, maybe this needs to be a SendableChooser
+     * This variable is entriely controlled by the Auto Manager, and will be enabled
+     * once the feedTimer indicates that the piece has been proerply positioned and
+     * is ready to be shot
+     */
+    private boolean hasBeenReversed = true;
+
+    /**
+     * This variable will be entirely controlled by the Auto Manager and will be
+     * used to determine when to end the shoot (command) and return to the state of
+     * intaking
+     */
+    private boolean shotsFired = false;
+
+    /**
+     * This variable is set by the user, using a SendableChooser. This decides
+     * whether or not we plan on keeping the intake deployed for the whole
+     * autonomous period (the intake motor is still controlled by a holding
+     * variable)
      */
     private boolean intakeAlwaysDeployed;
 
@@ -97,6 +136,8 @@ public class AutoManager extends Command {
 
         intakeAlwaysDeployed = Robot.intakeAlwaysOut.getSelected();
         shootTimer = null;
+        feedTimer = null;
+        intakeTimer = null;
 
         Pose2d startPose;
 
@@ -179,16 +220,18 @@ public class AutoManager extends Command {
                         feederSpeed = Constants.ShooterConstants.feederShootValue;
                         postAutoStatus("Shooting");
                         shotsFired = true;
-                    } 
-                    
-                    // if the shooter has been trying to prepare for a while, cancel the shoot command and then just shoot
+                    }
+
+                    // if the shooter has been trying to prepare for a while, cancel the shoot
+                    // command and then just shoot
                     else if (shootTimer.get() > shootTimeout) {
                         postAutoStatus("Shooter Timed Out");
                         feederSpeed = 1;
                         shotsFired = true;
-                    } 
-                    
-                    // if the timeout has not been triggered and the shooter is still being charged then keep charging
+                    }
+
+                    // if the timeout has not been triggered and the shooter is still being charged
+                    // then keep charging
                     else {
                         postAutoStatus("Preparing Shooter");
                         feederSpeed = 0;
@@ -219,7 +262,7 @@ public class AutoManager extends Command {
             // set the shooter and belt to pass the piece into shooter, once in shooter the
             // above if statement will be triggered in the next loop will be called
             else {
-
+                mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
                 shootTimer = null;
                 feedTimer = null;
 
@@ -249,6 +292,7 @@ public class AutoManager extends Command {
                     else {
                         mIntake.setBelt(-1);
                         mIntake.setIntake(-1);
+                        mShooter.shoot(-1, -1);
                         postAutoStatus("Shooter Handoff Timed Out, Removing Note");
                     }
                 }
@@ -298,7 +342,16 @@ public class AutoManager extends Command {
                     // it will work at least
                     mShooter.shoot(0, 1);
 
-                    mArm.setMotionMagic(mArm.calculateArmSetpoint());
+                    // dont want to hit the stage, so within 4 meters of the speaker, start tracking
+                    if (Drivetrain.getInstance().getDistanceToSpeaker() < 4) {
+                        mArm.setMotionMagic(mArm.calculateArmSetpoint());
+                    }
+
+                    // if we are farther than 4 meters, then I dont want the arm up, because what if
+                    // we go within 4 meters and then out, send arm to intake position
+                    else {
+                        mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+                    }
 
                     // postAutoStatus("Waiting To Shoot");
                 }
@@ -318,7 +371,7 @@ public class AutoManager extends Command {
                 if (!intakeAlwaysDeployed) {
                     mIntake.setExtend(true);
                 }
-                
+
                 mIntake.setIntake(1);
 
                 // this code must pull the piece off the ground and into the shooter
@@ -344,12 +397,10 @@ public class AutoManager extends Command {
     }
 
     public void postAutoStatus(String status) {
-        this.status = status;
-
-        System.out.println("Auto Status @ " + Timer.getMatchTime() + ": " + status);
-
-        if (status.contains("Time") || status.contains("time") || status.contains("Shooting")) {
-            Shuffleboard.addEventMarker(status, "Auto Status @ " + Timer.getMatchTime(), EventImportance.kCritical);
+        if ((status.contains("Time") || status.contains("time") || status.contains("Shooting")) && this.status != status) {
+            Shuffleboard.addEventMarker(status + " (" + Timer.getMatchTime() + ")", "Auto Status @ " + Timer.getMatchTime(), EventImportance.kCritical);
         }
+
+        this.status = status;
     }
 }

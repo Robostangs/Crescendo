@@ -36,6 +36,7 @@ import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -188,7 +189,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
-
+		
 		if (Intake.getInstance().getShooterSensor() && DriverStation.isEnabled()) {
 
 			// LEDs will blink when the arm is at the right setpoint to score and swerve is
@@ -306,6 +307,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
+		new InstantCommand(() -> Lighting.getInstance());
 	}
 
 	@Override

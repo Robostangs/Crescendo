@@ -431,14 +431,12 @@ public final class Constants {
 	}
 
 	public static class Lights {
-		public static final double blinkTime = 7.5;
 		public static final int blinkinPWM_ID = 0;
-		public static final double kConeStatic = 0.11;
-		public static final double kConeBlink = 0.15;
-		public static final double kCubeStatic = 0.31;
-		public static final double kCubeBlink = 0.35;
-		public static final double kFireTwinkle = -0.49;
-		public static final double kRobostangs = 0.63;
-		public static final double kKillLights = 0.99;
+
+		public static final double kGreen = 0.73;
+		public static final double kBlink = 0.43;
+		public static final double kOrange = 0.65;
+		public static final double kBlack = 0.99;
+		public static final double kLavaPalette = -0.39;
 	}
 }

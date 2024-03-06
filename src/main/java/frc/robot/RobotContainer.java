@@ -3,11 +3,13 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.Lights;
 import frc.robot.commands.Spit;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.commands.Swerve.PathToPoint;
@@ -41,6 +43,8 @@ public class RobotContainer {
 
 	private final Telemetry logger;
 	public Field2d field;
+	private Spark blinkin = new Spark(Lights.blinkinPWM_ID);
+
 
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
@@ -128,6 +132,8 @@ public class RobotContainer {
 
 		xManip.povRight().whileTrue(new Spit());
 		xManip.povDown().whileTrue(new DeployAndIntake());
+		//TODO SOMETHIHRJIHFIEHWFHWEIOHFO
+		// xManip.povLeft().onTrue(new InstantCommand(() -> blinkin.set(Lights.k)));
 
 		xManip.rightBumper().whileTrue(new FeedAndShoot(() -> xManip.getHID().getLeftBumper()));
 		xManip.leftBumper().whileTrue(new FeedAndShoot());

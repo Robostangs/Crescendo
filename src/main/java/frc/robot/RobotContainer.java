@@ -1,7 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix6.Orchestra;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -27,10 +25,12 @@ import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Music;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
+@SuppressWarnings("unused")
 public class RobotContainer {
 	private final CommandXboxController xDrive = new CommandXboxController(0);
 	private final CommandXboxController xManip = new CommandXboxController(1);
@@ -40,6 +40,8 @@ public class RobotContainer {
 	private final Arm mArm = Arm.getInstance();
 	private final Intake mIntake = Intake.getInstance();
 	private final Climber mClimber = Climber.getInstance();
+	private final Lighting mLighting = Lighting.getInstance();
+	private final Music mMusic = Music.getInstance();
 
 	private BeltFeed beltFeed = new BeltFeed();
 
@@ -48,8 +50,7 @@ public class RobotContainer {
 
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
-
-		Music.getInstance();
+		
 		mIntake.setDefaultCommand(beltFeed);
 
 		if (Robot.isSimulation()) {

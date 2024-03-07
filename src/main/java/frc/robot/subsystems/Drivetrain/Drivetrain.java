@@ -100,7 +100,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                     Constants.Vision.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 
-            super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionOfMyVision);
+            super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionInMyVision);
         }
 
         super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));

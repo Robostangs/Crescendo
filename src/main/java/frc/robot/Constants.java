@@ -48,7 +48,7 @@ public final class Constants {
 		// 0.1, Units.degreesToRadians(10));
 
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionOfMyVision = VecBuilder.fill(0.75, 0.75, Units.degreesToRadians(250));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.6, 0.6, Units.degreesToRadians(250));
 		// public static final double[] SpeakerCoords = { 0.21, 5.55, 1.97 };
 
 		/** This needs to be tuned for the shooter */
@@ -251,8 +251,8 @@ public final class Constants {
 		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
 
 		/* IRL PID */
-		public static final PIDConstants translationPID = new PIDConstants(0.9, 0.1, 0.05, 0.5);
-		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.4, 3);
+		public static final PIDConstants translationPID = new PIDConstants(0.6, 0.5, 0.4, 5);
+		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.5, 10);
 
 		public static final double kMaxSpeedMetersPerSecond = 4;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
@@ -295,7 +295,7 @@ public final class Constants {
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
 		public static final double falconShooterLoadRPM = 6200;
-		public static final double falconShooterThresholdRPM = falconFreeSpeedRPM * 0.9;
+		public static final double falconShooterThresholdRPM = falconFreeSpeedRPM * 0.925;
 
 		/* Kraken x60 Info */
 		public static class Kraken {

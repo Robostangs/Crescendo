@@ -434,7 +434,7 @@ public class Arm extends SubsystemBase {
         // armMotorConfig.Slot0.kV = 04;
 
         // going higher causes oscillation
-        motionMagicConfigs.MotionMagicCruiseVelocity = 1;
+        motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
         motionMagicConfigs.MotionMagicAcceleration = 0.5;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000

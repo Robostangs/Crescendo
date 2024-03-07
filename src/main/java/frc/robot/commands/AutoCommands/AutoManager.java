@@ -179,7 +179,6 @@ public class AutoManager extends Command {
         if (shoot) {
 
             // if there is a piece in the shooter
-            // if (mIntake.getShooterSensor() || Robot.isSimulation()) {
             if (mIntake.getShooterSensor()) {
 
                 // mIntake.setHolding(true);
@@ -398,7 +397,7 @@ public class AutoManager extends Command {
 
     public void postAutoStatus(String status) {
         if ((status.contains("Time") || status.contains("time") || status.contains("Shooting")) && this.status != status) {
-            Shuffleboard.addEventMarker(status + " (" + Timer.getMatchTime() + ")", "Auto Status @ " + Timer.getMatchTime(), EventImportance.kCritical);
+            Shuffleboard.addEventMarker(status + " (" + Timer.getMatchTime() + ")", "" + Timer.getMatchTime(), EventImportance.kCritical);
         }
 
         this.status = status;

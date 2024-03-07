@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix6.Orchestra;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -25,6 +27,7 @@ import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Music;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
@@ -46,6 +49,7 @@ public class RobotContainer {
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
+		Music.getInstance();
 		mIntake.setDefaultCommand(beltFeed);
 
 		if (Robot.isSimulation()) {

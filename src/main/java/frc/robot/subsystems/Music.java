@@ -56,13 +56,7 @@ public class Music extends SubsystemBase {
             mOrchestra.pause();
         }
 
-        // if (play && !mOrchestra.isPlaying()) {
-        //     playMusic(SmartDashboard.getString("Music File", ""));
-        // }
 
-        // if (!play) {
-        //     mOrchestra.pause();
-        // }
     }
 
     private void playMusic(String chrpFile) {

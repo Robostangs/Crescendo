@@ -59,16 +59,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
+    
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
             if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1
                     && LimelightHelpers.getCurrentPipelineIndex(
-                            Constants.Vision.llAprilTagRear) == Constants.Vision.llAprilTagPipelineIndex) {
+                            Constants.Vision.llAprilTagRear) == Constants.Vision.llAprilTagPipelineIndex
+                    && LimelightHelpers
+                            .getLatestResults(Constants.Vision.llAprilTagRear).targetingResults.botpose_tagcount > 1) {
                 this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear),
                         Timer.getFPGATimestamp());
             }
 
             if (LimelightHelpers.getTid(Constants.Vision.llAprilTag) != -1 && LimelightHelpers
-                    .getCurrentPipelineIndex(Constants.Vision.llAprilTag) == Constants.Vision.llAprilTagPipelineIndex) {
+                    .getCurrentPipelineIndex(Constants.Vision.llAprilTag) == Constants.Vision.llAprilTagPipelineIndex
+                    && LimelightHelpers
+                            .getLatestResults(Constants.Vision.llAprilTag).targetingResults.botpose_tagcount > 1) {
                 this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag),
                         Timer.getFPGATimestamp());
             }

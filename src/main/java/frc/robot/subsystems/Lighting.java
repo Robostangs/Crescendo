@@ -1,59 +1,50 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.Lights;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Lighting extends SubsystemBase {
-    public Shooter mShooter;
-    public Intake mIntake;
-    
-    private Spark blinkin;
-    
+    private DigitalOutput enabled, loaded, readyToShoot;
+
+
     @Override
     public void periodic() {
-        if (DriverStation.isDisabled()) {
-            setLights(Lights.kOrange);
-        } 
-        
-        else if (mIntake.getShooterSensor()) {
-            if (mShooter.readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot()) {
-                setLights(Lights.kGreen);
-            }
+        enabled.set(DriverStation.isEnabled());
+        loaded.set(Intake.getInstance().getShooterSensor());
+        readyToShoot.set(Intake.getInstance().getShooterSensor() && Shooter.getInstance().readyToShootAdvanced()
+                && Drivetrain.getInstance().readyToShoot());
 
-            else {
-                setLights(Lights.kBlue);
-            }
-        }
+        // if (DriverStation.isDisabled()) {
+        // enabled.set(false);
+        // setLights(Lights.kOrange);
+        // }
 
-        else {
-            setLights(Lights.kRed);
-        }
+        // else if (mIntake.getShooterSensor()) {
+        // if (mShooter.readyToShootAdvanced() &&
+        // Drivetrain.getInstance().readyToShoot()) {
+        // setLights(Lights.kGreen);
+        // }
+
+        // else {
+        // setLights(Lights.kBlue);
+        // }
+        // }
+
+        // else {
+        // setLights(Lights.kRed);
+        // }
     }
 
     private Lighting() {
-        mShooter = Shooter.getInstance();
-        mIntake = Intake.getInstance();
-
-        blinkin = new Spark(Lights.blinkinPWM_ID);
-    }
-
-    public void setLights(double PWMVal) {
-        blinkin.set(PWMVal);
-    }
-
-    public void lightsOff() {
-        blinkin.set(Lights.kOff);
-    }
-
-    public double getPWM() {
-        return blinkin.get();
+        enabled = new DigitalOutput(0);
+        enabled = new DigitalOutput(1);
+        enabled = new DigitalOutput(2);
     }
 
     private static Lighting mLighting;
-    
+
     public static Lighting getInstance() {
         if (mLighting == null) {
             mLighting = new Lighting();
@@ -61,5 +52,6 @@ public class Lighting extends SubsystemBase {
 
         return mLighting;
     }
+
 
 }

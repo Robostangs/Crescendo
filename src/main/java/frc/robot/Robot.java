@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
+import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
@@ -139,7 +140,10 @@ public class Robot extends TimedRobot {
 
 		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getHolding()).withSize(2, 2).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
-		teleopTab.addBoolean("Ready To Shoot", () -> Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot()).withSize(2, 2)
+		teleopTab
+				.addBoolean("Ready To Shoot",
+						() -> Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot())
+				.withSize(2, 2)
 				.withPosition(0, 0);
 
 		teleopTab.addString("Selected Climber", () -> Climber.getInstance().getLeftSelected() ? "Left" : "Right")
@@ -175,12 +179,11 @@ public class Robot extends TimedRobot {
 
 		DriverStation.silenceJoystickConnectionWarning(true);
 
-		NamedCommands.registerCommand("align and shoot", new InstantCommand(() -> autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
-				// .alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
+		NamedCommands.registerCommand("Align and Shoot", new InstantCommand(() -> autoManager.shoot = true)
+				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
 
 		// use this for on the fly shooting
-		NamedCommands.registerCommand("shoot", new InstantCommand(() -> autoManager.shoot = true)
+		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
 				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 	}
 

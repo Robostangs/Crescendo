@@ -38,7 +38,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @SuppressWarnings("unused")
-
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements
  * subsystem
@@ -51,27 +50,23 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private Field2d mField;
-    private AprilTagLimelight aprilTagReader = new AprilTagLimelight(
-            Constants.Vision.llAprilTag,
-            Constants.Vision.llAprilTagRear);
 
-    private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    public final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
     @Override
     public void periodic() {
-    
+
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
-            if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1
-                    && LimelightHelpers.getCurrentPipelineIndex(
-                            Constants.Vision.llAprilTagRear) == Constants.Vision.llAprilTagPipelineIndex
+            if (LimelightHelpers.getCurrentPipelineIndex(
+                    Constants.Vision.llAprilTagRear) == Constants.Vision.llAprilTagPipelineIndex
                     && LimelightHelpers
                             .getLatestResults(Constants.Vision.llAprilTagRear).targetingResults.botpose_tagcount > 1) {
                 this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear),
                         Timer.getFPGATimestamp());
             }
 
-            if (LimelightHelpers.getTid(Constants.Vision.llAprilTag) != -1 && LimelightHelpers
-                    .getCurrentPipelineIndex(Constants.Vision.llAprilTag) == Constants.Vision.llAprilTagPipelineIndex
+            if (LimelightHelpers.getCurrentPipelineIndex(
+                    Constants.Vision.llAprilTag) == Constants.Vision.llAprilTagPipelineIndex
                     && LimelightHelpers
                             .getLatestResults(Constants.Vision.llAprilTag).targetingResults.botpose_tagcount > 1) {
                 this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag),
@@ -80,7 +75,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
             if (DriverStation.isEnabled()) {
                 LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
-            } else {
+            } 
+            
+            else {
                 LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
             }
         }

@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "align and shoot"
+            "name": "Shoot"
           }
         },
         {
@@ -26,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "align and shoot"
+            "name": "Shoot"
           }
         },
         {
@@ -38,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "align and shoot"
+            "name": "Shoot"
           }
         },
         {
@@ -50,7 +50,7 @@
         {
           "type": "named",
           "data": {
-            "name": "align and shoot"
+            "name": "Shoot"
           }
         }
       ]

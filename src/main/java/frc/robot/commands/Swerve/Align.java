@@ -38,17 +38,17 @@ public class Align extends Command {
         if (howManyBabiesOnBoard == null) {
             this.howManyBabiesOnBoard = () -> 0.0;
         }
-        
+
         else {
             this.howManyBabiesOnBoard = howManyBabiesOnBoard;
         }
-        
+
         timer = new Timer();
         this.note = note;
-        
+
         this.translateX = translateX;
         this.translateY = translateY;
-        
+
         if (note) {
             this.setName("Align to Note");
             this.addRequirements(mDrivetrain, mIntake);
@@ -62,25 +62,26 @@ public class Align extends Command {
             this.setName("Align to Speaker");
             this.addRequirements(mDrivetrain);
             getTargetRotation = () -> {
-                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1 && Robot.isReal()) {
-                //     return mDrivetrain.getPose().getRotation()
-                //             .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
+                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1 &&
+                // Robot.isReal()) {
+                // return mDrivetrain.getPose().getRotation()
+                // .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
                 // }
 
                 // else {
-                    if (Robot.isRed()) {
-                        return Rotation2d
-                                .fromRadians(Math.atan2(
-                                        mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                        mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
-                    }
+                if (Robot.isRed()) {
+                    return Rotation2d
+                            .fromRadians(Math.atan2(
+                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+                }
 
-                    else {
-                        return Rotation2d
-                                .fromRadians(Math.atan2(
-                                        mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                                        mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
-                    }
+                else {
+                    return Rotation2d
+                            .fromRadians(Math.atan2(
+                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
+                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                }
                 // }
             };
         }
@@ -89,6 +90,9 @@ public class Align extends Command {
     @Override
     public void initialize() {
         drive = new SwerveRequest.FieldCentricFacingAngle();
+        // TODO: make this better, overshoots for now, consider lowering the kI value
+        // note align will have smaller error but more important changes in
+        // rotation, so if that needs a different pid controller we can make that happen
         drive.HeadingController = new PhoenixPIDController(4.0, 20, 0.3);
         drive.Deadband = Constants.OperatorConstants.deadband;
         drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
@@ -96,10 +100,11 @@ public class Align extends Command {
         timer.restart();
 
         // if (note) {
-        //     LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+        // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython,
+        // Constants.Vision.llPythonPipelineIndex);
         // } else {
-        //     // This pipeline will only look for the Speaker April Tag
-        //     LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 2);
+        // // This pipeline will only look for the Speaker April Tag
+        // LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 2);
         // }
     }
 

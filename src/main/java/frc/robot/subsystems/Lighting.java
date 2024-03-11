@@ -39,8 +39,8 @@ public class Lighting extends SubsystemBase {
 
     private Lighting() {
         enabled = new DigitalOutput(0);
-        enabled = new DigitalOutput(1);
-        enabled = new DigitalOutput(2);
+        loaded = new DigitalOutput(1);
+        readyToShoot = new DigitalOutput(2);
     }
 
     private static Lighting mLighting;

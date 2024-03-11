@@ -112,6 +112,17 @@ public class AutoManager extends Command {
      */
     private boolean intakeAlwaysDeployed;
 
+    /**
+     * This variable should be enabled and needs to be tested before competition
+     */
+    private static final boolean slowDownWhileShooting = true;
+
+    /**
+     * The speed at which the robot will drive whilst trying to shoot a piece, this
+     * is only in effect if the slowDownWhileShooting boolean is enabled
+     */
+    private static final double drivetrainShootSpeed = 0.75;
+
     public AutoManager() {
         mIntake = Intake.getInstance();
         mShooter = Shooter.getInstance();
@@ -177,6 +188,10 @@ public class AutoManager extends Command {
 
         // if the shoot variable has been enabled
         if (shoot) {
+
+            if (slowDownWhileShooting) {
+                Drivetrain.getInstance().autoRequest.slowDownRate = drivetrainShootSpeed;
+            }
 
             // if there is a piece in the shooter
             if (mIntake.getShooterSensor()) {
@@ -304,6 +319,11 @@ public class AutoManager extends Command {
 
         // this is for when we are running standard operation (intake)
         else {
+
+            if (slowDownWhileShooting) {
+                Drivetrain.getInstance().autoRequest.slowDownRate = 1;
+            }
+
             shotsFired = false;
             mIntake.setHolding(true);
             intakeTimer = null;
@@ -396,8 +416,10 @@ public class AutoManager extends Command {
     }
 
     public void postAutoStatus(String status) {
-        if ((status.contains("Time") || status.contains("time") || status.contains("Shooting")) && this.status != status) {
-            Shuffleboard.addEventMarker(status + " (" + Timer.getMatchTime() + ")", "" + Timer.getMatchTime(), EventImportance.kCritical);
+        if ((status.contains("Time") || status.contains("time") || status.contains("Shooting"))
+                && this.status != status) {
+            Shuffleboard.addEventMarker(status + " (" + Timer.getMatchTime() + ")", "" + Timer.getMatchTime(),
+                    EventImportance.kCritical);
         }
 
         this.status = status;

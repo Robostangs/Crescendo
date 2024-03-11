@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.8930604944543226,
-        "y": 7.0
+        "x": 2.6035616515677478,
+        "y": 6.861746112381113
       },
       "prevControl": {
-        "x": 2.432772180359176,
-        "y": 6.575275872773968
+        "x": 2.143273337472601,
+        "y": 6.437021985155082
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,7 +40,7 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 27.460000000000008,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Starting Notes",

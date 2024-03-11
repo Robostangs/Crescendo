@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7045983029003098,
-        "y": 4.811797382854025
+        "x": 2.4324494126451235,
+        "y": 4.128465494159952
       },
       "isLocked": false,
       "linkedName": "Center Start Position"
     },
     {
       "anchor": {
-        "x": 2.43546222552844,
-        "y": 4.116356237564284
+        "x": 2.4395419994543697,
+        "y": 4.196753379617871
       },
       "prevControl": {
-        "x": 2.377273366743316,
-        "y": 4.568330738735509
+        "x": 1.933967335885689,
+        "y": 4.816748750211406
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,7 +38,7 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": -28.879999999999995,
     "rotateFast": false
   },

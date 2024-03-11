@@ -22,9 +22,13 @@ public class PathPlannerCommand {
                     .setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
             lastAutoName = "null";
             return;
-        } else if (autoName.equals(lastAutoName)) {
+        } 
+        
+        else if (autoName.equals(lastAutoName)) {
             return;
-        } else {
+        } 
+        
+        else {
             lastAutoName = autoName;
         }
 
@@ -41,7 +45,13 @@ public class PathPlannerCommand {
 
                         poses.add(pose);
                     }));
-        } catch (Exception e) {
+        } 
+        
+        catch (RuntimeException e) {
+            System.out.println("Null Auto: " + autoName);
+        } 
+        
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -51,7 +61,5 @@ public class PathPlannerCommand {
 
     public static void unpublishTrajectory() {
         publishTrajectory(null);
-        // Drivetrain.getInstance().getField().getObject(Constants.AutoConstants.kFieldObjectName)
-        //         .setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
     }
 }

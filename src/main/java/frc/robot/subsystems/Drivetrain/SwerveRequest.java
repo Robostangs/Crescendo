@@ -838,10 +838,13 @@ public interface SwerveRequest {
          * The type of control request to use for the steer motor.
          */
         public SwerveModule.SteerRequestType SteerRequestType = SwerveModule.SteerRequestType.MotionMagic;
+        
+        public double slowDownRate = 1;
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {
             var states = parameters.kinematics.toSwerveModuleStates(Speeds, CenterOfRotation);
             for (int i = 0; i < modulesToApply.length; ++i) {
+                states[i].speedMetersPerSecond *= slowDownRate;
                 modulesToApply[i].apply(states[i], DriveRequestType, SteerRequestType);
             }
 

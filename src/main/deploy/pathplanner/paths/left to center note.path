@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8930604944543226,
-        "y": 7.0
+        "x": 2.6035616515677478,
+        "y": 6.861746112381113
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.685479167254631,
-        "y": 6.428299537154631
+        "x": 2.181635645678699,
+        "y": 6.230312020809227
       },
       "isLocked": false,
       "linkedName": "Close Left Note"
     },
     {
       "anchor": {
-        "x": 2.89,
+        "x": 2.4439364434284427,
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.143926565630909,
-        "y": 5.471260900855135
+        "x": 2.09244030988062,
+        "y": 5.981729014383955
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,7 +40,7 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 0.0,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Starting Notes",

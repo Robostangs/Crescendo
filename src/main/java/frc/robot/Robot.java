@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("4 Piece (Center Only)", " 4 piece");
 		autoChooser.addOption("Center Line Sprint (Center Only)", " centerline sprint");
 		autoChooser.addOption("All Close Notes (Center Only)", " all close notes");
-		autoChooser.addOption("All Close Notes Fast", " all close notes shoot in place");
+		autoChooser.addOption("All Close Notes Fast", " all close notes fast");
 		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
@@ -185,6 +185,10 @@ public class Robot extends TimedRobot {
 		// use this for on the fly shooting
 		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
 				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
+
+		NamedCommands.registerCommand("Slow Down", 
+				new PrintCommand("Slowing Down"));
+				// new InstantCommand(() -> Drivetrain.getInstance().autoRequest.slowDownRate = 0.1));
 	}
 
 	@Override
@@ -236,35 +240,53 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		Shuffleboard.selectTab(autoTab.getTitle());
-		Shooter.getInstance().setShooterBrake(true);
-
 		if (autoManager == null) {
 			autoManager = new AutoManager();
 		}
 
+		Arm.getInstance().setBrake(true);
+		Shooter.getInstance().setShooterBrake(true);
+		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+
+
+		Shuffleboard.selectTab(autoTab.getTitle());
 		robotContainer.removeDefaultCommands();
 
 		try {
 			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			if (autoChooser.getSelected().equals("back-up")) {
 				pathPlannerCommand = Drivetrain.getInstance()
 						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.5));
 			}
 
 			else {
-				pathPlannerCommand = new PrintCommand("Null Path");
+				pathPlannerCommand = new PrintCommand("Null Path: " + startingPose.getSelected() + autoChooser.getSelected());
 				System.out.println("Invalid Auto");
 			}
+		} catch (Exception e) {
+			System.out.println("Auto not working actual problem");
+			pathPlannerCommand = new PrintCommand("Autobuilder Exception");
+			e.printStackTrace();
 		}
 
 		autonCommand = new SequentialCommandGroup(
-				// new FeedAndShoot().until(() -> !Intake.getInstance().getShooterSensor()),
 				new InstantCommand(() -> Robot.autoManager.shoot = autoShoot.getSelected())
 						.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
-				pathPlannerCommand);
+				pathPlannerCommand,
+				new InstantCommand(() -> {
+					timer.stop();
+					autoManager.end(false);
+				}));
+
+		if (Constants.Vision.UseLimelight && Robot.isReal()) {
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
+					Constants.Vision.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
+					Constants.Vision.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+		}
 
 		autoManager.initialize();
 		autonCommand.schedule();
@@ -284,7 +306,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousExit() {
-		autoManager.end(false);
+		autoManager.end(true);
 		timer.stop();
 	}
 
@@ -292,7 +314,7 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		robotContainer.configureDefaultBinds();
 
-		Arm.getInstance().setBrake(false);
+		Arm.getInstance().setBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
 		Shooter.getInstance().setShooterBrake(true);

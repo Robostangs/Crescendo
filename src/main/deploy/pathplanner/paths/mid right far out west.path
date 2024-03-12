@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5745077047504663,
-        "y": 4.230483610401793
+        "x": 2.5985733638133945,
+        "y": 3.2686349354180195
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3715427414176198,
-        "y": 1.7488159021552296
+        "x": 3.914887487182382,
+        "y": 2.65014663825624
       },
       "isLocked": false,
       "linkedName": "Close Right Shoot Position"
     },
     {
       "anchor": {
-        "x": 2.549900430980184,
-        "y": 1.9755484502891465
+        "x": 5.814771893432676,
+        "y": 1.6064661944138705
       },
       "prevControl": {
-        "x": 1.9808949741974553,
-        "y": 2.093310113149489
+        "x": 4.9919984821070065,
+        "y": 1.245034372945482
       },
       "nextControl": {
-        "x": 3.136389758239937,
-        "y": 1.8541683165757283
+        "x": 6.927338215787541,
+        "y": 2.0951996255844354
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 2.4366686253566368
       },
       "prevControl": {
-        "x": 7.949166455683477,
-        "y": 0.9966686253566368
+        "x": 7.95703623226933,
+        "y": 2.216240140057782
       },
       "nextControl": {
-        "x": 7.949166455683477,
-        "y": 2.496668625356637
+        "x": 7.941267086237876,
+        "y": 2.65792599177791
       },
       "isLocked": false,
       "linkedName": "Far Mid Right Note"
@@ -86,8 +86,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 5.5,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

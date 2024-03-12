@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.4439364434284427,
-        "y": 5.55
+        "x": 2.5955447605339654,
+        "y": 5.558912242824485
       },
       "prevControl": {
-        "x": 2.3839364434284427,
-        "y": 5.55
+        "x": 2.3955447605339653,
+        "y": 5.558912242824485
       },
       "nextControl": {
-        "x": 2.5039364434284423,
-        "y": 5.55
+        "x": 2.7155447605339655,
+        "y": 5.558912242824485
       },
       "isLocked": false,
       "linkedName": "Close Center Note"
@@ -66,8 +66,8 @@
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 5.5,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

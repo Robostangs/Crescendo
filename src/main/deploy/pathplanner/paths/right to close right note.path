@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5745077047504663,
-        "y": 4.230483610401793
+        "x": 2.5985733638133945,
+        "y": 3.2686349354180195
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7890858156514378,
-        "y": 4.0132358023359025
+        "x": 2.813151474714366,
+        "y": 3.0513871273521294
       },
       "isLocked": false,
       "linkedName": "Close Right Shoot Position"
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 5.5,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

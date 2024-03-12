@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.446341982344708,
-        "y": 4.506969215877043
+        "x": 4.720964352723481,
+        "y": 4.620304386880854
       },
       "isLocked": false,
       "linkedName": "Right Shoot Position"
@@ -20,12 +20,12 @@
         "y": 4.21623711583449
       },
       "prevControl": {
-        "x": 4.795201990433783,
-        "y": 4.483192614581513
+        "x": 4.712145939620533,
+        "y": 4.344822596650435
       },
       "nextControl": {
-        "x": 5.318538282472365,
-        "y": 3.99802024875545
+        "x": 5.389876668642226,
+        "y": 4.109933418940913
       },
       "isLocked": false,
       "linkedName": null
@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 5.083156356127527,
-        "y": 4.21623711583449
+        "x": 5.100873802967057,
+        "y": 4.204374077973226
       },
       "prevControl": {
-        "x": 5.310249412905934,
-        "y": 4.014546182453522
+        "x": 5.376417317017048,
+        "y": 4.131206864019281
       },
       "nextControl": {
-        "x": 4.808292109736199,
-        "y": 4.460355659986276
+        "x": 4.74556717742755,
+        "y": 4.298721411750012
       },
       "isLocked": false,
       "linkedName": null
@@ -68,8 +68,8 @@
         "y": 4.892453456150855
       },
       "prevControl": {
-        "x": 4.446497398649079,
-        "y": 4.51178712131253
+        "x": 4.6982582726386095,
+        "y": 4.606363521534628
       },
       "nextControl": null,
       "isLocked": false,
@@ -91,8 +91,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 5.5,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

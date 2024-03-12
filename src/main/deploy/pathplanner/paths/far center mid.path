@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7955621105103283,
-        "y": 5.0440879637817435
+        "x": 3.9165502497671665,
+        "y": 5.413420516655849
       },
       "isLocked": false,
       "linkedName": "Center Shoot Position"
@@ -20,12 +20,12 @@
         "y": 4.345333093443965
       },
       "prevControl": {
-        "x": 3.9885241159371208,
-        "y": 5.4086103820355795
+        "x": 4.590466101857418,
+        "y": 4.6183595136053315
       },
       "nextControl": {
-        "x": 5.3213388086020075,
-        "y": 4.017769545564848
+        "x": 5.6002161356174565,
+        "y": 3.957196798652857
       },
       "isLocked": false,
       "linkedName": null
@@ -69,7 +69,7 @@
     {
       "waypointRelativePos": 2.0,
       "rotationDegrees": 0.0,
-      "rotateFast": false
+      "rotateFast": true
     },
     {
       "waypointRelativePos": 2.35,
@@ -80,8 +80,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 5.5,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

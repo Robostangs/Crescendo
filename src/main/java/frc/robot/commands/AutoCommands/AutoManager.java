@@ -114,8 +114,9 @@ public class AutoManager extends Command {
 
     /**
      * This variable should be enabled and needs to be tested before competition
+     * TODO: this needs to be done
      */
-    private static final boolean slowDownWhileShooting = true;
+    private static final boolean slowDownWhileShooting = false;
 
     /**
      * The speed at which the robot will drive whilst trying to shoot a piece, this
@@ -188,7 +189,7 @@ public class AutoManager extends Command {
 
         // if the shoot variable has been enabled
         if (shoot) {
-
+            // TODO: is this worth doing, it currently causes the pathing to be off but wont have any effect if the piece is shot quickly (hopefully)
             if (slowDownWhileShooting) {
                 Drivetrain.getInstance().autoRequest.slowDownRate = drivetrainShootSpeed;
             }

@@ -25,7 +25,6 @@ import frc.robot.commands.shooter.SetPoint;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Music;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -40,7 +39,6 @@ public class RobotContainer {
 	private final Arm mArm = Arm.getInstance();
 	private final Intake mIntake = Intake.getInstance();
 	private final Climber mClimber = Climber.getInstance();
-	private final Lighting mLighting = Lighting.getInstance();
 	private final Music mMusic = Music.getInstance();
 
 	private BeltFeed beltFeed = new BeltFeed();
@@ -126,7 +124,8 @@ public class RobotContainer {
 				.onTrue(new InstantCommand(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 1))
 						.finallyDo(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 0)));
 
-		xManip.y().onTrue(mClimber.runOnce(mClimber::toggleSelected));
+		// TODO: fix this new charlie climber
+		// xManip.y().onTrue(mClimber.runOnce(mClimber::toggleSelected));
 		xManip.x().whileTrue(new QuickFeed());
 
 		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getLeftBumper()));
@@ -148,13 +147,14 @@ public class RobotContainer {
 		xManip.start().and(() -> xManip.back().getAsBoolean())
 				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
 
-		xManip.leftStick().whileTrue(new RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
-		xManip.rightStick().whileTrue(new RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
+		// TODO: fix this new charlie climber
+		// xManip.leftStick().whileTrue(new RunCommand(mClimber::goUp, mClimber).finallyDo(mClimber::stop));
+		// xManip.rightStick().whileTrue(new RunCommand(mClimber::goDown, mClimber).finallyDo(mClimber::stop));
 
-		new Trigger(() -> xManip.getLeftTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
-				.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
-				.whileTrue(mClimber.run(() -> mClimber.moveSelected(
-						xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis())).finallyDo(mClimber::stop));
+		// new Trigger(() -> xManip.getLeftTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+		// 		.or(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
+		// 		.whileTrue(mClimber.run(() -> mClimber.moveSelected(
+		// 				xManip.getRightTriggerAxis() - xManip.getLeftTriggerAxis())).finallyDo(mClimber::stop));
 	}
 
 	public RobotContainer() {

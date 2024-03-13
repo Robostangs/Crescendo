@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 2.5955447605339654,
-        "y": 5.558912242824485
+        "y": 5.54
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.5543913865605505,
-        "y": 4.996903075287633
+        "y": 4.977990832463147
       },
       "isLocked": false,
       "linkedName": "Close Center Note"

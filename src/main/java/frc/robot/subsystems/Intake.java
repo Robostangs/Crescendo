@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -8,13 +10,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.LoggyThings.LoggyTalonFX;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Intake extends SubsystemBase {
     private Solenoid solenoid;
-    private LoggyTalonFX intakeMotor, beltMotor;
+    private TalonFX intakeMotor, beltMotor;
     private DigitalInput shooterSensor;
     private boolean holding = true, setExtend = false;
     
@@ -50,8 +51,8 @@ public class Intake extends SubsystemBase {
         solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.solenoidID);
         shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
         
-        intakeMotor = new LoggyTalonFX(Constants.IntakeConstants.shooterMotorID, true);
-        beltMotor = new LoggyTalonFX(Constants.IntakeConstants.beltMotorID, true);
+        intakeMotor = new TalonFX(Constants.IntakeConstants.shooterMotorID, "*");
+        beltMotor = new TalonFX(Constants.IntakeConstants.beltMotorID, "*");
         
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorInverted);
         beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);

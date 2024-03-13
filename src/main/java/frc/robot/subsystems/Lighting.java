@@ -1,46 +1,81 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Lights;
+import frc.robot.Constants.Lights.LEDState;
+import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Lighting extends SubsystemBase {
-    private DigitalOutput enabled, loaded, readyToShoot;
-
+    private CANdle mCANdle;
+    private LEDState mState;
+    private boolean auto = false;
+    private int[] oldColor = new int[3];
 
     @Override
     public void periodic() {
-        enabled.set(DriverStation.isEnabled());
-        loaded.set(Intake.getInstance().getShooterSensor());
-        readyToShoot.set(Intake.getInstance().getShooterSensor() && Shooter.getInstance().readyToShootAdvanced()
-                && Drivetrain.getInstance().readyToShoot());
+        int[] color = new int[3];
 
-        // if (DriverStation.isDisabled()) {
-        // enabled.set(false);
-        // setLights(Lights.kOrange);
-        // }
+        if (auto) {
+            if (DriverStation.isDisabled()) {
+                if (Robot.pdh.getVoltage() < Lights.lowVoltageThreshold) {
+                    color = LEDState.kPurple.getColor();
+                }
 
-        // else if (mIntake.getShooterSensor()) {
-        // if (mShooter.readyToShootAdvanced() &&
-        // Drivetrain.getInstance().readyToShoot()) {
-        // setLights(Lights.kGreen);
-        // }
+                else if (DriverStation.getAlliance().isPresent()) {
+                    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                        color = LEDState.kBlue.getColor();
+                    }
 
-        // else {
-        // setLights(Lights.kBlue);
-        // }
-        // }
+                    else {
+                        color = LEDState.kRed.getColor();
+                    }
+                }
 
-        // else {
-        // setLights(Lights.kRed);
-        // }
+                else {
+                    color = LEDState.kOff.getColor();
+                }
+            }
+
+            else if (Intake.getInstance().getShooterSensor()) {
+                if (Shooter.getInstance().readyToShootAdvanced() &&
+                        Drivetrain.getInstance().readyToShoot()) {
+                    color = LEDState.kGreen.getColor();
+                }
+
+                else {
+                    color = LEDState.kYellow.getColor();
+                }
+            }
+
+            else {
+                color = LEDState.kOrange.getColor();
+            }
+        } 
+        
+        else {
+            color = mState.getColor();
+        }
+
+        if (color != oldColor) {
+            mCANdle.setLEDs(color[0], color[1], color[2]);
+        }
+
+        oldColor = color;
     }
 
     private Lighting() {
-        enabled = new DigitalOutput(0);
-        loaded = new DigitalOutput(1);
-        readyToShoot = new DigitalOutput(2);
+        // TODO: do all this LED setup
+        // deviceID is a CAN ID, figure this out using phoenix tuner (X)
+        mCANdle = new CANdle(Lights.CANdleID);
+        mCANdle.configLEDType(LEDStripType.RGB);
+        
+        // Orange on init
+        mState = LEDState.kOrange;
     }
 
     private static Lighting mLighting;
@@ -53,5 +88,12 @@ public class Lighting extends SubsystemBase {
         return mLighting;
     }
 
+    public void setLights(LEDState state) {
+        autoSetLights(false);
+        mState = state;
+    }
 
+    public void autoSetLights(boolean autoSet) {
+        auto = autoSet;
+    }
 }

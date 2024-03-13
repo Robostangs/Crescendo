@@ -34,8 +34,9 @@ import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Climber;
+
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -68,26 +69,6 @@ public class Robot extends TimedRobot {
 		robotContainer = new RobotContainer();
 
 		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
-
-		if (DriverStation.isFMSAttached()) {
-			atComp = true;
-			DataLogManager.start(Constants.logDirectory);
-			CommandScheduler.getInstance()
-					.onCommandInitialize((action) -> DataLogManager.log(action.getName() + "Command Initialized"));
-			CommandScheduler.getInstance()
-					.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + "Command Interrupted"));
-			CommandScheduler.getInstance()
-					.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
-
-			Shuffleboard.startRecording();
-		} else {
-			CommandScheduler.getInstance()
-					.onCommandInitialize((action) -> System.out.println(action.getName() + " Command Initialized"));
-			CommandScheduler.getInstance()
-					.onCommandInterrupt((action) -> System.out.println(action.getName() + " Command Interrupted"));
-			CommandScheduler.getInstance()
-					.onCommandFinish((action) -> System.out.println(action.getName() + " Command Finished"));
-		}
 
 		SmartDashboard.putData("Field", teleopField);
 
@@ -131,12 +112,9 @@ public class Robot extends TimedRobot {
 		autoTab.add("Path Delay", 0).withSize(2, 1).withWidget(BuiltInWidgets.kNumberSlider).withPosition(0, 4)
 				.withProperties(Map.of("min", 0, "max", 15, "block increment", 1));
 
-		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
-				.getEntry("Path Delay");
-
 		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 0)
 				.withWidget(BuiltInWidgets.kDial)
-				.withProperties(Map.of("min", -1, "max", 135, "show value", true));
+				.withProperties(Map.of("min", 0, "max", 135, "show value", true));
 
 		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getHolding()).withSize(2, 2).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
@@ -146,9 +124,13 @@ public class Robot extends TimedRobot {
 				.withSize(2, 2)
 				.withPosition(0, 0);
 
-		teleopTab.addString("Selected Climber", () -> Climber.getInstance().getLeftSelected() ? "Left" : "Right")
-				.withSize(2, 2)
-				.withPosition(2, 2).withWidget(BuiltInWidgets.kTextView);
+				// TODO: fix this with new charlie climber
+		// teleopTab.addString("Selected Climber", () -> oldClimber.getInstance().getLeftSelected() ? "Left" : "Right")
+		// 		.withSize(2, 2)
+		// 		.withPosition(2, 2).withWidget(BuiltInWidgets.kTextView);
+
+		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
+				.getEntry("Path Delay");
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			try {
@@ -186,13 +168,35 @@ public class Robot extends TimedRobot {
 		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
 				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
-		NamedCommands.registerCommand("Slow Down", 
+		NamedCommands.registerCommand("Slow Down",
 				new PrintCommand("Slowing Down"));
-				// new InstantCommand(() -> Drivetrain.getInstance().autoRequest.slowDownRate = 0.1));
+		// new InstantCommand(() -> Drivetrain.getInstance().autoRequest.slowDownRate =
+		// 0.1));
+
+		Lighting.getInstance().autoSetLights(true);
 	}
 
 	@Override
 	public void driverStationConnected() {
+		if (DriverStation.isFMSAttached()) {
+			atComp = true;
+			DataLogManager.start(Constants.logDirectory);
+			CommandScheduler.getInstance()
+					.onCommandInitialize((action) -> DataLogManager.log(action.getName() + "Command Initialized"));
+			CommandScheduler.getInstance()
+					.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + "Command Interrupted"));
+			CommandScheduler.getInstance()
+					.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
+
+			Shuffleboard.startRecording();
+		} else {
+			CommandScheduler.getInstance()
+					.onCommandInitialize((action) -> System.out.println(action.getName() + " Command Initialized"));
+			CommandScheduler.getInstance()
+					.onCommandInterrupt((action) -> System.out.println(action.getName() + " Command Interrupted"));
+			CommandScheduler.getInstance()
+					.onCommandFinish((action) -> System.out.println(action.getName() + " Command Finished"));
+		}
 	}
 
 	@Override
@@ -248,7 +252,6 @@ public class Robot extends TimedRobot {
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
-
 		Shuffleboard.selectTab(autoTab.getTitle());
 		robotContainer.removeDefaultCommands();
 
@@ -261,7 +264,8 @@ public class Robot extends TimedRobot {
 			}
 
 			else {
-				pathPlannerCommand = new PrintCommand("Null Path: " + startingPose.getSelected() + autoChooser.getSelected());
+				pathPlannerCommand = new PrintCommand(
+						"Null Path: " + startingPose.getSelected() + autoChooser.getSelected());
 				System.out.println("Invalid Auto");
 			}
 		} catch (Exception e) {

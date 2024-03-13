@@ -20,7 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "left to center note"
+            "pathName": "center shoot to close left"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "center to center note"
           }
         },
         {

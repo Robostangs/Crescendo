@@ -222,7 +222,7 @@ public final class Constants {
 				kBackRightXPos, kBackRightYPos, kInvertRightSide).withDriveMotorInverted(true);
 	}
 
-	public enum AprilTag {
+	public static enum AprilTag {
 		NoTag(-1), BlueRightHumanPlayer(1), BlueLeftHumanPlayer(2), RedSpeakerOffset(3), RedSpeaker(4), RedAmp(5),
 		BlueAmp(6), BlueSpeaker(7), BlueSpeakerOffset(8), RedRightHumanPlayer(9), RedLeftHumanPlayer(10),
 		RedLeftStage(11), RedRightStage(12), RedCenterStage(13), BlueCenterStage(14), BlueLeftStage(15),
@@ -421,28 +421,60 @@ public final class Constants {
 		public static final int leftClimberMotorID = 54;
 		public static final int rightClimberMotorID = 55;
 
+		public static final double kDefaultStatorCurrentLimit = 60;
+        public static final double kHomingCurrentLimit = 10;
+        public static final double kHomingPower = 0;
+
+		public static final boolean leftClimberMotorInverted = true;
+		public static final boolean rightClimberMotorInverted = false;
+
 		public static final int leftClimberBrakeID = 4;
 		public static final int rightClimberBrakeID = 7;
 
 		public static final double climberMaxExtensionRotations = 0;
-		public static final double climberMinExtensionRotations = 2;
 		public static final double climberSpeed = 0.35;
 	}
 
 	public static class Lights {
-		public static final int blinkinPWM_ID = 0;
-
-		public static final double kGreen = 0.73;
-		public static final double kBlink = 0.43;
-
-		/** Robostangs Color */
-		public static final double kOrange = 0.65;
-
-		// TODO: get these led values
-		public static final double kRed = 0.61;
-		public static final double kBlue = 0.87;
-
-		public static final double kOff = 0.99;
-		public static final double kLavaPalette = -0.39;
+		public static enum LEDState {
+			/** No lights (white) */
+			kOff(new int[] { 255, 255, 255 }),
+	
+			/** Ready To Shoot */
+			kGreen(new int[] { 0, 255, 0 }),
+	
+			/** Alliance Color */
+			kRed(new int[] { 255, 0, 0 }),
+	
+			/** Alliance Color */
+			kBlue(new int[] { 0, 0, 255 }),
+	
+			/** Loaded but not ready to shoot */
+			kYellow(new int[] { 255, 255, 0 }),
+	
+			/** No Piece in shooter */
+			kOrange(new int[] { 255, 165, 0 }),
+	
+			/** Low Voltage */
+			kPurple(new int[] { 128, 0, 128 }),;
+	
+			public final int[] color;
+	
+			private LEDState(int[] color) {
+				this.color = color;
+			}
+	
+			/**
+			 * Gets the color of the LED state
+			 * 
+			 * @return will return a 3 element array formatted as [R, G, B]
+			 */
+			public int[] getColor() {
+				return color;
+			}
+		}
+		
+		public static final int CANdleID = 0;
+		public static final double lowVoltageThreshold = 12.5;
 	}
 }

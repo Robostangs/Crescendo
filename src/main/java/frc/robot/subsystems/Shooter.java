@@ -2,16 +2,17 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.LoggyThings.LoggyTalonFX;
 
+// TODO: redo for top bottom shooter
 public class Shooter extends SubsystemBase {
     /** shootMotorRight is the master motor */
-    private LoggyTalonFX shootMotorRight, shootMotorLeft, feedMotor;
+    private TalonFX shootMotorRight, shootMotorLeft, feedMotor;
     private VelocityVoltage shootPid = new VelocityVoltage(0);
 
     @Override
@@ -21,9 +22,9 @@ public class Shooter extends SubsystemBase {
     }
 
     private Shooter() {
-        shootMotorRight = new LoggyTalonFX(Constants.ShooterConstants.shootMotorRight, false);
-        shootMotorLeft = new LoggyTalonFX(Constants.ShooterConstants.shootMotorLeft, false);
-        feedMotor = new LoggyTalonFX(Constants.ShooterConstants.feedMotor, false);
+        shootMotorRight = new TalonFX(Constants.ShooterConstants.shootMotorRight, "rio");
+        shootMotorLeft = new TalonFX(Constants.ShooterConstants.shootMotorLeft, "rio");
+        feedMotor = new TalonFX(Constants.ShooterConstants.feedMotor, "rio");
 
         TalonFXConfiguration fxConfig = new TalonFXConfiguration();
         fxConfig.CurrentLimits.SupplyCurrentLimit = 30;

@@ -1,16 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -22,8 +19,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.LoggyThings.LoggyCANcoder;
-import frc.robot.LoggyThings.LoggyTalonFX;
 import frc.robot.commands.shooter.FineAdjust;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
@@ -32,8 +27,7 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
  * ground, then, in tuner X, zero the armCoder
  */
 public class Arm extends SubsystemBase {
-    private LoggyTalonFX armMotor;
-    private LoggyCANcoder armCoder;
+    private TalonFX armMotor;
     private double shooterExtensionSetpoint = 0;
 
     private double armPosition;
@@ -97,28 +91,10 @@ public class Arm extends SubsystemBase {
     }
 
     private Arm() {
-        armCoder = new LoggyCANcoder(Constants.ArmConstants.armEncoderID, false);
-        armCoder.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
-        CANcoderConfiguration armCoderConfig = new CANcoderConfiguration();
-
-        /*
-         * Do this directly on the CANcoder, so as to not reset the zero position
-         */
-        armCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-        armCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        armCoderConfig.MagnetSensor.MagnetOffset = -0.339599609375;
-        armCoderConfig.MagnetSensor.MagnetOffset = 0;
-
-        /* Do not apply */
-        armCoder.getConfigurator().apply(armCoderConfig);
-
-        // armCoder.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
-        // armCoder.setPosition(Units.degreesToRotations(0));
-
-        armMotor = new LoggyTalonFX(Constants.ArmConstants.armMotorID, false);
+        armMotor = new TalonFX(Constants.ArmConstants.armMotorID, "rio");
 
         setArmMotorConfig(getArmMotorConfig());
-
+        armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
         Music.getInstance().addFalcon(armMotor);
 
         double shooterHeightInches = 22;
@@ -171,8 +147,6 @@ public class Arm extends SubsystemBase {
 
         BaseStatusSignal.setUpdateFrequencyForAll(50, armMotor.getClosedLoopError(), armMotor.getClosedLoopReference(),
                 armMotor.getClosedLoopReferenceSlope());
-
-        armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
     }
 
     /**
@@ -401,12 +375,6 @@ public class Arm extends SubsystemBase {
         TalonFXConfiguration armMotorConfig = new TalonFXConfiguration();
         armMotorConfig.Feedback.SensorToMechanismRatio = 100;
 
-        // armMotorConfig.Feedback.RotorToSensorRatio = 50;
-        // armMotorConfig.Feedback.SensorToMechanismRatio = 2;
-        // armMotorConfig.Feedback.FeedbackSensorSource =
-        // FeedbackSensorSourceValue.SyncCANcoder;
-        // armMotorConfig.Feedback.FeedbackRemoteSensorID = armCoder.getDeviceID();
-
         armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
@@ -417,7 +385,7 @@ public class Arm extends SubsystemBase {
 
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
-        // TODO: tune these values for less ocsilation
+        // TODO: tune these values for less ocsilation with new shooter all stuff needs to be retuned
 
         armMotorConfig.Slot0.kP = 500;
         armMotorConfig.Slot0.kI = 0.03;
@@ -456,16 +424,19 @@ public class Arm extends SubsystemBase {
      *                                         limits
      */
     public void lastDitchEffortSetArmMotorWithoutSoftLimits(boolean Are_You_Sure_You_Want_To_Do_This) {
+        TalonFXConfiguration armMotorConfig = getArmMotorConfig();
+
         if (Are_You_Sure_You_Want_To_Do_This) {
             ArmIsBroken = true;
-            TalonFXConfiguration armMotorConfig = getArmMotorConfig();
             armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
             armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-            setArmMotorConfig(armMotorConfig);
-        } else {
+        } 
+        
+        else {
             ArmIsBroken = false;
-            setArmMotorConfig(getArmMotorConfig());
         }
+
+        setArmMotorConfig(armMotorConfig);
     }
 
     public void toggleArmMotorLimits() {

@@ -76,6 +76,7 @@ public final class Constants {
 		// public static final double SpeakerDeadBand = 0.57;
 	}
 
+	// TODO: need to redo this for faster swerve
 	public class SwerveConstants {
 		public enum Target {
 			kSpeaker, kAmp, None
@@ -385,13 +386,12 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.04;
-		public static final double shooterChargeUpTime = 0.5;
-		public static final double feederIntakeValue = 0.1;
+		public static final double feederFeedForward = 0.1;
+		public static final double shooterChargeUpTime = 0;
 
 
-		public static final double feederChargeUpTime = 0.13;
-		public static final double feederReverseFeed = -0.025;
+		public static final double feederChargeUpTime = 0;
+		public static final double feederReverseFeed = 0;
 		
 		public static final double shooterReverseSpeed = -0.1;
 		// public static final double feederChargeUpTime = 0.24;

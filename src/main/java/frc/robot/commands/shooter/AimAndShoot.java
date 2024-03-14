@@ -155,7 +155,7 @@ public class AimAndShoot extends Command {
             //     end(true);
             // }
 
-            mShooter.shoot(0.4, 0);
+            mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 0);
             mIntake.setBelt(0.75);
             SmartDashboard.putString("Shooter/Status", "Feeding");
         }

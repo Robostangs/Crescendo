@@ -1,6 +1,5 @@
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -11,7 +10,6 @@ import java.util.function.BooleanSupplier;
 public class FeedAndShoot extends Command {
     private final Shooter mShooter;
     private final Intake mIntake;
-    private Timer timer;
     private BooleanSupplier feedUntil;
 
     /**
@@ -48,11 +46,6 @@ public class FeedAndShoot extends Command {
         if (feedUntil == null) {
             // if there is a piece in the shooter
             if (mIntake.getShooterSensor()) {
-                if (timer == null) {
-                    timer = new Timer();
-                    timer.restart();
-                }
-
                 // if the shooter is already charged up then shoot
                 if (mShooter.readyToShoot()) {
                     mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
@@ -88,23 +81,12 @@ public class FeedAndShoot extends Command {
         else {
             // if there is a piece in the shooter
             if (mIntake.getShooterSensor()) {
-                if (timer == null) {
-                    timer = new Timer();
-                    timer.restart();
-                }
-
                 // if the shooter is ready to shoot and the user is ready then shoot
                 if (feedUntil.getAsBoolean() && mShooter.readyToShoot()) {
                     mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
                     SmartDashboard.putString("Shooter/Status", "Shooting");
                     mIntake.setHolding(false);
                 }
-
-                // // if the shooter is not charged up and the piece has not been reversed yet
-                // else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
-                //     mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
-                //     SmartDashboard.putString("Shooter/Status", "Reversing Feed");
-                // }
 
                 // if the shooter isnt charged up but the pieces has been reversed
                 else {

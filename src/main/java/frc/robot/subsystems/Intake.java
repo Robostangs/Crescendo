@@ -24,27 +24,27 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
         SmartDashboard.putBoolean("Intake/Holding", holding);
 
-        if (getShooterSensor() && DriverStation.isEnabled()) {
-            setHolding(true);
+        // if (getShooterSensor() && DriverStation.isEnabled()) {
+        //     setHolding(true);
 
-            // LEDs will blink when the arm is at the right setpoint to score
-            if (Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot()) {
-                LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
-                LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
-            }
+        //     // LEDs will blink when the arm is at the right setpoint to score
+        //     if (Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot()) {
+        //         LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
+        //         LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
+        //     }
 
-            // LEDs will be on when the arm is not at the right setpoint to score, but the shooter is occupied
-            else {
-                LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTag);
-                LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTagRear);
-            }
-        }
+        //     // LEDs will be on when the arm is not at the right setpoint to score, but the shooter is occupied
+        //     else {
+        //         LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTag);
+        //         LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTagRear);
+        //     }
+        // }
 
-        // LEDs will be off when the shooter is not occupied or robot is off
-        else {
-            LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
-            LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
-        }
+        // // LEDs will be off when the shooter is not occupied or robot is off
+        // else {
+        //     LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
+        //     LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
+        // }
     }
     
     private Intake() {

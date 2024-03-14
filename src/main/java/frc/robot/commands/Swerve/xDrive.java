@@ -7,6 +7,7 @@ import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 import java.util.function.Supplier;
 
+// TODO: at livonia we need to test that field centric stuff resets properly
 public class xDrive extends Command {
     private final Drivetrain drivetrain;
     private Supplier<Double> translateX, translateY, rotate, howManyBabiesOnBoard;

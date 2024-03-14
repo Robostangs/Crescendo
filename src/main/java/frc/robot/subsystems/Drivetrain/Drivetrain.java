@@ -59,6 +59,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
+        super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
 
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
             if (LimelightHelpers.getCurrentPipelineIndex(
@@ -143,8 +144,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
             super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionInMyVision);
         }
-
-        super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
 
         configurePathPlanner();
         if (Utils.isSimulation()) {

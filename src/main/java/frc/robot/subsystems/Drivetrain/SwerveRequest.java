@@ -175,6 +175,11 @@ public interface SwerveRequest {
         public double slowDownRate = 1;
 
         /**
+         * The perspective to use when determining which direction is forward.
+         */
+        public ForwardReference ForwardReference = SwerveRequest.ForwardReference.OperatorPerspective;
+
+        /**
          * The location (x,y) that the robot should rotate about.
          */
         public Translation2d centerOfRotation = Constants.SwerveConstants.centerOfRotation;
@@ -201,6 +206,15 @@ public interface SwerveRequest {
             double toApplyX = VelocityX;
             double toApplyY = VelocityY;
             double toApplyOmega = RotationalRate;
+
+            if (ForwardReference == SwerveRequest.ForwardReference.OperatorPerspective) {
+                /* If we're operator perspective, modify the X/Y translation by the angle */
+                Translation2d tmp = new Translation2d(toApplyX, toApplyY);
+                tmp = tmp.rotateBy(parameters.operatorForwardDirection);
+                toApplyX = tmp.getX();
+                toApplyY = tmp.getY();
+            }
+
             if (Math.sqrt(toApplyX * toApplyX + toApplyY * toApplyY) < Deadband) {
                 toApplyX = 0;
                 toApplyY = 0;
@@ -838,7 +852,7 @@ public interface SwerveRequest {
          * The type of control request to use for the steer motor.
          */
         public SwerveModule.SteerRequestType SteerRequestType = SwerveModule.SteerRequestType.MotionMagic;
-        
+
         public double slowDownRate = 1;
 
         public StatusCode apply(SwerveControlRequestParameters parameters, SwerveModule... modulesToApply) {

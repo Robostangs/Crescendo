@@ -124,10 +124,11 @@ public class Robot extends TimedRobot {
 				.withSize(2, 2)
 				.withPosition(0, 0);
 
-				// TODO: fix this with new charlie climber
-		// teleopTab.addString("Selected Climber", () -> oldClimber.getInstance().getLeftSelected() ? "Left" : "Right")
-		// 		.withSize(2, 2)
-		// 		.withPosition(2, 2).withWidget(BuiltInWidgets.kTextView);
+		// TODO: fix this with new charlie climber
+		// teleopTab.addString("Selected Climber", () ->
+		// oldClimber.getInstance().getLeftSelected() ? "Left" : "Right")
+		// .withSize(2, 2)
+		// .withPosition(2, 2).withWidget(BuiltInWidgets.kTextView);
 
 		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
 				.getEntry("Path Delay");
@@ -161,6 +162,7 @@ public class Robot extends TimedRobot {
 
 		DriverStation.silenceJoystickConnectionWarning(true);
 
+		// this will not work for on the fly shooting
 		NamedCommands.registerCommand("Align and Shoot", new InstantCommand(() -> autoManager.shoot = true)
 				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
 
@@ -168,16 +170,14 @@ public class Robot extends TimedRobot {
 		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
 				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
-		NamedCommands.registerCommand("Slow Down",
-				new PrintCommand("Slowing Down"));
-		// new InstantCommand(() -> Drivetrain.getInstance().autoRequest.slowDownRate =
-		// 0.1));
-
 		Lighting.getInstance().autoSetLights(true);
 	}
 
 	@Override
 	public void driverStationConnected() {
+		// TODO: if we are using practice match on home field then does this work? I
+		// want logs for practice matches at home
+		System.out.println(DriverStation.getMatchType());
 		if (DriverStation.isFMSAttached()) {
 			atComp = true;
 			DataLogManager.start(Constants.logDirectory);
@@ -189,7 +189,9 @@ public class Robot extends TimedRobot {
 					.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
 
 			Shuffleboard.startRecording();
-		} else {
+		}
+
+		else {
 			CommandScheduler.getInstance()
 					.onCommandInitialize((action) -> System.out.println(action.getName() + " Command Initialized"));
 			CommandScheduler.getInstance()

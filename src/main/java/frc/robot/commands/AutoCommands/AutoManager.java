@@ -164,7 +164,7 @@ public class AutoManager extends Command {
                 startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
                 break;
             default:
-                // just dont seed the pose, insted set it to be the robot pose
+                // just dont seed the pose, instead set it to be the robot pose
                 System.out.println("Starting Position Undefined");
                 startPose = Drivetrain.getInstance().getPose();
 

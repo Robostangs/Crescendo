@@ -155,11 +155,15 @@ public class Align extends Command {
 
     @Override
     public boolean isFinished() {
+        // if (Robot.isSimulation()) {
+        //     return false;
+        // }
+
         if (note) {
             return mIntake.getShooterSensor();
         } else {
-            // return false;
-            return !mIntake.getHolding();
+            // return !mIntake.getHolding();
+            return !mIntake.getShooterSensor();
         }
     }
 }

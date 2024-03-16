@@ -3,48 +3,23 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Vision.LimelightHelpers;
-import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Intake extends SubsystemBase {
     private Solenoid solenoid;
     private TalonFX intakeMotor, beltMotor;
     private DigitalInput shooterSensor;
-    private boolean holding = true, setExtend = false;
+    private boolean holding, setExtend;
     
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
         SmartDashboard.putBoolean("Intake/Holding", holding);
-
-        // if (getShooterSensor() && DriverStation.isEnabled()) {
-        //     setHolding(true);
-
-        //     // LEDs will blink when the arm is at the right setpoint to score
-        //     if (Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot()) {
-        //         LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
-        //         LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
-        //     }
-
-        //     // LEDs will be on when the arm is not at the right setpoint to score, but the shooter is occupied
-        //     else {
-        //         LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTag);
-        //         LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTagRear);
-        //     }
-        // }
-
-        // // LEDs will be off when the shooter is not occupied or robot is off
-        // else {
-        //     LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
-        //     LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
-        // }
     }
     
     private Intake() {
@@ -58,6 +33,7 @@ public class Intake extends SubsystemBase {
         beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);
 
         holding = false;
+        setExtend = false;
 
         if (Robot.isSimulation()) {
             SmartDashboard.putBoolean("Shooter/Simulated Shooter Sensor", false);

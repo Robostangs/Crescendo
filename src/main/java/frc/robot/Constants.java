@@ -348,6 +348,7 @@ public final class Constants {
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
 		public static final double shooterOffset = 58.8;
+		
 		public static final double hardStopOffset = shooterOffset + kArmMinAngle;
 
 		public static final double kInRangeThreshold = 2.5;

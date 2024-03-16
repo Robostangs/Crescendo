@@ -380,9 +380,9 @@ public final class Constants {
 		public static final int feedMotor = 60;
 		public static final int shootMotorLeft = 51;
 		public static final int shootMotorRight = 52;
-		public static final boolean feedIsInverted = true;
+		public static final boolean feedIsInverted = false;
 		public static final boolean rightShootIsInverted = true;
-		public static final boolean leftShootIsInverted = false;
+		public static final boolean leftShootIsInverted = true;
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;

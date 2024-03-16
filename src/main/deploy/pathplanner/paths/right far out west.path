@@ -3,51 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9443991246625467,
-        "y": 6.023158875881564
+        "x": 2.5985733638133945,
+        "y": 3.2686349354180195
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.527987963084166,
-        "y": 7.5366546532769965
+        "x": 3.1366324767619775,
+        "y": 0.7737489293802994
       },
       "isLocked": false,
-      "linkedName": "Center Shoot Position"
+      "linkedName": "Close Right Shoot Position"
     },
     {
       "anchor": {
-        "x": 7.97154640351284,
-        "y": 5.79676912584843
+        "x": 7.905814612555151,
+        "y": 0.8956351894185275
       },
       "prevControl": {
-        "x": 7.967557385033995,
-        "y": 5.511528401893638
+        "x": 8.191174904485226,
+        "y": 0.47054657167349984
       },
       "nextControl": {
-        "x": 7.975182081427978,
-        "y": 6.056743705078968
+        "x": 7.742918367761655,
+        "y": 1.1382945274321374
       },
       "isLocked": false,
-      "linkedName": "Far Mid Left Note"
+      "linkedName": "Far Right Note"
     },
     {
       "anchor": {
-        "x": 3.9443991246625467,
-        "y": 6.023158875881564
+        "x": 2.5985733638133945,
+        "y": 3.2686349354180195
       },
       "prevControl": {
-        "x": 5.89482193907845,
-        "y": 7.345440793466401
+        "x": 2.898906829249671,
+        "y": 2.4705187431208193
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center Shoot Position"
+      "linkedName": "Close Right Shoot Position"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0.0,
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 10.480024361942101,
       "rotateFast": false
     }
   ],
@@ -61,11 +61,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 7.64,
+    "rotation": -50.061417991201914,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Center Paths",
+  "folder": "Stage Side Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

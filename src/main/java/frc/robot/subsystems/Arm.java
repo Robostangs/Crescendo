@@ -267,17 +267,17 @@ public class Arm extends SubsystemBase {
      * @param position in degrees of the arm
      */
     public void setMotionMagic(double position) {
-        if (!validSetpoint(position)) {
-            if (position < Constants.ArmConstants.kArmMinAngle) {
-                position = Constants.ArmConstants.kArmMinAngle;
-            } else {
-                System.out.println(position + " is not a valid setpoint");
-                position = getArmPosition();
-            }
-        }
+        // if (!validSetpoint(position)) {
+        //     if (position < Constants.ArmConstants.kArmMinAngle) {
+        //         position = Constants.ArmConstants.kArmMinAngle;
+        //     } else {
+        //         System.out.println(position + " is not a valid setpoint");
+        //         position = getArmPosition();
+        //     }
+        // }
 
-        motionMagicDutyCycle.Position = Units.degreesToRotations(position);
-        setArmTarget(position);
+        // motionMagicDutyCycle.Position = Units.degreesToRotations(position);
+        // setArmTarget(position);
     }
 
     /**

@@ -47,6 +47,7 @@ public class FeedAndShoot extends Command {
             // if there is a piece in the shooter
             if (mIntake.getShooterSensor()) {
                 // if the shooter is already charged up then shoot
+                //TODO reversed this value
                 if (mShooter.readyToShoot()) {
                     mShooter.shoot(Constants.ShooterConstants.feederShootValue, 1);
                     SmartDashboard.putString("Shooter/Status", "Shooting");

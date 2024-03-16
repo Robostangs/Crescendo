@@ -23,6 +23,7 @@ public class FineAdjust extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        mArm.setMotionMagic(mArm.getArmPosition());
+        //TODO change this later???
+        // mArm.setMotionMagic(mArm.getArmPosition());
     }
 }

@@ -8,24 +8,15 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** An example command that uses an example subsystem. */
 public class Extend extends Command {
   private final Climber mClimber;
-
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   **/
 
   public Extend() {
     mClimber = Climber.getInstance();
 
-   // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mClimber);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize()
   {
@@ -33,7 +24,6 @@ public class Extend extends Command {
     mClimber.setRightClimbPower(Constants.ClimberConstants.RightMotor.kExtensionPower);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(mClimber.getLeftPosition() > Constants.ClimberConstants.LeftMotor.kMaxExtensionMeters - Constants.ClimberConstants.LeftMotor.kExtensionThreshold) {
@@ -45,14 +35,12 @@ public class Extend extends Command {
     }
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
       mClimber.setLeftClimbPower(0);
       mClimber.setRightClimbPower(0);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return

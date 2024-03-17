@@ -33,6 +33,7 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.Swerve.Align;
+import frc.robot.commands.climber.HomeClimber;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
@@ -297,6 +298,7 @@ public class Robot extends TimedRobot {
 		autoManager.initialize();
 		autonCommand.schedule();
 		timer.restart();
+		HomeClimber.getHomingCommand().schedule();
 	}
 
 	@Override

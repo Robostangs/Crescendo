@@ -14,6 +14,8 @@ import frc.robot.commands.Spit;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
+import frc.robot.commands.climber.AlrightTranslate;
+import frc.robot.commands.climber.Extend;
 import frc.robot.commands.feeder.BeltDrive;
 import frc.robot.commands.feeder.BeltFeed;
 import frc.robot.commands.feeder.QuickFeed;
@@ -124,13 +126,13 @@ public class RobotContainer {
 				.onTrue(new InstantCommand(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 1))
 						.finallyDo(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 0)));
 
-		// TODO: fix this new charlie climber
-		// xManip.y().onTrue(mClimber.runOnce(mClimber::toggleSelected));
 		xManip.x().whileTrue(new QuickFeed());
-
 		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getLeftBumper()));
 		xManip.b().toggleOnTrue(
 				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xManip.getHID().getLeftBumper()));
+
+		xManip.rightStick().onTrue(new Extend());
+		xManip.leftStick().whileTrue(new AlrightTranslate(() -> -0.1, () -> -0.1));
 
 		xManip.povRight().whileTrue(new Spit());
 

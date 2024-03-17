@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -19,8 +21,8 @@ public class Climber extends SubsystemBase {
 
     private TalonFX mLeftClimberMotor, mRightClimberMotor;
     private Solenoid mRightBrakeSolenoid, mLeftBrakeSolenoid;
-    private double mLeftPosition, mRightPosition;
-    private boolean mLeftLimitStatus, mRightLimitStatus;
+    private StatusSignal<Double> mLeftPosition, mRightPosition;
+    private StatusSignal<ReverseLimitValue> mLeftLimitStatus, mRightLimitStatus;
 
     private TalonFXConfiguration talonConfig = new TalonFXConfiguration();
 
@@ -32,12 +34,15 @@ public class Climber extends SubsystemBase {
 
         talonConfig.Feedback.SensorToMechanismRatio = Constants.ClimberConstants.LeftMotor.kGearboxRotationsToMechanismMeters;
         talonConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        talonConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+        talonConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         talonConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.ClimberConstants.LeftMotor.kMaxExtensionMeters;
-        talonConfig.HardwareLimitSwitch.ReverseLimitEnable = true;
-        talonConfig.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+        talonConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+        //CHANGE THE LIMIT OVERRIDES IF WE DO THIS TOOOOOOOOO
+        //talonConfig.HardwareLimitSwitch.ReverseLimitEnable = true;
+        //talonConfig.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
         talonConfig.CurrentLimits.StatorCurrentLimit = Constants.ClimberConstants.kDefaultStatorCurrentLimit;
         talonConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         mLeftClimberMotor.getConfigurator().apply(talonConfig);
         mRightClimberMotor.getConfigurator().apply(talonConfig);
@@ -54,6 +59,12 @@ public class Climber extends SubsystemBase {
             setLeftClimbPower(0);
             setRightClimbPower(0);
         }, this));
+
+        mLeftPosition = mLeftClimberMotor.getPosition();
+        mRightPosition = mRightClimberMotor.getPosition();
+        mLeftLimitStatus = mLeftClimberMotor.getReverseLimit();
+        mRightLimitStatus = mRightClimberMotor.getReverseLimit();
+
     }
 
     public void setLeftClimbPower(double power) {
@@ -73,29 +84,37 @@ public class Climber extends SubsystemBase {
     }
 
     public double getLeftPosition() {
-        return mLeftPosition;
+        return mLeftPosition.getValueAsDouble();
     }
 
     public double getRightPosition() {
-        return mRightPosition;
+        return mRightPosition.getValueAsDouble();
+    }
+
+    public void setLeftPosition(double position) {
+        mLeftClimberMotor.setPosition(position);
+    }
+
+    public void setRightPosition(double position) {
+        mRightClimberMotor.setPosition(position);
     }
 
     public boolean isLeftLimitSwitchHit() {
-        return mLeftLimitStatus;
+        return mLeftLimitStatus.getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     public boolean isRightLimitSwitchHit() {
-        return mRightLimitStatus;
+        return mRightLimitStatus.getValue() == ReverseLimitValue.ClosedToGround;
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        mLeftPosition = mLeftClimberMotor.getPosition().getValueAsDouble();
-        mRightPosition = mRightClimberMotor.getPosition().getValueAsDouble();
+        mLeftPosition.refresh();
+        mRightPosition.refresh();
 
-        mLeftLimitStatus = (mLeftClimberMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
-        mRightLimitStatus = (mLeftClimberMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
+        mLeftLimitStatus.refresh();
+        mRightLimitStatus.refresh();
 
         SmartDashboard.putNumber("Climber/Left/Motor Position", getLeftPosition());
         SmartDashboard.putBoolean("Climber/Left/Limit Switch", isLeftLimitSwitchHit());
@@ -108,6 +127,10 @@ public class Climber extends SubsystemBase {
         mLeftClimberMotor.getConfigurator().apply(talonConfig.CurrentLimits.withStatorCurrentLimit(kCurrentLimit));
         mRightClimberMotor.getConfigurator().apply(talonConfig.CurrentLimits.withStatorCurrentLimit(kCurrentLimit));
     }
+    public void setReverseSoftLimitState(boolean softLimitEnable) {
+        mLeftClimberMotor.getConfigurator().apply(talonConfig.SoftwareLimitSwitch.withReverseSoftLimitEnable(softLimitEnable));
+        mRightClimberMotor.getConfigurator().apply(talonConfig.SoftwareLimitSwitch.withReverseSoftLimitEnable(softLimitEnable));
+    }
 
     private static Climber instance;
 
@@ -117,5 +140,12 @@ public class Climber extends SubsystemBase {
         }
 
         return instance;
+    }
+
+    public void setAllLimitOverride(boolean limitOverride){
+        mLeftClimberMotor.getConfigurator().apply(talonConfig.SoftwareLimitSwitch.withReverseSoftLimitEnable(!limitOverride).withForwardSoftLimitEnable(!limitOverride));
+        mRightClimberMotor.getConfigurator().apply(talonConfig.SoftwareLimitSwitch.withReverseSoftLimitEnable(!limitOverride).withForwardSoftLimitEnable(!limitOverride));
+        //mLeftClimberMotor.getConfigurator().apply(talonConfig.HardwareLimitSwitch.withReverseLimitEnable(!limitOverride));
+        //mRightClimberMotor.getConfigurator().apply(talonConfig.HardwareLimitSwitch.withReverseLimitEnable(!limitOverride));
     }
 }

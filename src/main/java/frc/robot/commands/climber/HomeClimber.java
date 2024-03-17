@@ -17,6 +17,7 @@ public class HomeClimber extends Command {
         mClimber.setCurrentLimits(Constants.ClimberConstants.kHomingCurrentLimit);
         mClimber.setLeftClimbPower(Constants.ClimberConstants.kHomingPower);
         mClimber.setRightClimbPower(Constants.ClimberConstants.kHomingPower);
+        mClimber.setReverseSoftLimitState(false);
     }
     
     @Override
@@ -29,8 +30,13 @@ public class HomeClimber extends Command {
         mClimber.setCurrentLimits(Constants.ClimberConstants.kDefaultStatorCurrentLimit);
         mClimber.setLeftClimbPower(0);
         mClimber.setRightClimbPower(0);
-        if(interrupted)
-            DataLogManager.log("Climber Homing Interrupted");
+        mClimber.setReverseSoftLimitState(true);
+
+        if(interrupted){
+            DataLogManager.log("Climber Homing Interrupted - using hard limit offset");
+            mClimber.setLeftPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
+            mClimber.setRightPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
+        }
     }
 
     public static Command getHomingCommand(){

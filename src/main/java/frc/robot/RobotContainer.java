@@ -133,6 +133,11 @@ public class RobotContainer {
 
 		xManip.rightStick().onTrue(new Extend());
 		xManip.leftStick().whileTrue(new AlrightTranslate(() -> -0.1, () -> -0.1));
+		xManip.y().onTrue(new RunCommand(() -> {
+            mClimber.setLeftClimbPower(0);
+            mClimber.setRightClimbPower(0);
+        }, mClimber));
+		//TODO add button for soft limit override
 
 		xManip.povRight().whileTrue(new Spit());
 

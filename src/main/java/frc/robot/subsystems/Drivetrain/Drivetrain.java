@@ -153,7 +153,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         mField = Robot.teleopField;
         if (Robot.isRed()) {
             mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseRed);
-        } else {
+        } 
+        
+        else {
             mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseBlue);
         }
 

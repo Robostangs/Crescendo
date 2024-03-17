@@ -252,7 +252,7 @@ public class Robot extends TimedRobot {
 
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
-		// Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
 		Shuffleboard.selectTab(autoTab.getTitle());
 		robotContainer.removeDefaultCommands();
@@ -321,7 +321,7 @@ public class Robot extends TimedRobot {
 		robotContainer.configureDefaultBinds();
 
 		Arm.getInstance().setBrake(true);
-		// Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
 		Shooter.getInstance().setShooterBrake(true);
 

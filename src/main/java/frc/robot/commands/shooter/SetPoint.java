@@ -56,7 +56,8 @@ public class SetPoint extends Command {
             System.out.println("Error: " + error);
             System.out.println("*************************** Debug Stats (initialize) ***************************\n");
         }
-        // mArm.setMotionMagic(armSetpoint);
+        
+        mArm.setMotionMagic(armSetpoint);
     }
 
     @Override

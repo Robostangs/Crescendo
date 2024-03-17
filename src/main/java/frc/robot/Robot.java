@@ -33,11 +33,9 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.Swerve.Align;
-import frc.robot.commands.climber.HomeClimber;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -89,7 +87,6 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("All Close Notes (Center Only)", " all close notes");
 		autoChooser.addOption("All Close Notes Fast", " all close notes fast");
 		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
-		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
 
@@ -164,19 +161,21 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		// this will not work for on the fly shooting
-		NamedCommands.registerCommand("Align and Shoot", new InstantCommand(() -> autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
+		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
+				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).deadlineWith(new Align(false))));
 
 		// use this for on the fly shooting
-		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
+		// NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
+		// 		.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
-		Lighting.getInstance().autoSetLights(true);
+		// Lighting.getInstance().autoSetLights(true);
 		pdh.setSwitchableChannel(true);
 	}
 
 	@Override
 	public void driverStationConnected() {
+		pdh.setSwitchableChannel(true);
+
 		// TODO: if we are using practice match on home field then does this work? I
 		// want logs for practice matches at home
 		System.out.println(DriverStation.getMatchType());
@@ -299,7 +298,7 @@ public class Robot extends TimedRobot {
 		autoManager.initialize();
 		autonCommand.schedule();
 		timer.restart();
-		HomeClimber.getHomingCommand().schedule();
+		// HomeClimber.getHomingCommand().schedule();
 	}
 
 	@Override

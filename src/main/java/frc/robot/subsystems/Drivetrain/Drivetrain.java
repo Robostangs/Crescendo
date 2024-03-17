@@ -90,6 +90,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
         SmartDashboard.putNumber("Swerve/Rotation Error", (angleToSpeaker() -
                 getPose().getRotation().getDegrees()));
+
+        mField.getObject("RearLL pose").setPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear));
     }
 
     private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();

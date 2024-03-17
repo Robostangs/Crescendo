@@ -68,7 +68,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void setLeftClimbPower(double power) {
-        boolean solenoidVal = (power == 0);
+        boolean solenoidVal = (power != 0);
         mLeftBrakeSolenoid.set(solenoidVal);
         SmartDashboard.putBoolean("Climber/Left/Brake Solenoid", solenoidVal);
         SmartDashboard.putNumber("Climber/Left/Power", power);
@@ -76,7 +76,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void setRightClimbPower(double power) {
-        boolean solenoidVal = (power == 0);
+        boolean solenoidVal = (power != 0);
         mRightBrakeSolenoid.set(solenoidVal);
         SmartDashboard.putBoolean("Climber/Right/Brake Solenoid", solenoidVal);
         SmartDashboard.putNumber("Climber/Right/Power", power);

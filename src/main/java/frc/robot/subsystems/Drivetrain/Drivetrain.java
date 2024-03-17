@@ -173,7 +173,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 new HolonomicPathFollowerConfig(
                         Constants.AutoConstants.translationPID,
                         Constants.AutoConstants.rotationPID,
-                        SwerveConstants.kSpeedAt12VoltsMetersPerSecond,
+                        SwerveConstants.maxModuleSpeed,
                         Constants.SwerveConstants.driveBaseRadius,
                         // TODO: make one of these, using default values rn
                         new ReplanningConfig(true, false, 1, 0.25)),
@@ -320,8 +320,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     public static Drivetrain getInstance() {
         if (mInstance == null) {
-            mInstance = new Drivetrain(SwerveConstants.DrivetrainConstants, SwerveConstants.FrontLeft,
-                    SwerveConstants.FrontRight, SwerveConstants.BackLeft, SwerveConstants.BackRight);
+            mInstance = new Drivetrain(SwerveConstants.TunerConstants.DrivetrainConstants, SwerveConstants.TunerConstants.FrontLeft,
+                    SwerveConstants.TunerConstants.FrontRight, SwerveConstants.TunerConstants.BackLeft, SwerveConstants.TunerConstants.BackRight);
         }
         return mInstance;
     }

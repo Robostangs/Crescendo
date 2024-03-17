@@ -58,11 +58,14 @@ public final class Constants {
 		// 1.9 };
 		/** The height (in meters) of the speaker */
 		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.15, 5.55, Rotation2d.fromDegrees(0));
-		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
-		
+		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(),
+				SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
+
 		public static final double SpeakerHeight = 1.9;
-		public static final Pose3d SpeakerPoseBlue3d = new Pose3d(SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(), SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseBlue.getRotation().getRadians()));
-		public static final Pose3d SpeakerPoseRed3d = new Pose3d(SpeakerPoseRed.getX(), SpeakerPoseRed.getY(), SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseRed.getRotation().getRadians()));
+		public static final Pose3d SpeakerPoseBlue3d = new Pose3d(SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(),
+				SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseBlue.getRotation().getRadians()));
+		public static final Pose3d SpeakerPoseRed3d = new Pose3d(SpeakerPoseRed.getX(), SpeakerPoseRed.getY(),
+				SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseRed.getRotation().getRadians()));
 
 		/** Highest Y value of the speaker */
 		// public static final double SpeakerYUpperBound = 6.12 + 0.5;
@@ -82,77 +85,14 @@ public final class Constants {
 			kSpeaker, kAmp, None
 		}
 
-		/** Theoretical free speed (m/s) at 12v applied output; */
-		public static final double kSpeedAt12VoltsMetersPerSecond = 4.73;
-
-		// public static final double kMaxSpeedMetersPerSecond = kSpeedAt12VoltsMetersPerSecond;
 		public static final double kMaxSpeedMetersPerSecond = 5;
 		public static final double kMaxAngularSpeedMetersPerSecond = 3 * Math.PI;
-
-		// The steer motor uses any SwerveModule.SteerRequestType control request with
-		// the output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
-		private static final Slot0Configs steerGains = new Slot0Configs().withKP(100).withKI(0).withKD(0.2).withKS(0)
-				.withKV(1.5).withKA(0);
-
-		// When using closed-loop control, the drive motor uses the control
-		// output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
-		private static final Slot0Configs driveGains = new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0)
-				.withKV(0).withKA(0);
-
-		// private static final Slot0Configs driveGainsVelocity = new Slot0Configs()
-		// .withKP(10).withKI(0).withKD(1)
-		// .withKS(0).withKV(0).withKA(0);
-
-		// The closed-loop output type to use for the steer motors
-		// This affects the PID/FF gains for the steer motors
-		private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
-		// The closed-loop output type to use for the drive motors;
-		// This affects the PID/FF gains for the drive motors
-		private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
-
-		/** The stator current at which the wheels start to slip; */
-		private static final double kSlipCurrentA = 150.0;
-
-		/**
-		 * Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
-		 */
-		private static final double kCoupleRatio = 3.5714285714285716;
-
-		private static final double kDriveGearRatio = 6.746031746031747;
-		private static final double kSteerGearRatio = 21.428571428571427;
-		private static final double kWheelRadiusInches = 2;
 
 		/** This is with FOC disabled */
 		public static final double maxModuleSpeed = 4.7244;
 
 		/** This is with FOC enabled */
 		public static final double maxModuleSpeedFOC = 4.572;
-
-		private static final boolean kSteerMotorReversed = false;
-		private static final boolean kInvertLeftSide = true;
-		private static final boolean kInvertRightSide = false;
-
-		// These are only used for simulation
-		private static final double kSteerInertia = 0.00001;
-		private static final double kDriveInertia = 0.001;
-		// Simulated voltage necessary to overcome friction
-		private static final double kSteerFrictionVoltage = 0.25;
-		private static final double kDriveFrictionVoltage = 0.25;
-
-		private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
-				.withDriveMotorGearRatio(kDriveGearRatio).withSteerMotorGearRatio(kSteerGearRatio)
-				.withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA).withSteerMotorGains(steerGains)
-				.withDriveMotorGains(driveGains).withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
-				.withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
-				.withSpeedAt12VoltsMps(kSpeedAt12VoltsMetersPerSecond).withSteerInertia(kSteerInertia)
-				.withDriveInertia(kDriveInertia).withSteerFrictionVoltage(kSteerFrictionVoltage)
-				.withDriveFrictionVoltage(kDriveFrictionVoltage).withFeedbackSource(SteerFeedbackType.FusedCANcoder)
-				.withCouplingGearRatio(kCoupleRatio).withSteerMotorInverted(kSteerMotorReversed);
-
-		/*
-		 * Picture the front of the robot facing to the right in the XY axis, with the
-		 * center on the origin (0,0)
-		 */
 
 		/** Distance (inches) between the 2 left side CANcoders */
 		public static final double driveBaseWidth = Units.inchesToMeters(24.75);
@@ -172,55 +112,118 @@ public final class Constants {
 		 */
 		public static final double driveBaseRadius = Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2);
 
-		private static final String kCANbusName = "*";
-		private static final int kPigeonId = 0;
-		public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
-				.withPigeon2Id(kPigeonId).withCANbusName(kCANbusName);
+		public class TunerConstants {
+			/** Theoretical free speed (m/s) at 12v applied output; */
+			public static final double kSpeedAt12VoltsMetersPerSecond = 4.73;
 
-		// Front Left
-		private static final int kFrontLeftDriveMotorId = 11;
-		private static final int kFrontLeftSteerMotorId = 12;
-		private static final int kFrontLeftEncoderId = 10;
-		private static final double kFrontLeftEncoderOffset = -0.320556640625;
-		private static final double kFrontLeftXPos = driveBaseWidth / 2;
-		private static final double kFrontLeftYPos = driveBaseHeight / 2;
+			// public static final double kMaxSpeedMetersPerSecond =
+			// kSpeedAt12VoltsMetersPerSecond;
 
-		// Front Right
-		private static final int kFrontRightDriveMotorId = 21;
-		private static final int kFrontRightSteerMotorId = 22;
-		private static final int kFrontRightEncoderId = 20;
-		private static final double kFrontRightEncoderOffset = -0.375244140625;
-		private static final double kFrontRightXPos = driveBaseWidth / 2;
-		private static final double kFrontRightYPos = -driveBaseHeight / 2;
+			// The steer motor uses any SwerveModule.SteerRequestType control request with
+			// the output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
+			private static final Slot0Configs steerGains = new Slot0Configs().withKP(100).withKI(0).withKD(0.2)
+					.withKS(0)
+					.withKV(1.5).withKA(0);
 
-		// Back Left
-		private static final int kBackLeftDriveMotorId = 31;
-		private static final int kBackLeftSteerMotorId = 32;
-		private static final int kBackLeftEncoderId = 30;
-		private static final double kBackLeftEncoderOffset = -0.17578125;
-		private static final double kBackLeftXPos = -driveBaseWidth / 2;
-		private static final double kBackLeftYPos = driveBaseHeight / 2;
+			// When using closed-loop control, the drive motor uses the control
+			// output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
+			private static final Slot0Configs driveGains = new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0)
+					.withKV(0).withKA(0);
 
-		// Back Right
-		private static final int kBackRightDriveMotorId = 41;
-		private static final int kBackRightSteerMotorId = 42;
-		private static final int kBackRightEncoderId = 40;
-		private static final double kBackRightEncoderOffset = 0.41455078125;
-		private static final double kBackRightXPos = -driveBaseWidth / 2;
-		private static final double kBackRightYPos = -driveBaseHeight / 2;
+			// private static final Slot0Configs driveGainsVelocity = new Slot0Configs()
+			// .withKP(10).withKI(0).withKD(1)
+			// .withKS(0).withKV(0).withKA(0);
 
-		public static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
-				kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId,
-				kFrontLeftEncoderOffset, kFrontLeftXPos, kFrontLeftYPos, kInvertLeftSide);
-		public static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
-				kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId,
-				kFrontRightEncoderOffset, kFrontRightXPos, kFrontRightYPos, kInvertRightSide);
-		public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
-				kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
-				kBackLeftXPos, kBackLeftYPos, kInvertLeftSide);
-		public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
-				kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
-				kBackRightXPos, kBackRightYPos, kInvertRightSide).withDriveMotorInverted(true);
+			// The closed-loop output type to use for the steer motors
+			// This affects the PID/FF gains for the steer motors
+			private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
+			// The closed-loop output type to use for the drive motors;
+			// This affects the PID/FF gains for the drive motors
+			private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
+
+			/** The stator current at which the wheels start to slip; */
+			private static final double kSlipCurrentA = 150.0;
+
+			/**
+			 * Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
+			 */
+			private static final double kCoupleRatio = 3.5714285714285716;
+
+			private static final double kDriveGearRatio = 6.746031746031747;
+			private static final double kSteerGearRatio = 21.428571428571427;
+			private static final double kWheelRadiusInches = 2;
+
+			private static final boolean kSteerMotorReversed = false;
+			private static final boolean kInvertLeftSide = true;
+			private static final boolean kInvertRightSide = false;
+
+			// These are only used for simulation
+			private static final double kSteerInertia = 0.00001;
+			private static final double kDriveInertia = 0.001;
+			// Simulated voltage necessary to overcome friction
+			private static final double kSteerFrictionVoltage = 0.25;
+			private static final double kDriveFrictionVoltage = 0.25;
+
+			private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
+					.withDriveMotorGearRatio(kDriveGearRatio).withSteerMotorGearRatio(kSteerGearRatio)
+					.withWheelRadius(kWheelRadiusInches).withSlipCurrent(kSlipCurrentA).withSteerMotorGains(steerGains)
+					.withDriveMotorGains(driveGains).withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
+					.withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
+					.withSpeedAt12VoltsMps(kSpeedAt12VoltsMetersPerSecond).withSteerInertia(kSteerInertia)
+					.withDriveInertia(kDriveInertia).withSteerFrictionVoltage(kSteerFrictionVoltage)
+					.withDriveFrictionVoltage(kDriveFrictionVoltage).withFeedbackSource(SteerFeedbackType.FusedCANcoder)
+					.withCouplingGearRatio(kCoupleRatio).withSteerMotorInverted(kSteerMotorReversed);
+
+			private static final String kCANbusName = "*";
+			private static final int kPigeonId = 0;
+			public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
+					.withPigeon2Id(kPigeonId).withCANbusName(kCANbusName);
+
+			// Front Left
+			private static final int kFrontLeftDriveMotorId = 11;
+			private static final int kFrontLeftSteerMotorId = 12;
+			private static final int kFrontLeftEncoderId = 10;
+			private static final double kFrontLeftEncoderOffset = -0.320556640625;
+			private static final double kFrontLeftXPos = driveBaseWidth / 2;
+			private static final double kFrontLeftYPos = driveBaseHeight / 2;
+
+			// Front Right
+			private static final int kFrontRightDriveMotorId = 21;
+			private static final int kFrontRightSteerMotorId = 22;
+			private static final int kFrontRightEncoderId = 20;
+			private static final double kFrontRightEncoderOffset = -0.375244140625;
+			private static final double kFrontRightXPos = driveBaseWidth / 2;
+			private static final double kFrontRightYPos = -driveBaseHeight / 2;
+
+			// Back Left
+			private static final int kBackLeftDriveMotorId = 31;
+			private static final int kBackLeftSteerMotorId = 32;
+			private static final int kBackLeftEncoderId = 30;
+			private static final double kBackLeftEncoderOffset = -0.17578125;
+			private static final double kBackLeftXPos = -driveBaseWidth / 2;
+			private static final double kBackLeftYPos = driveBaseHeight / 2;
+
+			// Back Right
+			private static final int kBackRightDriveMotorId = 41;
+			private static final int kBackRightSteerMotorId = 42;
+			private static final int kBackRightEncoderId = 40;
+			private static final double kBackRightEncoderOffset = 0.41455078125;
+			private static final double kBackRightXPos = -driveBaseWidth / 2;
+			private static final double kBackRightYPos = -driveBaseHeight / 2;
+
+			public static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
+					kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId,
+					kFrontLeftEncoderOffset, kFrontLeftXPos, kFrontLeftYPos, kInvertLeftSide);
+			public static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
+					kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId,
+					kFrontRightEncoderOffset, kFrontRightXPos, kFrontRightYPos, kInvertRightSide);
+			public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
+					kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
+					kBackLeftXPos, kBackLeftYPos, kInvertLeftSide);
+			public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
+					kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
+					kBackRightXPos, kBackRightYPos, kInvertRightSide).withDriveMotorInverted(true);
+		}
 	}
 
 	public static enum AprilTag {
@@ -248,8 +251,10 @@ public final class Constants {
 	public static final class AutoConstants {
 
 		/* SIM PID */
-		// public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5, 0.3);
-		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07, 0.9, 1);
+		// public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5,
+		// 0.3);
+		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07,
+		// 0.9, 1);
 
 		/* IRL PID */
 		public static final PIDConstants translationPID = new PIDConstants(0.6, 0.5, 0.4, 5);
@@ -279,7 +284,8 @@ public final class Constants {
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
 
-				// these are called "edge positions" in path planner because they are on the edge of the wing line
+				// these are called "edge positions" in path planner because they are on the
+				// edge of the wing line
 				public static final Pose2d CenterStartPosition = new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(0));
 				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));
 				public static final Pose2d StageStartPosition = new Pose2d(0.74, 4.41, Rotation2d.fromDegrees(-60));
@@ -343,25 +349,27 @@ public final class Constants {
 		/** 60 degrees */
 		public static final double kArmMaxAngle = 60;
 		/** 300 degrees */
-		public static final double kArmMinAngle = -58.7;
+		public static final double kArmMinAngle = -67;
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
-		public static final double shooterOffset = 58.8;
-		
+		public static final double shooterOffset = 67.67;
+
 		public static final double hardStopOffset = shooterOffset + kArmMinAngle;
 
 		public static final double kInRangeThreshold = 2.5;
 
-
-		/* 
-		Interpolation between distance vs shooting angle (horizontal dist. to speaker, angle to shoot)
-		Y = a*x^b + c
-		
-		A decrease in C will shoot further up a constant amount, any distance
-		A decrease in B "bows" the curve in, closer distances will shoot further up and further values will shoot futher down
-		A decrease in A shifts curve up, no matter the distance, it will shoot lower, but closer distances will be effected greater than further distances
-		*/
+		/*
+		 * Interpolation between distance vs shooting angle (horizontal dist. to
+		 * speaker, angle to shoot)
+		 * Y = a*x^b + c
+		 * 
+		 * A decrease in C will shoot further up a constant amount, any distance
+		 * A decrease in B "bows" the curve in, closer distances will shoot further up
+		 * and further values will shoot futher down
+		 * A decrease in A shifts curve up, no matter the distance, it will shoot lower,
+		 * but closer distances will be effected greater than further distances
+		 */
 		public static final double a = -1170.66;
 		public static final double b = -0.751072;
 		public static final double c = 1.98502;
@@ -379,8 +387,8 @@ public final class Constants {
 
 	public static class ShooterConstants {
 		public static final int feedMotor = 60;
-		public static final int shootMotorLeft = 51;
-		public static final int shootMotorRight = 52;
+		public static final int topShooterMotorID = 51;
+		public static final int bottomShooterMotorID = 52;
 		public static final boolean feedIsInverted = false;
 		public static final boolean rightShootIsInverted = true;
 		public static final boolean leftShootIsInverted = true;
@@ -390,17 +398,16 @@ public final class Constants {
 		public static final double feederFeedForward = 0.1;
 		public static final double shooterChargeUpTime = 0;
 
-
 		public static final double feederChargeUpTime = 0;
 		public static final double feederReverseFeed = 0;
-		
+
 		public static final double shooterReverseSpeed = -0.1;
 		// public static final double feederChargeUpTime = 0.24;
 		// public static final double feederChargeUpTime = 0.23;
 	}
 
 	public static class IntakeConstants {
-		public static final int shooterMotorID = 62;
+		public static final int intakeMotorID = 62;
 		public static final int beltMotorID = 61;
 
 		public static final int solenoidID = 0;
@@ -419,52 +426,70 @@ public final class Constants {
 	}
 
 	public static class ClimberConstants {
-		public static final int leftClimberMotorID = 54;
-		public static final int rightClimberMotorID = 55;
+        public static class LeftMotor {
+            public static final int kId = 54;
+            public static final double kSpeed = 0.1;
+            public static final boolean kInverted = true;
 
-		public static final double kDefaultStatorCurrentLimit = 60;
+            public static final int kGearboxRotationsToMechanismMeters = 0;
+            public static final int kMaxExtensionMeters = 0;
+            public static final int kExtensionThreshold = 0;
+            public static final int kExtensionPower = 0;
+        }
+
+        public static class RightMotor {
+            public static final int kId = 55;
+            public static final double kSpeed = 0.1;
+            public static final boolean kInverted = false;
+
+            public static final int kGearboxRotationsToMechanismMeters = LeftMotor.kGearboxRotationsToMechanismMeters;
+            public static final int kMaxExtensionMeters = LeftMotor.kMaxExtensionMeters;
+            public static final int kExtensionThreshold = LeftMotor.kExtensionThreshold;
+            public static final int kExtensionPower = LeftMotor.kExtensionPower;
+        }
+
+        public static class LeftBrakeSolenoid {
+            public static final int kId = 4;
+        }
+
+        public static class RightBrakeSolenoid {
+            public static final int kId = 7;
+        }
+
+        public static final double kDefaultStatorCurrentLimit = 60;
         public static final double kHomingCurrentLimit = 10;
         public static final double kHomingPower = 0;
-
-		public static final boolean leftClimberMotorInverted = true;
-		public static final boolean rightClimberMotorInverted = false;
-
-		public static final int leftClimberBrakeID = 4;
-		public static final int rightClimberBrakeID = 7;
-
-		public static final double climberMaxExtensionRotations = 0;
-		public static final double climberSpeed = 0.35;
 	}
 
 	public static class Lights {
 		public static enum LEDState {
 			/** No lights (white) */
 			kOff(new int[] { 255, 255, 255 }),
-	
+
 			/** Ready To Shoot */
 			kGreen(new int[] { 0, 255, 0 }),
-	
+
 			/** Alliance Color */
 			kRed(new int[] { 255, 0, 0 }),
-	
+
 			/** Alliance Color */
 			kBlue(new int[] { 0, 0, 255 }),
-	
+
 			/** Loaded but not ready to shoot */
 			kYellow(new int[] { 255, 255, 0 }),
-	
+
 			/** No Piece in shooter */
 			kOrange(new int[] { 255, 165, 0 }),
-	
+
 			/** Low Voltage */
 			kPurple(new int[] { 128, 0, 128 }),;
-	
+
 			public final int[] color;
-	
+
 			private LEDState(int[] color) {
 				this.color = color;
 			}
-	
+
 			/**
 			 * Gets the color of the LED state
 			 * 
@@ -474,7 +499,7 @@ public final class Constants {
 				return color;
 			}
 		}
-		
+
 		public static final int CANdleID = 0;
 		public static final double lowVoltageThreshold = 12.5;
 	}

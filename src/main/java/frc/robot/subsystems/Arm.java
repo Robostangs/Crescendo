@@ -98,8 +98,8 @@ public class Arm extends SubsystemBase {
         Music.getInstance().addFalcon(armMotor);
 
         double shooterHeightInches = 22;
-        double shooterLengthInches = 9.5;
-        double shooterExtensionInches = 4.5;
+        double shooterLengthInches = 9.75;
+        double shooterExtensionInches = 7.5;
         double shooterExtensionAngle = -90;
         double elbowLigamentAngle = -Constants.ArmConstants.shooterOffset;
         double rootXInches = Units.metersToInches(0.7493);
@@ -110,14 +110,14 @@ public class Arm extends SubsystemBase {
             armMechanism = new Mechanism2d(0.7493 * 2, Units.inchesToMeters(
                     rootYInches + shooterHeightInches + shooterExtensionInches + shooterLengthInches + 5));
 
-            shooterLigament = new MechanismLigament2d("Shooter Bars", Units.inchesToMeters(shooterHeightInches), 90, 9,
+            shooterLigament = new MechanismLigament2d("Shooter Bars", Units.inchesToMeters(shooterHeightInches), 90, 8,
                     new Color8Bit(Color.kWhite));
 
             shooterExtension = new MechanismLigament2d("Shooter Extension",
                     Units.inchesToMeters(shooterExtensionInches), shooterExtensionAngle, 2, new Color8Bit(Color.kGray));
 
             elbowLigament = new MechanismLigament2d("Shooter", Units.inchesToMeters(shooterLengthInches),
-                    elbowLigamentAngle, 15, new Color8Bit(Color.kWhite));
+                    elbowLigamentAngle, 10, new Color8Bit(Color.kWhite));
 
             armMechanism.getRoot("Root", Units.inchesToMeters(rootXInches), Units.inchesToMeters(rootYInches))
                     .append(shooterLigament).append(shooterExtension).append(elbowLigament);
@@ -128,14 +128,14 @@ public class Arm extends SubsystemBase {
         simArmMechanism = new Mechanism2d(0.7493 * 2, Units
                 .inchesToMeters(rootYInches + shooterHeightInches + shooterExtensionInches + shooterLengthInches + 5));
 
-        simShooterLigament = new MechanismLigament2d("Shooter Bars", Units.inchesToMeters(shooterHeightInches), 90, 9,
+        simShooterLigament = new MechanismLigament2d("Shooter Bars", Units.inchesToMeters(shooterHeightInches), 90, 8,
                 new Color8Bit(Color.kRed));
 
         simShooterExtension = new MechanismLigament2d("Shooter Extension", Units.inchesToMeters(shooterExtensionInches),
                 shooterExtensionAngle, 2, new Color8Bit(Color.kDarkRed));
 
         simElbowLigament = new MechanismLigament2d("Shooter", Units.inchesToMeters(shooterLengthInches),
-                elbowLigamentAngle, 15, new Color8Bit(Color.kRed));
+                elbowLigamentAngle, 10, new Color8Bit(Color.kRed));
 
         simArmMechanism.getRoot("Root", Units.inchesToMeters(rootXInches), Units.inchesToMeters(rootYInches))
                 .append(simShooterLigament).append(simShooterExtension).append(simElbowLigament);

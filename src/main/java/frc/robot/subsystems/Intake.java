@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
         solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.solenoidID);
         shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
         
-        intakeMotor = new TalonFX(Constants.IntakeConstants.shooterMotorID, "*");
+        intakeMotor = new TalonFX(Constants.IntakeConstants.intakeMotorID, "*");
         beltMotor = new TalonFX(Constants.IntakeConstants.beltMotorID, "*");
         
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorInverted);

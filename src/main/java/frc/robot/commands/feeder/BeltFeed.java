@@ -46,7 +46,7 @@ public class BeltFeed extends Command {
             }
 
             mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
-            mShooter.setShoot(Constants.ShooterConstants.feederFeedForward, 0);
+            mShooter.shoot(Constants.ShooterConstants.feederFeedForward, 0);
         }
 
         // if there is a piece in the shooter

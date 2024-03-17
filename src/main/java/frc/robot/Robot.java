@@ -172,6 +172,7 @@ public class Robot extends TimedRobot {
 				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
 		Lighting.getInstance().autoSetLights(true);
+		pdh.setSwitchableChannel(true);
 	}
 
 	@Override

@@ -428,24 +428,22 @@ public final class Constants {
 	public static class ClimberConstants {
         public static class LeftMotor {
             public static final int kId = 54;
-            public static final double kSpeed = 0.1;
             public static final boolean kInverted = true;
 
-            public static final int kGearboxRotationsToMechanismMeters = 0;
-            public static final int kMaxExtensionMeters = 0;
-            public static final int kExtensionThreshold = 0;
-            public static final int kExtensionPower = 0;
+            public static final double kGearboxRotationsToMechanismMeters = 1;
+            public static final double kMaxExtensionMeters = 100;
+            public static final double kExtensionThreshold = 0;
+            public static final double kExtensionPower = 0.2;
         }
 
         public static class RightMotor {
             public static final int kId = 55;
-            public static final double kSpeed = 0.1;
             public static final boolean kInverted = false;
 
-            public static final int kGearboxRotationsToMechanismMeters = LeftMotor.kGearboxRotationsToMechanismMeters;
-            public static final int kMaxExtensionMeters = LeftMotor.kMaxExtensionMeters;
-            public static final int kExtensionThreshold = LeftMotor.kExtensionThreshold;
-            public static final int kExtensionPower = LeftMotor.kExtensionPower;
+            public static final double kGearboxRotationsToMechanismMeters = LeftMotor.kGearboxRotationsToMechanismMeters;
+            public static final double kMaxExtensionMeters = LeftMotor.kMaxExtensionMeters;
+            public static final double kExtensionThreshold = LeftMotor.kExtensionThreshold;
+            public static final double kExtensionPower = LeftMotor.kExtensionPower;
         }
 
         public static class LeftBrakeSolenoid {
@@ -457,8 +455,9 @@ public final class Constants {
         }
 
         public static final double kDefaultStatorCurrentLimit = 60;
-        public static final double kHomingCurrentLimit = 10;
-        public static final double kHomingPower = 0;
+        public static final double kHomingCurrentLimit = 5;
+        public static final double kHomingPower = 0.2;
+		public static final double kHardStopPositionRelativeToSwitchMeters = -0.1;
 	}
 
 	public static class Lights {

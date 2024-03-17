@@ -26,13 +26,6 @@ public class Extend extends Command {
 
   @Override
   public void execute() {
-    if(mClimber.getLeftPosition() > Constants.ClimberConstants.LeftMotor.kMaxExtensionMeters - Constants.ClimberConstants.LeftMotor.kExtensionThreshold) {
-      mClimber.setLeftClimbPower(0);
-    }
-    
-    if(mClimber.getRightPosition() > Constants.ClimberConstants.RightMotor.kMaxExtensionMeters - Constants.ClimberConstants.RightMotor.kExtensionThreshold) {
-      mClimber.setRightClimbPower(0);
-    }
   }
 
   @Override

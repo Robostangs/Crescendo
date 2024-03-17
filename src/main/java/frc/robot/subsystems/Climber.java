@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -41,6 +42,7 @@ public class Climber extends SubsystemBase {
         //talonConfig.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
         talonConfig.CurrentLimits.StatorCurrentLimit = Constants.ClimberConstants.kDefaultStatorCurrentLimit;
         talonConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         mLeftClimberMotor.getConfigurator().apply(talonConfig);
         mRightClimberMotor.getConfigurator().apply(talonConfig);

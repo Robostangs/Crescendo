@@ -114,7 +114,6 @@ public class AutoManager extends Command {
 
     /**
      * This variable should be enabled and needs to be tested before competition
-     * TODO: this needs to be done
      */
     private static final boolean slowDownWhileShooting = false;
 

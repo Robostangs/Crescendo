@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-// TODO: redo for top bottom shooter
 public class Shooter extends SubsystemBase {
     private TalonFX bottomShooter, topShooter, feedMotor;
     private VelocityVoltage shootPid = new VelocityVoltage(0);
@@ -30,7 +29,6 @@ public class Shooter extends SubsystemBase {
         fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
         fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
 
-        // TODO: this PID needs to be good af
         fxConfig.Slot0.kP = 0.1;
         fxConfig.Slot0.kI = 0.01;
         fxConfig.Slot0.kV = 10.5 / 88.9;

@@ -447,9 +447,6 @@ public class Arm extends SubsystemBase {
 
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
-        // TODO: tune these values for less ocsilation with new shooter all stuff needs
-        // to be retuned
-
         armMotorConfig.Slot0.kP = 500;
         armMotorConfig.Slot0.kI = 0.03;
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;

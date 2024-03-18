@@ -79,7 +79,6 @@ public final class Constants {
 		// public static final double SpeakerDeadBand = 0.57;
 	}
 
-	// TODO: need to redo this for faster swerve
 	public class SwerveConstants {
 		public enum Target {
 			kSpeaker, kAmp, None
@@ -89,7 +88,6 @@ public final class Constants {
 		public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
 
 		/** This is with FOC disabled */
-		// public static final double maxModuleSpeed = 4.7244;
 		public static final double maxModuleSpeed = 6;
 
 		/** This is with FOC enabled */

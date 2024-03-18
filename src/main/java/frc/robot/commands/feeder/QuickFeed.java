@@ -22,7 +22,6 @@ public class QuickFeed extends Command {
         SmartDashboard.putString("Intake/Status", "Quick Feed");
         SmartDashboard.putString("Shooter/Status", "Quick Feed");
         mIntake.setBelt(0.5);
-        //TODO reversed this motor
         mShooter.shoot(0.5, 0);
     }
 }

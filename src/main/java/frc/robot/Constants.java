@@ -57,11 +57,12 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
 		/** The height (in meters) of the speaker */
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.215, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.15, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(),
 				SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
-		public static final double SpeakerHeight = 1.9;
+		public static final double SpeakerHeight = 2.032;
+
 		public static final Pose3d SpeakerPoseBlue3d = new Pose3d(SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(),
 				SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseBlue.getRotation().getRadians()));
 		public static final Pose3d SpeakerPoseRed3d = new Pose3d(SpeakerPoseRed.getX(), SpeakerPoseRed.getY(),
@@ -87,16 +88,16 @@ public final class Constants {
 		public static final double kMaxSpeedMetersPerSecond = 6;
 		public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
 
-		/** This is with FOC disabled */
+		// /** This is with FOC disabled */
 		public static final double maxModuleSpeed = 6;
 
 		/** This is with FOC enabled */
 		// public static final double maxModuleSpeedFOC = 4.572;
 
 		/** Distance (inches) between the 2 left side CANcoders */
-		public static final double driveBaseWidth = Units.inchesToMeters(24.75);
+		public static final double driveBaseWidth = 24.75;
 		/** Distance (inches) between the 2 front side CANcoders */
-		public static final double driveBaseHeight = Units.inchesToMeters(24.1);
+		public static final double driveBaseHeight = 24.1;
 
 		/**
 		 * Picture the front of the robot facing to the right in the XY axis
@@ -109,7 +110,7 @@ public final class Constants {
 		 * distance from the center of the robot to the furthest module (meters) should
 		 * be 17.27
 		 */
-		public static final double driveBaseRadius = Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2);
+		public static final double driveBaseRadius = Units.inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
 
 		public class TunerConstants {
 			// The steer motor uses any SwerveModule.SteerRequestType control request with
@@ -361,7 +362,7 @@ public final class Constants {
 		/** 60 degrees */
 		public static final double kArmMaxAngle = 60;
 		/** 300 degrees */
-		public static final double kArmMinAngle = -67;
+		public static final double kArmMinAngle = -63;
 
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 
@@ -407,7 +408,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.1;
+		public static final double feederFeedForward = 0.15;
 	}
 
 	public static class IntakeConstants {

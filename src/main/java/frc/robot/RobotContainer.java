@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.util.GeometryUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -82,14 +84,16 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis, true));
 		xDrive.x().toggleOnTrue(new AimAndShoot());
 
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSpeakerCenter));
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp).andThen(
+				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xDrive.getHID().getLeftBumper())));
 
+
+		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain
 				.runOnce(() -> drivetrain
-						.seedFieldRelative(!Robot.isRed() ? new Pose2d(1.25, 5.55, Rotation2d.fromDegrees(0))
-								: new Pose2d(Constants.fieldLength - 1.25, 5.55, Rotation2d.fromDegrees(180)))));
-		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+						.seedFieldRelative(!Robot.isRed() ? Constants.AutoConstants.WayPoints.Blue.CenterStartPosition
+								: GeometryUtil.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition))));
 
 		xDrive.leftStick().onTrue(new InstantCommand(() -> {
 			beltFeed.deployIntake = false;
@@ -101,11 +105,7 @@ public class RobotContainer {
 			mIntake.setHolding(!mIntake.getHolding());
 		}));
 
-		xDrive.leftBumper().onTrue(new InstantCommand(() -> {
-			beltFeed.deployIntake = false;
-			mIntake.setHolding(!mIntake.getHolding());
-		}));
-
+		// this is a back up for if the backpaddles arent there or fail
 		xDrive.rightBumper().onTrue(new InstantCommand(() -> {
 			beltFeed.deployIntake = true;
 			mIntake.setHolding(!mIntake.getHolding());
@@ -122,14 +122,17 @@ public class RobotContainer {
 		new Trigger(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new ShooterCharge(xManip::getRightTriggerAxis));
 
-		new Trigger(() -> Timer.getMatchTime() > 25 && Timer.getMatchTime() < 30)
-				.onTrue(new InstantCommand(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 1))
-						.finallyDo(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 0)));
+		new Trigger(() -> Timer.getMatchTime() > 25).and(() -> Timer.getMatchTime() < 30)
+				.whileTrue(new RunCommand(() -> {
+					xManip.getHID().setRumble(RumbleType.kBothRumble, 1);
+					xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
+				})
+						.finallyDo(() -> {
+							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
+							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
+						}));
 
-		xManip.y().onTrue(new RunCommand(() -> {
-			mClimber.setLeftClimbPower(0);
-			mClimber.setRightClimbPower(0);
-		}, mClimber));
+		xManip.y().onTrue(new RunCommand(mClimber.stopClimber, mClimber));
 		xManip.x().whileTrue(new QuickFeed());
 		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getLeftBumper()));
 		xManip.b().toggleOnTrue(
@@ -153,20 +156,6 @@ public class RobotContainer {
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())
 				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
-
-		// TODO: fix this new charlie climber
-		// xManip.leftStick().whileTrue(new RunCommand(mClimber::goUp,
-		// mClimber).finallyDo(mClimber::stop));
-		// xManip.rightStick().whileTrue(new RunCommand(mClimber::goDown,
-		// mClimber).finallyDo(mClimber::stop));
-
-		// new Trigger(() -> xManip.getLeftTriggerAxis() >
-		// Constants.OperatorConstants.kManipDeadzone)
-		// .or(() -> xManip.getRightTriggerAxis() >
-		// Constants.OperatorConstants.kManipDeadzone)
-		// .whileTrue(mClimber.run(() -> mClimber.moveSelected(
-		// xManip.getRightTriggerAxis() -
-		// xManip.getLeftTriggerAxis())).finallyDo(mClimber::stop));
 	}
 
 	public RobotContainer() {

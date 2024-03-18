@@ -306,7 +306,7 @@ public class Arm extends SubsystemBase {
      *         to shoot into the speaker
      */
     public double calculateArmSetpoint() {
-        return calculateArmSetpointExpo();
+        return calculateArmSetpointTrig();
     }
 
     /**
@@ -338,8 +338,12 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        double angleToSpeaker = -1170.66 * Math.pow(distToSpeakerMeters * 39.37,
-                -0.751072) + 1.98502;
+        double angleToSpeaker = -1214.45 * Math.pow(Units.metersToInches(distToSpeakerMeters),
+                -0.796924) + -3.57488;
+
+        // double angleToSpeaker = Math.atan2(81.5, (-10 +
+        // Units.metersToInches(distToSpeakerMeters)));
+        // angleToSpeaker = -Units.radiansToDegrees(angleToSpeaker);
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)",
                 distToSpeakerMeters);
@@ -362,7 +366,7 @@ public class Arm extends SubsystemBase {
         }
     }
 
-        /**
+    /**
      * Calculates the arm setpoint based on the current robot pose using a
      * trigonometric model
      * 
@@ -371,12 +375,7 @@ public class Arm extends SubsystemBase {
      *         to shoot into the speaker
      */
     public double calculateArmSetpointTrig() {
-        double groundToShooterInches = 27;
-        // double floorToSpeakerBottomMouthInches = 78;
-
-        /* ~1.3 meters */
-        double shooterToSpeakerBottomMouthMeters = Constants.Vision.SpeakerHeight - Units
-                .inchesToMeters(groundToShooterInches);
+        // double groundToShooterInches = 27;
 
         /* Swerve Pose calculated in meters */
         Pose2d speakerPose;
@@ -387,7 +386,7 @@ public class Arm extends SubsystemBase {
             speakerPose = Constants.Vision.SpeakerPoseBlue;
         }
 
-        /* Swerve Pose calculated in meters */
+        /** Swerve Pose calculated in meters */
         Pose2d currentPose = Drivetrain.getInstance().getPose();
         double SpeakerY = speakerPose.getY();
 
@@ -398,6 +397,12 @@ public class Arm extends SubsystemBase {
         double distToSpeakerMeters = Math.sqrt(
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
+
+        double groundToShooterInches = 26 + (Units.metersToInches(distToSpeakerMeters) * (1 / 53.75));
+
+        /* ~1.3 meters */
+        double shooterToSpeakerBottomMouthMeters = Constants.Vision.SpeakerHeight - Units
+                .inchesToMeters(groundToShooterInches);
 
         double angleToSpeaker = Math.atan2(shooterToSpeakerBottomMouthMeters, distToSpeakerMeters);
         angleToSpeaker = -Units.radiansToDegrees(angleToSpeaker);

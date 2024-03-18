@@ -37,6 +37,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Robot;
 import frc.robot.Vision.AprilTagLimelight;
 import frc.robot.Vision.LimelightHelpers;
+import frc.robot.Vision.LimelightHelpers.LimelightResults;
 import frc.robot.subsystems.Music;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,40 +63,31 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
 
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
-            if (LimelightHelpers.getCurrentPipelineIndex(
-                    Constants.Vision.llAprilTagRear) == Constants.Vision.llAprilTagPipelineIndex
-                    && LimelightHelpers
-                            .getLatestResults(Constants.Vision.llAprilTagRear).targetingResults.botpose_tagcount > 1
-                    && LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
-                this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear),
-                        Timer.getFPGATimestamp()
-                                - LimelightHelpers.getLatency_Pipeline(Constants.Vision.llAprilTagRear) / 1000);
+            LimelightResults rearResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTagRear);
+            LimelightResults frontResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
+
+            if (rearResults.targetingResults.targets_Fiducials.length > 1) {
+                this.addVisionMeasurement(rearResults.targetingResults.getBotPose2d_wpiBlue(),
+                        Timer.getFPGATimestamp() - rearResults.targetingResults.latency_pipeline / 1000);
             }
 
-            // if (LimelightHelpers.getCurrentPipelineIndex(
-            //         Constants.Vision.llAprilTag) == Constants.Vision.llAprilTagPipelineIndex
-            //         && LimelightHelpers
-            //                 .getLatestResults(Constants.Vision.llAprilTag).targetingResults.botpose_tagcount > 1
-            //         && LimelightHelpers.getTid(Constants.Vision.llAprilTag) != -1) {
-            //     this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag),
-            //             Timer.getFPGATimestamp()
-            //                     - LimelightHelpers.getLatency_Pipeline(Constants.Vision.llAprilTag) / 1000);
-            // }
-
-            if (DriverStation.isEnabled()) {
-                LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
+            if (frontResults.targetingResults.targets_Fiducials.length > 1) {
+                this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
+                        Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline / 1000);
             }
 
-            else {
-                LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
-            }
+            // mField.getObject("Rear LL pose")
+            // .setPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear));
+
+            // mField.getObject("Front LL pose")
+            // .setPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag));
+
         }
 
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
         SmartDashboard.putNumber("Swerve/Rotation Error", (angleToSpeaker() -
                 getPose().getRotation().getDegrees()));
 
-        mField.getObject("RearLL pose").setPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear));
     }
 
     private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();

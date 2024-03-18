@@ -26,6 +26,11 @@ public class Climber extends SubsystemBase {
 
     private TalonFXConfiguration talonConfig = new TalonFXConfiguration();
 
+    public Runnable stopClimber = () -> {
+        setLeftClimbPower(0);
+        setRightClimbPower(0);
+    };
+
     private Climber() {
         mLeftClimberMotor = new TalonFX(Constants.ClimberConstants.LeftMotor.kId, "*");
         mRightClimberMotor = new TalonFX(Constants.ClimberConstants.RightMotor.kId, "*");
@@ -52,10 +57,7 @@ public class Climber extends SubsystemBase {
         mRightBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
                 Constants.ClimberConstants.RightBrakeSolenoid.kId);
 
-        setDefaultCommand(new RunCommand(() -> {
-            setLeftClimbPower(0);
-            setRightClimbPower(0);
-        }, this));
+        setDefaultCommand(new RunCommand(stopClimber, this));
 
         mLeftPosition = mLeftClimberMotor.getPosition();
         mRightPosition = mRightClimberMotor.getPosition();
@@ -106,17 +108,17 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        mLeftPosition.refresh();
-        mRightPosition.refresh();
+        // mLeftPosition.refresh();
+        // mRightPosition.refresh();
 
-        mLeftLimitStatus.refresh();
-        mRightLimitStatus.refresh();
+        // mLeftLimitStatus.refresh();
+        // mRightLimitStatus.refresh();
 
-        SmartDashboard.putNumber("Climber/Left/Motor Position", getLeftPosition());
-        SmartDashboard.putBoolean("Climber/Left/Limit Switch", isLeftLimitSwitchHit());
+        // SmartDashboard.putNumber("Climber/Left/Motor Position", getLeftPosition());
+        // SmartDashboard.putBoolean("Climber/Left/Limit Switch", isLeftLimitSwitchHit());
 
-        SmartDashboard.putNumber("Climber/Right/Motor Position", getRightPosition());
-        SmartDashboard.putBoolean("Climber/Right/Limit Switch", isRightLimitSwitchHit());
+        // SmartDashboard.putNumber("Climber/Right/Motor Position", getRightPosition());
+        // SmartDashboard.putBoolean("Climber/Right/Limit Switch", isRightLimitSwitchHit());
     }
 
     public void setCurrentLimits(double kCurrentLimit) {

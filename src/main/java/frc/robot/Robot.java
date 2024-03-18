@@ -33,8 +33,6 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.Swerve.Align;
-import frc.robot.commands.shooter.FeedAndShoot;
-import frc.robot.commands.shooter.SetPoint;
 import frc.robot.commands.shooter.TrackSetPoint;
 import frc.robot.subsystems.Arm;
 
@@ -68,8 +66,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		DataLogManager.start();
-		autoTab = Shuffleboard.getTab("Auto");
-		teleopTab = Shuffleboard.getTab("Teleop");
+		autoTab = Shuffleboard.getTab("Autonomous");
+		teleopTab = Shuffleboard.getTab("Teleoperated");
 
 		robotContainer = new RobotContainer();
 
@@ -128,7 +126,7 @@ public class Robot extends TimedRobot {
 				.withSize(2, 2)
 				.withPosition(0, 0);
 
-		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
+		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Autonomous")
 				.getEntry("Path Delay");
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
@@ -174,7 +172,7 @@ public class Robot extends TimedRobot {
 		// TODO: delete
 		SmartDashboard.putNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake);
 		setpointCommand = new TrackSetPoint(() -> SmartDashboard.getNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake));
-		teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand);
+		teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand).withPosition(2, 2).withSize(2, 2);
 		
 	}
 
@@ -212,29 +210,29 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
-		if (Intake.getInstance().getShooterSensor() && DriverStation.isEnabled()) {
+		// if (Intake.getInstance().getShooterSensor() && DriverStation.isEnabled()) {
 
-			// LEDs will blink when the arm is at the right setpoint to score and swerve is
-			// facing correct angle
-			if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
-					&& Drivetrain.getInstance().isInRangeOfTarget()) {
-				LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
-				LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
-			}
+		// 	// LEDs will blink when the arm is at the right setpoint to score and swerve is
+		// 	// facing correct angle
+		// 	if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
+		// 			&& Drivetrain.getInstance().isInRangeOfTarget()) {
+		// 		LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
+		// 		LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
+		// 	}
 
-			// LEDs will be on when the arm is not at the right setpoint to score, but the
-			// shooter is occupied
-			else {
-				LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTag);
-				LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTagRear);
-			}
-		}
+		// 	// LEDs will be on when the arm is not at the right setpoint to score, but the
+		// 	// shooter is occupied
+		// 	else {
+		// 		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTag);
+		// 		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTagRear);
+		// 	}
+		// }
 
-		// LEDs will be off when the shooter is not occupied
-		else {
-			LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
-			LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
-		}
+		// // LEDs will be off when the shooter is not occupied
+		// else {
+		// 	LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
+		// 	LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
+		// }
 	}
 
 	@Override

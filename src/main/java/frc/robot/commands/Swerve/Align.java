@@ -94,7 +94,7 @@ public class Align extends Command {
         // note align will have smaller error but more important changes in
         // rotation, so if that needs a different pid controller we can make that happen
         // drive.HeadingController = new PhoenixPIDController(4.0, 20, 0.3);
-        drive.HeadingController = new PhoenixPIDController(8, 2, 1);
+        drive.HeadingController = new PhoenixPIDController(10, 2, 1);
         
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Align PID", drive.HeadingController);

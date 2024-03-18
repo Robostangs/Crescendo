@@ -126,6 +126,10 @@ public class RobotContainer {
 				.onTrue(new InstantCommand(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 1))
 						.finallyDo(() -> xManip.getHID().setRumble(RumbleType.kBothRumble, 0)));
 
+		xManip.y().onTrue(new RunCommand(() -> {
+			mClimber.setLeftClimbPower(0);
+			mClimber.setRightClimbPower(0);
+		}, mClimber));
 		xManip.x().whileTrue(new QuickFeed());
 		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getLeftBumper()));
 		xManip.b().toggleOnTrue(
@@ -133,10 +137,6 @@ public class RobotContainer {
 
 		xManip.rightStick().onTrue(new Extend());
 		xManip.leftStick().whileTrue(new AlrightTranslate(() -> -0.1, () -> -0.1));
-		xManip.y().onTrue(new RunCommand(() -> {
-			mClimber.setLeftClimbPower(0);
-			mClimber.setRightClimbPower(0);
-		}, mClimber));
 
 		// TODO add button for soft limit override
 

@@ -52,17 +52,11 @@ public class FeedAndShoot extends Command {
                     SmartDashboard.putString("Shooter/Status", "Shooting");
                     mIntake.setHolding(false);
                 }
-                
-                // // if the shooter is not charged up and the piece has not been reversed yet
-                // else if (timer.get() < Constants.ShooterConstants.feederChargeUpTime) {
-                    //     mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
-                    //     SmartDashboard.putString("Shooter/Status", "Reversing Feed");
-                    // }
-                    
-                    // if the shooter isnt charged up but the pieces has been reversed
-                    else {
-                        mShooter.shoot(0, 1);
-                        SmartDashboard.putString("Shooter/Status", "Charging Up");
+
+                // if the shooter isnt charged up but the pieces has been reversed
+                else {
+                    mShooter.shoot(0, 1);
+                    SmartDashboard.putString("Shooter/Status", "Charging Up");
                 }
 
                 mIntake.setBelt(0);

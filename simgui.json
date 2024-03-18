@@ -19,6 +19,10 @@
       "/Shuffleboard/Auto/Path Selector": "String Chooser",
       "/Shuffleboard/Auto/Shoot Selector": "String Chooser",
       "/Shuffleboard/Auto/Starting Pose Selector": "String Chooser",
+      "/Shuffleboard/Teleop/InstantCommand": "Command",
+      "/Shuffleboard/Teleop/ParallelCommandGroup": "Command",
+      "/Shuffleboard/Teleop/Setpoint: -67.0 degrees": "Command",
+      "/Shuffleboard/Teleop/Track Setpoint": "Command",
       "/SmartDashboard/Align PID": "PIDController",
       "/SmartDashboard/Arm": "Subsystem",
       "/SmartDashboard/Arm/Target Profile": "Mechanism2d",
@@ -50,6 +54,11 @@
         }
       },
       "/Shuffleboard/Auto/Starting Pose Selector": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Teleop/Track Setpoint": {
         "window": {
           "visible": true
         }
@@ -108,7 +117,11 @@
         "Teleop": {
           "Field": {
             "open": true
-          }
+          },
+          "Setpoint: -67.0 degrees": {
+            "open": true
+          },
+          "open": true
         },
         "open": true
       },
@@ -130,8 +143,5 @@
   },
   "NetworkTables Info": {
     "visible": true
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }

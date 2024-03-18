@@ -33,6 +33,9 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.Swerve.Align;
+import frc.robot.commands.shooter.FeedAndShoot;
+import frc.robot.commands.shooter.SetPoint;
+import frc.robot.commands.shooter.TrackSetPoint;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
@@ -59,6 +62,8 @@ public class Robot extends TimedRobot {
 	public SequentialCommandGroup autonCommand;
 	public Command pathPlannerCommand;
 	public static AutoManager autoManager;
+
+	public static Command setpointCommand;
 
 	@Override
 	public void robotInit() {
@@ -165,6 +170,12 @@ public class Robot extends TimedRobot {
 
 		// Lighting.getInstance().autoSetLights(true);
 		pdh.setSwitchableChannel(true);
+
+		// TODO: delete
+		SmartDashboard.putNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake);
+		setpointCommand = new TrackSetPoint(() -> SmartDashboard.getNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake));
+		teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand);
+		
 	}
 
 	@Override

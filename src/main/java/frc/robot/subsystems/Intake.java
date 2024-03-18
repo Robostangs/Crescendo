@@ -18,6 +18,9 @@ public class Intake extends SubsystemBase {
     
     @Override
     public void periodic() {
+        if (getShooterSensor()) {
+            setHolding(true);
+        }
         SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
         SmartDashboard.putBoolean("Intake/Holding", holding);
     }

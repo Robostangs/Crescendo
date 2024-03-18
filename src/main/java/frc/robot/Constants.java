@@ -57,7 +57,7 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
 		/** The height (in meters) of the speaker */
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.15, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.215, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(),
 				SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
@@ -148,7 +148,7 @@ public final class Constants {
 
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
-			private static final double kWheelRadiusInches = 2;
+			private static final double kWheelRadiusInches = 2 * 6.3/6.6;
 
 			private static final boolean kSteerMotorReversed = false;
 			private static final boolean kInvertLeftSide = true;
@@ -271,7 +271,7 @@ public final class Constants {
 		// 0.9, 1);
 
 		/* IRL PID */
-		public static final PIDConstants translationPID = new PIDConstants(0.6, 0.5, 0.4, 5);
+		public static final PIDConstants translationPID = new PIDConstants(0.4, 0.1, 0.4, 5);
 		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.5, 10);
 
 		public static final double kMaxSpeedMetersPerSecond = 4;
@@ -410,14 +410,6 @@ public final class Constants {
 
 		public static final double feederShootValue = 1;
 		public static final double feederFeedForward = 0.1;
-		public static final double shooterChargeUpTime = 0;
-
-		public static final double feederChargeUpTime = 0;
-		public static final double feederReverseFeed = 0;
-
-		public static final double shooterReverseSpeed = -0.1;
-		// public static final double feederChargeUpTime = 0.24;
-		// public static final double feederChargeUpTime = 0.23;
 	}
 
 	public static class IntakeConstants {
@@ -429,9 +421,6 @@ public final class Constants {
 
 		public static final int shooterSensorPWM_ID = 9;
 		public static final int beltSensorPWM_ID = 1;
-
-		public static final double kDeployTimeSeconds = 0.25;
-		public static final double beltFeedForward = 0.05;
 
 		public static final double beltIntakeSpeed = 0.8;
 

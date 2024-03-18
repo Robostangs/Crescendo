@@ -40,7 +40,7 @@ public class AutoManager extends Command {
      * is used in order to be able to keep track of the position of the note using
      * time, even if we want to shoot but the piece has not been positioned yet.
      */
-    private Timer feedTimer;
+    // private Timer feedTimer;
 
     /**
      * The current status of this auto command, this will say whether we are trying
@@ -61,7 +61,7 @@ public class AutoManager extends Command {
      * this variable will be used to pull the note from the belt into the shooter so
      * that we can position the note
      */
-    private static final double feederHandoffSpeed = 0.7;
+    private static final double feederHandoffSpeed = 0.1;
 
     /**
      * the timeout that occurs when the time between activating shoot and the
@@ -95,7 +95,7 @@ public class AutoManager extends Command {
      * once the feedTimer indicates that the piece has been proerply positioned and
      * is ready to be shot
      */
-    private boolean hasBeenReversed = true;
+    // private boolean hasBeenReversed = true;
 
     /**
      * This variable will be entirely controlled by the Auto Manager and will be
@@ -143,12 +143,10 @@ public class AutoManager extends Command {
     @Override
     public void initialize() {
         shoot = false;
-        hasBeenReversed = true;
         shotsFired = false;
 
         intakeAlwaysDeployed = Robot.intakeAlwaysOut.getSelected();
         shootTimer = null;
-        feedTimer = null;
         intakeTimer = null;
 
         Pose2d startPose;
@@ -189,78 +187,55 @@ public class AutoManager extends Command {
 
         // if the shoot variable has been enabled
         if (shoot) {
-            // TODO: is this worth doing, it currently causes the pathing to be off but wont have any effect if the piece is shot quickly (hopefully)
+            // TODO: is this worth doing, it currently causes the pathing to be off but wont
+            // have any effect if the piece is shot quickly (hopefully)
             if (slowDownWhileShooting) {
                 Drivetrain.getInstance().autoRequest.slowDownRate = drivetrainShootSpeed;
             }
 
             // if there is a piece in the shooter
             if (mIntake.getShooterSensor()) {
-
-                // mIntake.setHolding(true);
                 intakeTimer = null;
 
-                // reset the timer if it has not been reset
-                if (feedTimer == null) {
-                    feedTimer = new Timer();
-                    feedTimer.restart();
+                // completely reset the timer
+                if (shootTimer == null) {
+                    shootTimer = new Timer();
+                    shootTimer.restart();
                 }
 
-                // if the piece has not been reversed, and the timer indicates that it still has
-                // not been reversed
-                if (feedTimer.get() < Constants.ShooterConstants.feederChargeUpTime && !hasBeenReversed) {
-                    shootTimer = null;
-                    shotsFired = false;
-                    mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
-                    postAutoStatus("Positioning Note to Shoot");
+                mArm.setMotionMagic(mArm.calculateArmSetpoint());
+
+                double feederSpeed = 0;
+
+                // if the shooter is ready to shoot, and has been ready to shoot
+                if (mShooter.readyToShootAdvanced()) {
+                    feederSpeed = Constants.ShooterConstants.feederShootValue;
+                    postAutoStatus("Shooting");
+                    shotsFired = true;
                 }
 
-                // wait until the shooter is ready to shoot and then shoot
-                // by this point we know the piece has been reversed
+                // if the shooter has been trying to prepare for a while, cancel the shoot
+                // command and then just shoot
+                else if (shootTimer.get() > shootTimeout) {
+                    postAutoStatus("Shooter Timed Out");
+                    feederSpeed = 1;
+                    shotsFired = true;
+                }
+
+                // if the timeout has not been triggered and the shooter is still being charged
+                // then keep charging
                 else {
-                    hasBeenReversed = true;
-
-                    // completely reset the timer
-                    if (shootTimer == null) {
-                        shootTimer = new Timer();
-                        shootTimer.restart();
-                    }
-
-                    mArm.setMotionMagic(mArm.calculateArmSetpoint());
-
-                    double feederSpeed = 0;
-
-                    // if the shooter is ready to shoot, and has been ready to shoot
-                    if (mShooter.readyToShootAdvanced()) {
-                        feederSpeed = Constants.ShooterConstants.feederShootValue;
-                        postAutoStatus("Shooting");
-                        shotsFired = true;
-                    }
-
-                    // if the shooter has been trying to prepare for a while, cancel the shoot
-                    // command and then just shoot
-                    else if (shootTimer.get() > shootTimeout) {
-                        postAutoStatus("Shooter Timed Out");
-                        feederSpeed = 1;
-                        shotsFired = true;
-                    }
-
-                    // if the timeout has not been triggered and the shooter is still being charged
-                    // then keep charging
-                    else {
-                        postAutoStatus("Preparing Shooter");
-                        feederSpeed = 0;
-                    }
-
-                    mShooter.shoot(feederSpeed, 1);
+                    postAutoStatus("Preparing Shooter");
+                    feederSpeed = 0;
                 }
+
+                mShooter.shoot(feederSpeed, 1);
             }
 
             // this says that if the shooter shooting and there is no piece in the
             // shooter, then we can go ahead and end the shoot command saying it worked
             else if (shotsFired || mShooter.readyToShoot()) {
                 shoot = false;
-                feedTimer = null;
 
                 if (shootTimer.get() > shootTimeout) {
                     postAutoStatus("Shooter Timed Out");
@@ -279,7 +254,6 @@ public class AutoManager extends Command {
             else {
                 mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
                 shootTimer = null;
-                feedTimer = null;
 
                 if (intakeTimer == null) {
                     intakeTimer = new Timer();
@@ -289,7 +263,7 @@ public class AutoManager extends Command {
                 // this code must push the piece all the way into the shooter, touching the
                 // shooter wheels
                 mIntake.setBelt(beltIntakeAndHandoffSpeed);
-                mShooter.shoot(feederHandoffSpeed, Constants.ShooterConstants.shooterReverseSpeed);
+                mShooter.shoot(feederHandoffSpeed, 0);
 
                 // if the piece is taking too long to get into the shooter, then stop trying to
                 // shoot and just move on
@@ -329,7 +303,6 @@ public class AutoManager extends Command {
             mIntake.setHolding(true);
             intakeTimer = null;
             if (mIntake.getShooterSensor()) {
-                // intakeTimer = null;
 
                 // if we dont want to always have the intake deployed, then we can retract it rn
                 // cuz there is a piece in the shooter
@@ -339,41 +312,19 @@ public class AutoManager extends Command {
 
                 mIntake.setIntake(0);
 
-                // reset the timer if it has not been reset
-                if (feedTimer == null) {
-                    feedTimer = new Timer();
-                    feedTimer.restart();
+                // if this is causing problems, removing it will result in a slower auto but ig
+                // it will work at least
+                mShooter.shoot(0, 1);
+
+                // dont want to hit the stage, so within 4 meters of the speaker, start tracking
+                if (Drivetrain.getInstance().getDistanceToSpeaker() < 4) {
+                    mArm.setMotionMagic(mArm.calculateArmSetpoint());
                 }
 
-                // if the piece has not been reversed, and the timer indicates that it still has
-                // not been reversed
-                if (feedTimer.get() < Constants.ShooterConstants.feederChargeUpTime && !hasBeenReversed) {
-
-                    // position the note in order to charge up the shooter motors
-                    mShooter.shoot(Constants.ShooterConstants.feederReverseFeed, 0);
-                    postAutoStatus("Positioning Note");
-                }
-
-                // if the piece has been reversed then start charging the shooter motors
+                // if we are farther than 4 meters, then I dont want the arm up, because what if
+                // we go within 4 meters and then out, send arm to intake position
                 else {
-                    hasBeenReversed = true;
-
-                    // if this is causing problems, removing it will result in a slower auto but ig
-                    // it will work at least
-                    mShooter.shoot(0, 1);
-
-                    // dont want to hit the stage, so within 4 meters of the speaker, start tracking
-                    if (Drivetrain.getInstance().getDistanceToSpeaker() < 4) {
-                        mArm.setMotionMagic(mArm.calculateArmSetpoint());
-                    }
-
-                    // if we are farther than 4 meters, then I dont want the arm up, because what if
-                    // we go within 4 meters and then out, send arm to intake position
-                    else {
-                        mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
-                    }
-
-                    // postAutoStatus("Waiting To Shoot");
+                    mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
                 }
             }
 
@@ -385,9 +336,6 @@ public class AutoManager extends Command {
                 // always be going to intake setpoint when trying to intake
                 mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
-                hasBeenReversed = false;
-                feedTimer = null;
-
                 if (!intakeAlwaysDeployed) {
                     mIntake.setExtend(true);
                 }
@@ -396,7 +344,7 @@ public class AutoManager extends Command {
 
                 // this code must pull the piece off the ground and into the shooter
                 mIntake.setBelt(beltIntakeAndHandoffSpeed);
-                mShooter.shoot(feederHandoffSpeed, Constants.ShooterConstants.shooterReverseSpeed);
+                mShooter.shoot(feederHandoffSpeed, 0);
                 // postAutoStatus("Intaking");
             }
 

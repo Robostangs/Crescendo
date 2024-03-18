@@ -65,18 +65,22 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             if (LimelightHelpers.getCurrentPipelineIndex(
                     Constants.Vision.llAprilTagRear) == Constants.Vision.llAprilTagPipelineIndex
                     && LimelightHelpers
-                            .getLatestResults(Constants.Vision.llAprilTagRear).targetingResults.botpose_tagcount > 1) {
+                            .getLatestResults(Constants.Vision.llAprilTagRear).targetingResults.botpose_tagcount > 1
+                    && LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1) {
                 this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear),
-                        Timer.getFPGATimestamp());
+                        Timer.getFPGATimestamp()
+                                - LimelightHelpers.getLatency_Pipeline(Constants.Vision.llAprilTagRear) / 1000);
             }
 
-            if (LimelightHelpers.getCurrentPipelineIndex(
-                    Constants.Vision.llAprilTag) == Constants.Vision.llAprilTagPipelineIndex
-                    && LimelightHelpers
-                            .getLatestResults(Constants.Vision.llAprilTag).targetingResults.botpose_tagcount > 1) {
-                this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag),
-                        Timer.getFPGATimestamp());
-            }
+            // if (LimelightHelpers.getCurrentPipelineIndex(
+            //         Constants.Vision.llAprilTag) == Constants.Vision.llAprilTagPipelineIndex
+            //         && LimelightHelpers
+            //                 .getLatestResults(Constants.Vision.llAprilTag).targetingResults.botpose_tagcount > 1
+            //         && LimelightHelpers.getTid(Constants.Vision.llAprilTag) != -1) {
+            //     this.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag),
+            //             Timer.getFPGATimestamp()
+            //                     - LimelightHelpers.getLatency_Pipeline(Constants.Vision.llAprilTag) / 1000);
+            // }
 
             if (DriverStation.isEnabled()) {
                 LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
@@ -155,8 +159,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         mField = Robot.teleopField;
         if (Robot.isRed()) {
             mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseRed);
-        } 
-        
+        }
+
         else {
             mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseBlue);
         }
@@ -322,8 +326,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     public static Drivetrain getInstance() {
         if (mInstance == null) {
-            mInstance = new Drivetrain(SwerveConstants.TunerConstants.DrivetrainConstants, SwerveConstants.TunerConstants.FrontLeft,
-                    SwerveConstants.TunerConstants.FrontRight, SwerveConstants.TunerConstants.BackLeft, SwerveConstants.TunerConstants.BackRight);
+            mInstance = new Drivetrain(SwerveConstants.TunerConstants.DrivetrainConstants,
+                    SwerveConstants.TunerConstants.FrontLeft,
+                    SwerveConstants.TunerConstants.FrontRight, SwerveConstants.TunerConstants.BackLeft,
+                    SwerveConstants.TunerConstants.BackRight);
         }
         return mInstance;
     }

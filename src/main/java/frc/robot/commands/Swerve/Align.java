@@ -118,11 +118,9 @@ public class Align extends Command {
     public void execute() {
         if (note) {
             mIntake.setExtend(true);
-            if (timer.get() > Constants.IntakeConstants.kDeployTimeSeconds) {
-                mIntake.setIntake(1);
-                mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
-                SmartDashboard.putString("Intake/Status", "Align and Intaking");
-            }
+            mIntake.setIntake(1);
+            mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+            SmartDashboard.putString("Intake/Status", "Align and Intaking");
         }
 
         drive.TargetDirection = getTargetRotation.get();
@@ -162,8 +160,8 @@ public class Align extends Command {
         if (note) {
             return mIntake.getShooterSensor();
         } else {
-            // return !mIntake.getHolding();
-            return !mIntake.getShooterSensor();
+            return !mIntake.getHolding();
+            // return !mIntake.getShooterSensor();
         }
     }
 }

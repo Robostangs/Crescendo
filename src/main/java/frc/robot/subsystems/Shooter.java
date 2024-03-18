@@ -163,7 +163,7 @@ public class Shooter extends SubsystemBase {
      * @return returns true if ready to feed (and shoot) right now
      */
     public boolean readyToShootAdvanced() {
-        return Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint(), 3) &&
+        return Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint()) &&
                 Math.abs(Arm.getInstance().getVelocity()) < 0.25 && readyToShoot();
     }
 

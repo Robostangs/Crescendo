@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
+		DataLogManager.start();
 		autoTab = Shuffleboard.getTab("Auto");
 		teleopTab = Shuffleboard.getTab("Teleop");
 
@@ -121,12 +122,6 @@ public class Robot extends TimedRobot {
 						() -> Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot())
 				.withSize(2, 2)
 				.withPosition(0, 0);
-
-		// TODO: fix this with new charlie climber
-		// teleopTab.addString("Selected Climber", () ->
-		// oldClimber.getInstance().getLeftSelected() ? "Left" : "Right")
-		// .withSize(2, 2)
-		// .withPosition(2, 2).withWidget(BuiltInWidgets.kTextView);
 
 		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Auto")
 				.getEntry("Path Delay");

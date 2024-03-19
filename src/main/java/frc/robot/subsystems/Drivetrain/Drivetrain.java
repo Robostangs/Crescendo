@@ -60,6 +60,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
+        // TODO: looooots of loop overunns in here, mainly just due to LL pose estimation but the new LLResults should help with that
         super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
 
         if (Constants.Vision.UseLimelight && Robot.isReal()) {

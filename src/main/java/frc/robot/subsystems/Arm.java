@@ -452,7 +452,7 @@ public class Arm extends SubsystemBase {
 
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
-        armMotorConfig.Slot0.kP = 500;
+        armMotorConfig.Slot0.kP = 400;
         armMotorConfig.Slot0.kI = 0.03;
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
         motionMagicConfigs.MotionMagicAcceleration = 0.5;

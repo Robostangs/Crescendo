@@ -33,7 +33,6 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.Swerve.Align;
-import frc.robot.commands.shooter.TrackSetPoint;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
@@ -169,10 +168,10 @@ public class Robot extends TimedRobot {
 		// Lighting.getInstance().autoSetLights(true);
 		pdh.setSwitchableChannel(true);
 
-		// TODO: delete
-		SmartDashboard.putNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake);
-		setpointCommand = new TrackSetPoint(() -> SmartDashboard.getNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake));
-		teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand).withPosition(2, 2).withSize(2, 2);
+		// use this for shooter regression
+		// SmartDashboard.putNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake);
+		// setpointCommand = new TrackSetPoint(() -> SmartDashboard.getNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake));
+		// teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand).withPosition(2, 2).withSize(2, 2);
 		
 	}
 
@@ -243,6 +242,7 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		PathPlannerCommand.publishTrajectory(startingPose.getSelected() + autoChooser.getSelected());
 		autoField.setRobotPose(Drivetrain.getInstance().getPose());
+		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
 	}
 
 	@Override
@@ -324,6 +324,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
 		robotContainer.configureDefaultBinds();
 
 		Arm.getInstance().setBrake(true);

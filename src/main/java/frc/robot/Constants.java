@@ -32,7 +32,7 @@ public final class Constants {
 
 	public class Vision {
 		public static final boolean UseLimelight = true;
-		public static final String llAprilTag = "limelight-nick";
+		public static final String llAprilTag = "limelight-front";
 		public static final String llAprilTagRear = "limelight-rear";
 		public static final String llPython = "limelight-python";
 
@@ -421,7 +421,7 @@ public final class Constants {
 		public static final int shooterSensorPWM_ID = 9;
 		public static final int beltSensorPWM_ID = 1;
 
-		public static final double beltIntakeSpeed = 0.8;
+		public static final double beltIntakeSpeed = 01;
 
 		public static final boolean intakeMotorInverted = true;
 		public static final boolean beltMotorInverted = true;
@@ -458,7 +458,7 @@ public final class Constants {
 
 		public static final double kDefaultStatorCurrentLimit = 60;
 		public static final double kHomingCurrentLimit = 5;
-		public static final double kHomingPower = 0.2;
+		public static final double kHomingPower = -0.2;
 		public static final double kHardStopPositionRelativeToSwitchMeters = -0.1;
 	}
 

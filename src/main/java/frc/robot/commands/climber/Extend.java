@@ -21,7 +21,7 @@ public class Extend extends Command {
 		}
 
 		if (mClimber.getRightPosition() < ClimberConstants.RightMotor.kMaxExtensionMeters - ClimberConstants.RightMotor.kExtensionThreshold) {
-			mClimber.setLeftClimbPower(ClimberConstants.RightMotor.kExtensionPower);
+			mClimber.setRightClimbPower(ClimberConstants.RightMotor.kExtensionPower);
 		}
 	}
 
@@ -33,9 +33,9 @@ public class Extend extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return mClimber.getLeftPosition() > ClimberConstants.LeftMotor.kMaxExtensionMeters
-				- ClimberConstants.LeftMotor.kExtensionThreshold &&
-				mClimber.getRightPosition() > ClimberConstants.RightMotor.kMaxExtensionMeters
-						- ClimberConstants.RightMotor.kExtensionThreshold;
+		return (mClimber.getLeftPosition() > ClimberConstants.LeftMotor.kMaxExtensionMeters
+				- ClimberConstants.LeftMotor.kExtensionThreshold) &&
+				(mClimber.getRightPosition() > ClimberConstants.RightMotor.kMaxExtensionMeters
+						- ClimberConstants.RightMotor.kExtensionThreshold);
 	}
 }

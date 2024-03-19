@@ -18,6 +18,7 @@ import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
 import frc.robot.commands.climber.AlrightTranslate;
 import frc.robot.commands.climber.Extend;
+import frc.robot.commands.climber.HomeClimber;
 import frc.robot.commands.feeder.BeltDrive;
 import frc.robot.commands.feeder.BeltFeed;
 import frc.robot.commands.feeder.QuickFeed;
@@ -54,6 +55,7 @@ public class RobotContainer {
 		removeDefaultCommands();
 
 		mIntake.setDefaultCommand(beltFeed);
+		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber));
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -132,15 +134,16 @@ public class RobotContainer {
 							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
 
-		xManip.y().onTrue(new RunCommand(mClimber.stopClimber, mClimber));
+		// xManip.y().onTrue(mClimber.run(mClimber.stopClimber));
+		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.x().whileTrue(new QuickFeed());
 		xManip.a().toggleOnTrue(new AimAndShoot(() -> xManip.getHID().getLeftBumper()));
 		xManip.b().toggleOnTrue(
 				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xManip.getHID().getLeftBumper()));
 
 		// can be a whileTrue or onTrue
-		xManip.rightStick().whileTrue(new Extend());
-		xManip.leftStick().whileTrue(new AlrightTranslate(() -> -0.1, () -> -0.1));
+		xManip.rightStick().toggleOnTrue(new Extend());
+		xManip.leftStick().toggleOnTrue(new AlrightTranslate(() -> -0.2, () -> -0.2));
 
 		// TODO add button for soft limit override
 

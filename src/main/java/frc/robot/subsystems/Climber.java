@@ -9,8 +9,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,7 +16,6 @@ import frc.robot.Constants;
 public class Climber extends SubsystemBase {
 
     private TalonFX mLeftClimberMotor, mRightClimberMotor;
-    private Solenoid mRightBrakeSolenoid, mLeftBrakeSolenoid;
     private StatusSignal<Double> mLeftPosition, mRightPosition;
 
     private TalonFXConfiguration talonConfig = new TalonFXConfiguration();
@@ -31,6 +28,7 @@ public class Climber extends SubsystemBase {
     private Climber() {
         mLeftClimberMotor = new TalonFX(Constants.ClimberConstants.LeftMotor.kId, "*");
         mRightClimberMotor = new TalonFX(Constants.ClimberConstants.RightMotor.kId, "*");
+
         mLeftClimberMotor.setInverted(Constants.ClimberConstants.LeftMotor.kInverted);
         mRightClimberMotor.setInverted(Constants.ClimberConstants.RightMotor.kInverted);
 
@@ -49,12 +47,10 @@ public class Climber extends SubsystemBase {
         mLeftClimberMotor.setPosition(0);
         mRightClimberMotor.setPosition(0);
 
-        mLeftBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
-                Constants.ClimberConstants.LeftBrakeSolenoid.kId);
-        mRightBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
-                Constants.ClimberConstants.RightBrakeSolenoid.kId);
-
-        this.setDefaultCommand(this.run(stopClimber));
+        // mLeftBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
+        //         Constants.ClimberConstants.LeftBrakeSolenoid.kId);
+        // mRightBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
+        //         Constants.ClimberConstants.RightBrakeSolenoid.kId);
 
         mLeftPosition = mLeftClimberMotor.getPosition();
         mRightPosition = mRightClimberMotor.getPosition();
@@ -62,7 +58,7 @@ public class Climber extends SubsystemBase {
 
     public void setLeftClimbPower(double power) {
         boolean solenoidVal = (power != 0);
-        mLeftBrakeSolenoid.set(solenoidVal);
+        // mLeftBrakeSolenoid.set(solenoidVal);
         SmartDashboard.putBoolean("Climber/Left/Brake Solenoid", solenoidVal);
         SmartDashboard.putNumber("Climber/Left/Power", power);
         mLeftClimberMotor.set(power);
@@ -70,7 +66,7 @@ public class Climber extends SubsystemBase {
 
     public void setRightClimbPower(double power) {
         boolean solenoidVal = (power != 0);
-        mRightBrakeSolenoid.set(solenoidVal);
+        // mRightBrakeSolenoid.set(solenoidVal);
         SmartDashboard.putBoolean("Climber/Right/Brake Solenoid", solenoidVal);
         SmartDashboard.putNumber("Climber/Right/Power", power);
         mRightClimberMotor.set(power);
@@ -103,7 +99,7 @@ public class Climber extends SubsystemBase {
 
     public void setCurrentLimits(double kCurrentLimit) {
         mLeftClimberMotor.getConfigurator().apply(talonConfig.CurrentLimits.withStatorCurrentLimit(kCurrentLimit));
-        mRightClimberMotor.getConfigurator().apply(talonConfig.CurrentLimits.withStatorCurrentLimit(kCurrentLimit));
+        mRightClimberMotor.getConfigurator().apply(talonConfig);
     }
 
     private static Climber instance;
@@ -120,7 +116,7 @@ public class Climber extends SubsystemBase {
         mLeftClimberMotor.getConfigurator()
                 .apply(talonConfig.SoftwareLimitSwitch.withReverseSoftLimitEnable(softLimitEnable));
         mRightClimberMotor.getConfigurator()
-                .apply(talonConfig.SoftwareLimitSwitch.withReverseSoftLimitEnable(softLimitEnable));
+                .apply(talonConfig);
     }
 
     public void FrickItWeBall(boolean limitOverride) {

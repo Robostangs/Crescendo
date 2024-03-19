@@ -65,17 +65,19 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
             LimelightResults rearResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTagRear);
-            LimelightResults frontResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
-
+            
             if (rearResults.targetingResults.targets_Fiducials.length > 1) {
                 this.addVisionMeasurement(rearResults.targetingResults.getBotPose2d_wpiBlue(),
-                        Timer.getFPGATimestamp() - rearResults.targetingResults.latency_pipeline / 1000);
+                Timer.getFPGATimestamp() - rearResults.targetingResults.latency_pipeline / 1000);
             }
+            
 
-            if (frontResults.targetingResults.targets_Fiducials.length > 1) {
-                this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
-                        Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline / 1000);
-            }
+            // LimelightResults frontResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
+            
+            // if (frontResults.targetingResults.targets_Fiducials.length > 1) {
+            //     this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
+            //             Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline / 1000);
+            // }
 
             // mField.getObject("Rear LL pose")
             // .setPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear));

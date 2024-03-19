@@ -430,10 +430,17 @@ public final class Constants {
 			public static final int kId = 54;
 			public static final boolean kInverted = true;
 
-			public static final double kGearboxRotationsToMechanismMeters = 1;
-			public static final double kMaxExtensionMeters = 100;
-			public static final double kExtensionThreshold = 0;
-			public static final double kExtensionPower = 0.2;
+			/** should be 204.083928 */
+			public static final double kGearboxRotationsToMechanismMeters = 18.1430612 / 0.0889;
+			public static final double kMaxExtensionMeters = 0.6604;
+			public static final double kExtensionThreshold = kMaxExtensionMeters - 0.482;
+			public static final double kExtensionPower = 0.35;
+
+			// 0.0889 meters moves
+			// 18.1430612 rotations
+
+			// 13 inches starting
+			// 81 inches ending
 		}
 
 		public static class RightMotor {
@@ -454,10 +461,10 @@ public final class Constants {
 			public static final int kId = 7;
 		}
 
-		public static final double kDefaultStatorCurrentLimit = 60;
-		public static final double kHomingCurrentLimit = 5;
+		public static final double kDefaultStatorCurrentLimit = 120;
+		public static final double kHomingCurrentLimit = 12;
 		public static final double kHomingPower = -0.2;
-		public static final double kHardStopPositionRelativeToSwitchMeters = -0.1;
+		public static final double kHardStopPositionRelativeToSwitchMeters = -0.02;
 	}
 
 	public static class Lights {

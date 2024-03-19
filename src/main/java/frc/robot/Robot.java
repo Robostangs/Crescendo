@@ -61,17 +61,15 @@ public class Robot extends TimedRobot {
 	public Command pathPlannerCommand;
 	public static AutoManager autoManager;
 
-	public static Command setpointCommand;
-
 	@Override
 	public void robotInit() {
 		DataLogManager.start(Constants.logDirectory);
 		CommandScheduler.getInstance()
-				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + "Command Initialized"));
+				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
 		CommandScheduler.getInstance()
-				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + "Command Interrupted"));
+				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
 		CommandScheduler.getInstance()
-				.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
+				.onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
 
 		autoTab = Shuffleboard.getTab("Autonomous");
 		teleopTab = Shuffleboard.getTab("Teleoperated");
@@ -308,6 +306,7 @@ public class Robot extends TimedRobot {
 		PathPlannerCommand.unpublishTrajectory();
 
 		Shuffleboard.selectTab(teleopTab.getTitle());
+		HomeClimber.getHomingCommand().schedule();
 	}
 
 	@Override

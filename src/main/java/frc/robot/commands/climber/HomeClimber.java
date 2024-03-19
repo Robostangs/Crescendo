@@ -10,14 +10,19 @@ public class HomeClimber extends Command {
 
     private HomeClimber() {
         mClimber = Climber.getInstance();
+        this.addRequirements(mClimber);
     }
 
     @Override
     public void initialize() {
+        mClimber.setReverseSoftLimitState(false);
         mClimber.setCurrentLimits(Constants.ClimberConstants.kHomingCurrentLimit);
+    }
+
+    @Override
+    public void execute() {
         mClimber.setLeftClimbPower(Constants.ClimberConstants.kHomingPower);
         mClimber.setRightClimbPower(Constants.ClimberConstants.kHomingPower);
-        mClimber.setReverseSoftLimitState(false);
     }
 
     @Override
@@ -27,10 +32,10 @@ public class HomeClimber extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        mClimber.setReverseSoftLimitState(true);
         mClimber.setCurrentLimits(Constants.ClimberConstants.kDefaultStatorCurrentLimit);
         mClimber.setLeftClimbPower(0);
         mClimber.setRightClimbPower(0);
-        mClimber.setReverseSoftLimitState(true);
 
         DataLogManager.log("Climber has been Homed");
         mClimber.setLeftPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
@@ -38,6 +43,7 @@ public class HomeClimber extends Command {
     }
 
     public static Command getHomingCommand() {
-        return new HomeClimber().withTimeout(10).withName("Home Climber");
+        return new HomeClimber().withTimeout(7).withName("Home Climber");
+        // .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
     }
 }

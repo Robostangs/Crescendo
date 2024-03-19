@@ -62,13 +62,6 @@ public class Align extends Command {
             this.setName("Align to Speaker");
             this.addRequirements(mDrivetrain);
             getTargetRotation = () -> {
-                // if (LimelightHelpers.getTid(Constants.Vision.llAprilTagRear) != -1 &&
-                // Robot.isReal()) {
-                // return mDrivetrain.getPose().getRotation()
-                // .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llAprilTagRear)));
-                // }
-
-                // else {
                 if (Robot.isRed()) {
                     return Rotation2d
                             .fromRadians(Math.atan2(
@@ -82,7 +75,6 @@ public class Align extends Command {
                                     mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
                                     mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
                 }
-                // }
             };
         }
     }
@@ -91,11 +83,12 @@ public class Align extends Command {
     public void initialize() {
         drive = new SwerveRequest.FieldCentricFacingAngle();
 
+        // TODO: cuz faster drivertrain this needs to be redone
         // note align will have smaller error but more important changes in
         // rotation, so if that needs a different pid controller we can make that happen
         // drive.HeadingController = new PhoenixPIDController(4.0, 20, 0.3);
         drive.HeadingController = new PhoenixPIDController(10, 2, 1);
-        
+
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Align PID", drive.HeadingController);
 
@@ -103,14 +96,6 @@ public class Align extends Command {
         drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
 
         timer.restart();
-
-        // if (note) {
-        // LimelightHelpers.setPipelineIndex(Constants.Vision.llPython,
-        // Constants.Vision.llPythonPipelineIndex);
-        // } else {
-        // // This pipeline will only look for the Speaker April Tag
-        // LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, 2);
-        // }
     }
 
     @Override
@@ -152,15 +137,14 @@ public class Align extends Command {
 
     @Override
     public boolean isFinished() {
-        // if (Robot.isSimulation()) {
-        //     return false;
-        // }
+        if (Robot.isSimulation()) {
+            return false;
+        }
 
         if (note) {
             return mIntake.getShooterSensor();
         } else {
             return !mIntake.getHolding();
-            // return !mIntake.getShooterSensor();
         }
     }
 }

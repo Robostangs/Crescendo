@@ -33,6 +33,7 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.Swerve.Align;
+import frc.robot.commands.climber.HomeClimber;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
@@ -64,7 +65,14 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
-		DataLogManager.start();
+		DataLogManager.start(Constants.logDirectory);
+		CommandScheduler.getInstance()
+				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + "Command Initialized"));
+		CommandScheduler.getInstance()
+				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + "Command Interrupted"));
+		CommandScheduler.getInstance()
+				.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
+
 		autoTab = Shuffleboard.getTab("Autonomous");
 		teleopTab = Shuffleboard.getTab("Teleoperated");
 
@@ -78,8 +86,6 @@ public class Robot extends TimedRobot {
 		startingPose.addOption("Amp Side", "amp"); // left
 		startingPose.addOption("Stage Side", "stage"); // right
 
-		// this could be literally whatever it doesnt matter cuz the path is null and
-		// means nothing
 		autoChooser.setDefaultOption("Sit and Shit", " null");
 		autoChooser.addOption("Simple Reverse", "back-up");
 		autoChooser.addOption("1 Piece", " 1 piece");
@@ -96,8 +102,8 @@ public class Robot extends TimedRobot {
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);
 
-		intakeAlwaysOut.setDefaultOption("Intake Always Out", true);
-		intakeAlwaysOut.addOption("Intake Retracts When Holding", false);
+		intakeAlwaysOut.setDefaultOption("Intake Retracts When Holding", false);
+		intakeAlwaysOut.addOption("Intake Always Out", true);
 
 		autoTab.add("Starting Pose Selector", startingPose).withSize(2, 1).withPosition(0, 0)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
@@ -147,91 +153,49 @@ public class Robot extends TimedRobot {
 				autoTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP))
 						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0)
 						.withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
+			}
 
-			} catch (Exception e) {
+			catch (Exception e) {
 				System.out.println("Failed to add camera to Shuffleboard");
 			}
 		}
 
-		Shuffleboard.selectTab(autoTab.getTitle());
+		Shuffleboard.selectTab(Shuffleboard.getTab("Pre-Game").getTitle());
 
 		DriverStation.silenceJoystickConnectionWarning(true);
 
-		// this will not work for on the fly shooting
+		// this is for stop and go shooting
 		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
 				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).deadlineWith(new Align(false))));
 
 		// use this for on the fly shooting
-		// NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
-		// 		.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
+		NamedCommands.registerCommand("Drive by", new InstantCommand(() -> autoManager.shoot = true)
+				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
 		// Lighting.getInstance().autoSetLights(true);
-		pdh.setSwitchableChannel(true);
 
 		// use this for shooter regression
-		// SmartDashboard.putNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake);
-		// setpointCommand = new TrackSetPoint(() -> SmartDashboard.getNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake));
-		// teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand).withPosition(2, 2).withSize(2, 2);
-		
+		// SmartDashboard.putNumber("Arm/Desired Setpoint",
+		// Constants.ArmConstants.SetPoints.kIntake);
+		// setpointCommand = new TrackSetPoint(() ->
+		// SmartDashboard.getNumber("Arm/Desired Setpoint",
+		// Constants.ArmConstants.SetPoints.kIntake));
+		// teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand).withPosition(2,
+		// 2).withSize(2, 2);
+
 	}
 
 	@Override
 	public void driverStationConnected() {
-		pdh.setSwitchableChannel(true);
-
-		// TODO: if we are using practice match on home field then does this work? I
-		// want logs for practice matches at home
-		System.out.println(DriverStation.getMatchType());
 		if (DriverStation.isFMSAttached()) {
 			atComp = true;
-			DataLogManager.start(Constants.logDirectory);
-			CommandScheduler.getInstance()
-					.onCommandInitialize((action) -> DataLogManager.log(action.getName() + "Command Initialized"));
-			CommandScheduler.getInstance()
-					.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + "Command Interrupted"));
-			CommandScheduler.getInstance()
-					.onCommandFinish((action) -> DataLogManager.log(action.getName() + "Command Finished"));
-
 			Shuffleboard.startRecording();
-		}
-
-		else {
-			CommandScheduler.getInstance()
-					.onCommandInitialize((action) -> System.out.println(action.getName() + " Command Initialized"));
-			CommandScheduler.getInstance()
-					.onCommandInterrupt((action) -> System.out.println(action.getName() + " Command Interrupted"));
-			CommandScheduler.getInstance()
-					.onCommandFinish((action) -> System.out.println(action.getName() + " Command Finished"));
 		}
 	}
 
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
-
-		// if (Intake.getInstance().getShooterSensor() && DriverStation.isEnabled()) {
-
-		// 	// LEDs will blink when the arm is at the right setpoint to score and swerve is
-		// 	// facing correct angle
-		// 	if (Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint())
-		// 			&& Drivetrain.getInstance().isInRangeOfTarget()) {
-		// 		LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTag);
-		// 		LimelightHelpers.setLEDMode_ForceBlink(Constants.Vision.llAprilTagRear);
-		// 	}
-
-		// 	// LEDs will be on when the arm is not at the right setpoint to score, but the
-		// 	// shooter is occupied
-		// 	else {
-		// 		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTag);
-		// 		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llAprilTagRear);
-		// 	}
-		// }
-
-		// // LEDs will be off when the shooter is not occupied
-		// else {
-		// 	LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTag);
-		// 	LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llAprilTagRear);
-		// }
 	}
 
 	@Override
@@ -302,7 +266,7 @@ public class Robot extends TimedRobot {
 		autoManager.initialize();
 		autonCommand.schedule();
 		timer.restart();
-		// HomeClimber.getHomingCommand().schedule();
+		HomeClimber.getHomingCommand().schedule();
 	}
 
 	@Override
@@ -325,6 +289,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
+
 		robotContainer.configureDefaultBinds();
 
 		Arm.getInstance().setBrake(true);

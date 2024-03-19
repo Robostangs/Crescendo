@@ -57,16 +57,16 @@ public final class Constants {
 		// public static final double[] SpeakerCoordsRed = { fieldLength - 0.3, 5.55,
 		// 1.9 };
 		/** The height (in meters) of the speaker */
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0.15, 5.55, Rotation2d.fromDegrees(0));
+		public static final Pose2d SpeakerPoseBlue = new Pose2d(0, 5.55, Rotation2d.fromDegrees(0));
 		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(),
 				SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
-		public static final double SpeakerHeight = 2.032;
+		public static final double SpeakerHeightMeters = 2.032;
 
 		public static final Pose3d SpeakerPoseBlue3d = new Pose3d(SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(),
-				SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseBlue.getRotation().getRadians()));
+				SpeakerHeightMeters, new Rotation3d(0, 0, SpeakerPoseBlue.getRotation().getRadians()));
 		public static final Pose3d SpeakerPoseRed3d = new Pose3d(SpeakerPoseRed.getX(), SpeakerPoseRed.getY(),
-				SpeakerHeight, new Rotation3d(0, 0, SpeakerPoseRed.getRotation().getRadians()));
+				SpeakerHeightMeters, new Rotation3d(0, 0, SpeakerPoseRed.getRotation().getRadians()));
 
 		/** Highest Y value of the speaker */
 		// public static final double SpeakerYUpperBound = 6.12 + 0.5;
@@ -90,9 +90,6 @@ public final class Constants {
 
 		// /** This is with FOC disabled */
 		public static final double maxModuleSpeed = 6;
-
-		/** This is with FOC enabled */
-		// public static final double maxModuleSpeedFOC = 4.572;
 
 		/** Distance (inches) between the 2 left side CANcoders */
 		public static final double driveBaseWidth = 24.75;
@@ -270,6 +267,7 @@ public final class Constants {
 		// 0.9, 1);
 
 		/* IRL PID */
+		// TODO: tune this cuz faster swerve
 		public static final PIDConstants translationPID = new PIDConstants(0.4, 0.1, 0.4, 5);
 		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.5, 10);
 

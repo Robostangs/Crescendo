@@ -401,7 +401,7 @@ public class Arm extends SubsystemBase {
         double groundToShooterInches = 26 + (Units.metersToInches(distToSpeakerMeters) * (1 / 53.75));
 
         /* ~1.3 meters */
-        double shooterToSpeakerBottomMouthMeters = Constants.Vision.SpeakerHeight - Units
+        double shooterToSpeakerBottomMouthMeters = Constants.Vision.SpeakerHeightMeters - Units
                 .inchesToMeters(groundToShooterInches);
 
         double angleToSpeaker = Math.atan2(shooterToSpeakerBottomMouthMeters, distToSpeakerMeters);

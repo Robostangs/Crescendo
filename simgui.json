@@ -48,17 +48,22 @@
       "/SmartDashboard/Swerve/Module 3": "Mechanism2d"
     },
     "windows": {
-      "/Shuffleboard/Auto/Path Selector": {
+      "/Shuffleboard/Autonomous/Intake Always Out": {
         "window": {
           "visible": true
         }
       },
-      "/Shuffleboard/Auto/Shoot Selector": {
+      "/Shuffleboard/Autonomous/Path Selector": {
         "window": {
           "visible": true
         }
       },
-      "/Shuffleboard/Auto/Starting Pose Selector": {
+      "/Shuffleboard/Autonomous/Shoot Selector": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Autonomous/Starting Pose Selector": {
         "window": {
           "visible": true
         }

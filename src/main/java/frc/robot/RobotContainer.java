@@ -87,13 +87,13 @@ public class RobotContainer {
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp).andThen(
 				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xDrive.getHID().getLeftBumper())));
 
-
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain
 				.runOnce(() -> drivetrain
 						.seedFieldRelative(!Robot.isRed() ? Constants.AutoConstants.WayPoints.Blue.CenterStartPosition
-								: GeometryUtil.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition))));
+								: GeometryUtil
+										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition))));
 
 		xDrive.leftStick().onTrue(new InstantCommand(() -> {
 			beltFeed.deployIntake = false;
@@ -138,7 +138,8 @@ public class RobotContainer {
 		xManip.b().toggleOnTrue(
 				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xManip.getHID().getLeftBumper()));
 
-		xManip.rightStick().onTrue(new Extend());
+		// can be a whileTrue or onTrue
+		xManip.rightStick().whileTrue(new Extend());
 		xManip.leftStick().whileTrue(new AlrightTranslate(() -> -0.1, () -> -0.1));
 
 		// TODO add button for soft limit override

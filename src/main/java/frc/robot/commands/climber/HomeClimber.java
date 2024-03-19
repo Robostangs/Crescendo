@@ -19,10 +19,10 @@ public class HomeClimber extends Command {
         mClimber.setRightClimbPower(Constants.ClimberConstants.kHomingPower);
         mClimber.setReverseSoftLimitState(false);
     }
-    
+
     @Override
     public boolean isFinished() {
-        return mClimber.isLeftLimitSwitchHit() && mClimber.isRightLimitSwitchHit();
+        return false;
     }
 
     @Override
@@ -32,14 +32,12 @@ public class HomeClimber extends Command {
         mClimber.setRightClimbPower(0);
         mClimber.setReverseSoftLimitState(true);
 
-        if(interrupted){
-            DataLogManager.log("Climber Homing Interrupted - using hard limit offset");
-            mClimber.setLeftPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
-            mClimber.setRightPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
-        }
+        DataLogManager.log("Climber has been Homed");
+        mClimber.setLeftPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
+        mClimber.setRightPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
     }
 
-    public static Command getHomingCommand(){
-        return new HomeClimber().withTimeout(10).withName("HomeWithTimeout");
+    public static Command getHomingCommand() {
+        return new HomeClimber().withTimeout(10).withName("Home Climber");
     }
 }

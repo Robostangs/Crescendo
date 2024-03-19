@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.651937070429201,
-        "y": 5.109922428736226
+        "x": 3.5573275508530187,
+        "y": 5.174678029787607
       },
       "isLocked": false,
       "linkedName": "Center Shoot Position"
@@ -36,8 +36,8 @@
         "y": 6.023158875881564
       },
       "prevControl": {
-        "x": 3.5501164594219072,
-        "y": 5.881172694265032
+        "x": 3.534300132216336,
+        "y": 4.511882579382719
       },
       "nextControl": null,
       "isLocked": false,

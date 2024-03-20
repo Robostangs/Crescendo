@@ -459,13 +459,18 @@ public final class Constants {
 			kBlue(new int[] { 0, 0, 255 }),
 
 			/** Loaded but not ready to shoot */
-			kYellow(new int[] { 255, 255, 0 }),
+			kYellowRed(new int[] { 255, 255, 0 }),
 
 			/** No Piece in shooter */
 			kOrange(new int[] { 255, 165, 0 }),
 
 			/** Low Voltage */
-			kPurple(new int[] { 128, 0, 128 }),;
+			kPurple(new int[] { 128, 0, 128 }),
+			
+			kBrown(new int[] { 165, 42, 42 }),
+
+
+			;
 
 			public final int[] color;
 

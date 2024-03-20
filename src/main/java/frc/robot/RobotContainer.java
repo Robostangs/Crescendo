@@ -51,6 +51,7 @@ public class RobotContainer {
 
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
 	private final Arm mArm = Arm.getInstance();
+	private final Shooter mShooter = Shooter.getInstance();
 	private final Intake mIntake = Intake.getInstance();
 	private final Climber mClimber = Climber.getInstance();
 	private final Music mMusic = Music.getInstance();
@@ -61,7 +62,8 @@ public class RobotContainer {
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
-		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no)"));
+		// mShooter.setDefaultCommand(new ReturnToHome());
+		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no)")); 
 
 		if (Robot.isSimulation()) {
 			drivetrain

@@ -38,6 +38,7 @@ import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -177,7 +178,7 @@ public class Robot extends TimedRobot {
 		// NamedCommands.registerCommand("Drive by", new InstantCommand(() -> autoManager.shoot = true)
 		// 		.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
-		// Lighting.getInstance().autoSetLights(true);
+		Lighting.getInstance().autoSetLights(true);
 
 		// use this for shooter regression
 		// SmartDashboard.putNumber("Arm/Desired Setpoint",

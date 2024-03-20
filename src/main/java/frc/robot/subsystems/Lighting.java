@@ -48,12 +48,12 @@ public class Lighting extends SubsystemBase {
                 }
 
                 else {
-                    color = LEDState.kYellow.getColor();
+                    color = LEDState.kYellowRed.getColor();
                 }
             }
 
             else {
-                color = LEDState.kOrange.getColor();
+                color = LEDState.kBrown.getColor();
             }
         } 
         

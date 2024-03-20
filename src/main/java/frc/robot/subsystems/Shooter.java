@@ -153,6 +153,38 @@ public class Shooter extends SubsystemBase {
                 .getValueAsDouble() * 60) > threshold);
     }
 
+    public void setShooterMotors(double topShooterPIDTarget, double bottomShooterPIDTarget) {
+        // dont use PID to get to 0rpm
+        if (bottomShooterPIDTarget == 0d) {
+            bottomShooter.set(0);
+        }
+
+        else {
+            bottomShooter
+                    .setControl(shootPid
+                            .withVelocity((Constants.MotorConstants.falconShooterLoadRPM * bottomShooterPIDTarget) / 60));
+        }
+
+        // dont use PID to get to 0rpm
+        if (topShooterPIDTarget == 0d) {
+            topShooter.set(0);
+        }
+
+        else {
+            topShooter
+                    .setControl(shootPid
+                            .withVelocity((Constants.MotorConstants.falconShooterLoadRPM * topShooterPIDTarget) / 60));
+        }
+    }
+
+    public void setShooterMotors(double shooterPIDTarget) {
+        setShooterMotors(shooterPIDTarget, shooterPIDTarget);
+    }
+
+    public void setFeederMotor(double setVal) {
+        feedMotor.set(setVal);
+    }
+
     /**
      * If the shooter is at the right angle, the shooter wheels are spinning fast
      * enough, and the robot is aligned with the target and not currently rotating

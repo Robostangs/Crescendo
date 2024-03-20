@@ -1,13 +1,12 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 
 public class SetPoint extends Command {
     private Arm mArm;
     private double armSetpoint;
-    private double error;
-    private boolean debugMode = false;
     private boolean autoAim;
 
     /**
@@ -47,16 +46,6 @@ public class SetPoint extends Command {
             armSetpoint = mArm.calculateArmSetpoint();
         }
 
-        error = armSetpoint - mArm.getArmPosition();
-
-        if (debugMode) {
-            System.out.println("\n*************************** Debug Stats (initialize) ***************************");
-            System.out.println("Shooter position: " + mArm.getArmPosition());
-            System.out.println("Shooter target position: " + armSetpoint);
-            System.out.println("Error: " + error);
-            System.out.println("*************************** Debug Stats (initialize) ***************************\n");
-        }
-        
         mArm.setMotionMagic(armSetpoint);
     }
 
@@ -65,22 +54,23 @@ public class SetPoint extends Command {
         if (autoAim) {
             armSetpoint = mArm.calculateArmSetpoint();
         }
+    }
 
-        error = armSetpoint - mArm.getArmPosition();
-
-        // SmartDashboard.putNumber("Arm/Position Error", error);
-
-        if (debugMode) {
-            System.out.println("\n*************************** Debug Stats (execute) ***************************");
-            System.out.println("Shooter position: " + mArm.getArmPosition());
-            System.out.println("Shooter target position: " + armSetpoint);
-            System.out.println("Error: " + error);
-            System.out.println("*************************** Debug Stats (execute) ***************************\n");
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
         }
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        if (autoAim) {
+            return false;
+        }
+
+        else {
+            return mArm.atSetpoint();
+        }
     }
 }

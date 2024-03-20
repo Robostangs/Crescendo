@@ -171,6 +171,8 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 
+		SmartDashboard.putData(CommandScheduler.getInstance());
+
 		// use this for on the fly shooting
 		// NamedCommands.registerCommand("Drive by", new InstantCommand(() -> autoManager.shoot = true)
 		// 		.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));

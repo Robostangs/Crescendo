@@ -62,7 +62,7 @@ public class Lighting extends SubsystemBase {
         }
 
         if (color != oldColor) {
-            mCANdle.setLEDs(color[0], color[1], color[2]);
+            mCANdle.setLEDs(color[0], color[1], color[2], 0, 0, 98);
         }
 
         oldColor = color;

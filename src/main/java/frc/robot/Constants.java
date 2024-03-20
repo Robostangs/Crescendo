@@ -470,7 +470,7 @@ public final class Constants {
 	public static class Lights {
 		public static enum LEDState {
 			/** No lights (white) */
-			kOff(new int[] { 255, 255, 255 }),
+			kOff(new int[] { 0, 0, 0 }),
 
 			/** Ready To Shoot */
 			kGreen(new int[] { 0, 255, 0 }),
@@ -506,7 +506,7 @@ public final class Constants {
 			}
 		}
 
-		public static final int CANdleID = 0;
+		public static final int CANdleID = 2;
 		public static final double lowVoltageThreshold = 12.5;
 	}
 }

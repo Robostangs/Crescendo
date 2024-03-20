@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1366324767619775,
-        "y": 0.7737489293802994
+        "x": 3.2647976084642645,
+        "y": 0.9148940256585872
       },
       "isLocked": false,
       "linkedName": "Close Right Shoot Position"
     },
     {
       "anchor": {
-        "x": 7.905814612555151,
-        "y": 0.8956351894185275
+        "x": 7.941623067025897,
+        "y": 0.7946130205876477
       },
       "prevControl": {
-        "x": 8.191174904485226,
-        "y": 0.47054657167349984
+        "x": 8.226983358955955,
+        "y": 0.3695244028426201
       },
       "nextControl": {
-        "x": 7.742918367761655,
-        "y": 1.1382945274321374
+        "x": 7.778726822232401,
+        "y": 1.0372723586012582
       },
       "isLocked": false,
       "linkedName": "Far Right Note"
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.7,
-      "rotationDegrees": 10.480024361942101,
+      "rotationDegrees": 17.985211429546606,
       "rotateFast": false
     }
   ],

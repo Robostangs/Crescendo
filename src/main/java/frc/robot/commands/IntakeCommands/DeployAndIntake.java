@@ -23,8 +23,12 @@ public class DeployAndIntake extends Command {
 
     @Override
     public void initialize() {
-        intake.setExtend(deploy);
-        intake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
+        if (deploy) {
+            intake.setExtend(true);
+            intake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
+        }
+
+        intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
         intake.setHolding(true);
         shooter.setFeederMotor(Constants.ShooterConstants.feederFeedForward);
     }
@@ -38,8 +42,11 @@ public class DeployAndIntake extends Command {
     public void end(boolean interrupted) {
         if (deploy) {
             intake.setExtend(false);
+            intake.setIntake(0);
         }
 
+        shooter.setFeederMotor(0);
         intake.setIntake(0);
+        intake.setBelt(0);
     }
 }

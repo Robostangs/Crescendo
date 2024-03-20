@@ -306,7 +306,7 @@ public class Arm extends SubsystemBase {
      *         to shoot into the speaker
      */
     public double calculateArmSetpoint() {
-        return calculateArmSetpointTrig();
+        return calculateArmSetpointExpo();
     }
 
     /**
@@ -508,7 +508,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return isInRangeOfTarget(getArmTarget());
+        return isInRangeOfTarget(getArmTarget()) && Math.abs(getVelocity()) < 0.25;
     }
 
     private static Arm mInstance;

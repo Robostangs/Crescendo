@@ -154,6 +154,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShooterMotors(double topShooterPIDTarget, double bottomShooterPIDTarget) {
+        
         // dont use PID to get to 0rpm
         if (bottomShooterPIDTarget == 0d) {
             bottomShooter.set(0);

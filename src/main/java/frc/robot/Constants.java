@@ -323,8 +323,8 @@ public final class Constants {
 		
 		// TODO: need new values for new shooter, will probably be lower
 		public static final double kFeedForwardDutyCycle = 0.025;
-		public static final double kFeedForwardTorqueCurrent = 6.04;
-		public static final double kFeedForwardTorqueCurrentWhileShooting = 8;
+		public static final double kFeedForwardTorqueCurrent = 6.04 - 1;
+		public static final double kFeedForwardTorqueCurrentWhileShooting = 8 - 1;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -381,7 +381,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.15;
+		public static final double feederFeedForward = 0.125;
 		public static final double shooterPoopSpeed = 0.3;
 	}
 
@@ -447,7 +447,7 @@ public final class Constants {
 	public static class Lights {
 		public static enum LEDState {
 			/** No lights (white) */
-			kOff(new int[] { 255, 255, 255 }),
+			kOff(new int[] { 0, 0, 0 }),
 
 			/** Ready To Shoot */
 			kGreen(new int[] { 0, 255, 0 }),
@@ -483,7 +483,7 @@ public final class Constants {
 			}
 		}
 
-		public static final int CANdleID = 0;
+		public static final int CANdleID = 2;
 		public static final double lowVoltageThreshold = 12.5;
 	}
 }

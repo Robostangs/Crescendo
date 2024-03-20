@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.FineAdjust;
+import frc.robot.commands.ArmCommands.ReturnToHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ClimberCommands.AlrightTranslate;
 import frc.robot.commands.ClimberCommands.Extend;
@@ -60,7 +61,7 @@ public class RobotContainer {
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
-		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber));
+		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no)"));
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -90,12 +91,12 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, true));
-		xDrive.x().toggleOnTrue(new AimAndShoot());
+		// xDrive.x().toggleOnTrue(new AimAndShoot());
 
 		xDrive.x()
 				.toggleOnTrue(new PassToShooter().andThen(new SetPoint()
-						.alongWith(new WaitUntilCommand(() -> mArm.atSetpoint()).andThen(new RepeatCommand(
-								new Shoot())))));
+						.alongWith(new WaitUntilCommand(() -> mArm.atSetpoint()).deadlineWith(new Prepare()).andThen(new RepeatCommand(
+								new Shoot()))), new ReturnToHome()));
 
 		// xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp).andThen(
 		// 		new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xDrive.getHID().getLeftBumper())));
@@ -133,10 +134,10 @@ public class RobotContainer {
 		xManip.x().whileTrue(new QuickFeed());
 
 		xManip.a().toggleOnTrue(new PassToShooter().andThen(new SetPoint().alongWith(new RepeatCommand(
-				new ConditionalCommand(new Shoot(), new Prepare(), () -> xManip.getHID().getLeftBumper())))));
+				new ConditionalCommand(new Shoot(), new Prepare(), () -> xManip.getHID().getLeftBumper()))), new ReturnToHome()));
 
 		xManip.b().toggleOnTrue(new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp),
-				new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new PoopOut()));
+				new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new PoopOut(), new ReturnToHome()));
 
 		// can be a whileTrue or onTrue
 		xManip.rightStick().toggleOnTrue(new Extend());
@@ -154,7 +155,8 @@ public class RobotContainer {
 
 		xManip.rightBumper().whileTrue(new RepeatCommand(
 				new ConditionalCommand(new Shoot(), new Prepare(), () -> xManip.getHID().getLeftBumper())));
-		xManip.leftBumper().whileTrue(new Prepare().andThen(new Shoot()));
+
+		xManip.povUp().toggleOnTrue(new Prepare().andThen(new Shoot()));
 
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())

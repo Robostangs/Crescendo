@@ -67,7 +67,6 @@ public final class Constants {
 		public static final double kMaxSpeedMetersPerSecond = 6;
 		public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
 
-		// /** This is with FOC disabled */
 		public static final double maxModuleSpeed = 6;
 
 		/** Distance (inches) between the 2 left side CANcoders */
@@ -78,8 +77,6 @@ public final class Constants {
 		/**
 		 * Picture the front of the robot facing to the right in the XY axis
 		 */
-		// public static final Translation2d centerOfRotation = new
-		// Translation2d(driveBaseWidth / 2, driveBaseHeight / 2);
 		public static final Translation2d centerOfRotation = new Translation2d(0, 0);
 
 		/**
@@ -323,9 +320,8 @@ public final class Constants {
 	public static class ArmConstants {
 		public static final int armMotorID = 53;
 		public static final boolean armMotorInverted = true;
-
-		public static final int armEncoderID = 50;
-
+		
+		// TODO: need new values for new shooter, will probably be lower
 		public static final double kFeedForwardDutyCycle = 0.025;
 		public static final double kFeedForwardTorqueCurrent = 6.04;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 8;
@@ -399,7 +395,8 @@ public final class Constants {
 		public static final int shooterSensorPWM_ID = 9;
 		public static final int beltSensorPWM_ID = 1;
 
-		public static final double beltIntakeSpeed = 01;
+		public static final double beltIntakeSpeed = 1;
+		public static final double intakeMotorSpeed = 1;
 
 		public static final boolean intakeMotorInverted = true;
 		public static final boolean beltMotorInverted = true;

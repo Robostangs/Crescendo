@@ -1,4 +1,4 @@
-package frc.robot.commands.feeder;
+package frc.robot.commands.FeederCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +21,8 @@ public class QuickFeed extends Command {
     public void execute() {
         SmartDashboard.putString("Intake/Status", "Quick Feed");
         SmartDashboard.putString("Shooter/Status", "Quick Feed");
+        
         mIntake.setBelt(0.5);
-        mShooter.shoot(0.5, 0);
+        mShooter.setFeederMotor(0.5);
     }
 }

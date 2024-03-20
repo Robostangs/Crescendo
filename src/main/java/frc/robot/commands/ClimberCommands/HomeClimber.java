@@ -1,4 +1,4 @@
-package frc.robot.commands.climber;
+package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,6 +10,8 @@ public class HomeClimber extends Command {
 
     private HomeClimber() {
         mClimber = Climber.getInstance();
+        
+        this.setName("Home Climber");
         this.addRequirements(mClimber);
     }
 
@@ -43,7 +45,6 @@ public class HomeClimber extends Command {
     }
 
     public static Command getHomingCommand() {
-        return new HomeClimber().withTimeout(7).withName("Home Climber");
-        // .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+        return new HomeClimber().withTimeout(7);
     }
 }

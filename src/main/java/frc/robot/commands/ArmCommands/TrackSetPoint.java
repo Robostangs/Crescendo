@@ -1,4 +1,4 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.ArmCommands;
 
 import java.util.function.Supplier;
 

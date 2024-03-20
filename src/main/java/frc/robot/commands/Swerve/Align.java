@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -19,8 +18,7 @@ public class Align extends Command {
     private Drivetrain mDrivetrain;
     private Intake mIntake;
 
-    private SwerveRequest.FieldCentricFacingAngle drive;
-    private Timer timer;
+    private SwerveRequest.FieldCentricFacingAngle driveRequest;
 
     private Supplier<Double> translateX, translateY, howManyBabiesOnBoard;
     private Supplier<Rotation2d> getTargetRotation;
@@ -43,7 +41,6 @@ public class Align extends Command {
             this.howManyBabiesOnBoard = howManyBabiesOnBoard;
         }
 
-        timer = new Timer();
         this.note = note;
 
         this.translateX = translateX;
@@ -81,21 +78,19 @@ public class Align extends Command {
 
     @Override
     public void initialize() {
-        drive = new SwerveRequest.FieldCentricFacingAngle();
+        driveRequest = new SwerveRequest.FieldCentricFacingAngle();
 
         // TODO: cuz faster drivertrain this needs to be redone
         // note align will have smaller error but more important changes in
         // rotation, so if that needs a different pid controller we can make that happen
         // drive.HeadingController = new PhoenixPIDController(4.0, 20, 0.3);
-        drive.HeadingController = new PhoenixPIDController(10, 2, 1);
+        driveRequest.HeadingController = new PhoenixPIDController(10, 2, 1);
 
         // this is for tuning and now we can tune the PID controller
-        SmartDashboard.putData("Align PID", drive.HeadingController);
+        SmartDashboard.putData("Align PID", driveRequest.HeadingController);
 
-        drive.Deadband = Constants.OperatorConstants.deadband;
-        drive.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
-
-        timer.restart();
+        driveRequest.Deadband = Constants.OperatorConstants.deadband;
+        driveRequest.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
     }
 
     @Override
@@ -107,19 +102,19 @@ public class Align extends Command {
             SmartDashboard.putString("Intake/Status", "Align and Intaking");
         }
 
-        drive.TargetDirection = getTargetRotation.get();
-        double rotationError = drive.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees();
+        driveRequest.TargetDirection = getTargetRotation.get();
+        double rotationError = driveRequest.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees();
 
         SmartDashboard.putNumber("Swerve/Rotation Error", rotationError);
 
-        drive
+        driveRequest
                 .withVelocityX(-translateY.get()
                         * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
                 .withVelocityY(-translateX.get()
                         * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 
-        mDrivetrain.setControl(drive);
+        mDrivetrain.setControl(driveRequest);
     }
 
     @Override

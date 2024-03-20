@@ -47,28 +47,17 @@ public class Climber extends SubsystemBase {
         mLeftClimberMotor.setPosition(0);
         mRightClimberMotor.setPosition(0);
 
-        // mLeftBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
-        //         Constants.ClimberConstants.LeftBrakeSolenoid.kId);
-        // mRightBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
-        //         Constants.ClimberConstants.RightBrakeSolenoid.kId);
-
         mLeftPosition = mLeftClimberMotor.getPosition();
         mRightPosition = mRightClimberMotor.getPosition();
     }
 
     public void setLeftClimbPower(double power) {
-        boolean solenoidVal = (power != 0);
-        // mLeftBrakeSolenoid.set(solenoidVal);
-        SmartDashboard.putBoolean("Climber/Left/Brake Solenoid", solenoidVal);
-        SmartDashboard.putNumber("Climber/Left/Power", power);
+        SmartDashboard.putNumber("Climber/Left Power", power);
         mLeftClimberMotor.set(power);
     }
 
     public void setRightClimbPower(double power) {
-        boolean solenoidVal = (power != 0);
-        // mRightBrakeSolenoid.set(solenoidVal);
-        SmartDashboard.putBoolean("Climber/Right/Brake Solenoid", solenoidVal);
-        SmartDashboard.putNumber("Climber/Right/Power", power);
+        SmartDashboard.putNumber("Climber/Right Power", power);
         mRightClimberMotor.set(power);
     }
 
@@ -93,8 +82,8 @@ public class Climber extends SubsystemBase {
         mLeftPosition.refresh();
         mRightPosition.refresh();
 
-        SmartDashboard.putNumber("Climber/Left/Motor Position", getLeftPosition());
-        SmartDashboard.putNumber("Climber/Right/Motor Position", getRightPosition());
+        SmartDashboard.putNumber("Climber/Left Motor Position", getLeftPosition());
+        SmartDashboard.putNumber("Climber/Right Motor Position", getRightPosition());
     }
 
     public void setCurrentLimits(double kCurrentLimit) {

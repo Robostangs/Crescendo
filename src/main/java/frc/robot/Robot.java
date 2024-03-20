@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import java.util.Map;
@@ -30,10 +26,15 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Vision.LimelightHelpers;
+import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
+import frc.robot.commands.ClimberCommands.HomeClimber;
+import frc.robot.commands.FeederCommands.PassToShooter;
+import frc.robot.commands.IntakeCommands.DeployAndIntake;
+import frc.robot.commands.ShooterCommands.Prepare;
+import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.Align;
-import frc.robot.commands.climber.HomeClimber;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
@@ -158,17 +159,21 @@ public class Robot extends TimedRobot {
 			}
 		}
 
-		Shuffleboard.selectTab(Shuffleboard.getTab("Pre-Game").getTitle());
+		Shuffleboard.selectTab(Shuffleboard.getTab("Pre Game").getTitle());
 
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		// this is for stop and go shooting
-		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).deadlineWith(new Align(false))));
+		NamedCommands.registerCommand("Shoot",
+				new Align(false)
+						.alongWith(new PassToShooter().andThen(new SetPoint(Arm.getInstance().calculateArmSetpoint())
+								.deadlineWith(new Prepare()).andThen(new Shoot()))));
+
+		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 
 		// use this for on the fly shooting
-		NamedCommands.registerCommand("Drive by", new InstantCommand(() -> autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
+		// NamedCommands.registerCommand("Drive by", new InstantCommand(() -> autoManager.shoot = true)
+		// 		.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
 		// Lighting.getInstance().autoSetLights(true);
 

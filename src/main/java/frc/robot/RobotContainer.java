@@ -15,25 +15,26 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.robot.commands.Spit;
+import frc.robot.commands.ArmCommands.FineAdjust;
 import frc.robot.commands.ArmCommands.SetPoint;
+import frc.robot.commands.ClimberCommands.AlrightTranslate;
+import frc.robot.commands.ClimberCommands.Extend;
+import frc.robot.commands.ClimberCommands.HomeClimber;
+import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
+import frc.robot.commands.FeederCommands.QuickFeed;
+import frc.robot.commands.IntakeCommands.DeployAndIntake;
+import frc.robot.commands.ShooterCommands.FeedAndShoot;
 import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
-import frc.robot.commands.climber.AlrightTranslate;
-import frc.robot.commands.climber.Extend;
-import frc.robot.commands.climber.HomeClimber;
-import frc.robot.commands.feeder.BeltDrive;
-import frc.robot.commands.feeder.BeltFeed;
-import frc.robot.commands.feeder.QuickFeed;
-import frc.robot.commands.feeder.ShooterCharge;
 import frc.robot.commands.shooter.AimAndShoot;
-import frc.robot.commands.shooter.FeedAndShoot;
-import frc.robot.commands.shooter.FineAdjust;
+
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
@@ -53,15 +54,12 @@ public class RobotContainer {
 	private final Climber mClimber = Climber.getInstance();
 	private final Music mMusic = Music.getInstance();
 
-	private BeltFeed beltFeed = new BeltFeed();
-
 	private final Telemetry logger;
 	public Field2d field;
 
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
-		mIntake.setDefaultCommand(beltFeed);
 		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber));
 
 		if (Robot.isSimulation()) {
@@ -80,6 +78,7 @@ public class RobotContainer {
 		Shooter.getInstance().removeDefaultCommand();
 		Arm.getInstance().removeDefaultCommand();
 		Drivetrain.getInstance().removeDefaultCommand();
+		Climber.getInstance().removeDefaultCommand();
 	}
 
 	private void configureDriverBinds() {
@@ -98,8 +97,8 @@ public class RobotContainer {
 						.alongWith(new WaitUntilCommand(() -> mArm.atSetpoint()).andThen(new RepeatCommand(
 								new Shoot())))));
 
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp).andThen(
-				new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xDrive.getHID().getLeftBumper())));
+		// xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp).andThen(
+		// 		new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xDrive.getHID().getLeftBumper())));
 
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 		// Square up to the speaker and press this to reset odometry to the speaker
@@ -109,21 +108,8 @@ public class RobotContainer {
 								: GeometryUtil
 										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition))));
 
-		xDrive.leftStick().onTrue(new InstantCommand(() -> {
-			beltFeed.deployIntake = false;
-			mIntake.setHolding(!mIntake.getHolding());
-		}));
-
-		xDrive.rightStick().onTrue(new InstantCommand(() -> {
-			beltFeed.deployIntake = true;
-			mIntake.setHolding(!mIntake.getHolding());
-		}));
-
-		// this is a back up for if the backpaddles arent there or fail
-		xDrive.rightBumper().onTrue(new InstantCommand(() -> {
-			beltFeed.deployIntake = true;
-			mIntake.setHolding(!mIntake.getHolding());
-		}));
+		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false));
+		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true));
 	}
 
 	private void configureManipBinds() {
@@ -132,9 +118,6 @@ public class RobotContainer {
 
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
-
-		new Trigger(() -> xManip.getRightTriggerAxis() > Constants.OperatorConstants.kManipDeadzone)
-				.whileTrue(new ShooterCharge(xManip::getRightTriggerAxis));
 
 		new Trigger(() -> Timer.getMatchTime() > 25).and(() -> Timer.getMatchTime() < 30)
 				.whileTrue(new RunCommand(() -> {
@@ -162,11 +145,12 @@ public class RobotContainer {
 		// TODO add button for soft limit override
 
 		xManip.povRight().whileTrue(new Spit());
+		xManip.povDown().toggleOnTrue(new DeployAndIntake(true));
 
-		xManip.povDown().onTrue(new InstantCommand(() -> {
-			beltFeed.deployIntake = true;
-			mIntake.setHolding(!mIntake.getHolding());
-		}));
+		// xManip.povDown().onTrue(new InstantCommand(() -> {
+		// 	beltFeed.deployIntake = true;
+		// 	mIntake.setHolding(!mIntake.getHolding());
+		// }));
 
 		xManip.rightBumper().whileTrue(new RepeatCommand(
 				new ConditionalCommand(new Shoot(), new Prepare(), () -> xManip.getHID().getLeftBumper())));

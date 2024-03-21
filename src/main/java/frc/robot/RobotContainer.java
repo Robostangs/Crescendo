@@ -94,6 +94,8 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis, true));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
+				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()));
 
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 		// Square up to the speaker and press this to reset odometry to the speaker
@@ -137,11 +139,13 @@ public class RobotContainer {
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 		xManip.povRight().toggleOnTrue(ShootCommandFactory.getContinuousShootCommand());
 		xManip.povDown().whileTrue(new Spit());
-		xManip.povLeft().toggleOnTrue(new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).alongWith(new Prepare()), new Shoot()));
+		xManip.povLeft()
+				.toggleOnTrue(new PassToShooter().andThen(
+						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).alongWith(new Prepare()),
+						new Shoot()));
 
 		// make this the command for shooting cross map
 		// xManip.povLeft().toggleOnTrue(new DeployAndIntake(true));
-		
 
 		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootWithWaitUntilCommand());
 		// left bumper is the universal shoot button

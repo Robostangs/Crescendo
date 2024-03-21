@@ -380,7 +380,7 @@ public final class Constants {
 
 		public static final double feederShootValue = 1;
 		public static final double feederFeedForward = 0.125;
-		public static final double shooterPoopSpeed = 0.3;
+		public static final double shooterPoopSpeed = 0.5;
 	}
 
 	public static class IntakeConstants {

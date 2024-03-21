@@ -16,7 +16,8 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooter/Actual Top Motor RPM", topShooter.getVelocity().getValueAsDouble() * 60);
-        SmartDashboard.putNumber("Shooter/Actual Bottom Motor RPM", bottomShooter.getVelocity().getValueAsDouble() * 60);
+        SmartDashboard.putNumber("Shooter/Actual Bottom Motor RPM",
+                bottomShooter.getVelocity().getValueAsDouble() * 60);
     }
 
     private Shooter() {
@@ -76,7 +77,7 @@ public class Shooter extends SubsystemBase {
      * feedMotor does not use Velocity PID
      */
     public void shoot(double feederDutyCycle, double topShooterSetVal, double bottomShooterSetVal) {
-        
+
         // dont use PID to get to 0rpm
         if (bottomShooterSetVal == 0d) {
             bottomShooter.set(0);
@@ -154,7 +155,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setShooterMotors(double topShooterPIDTarget, double bottomShooterPIDTarget) {
-        
+
         // dont use PID to get to 0rpm
         if (bottomShooterPIDTarget == 0d) {
             bottomShooter.set(0);
@@ -163,7 +164,8 @@ public class Shooter extends SubsystemBase {
         else {
             bottomShooter
                     .setControl(shootPid
-                            .withVelocity((Constants.MotorConstants.falconShooterLoadRPM * bottomShooterPIDTarget) / 60));
+                            .withVelocity(
+                                    (Constants.MotorConstants.falconShooterLoadRPM * bottomShooterPIDTarget) / 60));
         }
 
         // dont use PID to get to 0rpm
@@ -187,15 +189,13 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * If the shooter is at the right angle, the shooter wheels are spinning fast
-     * enough, and the robot is aligned with the target and not currently rotating
-     * much
+     * If the shooter is at the right angle and the shooter wheels are spinning fast
+     * enough
      * 
      * @return returns true if ready to feed (and shoot) right now
      */
     public boolean readyToShootAdvanced() {
-        return Arm.getInstance().isInRangeOfTarget(Arm.getInstance().calculateArmSetpoint()) &&
-                Math.abs(Arm.getInstance().getVelocity()) < 0.25 && readyToShoot();
+        return Arm.getInstance().atSetpoint() && readyToShoot();
     }
 
     private static Shooter mInstance;

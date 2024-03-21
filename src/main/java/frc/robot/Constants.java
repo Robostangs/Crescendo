@@ -446,11 +446,12 @@ public final class Constants {
 
 	public static class Lights {
 		public static enum LEDState {
-			/** No lights (white) */
+			/** No lights */
 			kOff(new int[] { 0, 0, 0 }),
 
 			/** Ready To Shoot */
 			kGreen(new int[] { 0, 255, 0 }),
+			kGreenBlink(new int[] { 0, 255, 0 }),
 
 			/** Alliance Color */
 			kRed(new int[] { 255, 0, 0 }),
@@ -458,19 +459,17 @@ public final class Constants {
 			/** Alliance Color */
 			kBlue(new int[] { 0, 0, 255 }),
 
-			/** Loaded but not ready to shoot */
 			kYellowRed(new int[] { 255, 255, 0 }),
 
-			/** No Piece in shooter */
-			kOrange(new int[] { 255, 165, 0 }),
+			kRobostangsOrange(new int[] { 255, 110, 0 }),
 
-			/** Low Voltage */
 			kPurple(new int[] { 128, 0, 128 }),
 			
-			kBrown(new int[] { 165, 42, 42 }),
-
-
-			;
+			kBrown(new int[] { 165, 42, 42 }), 
+			
+			kWhite(new int[] { 255, 255, 255 }),
+			
+			kPink(new int[] { 255, 192, 203 });
 
 			public final int[] color;
 
@@ -490,5 +489,17 @@ public final class Constants {
 
 		public static final int CANdleID = 2;
 		public static final double lowVoltageThreshold = 12.5;
+
+		/** Right Shooter Bar */
+		public static final int strip1Length = 28;
+
+		/** Left Shooter Bar */
+		public static final int strip2Length = 29;
+
+		/** Left Climber Support */
+		public static final int strip3Length = 16;
+		
+		/** Right Climber Support */
+		public static final int strip4Length = 17;
 	}
 }

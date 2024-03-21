@@ -11,15 +11,12 @@ import frc.robot.Robot;
 import frc.robot.Alert.AlertType;
 
 import java.util.List;
-
-import javax.sound.sampled.AudioSystem;
-
 import java.util.ArrayList;
 
 public class PathPlannerCommand {
     private static String lastAutoName;
     private static Alert nullAuto = new Alert("Alerts", "Null auto", AlertType.WARNING);
-    private static Alert publishfail = new Alert("Alerts", "Publishing failed", AlertType.ERROR)
+    private static Alert publishfail = new Alert("Alerts", "Publishing failed", AlertType.ERROR);
 
     public static void publishTrajectory(String autoName) {
         if (autoName == null) {

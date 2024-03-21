@@ -36,6 +36,7 @@
       "/SmartDashboard/Auto/Starting Pose Selector": "String Chooser",
       "/SmartDashboard/Auto/Trajectory Chooser": "String Chooser",
       "/SmartDashboard/Auton Chooser": "String Chooser",
+      "/SmartDashboard/Command Scheduler": "Scheduler",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",

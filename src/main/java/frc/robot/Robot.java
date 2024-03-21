@@ -26,14 +26,10 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Vision.LimelightHelpers;
-import frc.robot.commands.ArmCommands.SetPoint;
+import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.HomeClimber;
-import frc.robot.commands.FeederCommands.PassToShooter;
-import frc.robot.commands.IntakeCommands.DeployAndIntake;
-import frc.robot.commands.ShooterCommands.Prepare;
-import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 
@@ -50,7 +46,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Boolean> intakeAlwaysOut = new SendableChooser<>();
 	public static NetworkTableEntry pathDelayEntry;
 
-	public static ShuffleboardTab autoTab, teleopTab;
+	public static ShuffleboardTab autoTab, teleopTab, disabledTab;
 
 	public static Field2d teleopField = new Field2d(), autoField = new Field2d();
 	public static PowerDistribution pdh = new PowerDistribution();
@@ -75,6 +71,7 @@ public class Robot extends TimedRobot {
 
 		autoTab = Shuffleboard.getTab("Autonomous");
 		teleopTab = Shuffleboard.getTab("Teleoperated");
+		disabledTab = Shuffleboard.getTab("Disabled");
 
 		robotContainer = new RobotContainer();
 
@@ -114,14 +111,12 @@ public class Robot extends TimedRobot {
 		autoTab.add("Intake Always Out", intakeAlwaysOut).withSize(2, 1).withPosition(0, 3)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 		autoTab.addNumber("Auto Countdown", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 2)
-				.withWidget(BuiltInWidgets.kDial)
-				.withProperties(Map.of("min", -1, "max", 15, "show value", true));
+				.withWidget("Match Time");
 		autoTab.add("Path Delay", 0).withSize(2, 1).withWidget(BuiltInWidgets.kNumberSlider).withPosition(0, 4)
 				.withProperties(Map.of("min", 0, "max", 15, "block increment", 1));
 
 		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 0)
-				.withWidget(BuiltInWidgets.kDial)
-				.withProperties(Map.of("min", 0, "max", 135, "show value", true));
+				.withWidget("Msatch Time");
 
 		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getHolding()).withSize(2, 2).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
@@ -160,25 +155,21 @@ public class Robot extends TimedRobot {
 			}
 		}
 
-		Shuffleboard.selectTab(Shuffleboard.getTab("Pre Game").getTitle());
-
 		DriverStation.silenceJoystickConnectionWarning(true);
+		Shuffleboard.selectTab(disabledTab.getTitle());
+
+		Lighting.getInstance().autoSetLights(true);
 
 		// this is for stop and go shooting
-		NamedCommands.registerCommand("Shoot",
-				new Align(false)
-						.alongWith(new PassToShooter().andThen(new SetPoint(Arm.getInstance().calculateArmSetpoint())
-								.deadlineWith(new Prepare()).andThen(new Shoot()))));
+		NamedCommands.registerCommand("Shoot", ShootCommandFactory.getAimAndShootCommand().deadlineWith(new Align(false)));
+		NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command (Ignore)"));
 
-		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
-
-		SmartDashboard.putData(CommandScheduler.getInstance());
+		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
 		// use this for on the fly shooting
 		// NamedCommands.registerCommand("Drive by", new InstantCommand(() -> autoManager.shoot = true)
 		// 		.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
-		Lighting.getInstance().autoSetLights(true);
 
 		// use this for shooter regression
 		// SmartDashboard.putNumber("Arm/Desired Setpoint",
@@ -206,6 +197,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledInit() {
+		Shuffleboard.selectTab(disabledTab.getTitle());
 	}
 
 	@Override

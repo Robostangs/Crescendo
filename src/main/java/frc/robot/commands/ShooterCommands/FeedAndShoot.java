@@ -13,6 +13,7 @@ public class FeedAndShoot extends Command {
     private BooleanSupplier feedUntil;
 
     /**
+     * @deprecated
      * This command will wait until a piece is in the shooter and then shoot, but if
      * there was already a piece in the shooter then it will wait until the shooter
      * is charged up and then shoot

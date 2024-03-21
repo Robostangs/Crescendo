@@ -30,6 +30,7 @@ public class Shoot extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        Intake.getInstance().setHolding(false);
         shooter.setShooterMotors(0);
         shooter.setFeederMotor(0);
     }    

@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.FineAdjust;
 import frc.robot.commands.ArmCommands.ReturnToHome;
@@ -27,6 +27,7 @@ import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
 import frc.robot.commands.FeederCommands.QuickFeed;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
+import frc.robot.commands.ShooterCommands.AimAndShoot;
 import frc.robot.commands.ShooterCommands.FeedAndShoot;
 import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
@@ -34,8 +35,6 @@ import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
-import frc.robot.commands.shooter.AimAndShoot;
-
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
@@ -45,9 +44,9 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 @SuppressWarnings("unused")
 public class RobotContainer {
-	private final CommandXboxController xDrive = new CommandXboxController(0);
-	private final CommandXboxController xManip = new CommandXboxController(1);
-	private final GenericHID simController = new GenericHID(3);
+	public static final CommandXboxController xDrive = new CommandXboxController(0);
+	public static final CommandXboxController xManip = new CommandXboxController(1);
+	private static final GenericHID simController = new GenericHID(3);
 
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
 	private final Arm mArm = Arm.getInstance();
@@ -63,7 +62,7 @@ public class RobotContainer {
 		removeDefaultCommands();
 
 		// mShooter.setDefaultCommand(new ReturnToHome());
-		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no)")); 
+		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no)"));
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -93,15 +92,8 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, true));
-		// xDrive.x().toggleOnTrue(new AimAndShoot());
 
-		xDrive.x()
-				.toggleOnTrue(new PassToShooter().andThen(new SetPoint()
-						.alongWith(new WaitUntilCommand(() -> mArm.atSetpoint()).deadlineWith(new Prepare()).andThen(new RepeatCommand(
-								new Shoot()))), new ReturnToHome()));
-
-		// xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp).andThen(
-		// 		new AimAndShoot(Constants.ArmConstants.SetPoints.kAmp, () -> xDrive.getHID().getLeftBumper())));
+		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 		// Square up to the speaker and press this to reset odometry to the speaker
@@ -134,31 +126,19 @@ public class RobotContainer {
 
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.x().whileTrue(new QuickFeed());
+		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil());
+		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil());
 
-		xManip.a().toggleOnTrue(new PassToShooter().andThen(new SetPoint().alongWith(new RepeatCommand(
-				new ConditionalCommand(new Shoot(), new Prepare(), () -> xManip.getHID().getLeftBumper()))), new ReturnToHome()));
-
-		xManip.b().toggleOnTrue(new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp),
-				new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new PoopOut(), new ReturnToHome()));
-
-		// can be a whileTrue or onTrue
 		xManip.rightStick().toggleOnTrue(new Extend());
-		xManip.leftStick().toggleOnTrue(new AlrightTranslate(() -> -0.2, () -> -0.2));
+		xManip.leftStick()
+				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kExtensionPower,
+						() -> -Constants.ClimberConstants.RightMotor.kExtensionPower));
 
-		// TODO add button for soft limit override
-
+		xManip.povUp().toggleOnTrue(ShootCommandFactory.prepareAndShoot());
 		xManip.povRight().whileTrue(new Spit());
 		xManip.povDown().toggleOnTrue(new DeployAndIntake(true));
 
-		// xManip.povDown().onTrue(new InstantCommand(() -> {
-		// 	beltFeed.deployIntake = true;
-		// 	mIntake.setHolding(!mIntake.getHolding());
-		// }));
-
-		xManip.rightBumper().whileTrue(new RepeatCommand(
-				new ConditionalCommand(new Shoot(), new Prepare(), () -> xManip.getHID().getLeftBumper())));
-
-		xManip.povUp().toggleOnTrue(new Prepare().andThen(new Shoot()));
+		xManip.rightBumper().whileTrue(ShootCommandFactory.prepareAndShootWithWaitUntil());
 
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())

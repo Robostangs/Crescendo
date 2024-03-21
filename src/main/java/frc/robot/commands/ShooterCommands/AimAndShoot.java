@@ -1,4 +1,4 @@
-package frc.robot.commands.shooter;
+package frc.robot.commands.ShooterCommands;
 
 import java.util.function.Supplier;
 
@@ -27,6 +27,7 @@ public class AimAndShoot extends Command {
     private Supplier<Boolean> chargeUntil;
 
     /**
+     * @deprecated
      * Calculates the desired setpoint of the arm using robotPose and then charges
      * the shooter motors so that when the arm gets to the correct position, it is
      * ready to feed and shoot
@@ -44,6 +45,7 @@ public class AimAndShoot extends Command {
     }
 
     /**
+     * @deprecated
      * Calculates the desired setpoint of the arm using robotPose and then charges
      * the shooter motors. When the user presses the defined button, the shooter
      * will shoot and the command ends
@@ -64,6 +66,7 @@ public class AimAndShoot extends Command {
     }
 
     /**
+     * @deprecated
      * Set the shooter to a specific position and shoots when within 1 degree
      * 
      * @param target in degrees of THE SHOOTER, not the extension bar
@@ -82,6 +85,7 @@ public class AimAndShoot extends Command {
     }
 
     /**
+     * @deprecated
      * Set the shooter to a specific position and shoots when within 1 degree
      * 
      * @param target      in degrees of THE SHOOTER, not the extension bar
@@ -161,7 +165,7 @@ public class AimAndShoot extends Command {
         }
 
         // else if the arm is within 1.5 degrees of the target and the arm is not moving
-        else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.25) {
+        else if (mArm.atSetpoint()) {
             pieceHasBeenLoaded = true;
             
             // if the shooter i;//s ready to shoot and the user has pressed the button

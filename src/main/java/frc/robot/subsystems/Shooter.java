@@ -25,9 +25,9 @@ public class Shooter extends SubsystemBase {
         feedMotor = new TalonFX(Constants.ShooterConstants.feedMotor, "rio");
 
         TalonFXConfiguration fxConfig = new TalonFXConfiguration();
-        fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
-        fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
-        fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
+        // fxConfig.CurrentLimits.SupplyCurrentLimit = 30;
+        // fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
+        // fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
 
         fxConfig.Slot0.kP = 0.07;
         fxConfig.Slot0.kI = 0.01;

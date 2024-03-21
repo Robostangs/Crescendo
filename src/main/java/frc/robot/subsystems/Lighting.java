@@ -69,8 +69,6 @@ public class Lighting extends SubsystemBase {
     }
 
     private Lighting() {
-        // TODO: do all this LED setup
-        // deviceID is a CAN ID, figure this out using phoenix tuner (X)
         mCANdle = new CANdle(Lights.CANdleID);
         mCANdle.configLEDType(LEDStripType.RGB);
         

@@ -16,6 +16,7 @@ import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.subsystems.Arm;
 
+// TODO: make everything named using withName so that it is way eaiser to track with the CommandScheduler Sendable object
 public class ShootCommandFactory {
     static boolean configured;
 

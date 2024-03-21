@@ -60,9 +60,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        // TODO: looooots of loop overunns in here, mainly just due to LL pose estimation but the new LLResults should help with that
         super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
-
+        
+        // TODO: looooots of loop overunns in here, prolly just due to LL pose estimation but the new LLResults should help with that
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
             LimelightResults rearResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTagRear);
             
@@ -72,12 +72,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             }
             
 
-            // LimelightResults frontResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
+            LimelightResults frontResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
             
-            // if (frontResults.targetingResults.targets_Fiducials.length > 1) {
-            //     this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
-            //             Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline / 1000);
-            // }
+            if (frontResults.targetingResults.targets_Fiducials.length > 1) {
+                this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
+                        Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline / 1000);
+            }
 
             // mField.getObject("Rear LL pose")
             // .setPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear));

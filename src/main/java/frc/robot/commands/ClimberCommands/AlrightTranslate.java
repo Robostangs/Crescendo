@@ -10,18 +10,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 
 public class AlrightTranslate extends Command {
-	private final Climber mClimber;
-	private DoubleSupplier mLeftSupplier;
-	private DoubleSupplier mRightSupplier;
+	Climber climber;
+	DoubleSupplier mLeftSupplier, mRightSupplier;
 
 	public AlrightTranslate(DoubleSupplier leftSupplier, DoubleSupplier rightSupplier) {
-		mClimber = Climber.getInstance();
+		climber = Climber.getInstance();
 
 		mLeftSupplier = leftSupplier;
 		mRightSupplier = rightSupplier;
 
+		this.addRequirements(climber);
 		this.setName("Climb Time");
-		this.addRequirements(mClimber);
 	}
 
 	@Override
@@ -30,14 +29,14 @@ public class AlrightTranslate extends Command {
 
 	@Override
 	public void execute() {
-		mClimber.setLeftClimbPower(mLeftSupplier.getAsDouble());
-		mClimber.setRightClimbPower(mRightSupplier.getAsDouble());
+		climber.setLeftClimbPower(mLeftSupplier.getAsDouble());
+		climber.setRightClimbPower(mRightSupplier.getAsDouble());
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		mClimber.setLeftClimbPower(0);
-		mClimber.setRightClimbPower(0);
+		climber.setLeftClimbPower(0);
+		climber.setRightClimbPower(0);
 	}
 
 	@Override

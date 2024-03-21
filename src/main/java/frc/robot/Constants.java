@@ -361,9 +361,7 @@ public final class Constants {
 		public static final double c = 1.98502;
 
 		public static class SetPoints {
-			public static final double kSpeaker1 = -45;
-			public static final double kSpeaker2 = -40;
-			public static final double kSpeaker3 = -30;
+			public static final double kCenterToWingPass = -30;
 			public static final double kSubwoofer = kArmMinAngle;
 			public static final double kAmp = 46;
 			public static final double kIntake = kArmMinAngle;

@@ -134,11 +134,17 @@ public class RobotContainer {
 				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kExtensionPower,
 						() -> -Constants.ClimberConstants.RightMotor.kExtensionPower));
 
-		xManip.povUp().toggleOnTrue(ShootCommandFactory.prepareAndShoot());
-		xManip.povRight().whileTrue(new Spit());
-		xManip.povDown().toggleOnTrue(new DeployAndIntake(true));
+		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
+		xManip.povRight().toggleOnTrue(ShootCommandFactory.getContinuousShootCommand());
+		xManip.povDown().whileTrue(new Spit());
+		xManip.povLeft().toggleOnTrue(new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).alongWith(new Prepare()), new Shoot()));
 
-		xManip.rightBumper().whileTrue(ShootCommandFactory.prepareAndShootWithWaitUntil());
+		// make this the command for shooting cross map
+		// xManip.povLeft().toggleOnTrue(new DeployAndIntake(true));
+		
+
+		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootWithWaitUntilCommand());
+		// left bumper is the universal shoot button
 
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())

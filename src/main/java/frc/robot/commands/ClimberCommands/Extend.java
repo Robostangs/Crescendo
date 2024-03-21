@@ -5,37 +5,37 @@ import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Extend extends Command {
-	private final Climber mClimber;
+	Climber climber;
 
 	public Extend() {
-		mClimber = Climber.getInstance();
+		climber = Climber.getInstance();
 
+		this.addRequirements(climber);
 		this.setName("Extend Climber");
-		addRequirements(mClimber);
 	}
 
 	@Override
 	public void execute() {
-		if (mClimber.getLeftPosition() < ClimberConstants.LeftMotor.kMaxExtensionMeters - ClimberConstants.LeftMotor.kExtensionThreshold) {
-			mClimber.setLeftClimbPower(ClimberConstants.LeftMotor.kExtensionPower);
+		if (climber.getLeftPosition() < ClimberConstants.LeftMotor.kMaxExtensionMeters - ClimberConstants.LeftMotor.kExtensionThreshold) {
+			climber.setLeftClimbPower(ClimberConstants.LeftMotor.kExtensionPower);
 		}
 
-		if (mClimber.getRightPosition() < ClimberConstants.RightMotor.kMaxExtensionMeters - ClimberConstants.RightMotor.kExtensionThreshold) {
-			mClimber.setRightClimbPower(ClimberConstants.RightMotor.kExtensionPower);
+		if (climber.getRightPosition() < ClimberConstants.RightMotor.kMaxExtensionMeters - ClimberConstants.RightMotor.kExtensionThreshold) {
+			climber.setRightClimbPower(ClimberConstants.RightMotor.kExtensionPower);
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		mClimber.setLeftClimbPower(0);
-		mClimber.setRightClimbPower(0);
+		climber.setLeftClimbPower(0);
+		climber.setRightClimbPower(0);
 	}
 
 	@Override
 	public boolean isFinished() {
-		return (mClimber.getLeftPosition() > ClimberConstants.LeftMotor.kMaxExtensionMeters
+		return (climber.getLeftPosition() > ClimberConstants.LeftMotor.kMaxExtensionMeters
 				- ClimberConstants.LeftMotor.kExtensionThreshold) &&
-				(mClimber.getRightPosition() > ClimberConstants.RightMotor.kMaxExtensionMeters
+				(climber.getRightPosition() > ClimberConstants.RightMotor.kMaxExtensionMeters
 						- ClimberConstants.RightMotor.kExtensionThreshold);
 	}
 }

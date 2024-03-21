@@ -6,17 +6,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
 public class BeltDrive extends Command {
-    private final Intake mIntake = Intake.getInstance();
-    private Supplier<Double> manualAdjust;
+    Intake intake;
+    Supplier<Double> manualAdjust;
 
     public BeltDrive(Supplier<Double> manualAdjust) {
+        intake = Intake.getInstance();
+
         this.manualAdjust = manualAdjust;
+
+        this.addRequirements(intake);
         this.setName("Belt Drive");
-        this.addRequirements(mIntake);
     }
 
     @Override
     public void execute() {
-        mIntake.setBelt(manualAdjust.get());
+        intake.setBelt(manualAdjust.get());
     }
 }

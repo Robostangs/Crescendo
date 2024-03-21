@@ -11,8 +11,8 @@ public class PoopOut extends Command {
     public PoopOut() {
         shooter = Shooter.getInstance();
 
-        this.setName("Poop Out Piece");
         this.addRequirements(shooter);
+        this.setName("Poop Out Piece");
     }
 
     @Override

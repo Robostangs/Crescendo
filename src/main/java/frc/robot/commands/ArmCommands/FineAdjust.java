@@ -7,22 +7,23 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 
 public class FineAdjust extends Command {
-    private final Arm mArm = Arm.getInstance();
-    private Supplier<Double> manualAdjust;
+    Arm arm = Arm.getInstance();
+    Supplier<Double> manualAdjust;
 
     public FineAdjust(Supplier<Double> manualAdjust) {
         this.manualAdjust = manualAdjust;
+
+        this.addRequirements(arm);
         this.setName("Fine Adjust");
-        this.addRequirements(mArm);
     }
 
     @Override
     public void execute() {
-        mArm.aimRaw(manualAdjust.get() * Constants.ArmConstants.rateOfMotion);
+        arm.aimRaw(manualAdjust.get() * Constants.ArmConstants.rateOfMotion);
     }
 
     @Override
     public void end(boolean interrupted) {
-        mArm.setMotionMagic(mArm.getArmPosition());
+        arm.setMotionMagic(arm.getArmPosition());
     }
 }

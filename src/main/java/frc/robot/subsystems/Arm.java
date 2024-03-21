@@ -275,30 +275,6 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * @deprecated
-     *             do not use this, use {@link #calculateArmSetpoint()} instead
-     * 
-     */
-    public void roundArmSetpoint() {
-        /* Swerve Pose calculated in meters */
-        double returnVal = Constants.ArmConstants.SetPoints.kSubwoofer;
-        Pose2d currentPose = Drivetrain.getInstance().getState().Pose;
-        double distToSpeaker = Math.sqrt(Math.pow(currentPose.getX(), 2) + Math.pow(currentPose.getY(), 2));
-
-        if (distToSpeaker < 4) {
-            returnVal = Constants.ArmConstants.SetPoints.kSubwoofer;
-        } else if (distToSpeaker < 6) {
-            returnVal = Constants.ArmConstants.SetPoints.kSpeaker1;
-        } else if (distToSpeaker < 8) {
-            returnVal = Constants.ArmConstants.SetPoints.kSpeaker2;
-        } else {
-            returnVal = Constants.ArmConstants.SetPoints.kSpeaker3;
-        }
-
-        setMotionMagic(returnVal);
-    }
-
-    /**
      * Calculates the arm setpoint based on the current robot pose
      * 
      * @return the desired arm angle

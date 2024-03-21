@@ -6,25 +6,25 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
 public class HomeClimber extends Command {
-    private final Climber mClimber;
+    Climber climber;
 
     private HomeClimber() {
-        mClimber = Climber.getInstance();
+        climber = Climber.getInstance();
         
+        this.addRequirements(climber);
         this.setName("Home Climber");
-        this.addRequirements(mClimber);
     }
 
     @Override
     public void initialize() {
-        mClimber.setReverseSoftLimitState(false);
-        mClimber.setCurrentLimits(Constants.ClimberConstants.kHomingCurrentLimit);
+        climber.setReverseSoftLimitState(false);
+        climber.setCurrentLimits(Constants.ClimberConstants.kHomingCurrentLimit);
     }
 
     @Override
     public void execute() {
-        mClimber.setLeftClimbPower(Constants.ClimberConstants.kHomingPower);
-        mClimber.setRightClimbPower(Constants.ClimberConstants.kHomingPower);
+        climber.setLeftClimbPower(Constants.ClimberConstants.kHomingPower);
+        climber.setRightClimbPower(Constants.ClimberConstants.kHomingPower);
     }
 
     @Override
@@ -34,14 +34,14 @@ public class HomeClimber extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        mClimber.setReverseSoftLimitState(true);
-        mClimber.setCurrentLimits(Constants.ClimberConstants.kDefaultStatorCurrentLimit);
-        mClimber.setLeftClimbPower(0);
-        mClimber.setRightClimbPower(0);
+        climber.setReverseSoftLimitState(true);
+        climber.setCurrentLimits(Constants.ClimberConstants.kDefaultStatorCurrentLimit);
+        climber.setLeftClimbPower(0);
+        climber.setRightClimbPower(0);
 
         DataLogManager.log("Climber has been Homed");
-        mClimber.setLeftPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
-        mClimber.setRightPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
+        climber.setLeftPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
+        climber.setRightPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
     }
 
     public static Command getHomingCommand() {

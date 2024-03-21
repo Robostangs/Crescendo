@@ -5,9 +5,9 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 
 public class SetPoint extends Command {
-    private Arm mArm;
-    private double armSetpoint;
-    private boolean autoAim;
+    Arm mArm;
+    double armSetpoint;
+    boolean autoAim;
 
     /**
      * <p>Set the shooter to a specific position
@@ -21,8 +21,8 @@ public class SetPoint extends Command {
 
         autoAim = false;
 
-        this.setName("Setpoint: " + armSetpoint + " degrees");
         this.addRequirements(mArm);
+        this.setName("Setpoint: " + armSetpoint + " degrees");
     }
 
     /**

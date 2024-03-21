@@ -13,8 +13,8 @@ public class QuickFeed extends Command {
         mIntake = Intake.getInstance();
         mShooter = Shooter.getInstance();
 
-        this.setName("Quick Feed");
         this.addRequirements(mIntake, mShooter);
+        this.setName("Quick Feed");
     }
 
     @Override

@@ -9,6 +9,9 @@ public class Shoot extends Command {
 
     public Shoot() {
         shooter = Shooter.getInstance();
+
+        this.addRequirements(shooter);
+        this.setName("Shoot");
     }
 
     @Override

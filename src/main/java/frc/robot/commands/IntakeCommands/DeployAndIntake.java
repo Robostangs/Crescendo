@@ -17,8 +17,8 @@ public class DeployAndIntake extends Command {
         intake = Intake.getInstance();
         shooter = Shooter.getInstance();
 
-        this.setName("Deploy And Intake");
         this.addRequirements(intake, shooter);
+        this.setName("Deploy And Intake");
     }
 
     @Override

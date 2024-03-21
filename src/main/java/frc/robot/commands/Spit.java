@@ -6,12 +6,15 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class Spit extends Command {
-    private Shooter mShooter;
-    private Intake mIntake;
+    Shooter shooter;
+    Intake intake;
 
     public Spit() {
-        mShooter = Shooter.getInstance();
-        mIntake = Intake.getInstance();
+        shooter = Shooter.getInstance();
+        intake = Intake.getInstance();
+
+        this.addRequirements(shooter, intake);
+        this.setName("Spit");
     }
 
     @Override
@@ -22,18 +25,18 @@ public class Spit extends Command {
 
     @Override
     public void execute() {
-        mShooter.shoot(0.5, 0.5);
+        shooter.shoot(0.5, 0.5);
 
-        mIntake.setExtend(false);
-        mIntake.setIntake(-0.5);
-        mIntake.setBelt(-0.5);
+        intake.setExtend(false);
+        intake.setIntake(-0.5);
+        intake.setBelt(-0.5);
     }
 
     @Override
     public void end(boolean interrupted) {
-        mShooter.stop();
-        mIntake.stop();
-        mIntake.setHolding(false);
+        shooter.stop();
+        intake.stop();
+        intake.setHolding(false);
         
         SmartDashboard.putString("Intake/Status", "Idle");
         SmartDashboard.putString("Shooter/Status", "Idle");

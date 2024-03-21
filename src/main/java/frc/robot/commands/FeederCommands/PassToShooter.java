@@ -6,14 +6,14 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class PassToShooter extends Command {
-    private Intake intake;
-    private Shooter shooter;
+    Intake intake;
+    Shooter shooter;
 
     public PassToShooter() {
         intake = Intake.getInstance();
         shooter = Shooter.getInstance();
-        this.setName("Pass to Shooter");
         this.addRequirements(intake, shooter);
+        this.setName("Pass to Shooter");
     }
 
     @Override

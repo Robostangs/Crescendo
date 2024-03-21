@@ -3,23 +3,23 @@ package frc.robot.commands.ShooterCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-public class Prepare extends Command {
-    private Shooter shooter;
+public class FullSend extends Command {
+    Shooter shooter;
 
-    public Prepare() {
+    public FullSend() {
         shooter = Shooter.getInstance();
 
         this.addRequirements(shooter);
-        this.setName("Prepare");
+        this.setName("Full Send");
     }
 
     @Override
     public void initialize() {
-        shooter.setShooterMotors(1);  
+        shooter.shoot(1, 1);
     }
 
     @Override
-    public boolean isFinished() {
-        return shooter.readyToShoot();
+    public void end(boolean interrupted) {
+        shooter.shoot(0, 0);
     }
 }

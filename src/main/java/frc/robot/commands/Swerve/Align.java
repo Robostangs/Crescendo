@@ -15,14 +15,14 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class Align extends Command {
-    private Drivetrain mDrivetrain;
-    private Intake mIntake;
+    Drivetrain drivetrain;
+    Intake intake;
 
-    private SwerveRequest.FieldCentricFacingAngle driveRequest;
+    SwerveRequest.FieldCentricFacingAngle driveRequest;
 
-    private Supplier<Double> translateX, translateY, howManyBabiesOnBoard;
-    private Supplier<Rotation2d> getTargetRotation;
-    private boolean note;
+    Supplier<Double> translateX, translateY, howManyBabiesOnBoard;
+    Supplier<Rotation2d> getTargetRotation;
+    boolean note;
 
     public Align(boolean note) {
         this(() -> 0.0, () -> 0.0, () -> 0.0, note);
@@ -30,8 +30,8 @@ public class Align extends Command {
 
     public Align(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard,
             boolean note) {
-        mDrivetrain = Drivetrain.getInstance();
-        mIntake = Intake.getInstance();
+        drivetrain = Drivetrain.getInstance();
+        intake = Intake.getInstance();
 
         if (howManyBabiesOnBoard == null) {
             this.howManyBabiesOnBoard = () -> 0.0;
@@ -47,30 +47,30 @@ public class Align extends Command {
         this.translateY = translateY;
 
         if (note) {
+            this.addRequirements(drivetrain, intake);
             this.setName("Align to Note");
-            this.addRequirements(mDrivetrain, mIntake);
 
             getTargetRotation = () -> {
-                return mDrivetrain.getPose().getRotation()
+                return drivetrain.getPose().getRotation()
                         .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llPython)));
             };
 
         } else {
             this.setName("Align to Speaker");
-            this.addRequirements(mDrivetrain);
+            this.addRequirements(drivetrain);
             getTargetRotation = () -> {
                 if (Robot.isRed()) {
                     return Rotation2d
                             .fromRadians(Math.atan2(
-                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+                                    drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+                                    drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
                 }
 
                 else {
                     return Rotation2d
                             .fromRadians(Math.atan2(
-                                    mDrivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                                    mDrivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                                    drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
+                                    drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
                 }
             };
         }
@@ -96,9 +96,9 @@ public class Align extends Command {
     @Override
     public void execute() {
         if (note) {
-            mIntake.setExtend(true);
-            mIntake.setIntake(1);
-            mIntake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+            intake.setExtend(true);
+            intake.setIntake(1);
+            intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
             SmartDashboard.putString("Intake/Status", "Align and Intaking");
         }
 
@@ -114,7 +114,7 @@ public class Align extends Command {
                         * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 
-        mDrivetrain.setControl(driveRequest);
+        drivetrain.setControl(driveRequest);
     }
 
     @Override
@@ -122,12 +122,12 @@ public class Align extends Command {
         LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
 
         if (note) {
-            mIntake.setIntake(0);
-            mIntake.setExtend(false);
-            mIntake.setHolding(!interrupted);
+            intake.setIntake(0);
+            intake.setExtend(false);
+            intake.setHolding(!interrupted);
         }
 
-        mDrivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
+        drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
     }
 
     @Override
@@ -137,9 +137,9 @@ public class Align extends Command {
         }
 
         if (note) {
-            return mIntake.getShooterSensor();
+            return intake.getShooterSensor();
         } else {
-            return !mIntake.getHolding();
+            return !intake.getHolding();
         }
     }
 }

@@ -24,7 +24,6 @@ public class Lighting extends SubsystemBase {
 
     boolean blink = false;
     Timer timer = new Timer();
-    
 
     @Override
     public void periodic() {
@@ -53,8 +52,8 @@ public class Lighting extends SubsystemBase {
 
             else if (Intake.getInstance().getShooterSensor()) {
 
-                if (Drivetrain.getInstance().readyToShoot()) {
-                    if (Shooter.getInstance().readyToShootAdvanced()) {
+                if (Shooter.getInstance().readyToShootAdvanced()) {
+                    if (Drivetrain.getInstance().readyToShoot()) {
                         state = LEDState.kGreen;
                     }
 

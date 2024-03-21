@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.ArmCommands.ReturnToHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
@@ -15,8 +16,8 @@ import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shooter;
 
-// TODO: make everything named using withName so that it is way eaiser to track with the CommandScheduler Sendable object
 public class ShootCommandFactory {
     static boolean configured;
 
@@ -34,22 +35,31 @@ public class ShootCommandFactory {
         configureSticks();
 
         return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
-                .alongWith(new Prepare()).andThen(new Shoot())).deadlineWith(new SetPoint());
+                .deadlineWith(new Prepare()).andThen(new Shoot())).deadlineWith(new SetPoint())
+                .withName("Aim and Shoot");
     }
 
-    // TODO: might be able to remove the conditional
     public static Command getAimAndShootCommandWithWaitUntil() {
         configureSticks();
 
-        return new PassToShooter().andThen(new SetPoint().alongWith(new RepeatCommand(
-                new ConditionalCommand(new Shoot(), new Prepare(), () -> xManip.getHID().getLeftBumper()))));
+        return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
+                .deadlineWith(new Prepare())
+                .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot()))
+                .deadlineWith(new SetPoint()).withName("Aim and Shoot With WaitUntil");
+
+        // return new PassToShooter().andThen(new SetPoint().raceWith(new
+        // WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new
+        // Prepare())));
+        // new ConditionalCommand(new Shoot(), new Prepare(), () ->
+        // xManip.getHID().getLeftBumper())))).withName("Aim and Shoot with WaitUntil");
         // , new ReturnToHome());
     }
 
     public static Command getAmpCommand() {
         configureSticks();
 
-        return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut());
+        return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut())
+                .withName("Amp Shoot");
         // , new ReturnToHome());
     }
 
@@ -57,28 +67,36 @@ public class ShootCommandFactory {
         configureSticks();
 
         return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp),
-                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new PoopOut());
+                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new PoopOut(), new ReturnToHome());
         // , new ReturnToHome());
     }
 
     public static Command getPrepareAndShootCommand() {
         configureSticks();
 
-        return new Prepare().andThen(new Shoot());
+        return new Prepare().raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()))
+                .andThen(new Shoot()).withName("Prepare and Shoot");
     }
 
-    // TODO: might be able to remove the conditional
-    public static Command getPrepareAndShootWithWaitUntilCommand() {
+    public static Command getPrepareAndShootCommandWithWaitUntil() {
         configureSticks();
 
-        return new RepeatCommand(
-                new ConditionalCommand(new Shoot(), new Prepare(), () -> xManip.getHID().getLeftBumper()));
+        return new Prepare().raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())).andThen(new Shoot())
+                // .raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()),
+                // new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
+                // .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new
+                // Shoot())
+                .withName("Prepare and Shoot");
+        // return new RepeatCommand(
+        // new ConditionalCommand(new Shoot(), new Prepare(), () ->
+        // xManip.getHID().getLeftBumper()));
     }
 
     public static Command getContinuousShootCommand() {
         configureSticks();
 
         return new Shoot()
-                .andThen(new BeltDrive(() -> Constants.IntakeConstants.beltIntakeSpeed).alongWith(new FullSend()));
+                .andThen(new BeltDrive(() -> Constants.IntakeConstants.beltIntakeSpeed).alongWith(new FullSend()))
+                .withName("Continuous Shoot");
     }
 }

@@ -12,6 +12,7 @@ public class PassToShooter extends Command {
     public PassToShooter() {
         intake = Intake.getInstance();
         shooter = Shooter.getInstance();
+        
         this.addRequirements(intake, shooter);
         this.setName("Pass to Shooter");
     }

@@ -60,8 +60,9 @@ public class AutoManager extends Command {
     /**
      * this variable will be used to pull the note from the belt into the shooter so
      * that we can position the note
+     * @see {@link Constants.ShooterConstants#feederFeedForward}
      */
-    private static final double feederHandoffSpeed = 0.1;
+    private static final double feederHandoffSpeed = 0.11;
 
     /**
      * the timeout that occurs when the time between activating shoot and the
@@ -343,8 +344,7 @@ public class AutoManager extends Command {
 
                 // this code must pull the piece off the ground and into the shooter
                 mIntake.setBelt(beltIntakeAndHandoffSpeed);
-                mShooter.shoot(feederHandoffSpeed, 0);
-                // postAutoStatus("Intaking");
+                mShooter.shoot(feederHandoffSpeed, 1);
             }
 
             shootTimer = null;

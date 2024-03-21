@@ -20,6 +20,8 @@ public class Prepare extends Command {
 
     @Override
     public boolean isFinished() {
-        return shooter.readyToShoot();
+        // return shooter.readyToShoot();
+        
+        return false;
     }
 }

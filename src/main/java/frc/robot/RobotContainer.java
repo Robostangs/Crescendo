@@ -27,6 +27,7 @@ import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
 import frc.robot.commands.FeederCommands.QuickFeed;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
+import frc.robot.commands.IntakeCommands.IntakeMultiple;
 import frc.robot.commands.ShooterCommands.AimAndShoot;
 import frc.robot.commands.ShooterCommands.FeedAndShoot;
 import frc.robot.commands.ShooterCommands.PoopOut;
@@ -62,7 +63,7 @@ public class RobotContainer {
 		removeDefaultCommands();
 
 		// mShooter.setDefaultCommand(new ReturnToHome());
-		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no)"));
+		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -97,13 +98,16 @@ public class RobotContainer {
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
 				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()));
 
-		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain
 				.runOnce(() -> drivetrain
 						.seedFieldRelative(!Robot.isRed() ? Constants.AutoConstants.WayPoints.Blue.CenterStartPosition
 								: GeometryUtil
-										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition))));
+										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
+				.withName("Zero Swerve 2 Speaker"));
+				
+		xDrive.povLeft().onTrue(new IntakeMultiple().alongWith(new PassToShooter()));
 
 		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false));
 		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true));
@@ -147,7 +151,7 @@ public class RobotContainer {
 		// make this the command for shooting cross map
 		// xManip.povLeft().toggleOnTrue(new DeployAndIntake(true));
 
-		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootWithWaitUntilCommand());
+		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
 		// left bumper is the universal shoot button
 
 		// absolute worst case scenario

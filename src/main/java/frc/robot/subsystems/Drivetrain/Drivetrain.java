@@ -311,6 +311,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         return isInRangeOfTarget(10);
     }
 
+    // TODO: make sure this works
     public boolean readyToShoot() {
         return this.isInRangeOfTarget() &&
                 Math.abs(this.getState().speeds.omegaRadiansPerSecond) < 0.05;

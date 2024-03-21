@@ -83,7 +83,8 @@ public final class Constants {
 		 * distance from the center of the robot to the furthest module (meters) should
 		 * be 17.27
 		 */
-		public static final double driveBaseRadius = Units.inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
+		public static final double driveBaseRadius = Units
+				.inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
 
 		public class TunerConstants {
 			// The steer motor uses any SwerveModule.SteerRequestType control request with
@@ -92,7 +93,7 @@ public final class Constants {
 			private static final Slot0Configs steerGains = new Slot0Configs()
 					.withKP(100).withKI(0).withKD(0.2)
 					.withKS(0).withKV(1.5).withKA(0);
-					
+
 			// When using closed-loop control, the drive motor uses the control
 			// output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
 			private static final Slot0Configs driveGains = new Slot0Configs()
@@ -101,7 +102,7 @@ public final class Constants {
 
 			/** The closed-loop output type to use for the steer motors */
 			private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
-			
+
 			/** The closed-loop output type to use for the drive motors */
 			private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
@@ -120,7 +121,7 @@ public final class Constants {
 
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
-			private static final double kWheelRadiusInches = 2 * 6.3/6.6;
+			private static final double kWheelRadiusInches = 2 * 6.3 / 6.6;
 
 			private static final boolean kSteerMotorReversed = false;
 			private static final boolean kInvertLeftSide = true;
@@ -237,30 +238,25 @@ public final class Constants {
 	public static final class AutoConstants {
 
 		/* SIM PID */
-		// public static final PIDConstants translationPID = new PIDConstants(12.5, 0.5,
-		// 0.3);
-		// public static final PIDConstants rotationPID = new PIDConstants(1.57, 0.07,
-		// 0.9, 1);
+		// public static final PIDConstants translationPID = new
+		// PIDConstants(12.5, 0.5, 0.3);
+		// public static final PIDConstants rotationPID = new
+		// PIDConstants(1.57, 0.07, 0.9, 1);
 
 		/* IRL PID */
 		// TODO: tune this cuz faster swerve
 		public static final PIDConstants translationPID = new PIDConstants(0.4, 0.1, 0.4, 5);
 		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.5, 10);
 
-		public static final double kMaxSpeedMetersPerSecond = 4;
+		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
-		public static final double kMaxAngularSpeedMetersPerSecond = 2.5 * Math.PI;
-		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond;
+		public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
+		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond * 4/6;
 
-		public static final double kMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(360d * 2.5);
+		public static final double kMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(360d * 4);
 		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = Units.degreesToRadians(360 * 2.5);
 
 		public static final String kFieldObjectName = "path";
-
-		/* NoteAlign constants */
-		public static final PIDConstants noteAlignPID = new PIDConstants(0.08, 0.1, 0.01);
-
-		public static final double driveSpeed = 2;
 
 		public static class WayPoints {
 			public static class Blue {
@@ -271,16 +267,14 @@ public final class Constants {
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
 
-				// these are called "edge positions" in path planner because they are on the
-				// edge of the wing line
 				public static final Pose2d CenterStartPosition = new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(0));
 				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));
 				public static final Pose2d StageStartPosition = new Pose2d(0.74, 4.41, Rotation2d.fromDegrees(-60));
 
-				public static class Notes {
-					public static final Pose2d leftStage = new Pose2d(2.9, 7.0, Rotation2d.fromDegrees(0));
-					public static final Pose2d centerStage = new Pose2d(2.9, 5.5, Rotation2d.fromDegrees(0));
-					public static final Pose2d rightStage = new Pose2d(2.9, 4.11, Rotation2d.fromDegrees(0));
+				public static class StartingNotes {
+					public static final Pose2d amp = new Pose2d(2.9, 7.0, Rotation2d.fromDegrees(0));
+					public static final Pose2d center = new Pose2d(2.9, 5.5, Rotation2d.fromDegrees(0));
+					public static final Pose2d stage = new Pose2d(2.9, 4.11, Rotation2d.fromDegrees(0));
 				}
 			}
 		}
@@ -320,7 +314,7 @@ public final class Constants {
 	public static class ArmConstants {
 		public static final int armMotorID = 53;
 		public static final boolean armMotorInverted = true;
-		
+
 		// TODO: need new values for new shooter, will probably be lower
 		public static final double kFeedForwardDutyCycle = 0.025;
 		public static final double kFeedForwardTorqueCurrent = 6.04 - 1;
@@ -462,11 +456,11 @@ public final class Constants {
 			kRobostangsOrange(new int[] { 255, 110, 0 }),
 
 			kPurple(new int[] { 128, 0, 128 }),
-			
-			kBrown(new int[] { 165, 42, 42 }), 
-			
+
+			kBrown(new int[] { 165, 42, 42 }),
+
 			kWhite(new int[] { 255, 255, 255 }),
-			
+
 			kPink(new int[] { 255, 192, 203 });
 
 			public final int[] color;
@@ -496,7 +490,7 @@ public final class Constants {
 
 		/** Left Climber Support */
 		public static final int strip3Length = 16;
-		
+
 		/** Right Climber Support */
 		public static final int strip4Length = 17;
 	}

@@ -161,7 +161,7 @@ public class AimAndShoot extends Command {
         }
 
         // else if the arm is within 1.5 degrees of the target and the arm is not moving
-        else if (mArm.isInRangeOfTarget(armSetpoint) && Math.abs(mArm.getVelocity()) < 0.25) {
+        else if (mArm.atSetpoint()) {
             pieceHasBeenLoaded = true;
             
             // if the shooter i;//s ready to shoot and the user has pressed the button

@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants.Lights.LEDState;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
@@ -171,7 +172,8 @@ public class Robot extends TimedRobot {
 		NamedCommands.registerCommand("Drive by", new InstantCommand(() -> autoManager.shoot = true)
 				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
 
-		Lighting.getInstance().autoSetLights(true);
+		// Lighting.getInstance().autoSetLights(true);
+		Lighting.getInstance().setLights(LEDState.kRobostangsOrange);
 
 		// use this for shooter regression
 		// SmartDashboard.putNumber("Arm/Desired Setpoint",

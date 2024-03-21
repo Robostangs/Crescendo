@@ -23,7 +23,7 @@ public class Lighting extends SubsystemBase {
         if (auto) {
             if (DriverStation.isDisabled()) {
                 if (Robot.pdh.getVoltage() < Lights.lowVoltageThreshold) {
-                    color = LEDState.kPurple.getColor();
+                    color = LEDState.kWhite.getColor();
                 }
 
                 else if (DriverStation.getAlliance().isPresent()) {
@@ -48,12 +48,12 @@ public class Lighting extends SubsystemBase {
                 }
 
                 else {
-                    color = LEDState.kYellow.getColor();
+                    color = LEDState.kPurple.getColor();
                 }
             }
 
             else {
-                color = LEDState.kOrange.getColor();
+                color = LEDState.kOff.getColor();
             }
         } 
         
@@ -69,13 +69,11 @@ public class Lighting extends SubsystemBase {
     }
 
     private Lighting() {
-        // TODO: do all this LED setup
-        // deviceID is a CAN ID, figure this out using phoenix tuner (X)
         mCANdle = new CANdle(Lights.CANdleID);
-        mCANdle.configLEDType(LEDStripType.RGB);
+        mCANdle.configLEDType(LEDStripType.GRB);
         
         // Orange on init
-        mState = LEDState.kOrange;
+        mState = LEDState.kOff;
     }
 
     public void setLights(LEDState state) {

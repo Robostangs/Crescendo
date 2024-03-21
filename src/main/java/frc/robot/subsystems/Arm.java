@@ -306,7 +306,7 @@ public class Arm extends SubsystemBase {
      *         to shoot into the speaker
      */
     public double calculateArmSetpoint() {
-        return calculateArmSetpointTrig();
+        return calculateArmSetpointExpo();
     }
 
     /**
@@ -453,8 +453,8 @@ public class Arm extends SubsystemBase {
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
         armMotorConfig.Slot0.kP = 400;
-        armMotorConfig.Slot0.kI = 0.03;
-        motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
+        armMotorConfig.Slot0.kI = 0.02;
+        motionMagicConfigs.MotionMagicCruiseVelocity = 0.5;
         motionMagicConfigs.MotionMagicAcceleration = 0.5;
 
         // armMotorConfig.Slot0.kA = 0.0;
@@ -508,7 +508,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return isInRangeOfTarget(getArmTarget());
+        return isInRangeOfTarget(getArmTarget()) && Math.abs(getVelocity()) < 0.1;
     }
 
     private static Arm mInstance;

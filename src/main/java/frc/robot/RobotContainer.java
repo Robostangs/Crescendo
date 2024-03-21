@@ -91,8 +91,11 @@ public class RobotContainer {
 
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
-		xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
-				xDrive::getRightTriggerAxis, true));
+		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
+				xDrive::getRightTriggerAxis, true)));
+				
+		// xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
+		// 		xDrive::getRightTriggerAxis, true));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
@@ -106,7 +109,7 @@ public class RobotContainer {
 								: GeometryUtil
 										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
 				.withName("Zero Swerve 2 Speaker"));
-				
+
 		xDrive.povLeft().onTrue(new IntakeMultiple().alongWith(new PassToShooter()));
 
 		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false));

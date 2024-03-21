@@ -16,7 +16,6 @@ import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class Align extends Command {
     Drivetrain drivetrain;
-    Intake intake;
 
     SwerveRequest.FieldCentricFacingAngle driveRequest;
 
@@ -31,7 +30,8 @@ public class Align extends Command {
     public Align(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard,
             boolean note) {
         drivetrain = Drivetrain.getInstance();
-        intake = Intake.getInstance();
+
+        this.addRequirements(drivetrain);
 
         if (howManyBabiesOnBoard == null) {
             this.howManyBabiesOnBoard = () -> 0.0;
@@ -47,7 +47,6 @@ public class Align extends Command {
         this.translateY = translateY;
 
         if (note) {
-            this.addRequirements(drivetrain, intake);
             this.setName("Align to Note");
 
             getTargetRotation = () -> {
@@ -57,7 +56,7 @@ public class Align extends Command {
 
         } else {
             this.setName("Align to Speaker");
-            this.addRequirements(drivetrain);
+
             getTargetRotation = () -> {
                 if (Robot.isRed()) {
                     return Rotation2d
@@ -88,6 +87,7 @@ public class Align extends Command {
 
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Align PID", driveRequest.HeadingController);
+        SmartDashboard.putString("Swerve/status", "Aligning");
 
         driveRequest.Deadband = Constants.OperatorConstants.deadband;
         driveRequest.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
@@ -95,13 +95,6 @@ public class Align extends Command {
 
     @Override
     public void execute() {
-        if (note) {
-            intake.setExtend(true);
-            intake.setIntake(1);
-            intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
-            SmartDashboard.putString("Intake/Status", "Align and Intaking");
-        }
-
         driveRequest.TargetDirection = getTargetRotation.get();
         double rotationError = driveRequest.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees();
 
@@ -121,12 +114,6 @@ public class Align extends Command {
     public void end(boolean interrupted) {
         LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
 
-        if (note) {
-            intake.setIntake(0);
-            intake.setExtend(false);
-            intake.setHolding(!interrupted);
-        }
-
         drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
     }
 
@@ -136,10 +123,10 @@ public class Align extends Command {
             return false;
         }
 
-        if (note) {
-            return intake.getShooterSensor();
-        } else {
-            return !intake.getHolding();
-        }
+        // if (note) {
+        //     return false;
+        // }
+
+        return !Intake.getInstance().getHolding();
     }
 }

@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.Lights.LEDState;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.FineAdjust;
@@ -40,6 +42,7 @@ import frc.robot.commands.Swerve.xDrive;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Music;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -56,6 +59,7 @@ public class RobotContainer {
 	private final Intake mIntake = Intake.getInstance();
 	private final Climber mClimber = Climber.getInstance();
 	private final Music mMusic = Music.getInstance();
+	private final Lighting mLighting = Lighting.getInstance();
 
 	private final Telemetry logger;
 	public Field2d field;
@@ -65,6 +69,9 @@ public class RobotContainer {
 
 		// mShooter.setDefaultCommand(new ReturnToHome());
 		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
+		mLighting.setDefaultCommand(new WaitCommand(2).andThen(mLighting.runOnce(() -> mLighting.autoSetLights(true))));
+
+
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -83,6 +90,7 @@ public class RobotContainer {
 		Arm.getInstance().removeDefaultCommand();
 		Drivetrain.getInstance().removeDefaultCommand();
 		Climber.getInstance().removeDefaultCommand();
+		Lighting.getInstance().removeDefaultCommand();
 	}
 
 	private void configureDriverBinds() {
@@ -93,7 +101,7 @@ public class RobotContainer {
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
-				xDrive::getRightTriggerAxis, true)));
+				xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
 				
 		// xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 		// 		xDrive::getRightTriggerAxis, true));
@@ -113,8 +121,8 @@ public class RobotContainer {
 
 		xDrive.povLeft().onTrue(new IntakeMultiple().alongWith(new Feed()));
 
-		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false));
-		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true));
+		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
+		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
 	}
 
 	private void configureManipBinds() {

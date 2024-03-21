@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 		Shuffleboard.selectTab(disabledTab.getTitle());
 
-		Lighting.getInstance().autoSetLights(true);
+		// Lighting.getInstance().autoSetLights(true);
 
 		// NamedCommands.registerCommand("Shoot",
 		// ShootCommandFactory.getAimAndShootCommand().deadlineWith(new Align(false)));

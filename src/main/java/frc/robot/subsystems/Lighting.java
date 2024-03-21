@@ -2,15 +2,19 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.Lights;
 import frc.robot.Constants.Lights.LEDState;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
@@ -78,25 +82,33 @@ public class Lighting extends SubsystemBase {
             oldState = state;
         }
 
-        // if not in auto light mode
-        else {
-            int[] color = new int[3];
+        // // if not in auto light mode
+        // else {
+        // int[] color = new int[3];
 
-            color = mState.getColor();
+        // color = mState.getColor();
 
-            if (color != oldColor) {
-                mCANdle.setLEDs(color[0], color[1], color[2]);
-            }
+        // if (color != oldColor) {
+        // mCANdle.setLEDs(color[0], color[1], color[2]);
+        // }
 
-            oldColor = color;
-        }
+        // oldColor = color;
+        // }
     }
 
     private Lighting() {
         mCANdle = new CANdle(Lights.CANdleID);
         mCANdle.configLEDType(LEDStripType.GRB);
 
-        mState = LEDState.kOff;
+        LEDState state = LEDState.kRobostangsOrange;
+        LarsonAnimation animation = new LarsonAnimation(state.getColor()[0], state.getColor()[1], state.getColor()[2]);
+
+        setRightBarAnimation(animation);
+        setLeftBarAnimation(animation);
+        setLeftClimberSupportAnimation(animation);
+        setRightClimberSupportAnimation(animation);
+        // mCANdle.animate(new StrobeAnimation(mState.getColor()[0],
+        // mState.getColor()[1], mState.getColor()[2], 0, 0.5, Lights.strip1Length, 7));
     }
 
     private static Lighting mLighting;
@@ -133,5 +145,45 @@ public class Lighting extends SubsystemBase {
     public void setRightClimberSupport(int r, int g, int b) {
         mCANdle.setLEDs(r, g, b, 0, 7 + Lights.strip1Length + Lights.strip2Length + Lights.strip3Length,
                 Lights.strip4Length);
+    }
+
+    public void setRightBarAnimation(Animation animation) {
+        animation.setSpeed(0.1);
+        animation.setLedOffset(8);
+        animation.setNumLed(Lights.strip1Length);
+        mCANdle.animate(animation, 0);
+    }
+
+    public void setLeftBarAnimation(Animation animation) {
+        animation.setSpeed(0.1);
+        animation.setLedOffset(8 + Lights.strip1Length);
+        animation.setNumLed(Lights.strip2Length);
+        mCANdle.animate(animation, 1);
+    }
+
+    public void setLeftClimberSupportAnimation(Animation animation) {
+        animation.setSpeed(0.1);
+        animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length);
+        animation.setNumLed(Lights.strip3Length);
+        mCANdle.animate(animation, 2);
+    }
+
+    public void setRightClimberSupportAnimation(Animation animation) {
+        animation.setSpeed(0.1);
+        animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length + Lights.strip3Length);
+        animation.setNumLed(Lights.strip4Length);
+        mCANdle.animate(animation, 3);
+    }
+
+    public static Command getStrobeCommand(LEDState state) {
+        int[] color = state.getColor();
+
+        return Lighting.getInstance().runOnce(() -> {
+            Lighting.getInstance().autoSetLights(false);
+            Lighting.getInstance().setRightBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
+            Lighting.getInstance().setLeftBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
+            Lighting.getInstance().setLeftClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
+            Lighting.getInstance().setRightClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
+        });
     }
 }

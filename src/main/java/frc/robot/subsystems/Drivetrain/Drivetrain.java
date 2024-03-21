@@ -61,29 +61,31 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     @Override
     public void periodic() {
         super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
-        
-        // TODO: looooots of loop overunns in here, prolly just due to LL pose estimation but the new LLResults should help with that
+
+        // TODO: looooots of loop overunns in here, prolly just due to LL pose
+        // estimation but the new LLResults should help with that
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
             LimelightResults rearResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTagRear);
-            
-            if (rearResults.targetingResults.targets_Fiducials.length > 1) {
+
+            if (LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.26
+                    && rearResults.targetingResults.targets_Fiducials.length > 1) {
                 this.addVisionMeasurement(rearResults.targetingResults.getBotPose2d_wpiBlue(),
-                Timer.getFPGATimestamp() - rearResults.targetingResults.latency_pipeline / 1000);
+                        Timer.getFPGATimestamp() - rearResults.targetingResults.latency_pipeline / 1000);
             }
-            
 
             LimelightResults frontResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
-            
-            if (frontResults.targetingResults.targets_Fiducials.length > 1) {
+
+            if (LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.26
+                    && frontResults.targetingResults.targets_Fiducials.length > 1) {
                 this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
                         Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline / 1000);
             }
 
             // mField.getObject("Rear LL pose")
-            // .setPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTagRear));
+            // .setPose(rearResults.targetingResults.getBotPose2d_wpiBlue());
 
             // mField.getObject("Front LL pose")
-            // .setPose(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Vision.llAprilTag));
+            // .setPose(frontResults.targetingResults.getBotPose2d_wpiBlue());
 
         }
 

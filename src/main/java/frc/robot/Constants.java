@@ -44,7 +44,7 @@ public final class Constants {
 		public static final int llAprilTagWithLightsPipelineIndex = 2;
 
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.6, 0.6, Units.degreesToRadians(250));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.55, 0.55, Units.degreesToRadians(200));
 
 		/** The height (in meters) of the speaker */
 		public static final Pose2d SpeakerPoseBlue = new Pose2d(0, 5.55, Rotation2d.fromDegrees(0));
@@ -117,7 +117,8 @@ public final class Constants {
 			 * Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns
 			 * This may need to be tuned to your individual robot
 			 */
-			private static final double kCoupleRatio = 3.125;
+			// private static final double kCoupleRatio = 3.125;
+			private static final double kCoupleRatio = 6.12;
 
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
@@ -243,15 +244,20 @@ public final class Constants {
 		// public static final PIDConstants rotationPID = new
 		// PIDConstants(1.57, 0.07, 0.9, 1);
 
-		/* IRL PID */
-		// TODO: tune this cuz faster swerve
-		public static final PIDConstants translationPID = new PIDConstants(0.4, 0.1, 0.4, 5);
-		public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.5, 10);
+		/* Old PID */
+		// public static final PIDConstants translationPID = new PIDConstants(0.6, 0.1,
+		// 0.4, 5);
+		// public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.5,
+		// 10);
+
+		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0, 2);
+		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
 		public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
-		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond * 4/6;
+		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond * 4
+				/ 6;
 
 		public static final double kMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(360d * 4);
 		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = Units.degreesToRadians(360 * 2.5);
@@ -373,7 +379,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.125;
+		public static final double feederFeedForward = 0.15;
 		public static final double shooterPoopSpeed = 0.5;
 	}
 
@@ -461,7 +467,9 @@ public final class Constants {
 
 			kWhite(new int[] { 255, 255, 255 }),
 
-			kPink(new int[] { 255, 192, 203 });
+			kPink(new int[] { 255, 192, 203 }),
+
+			kBlink(new int[] { 0, 0, 0 });
 
 			public final int[] color;
 
@@ -483,7 +491,7 @@ public final class Constants {
 		public static final double lowVoltageThreshold = 12.5;
 
 		/** Right Shooter Bar */
-		public static final int strip1Length = 28;
+		public static final int strip1Length = 39;
 
 		/** Left Shooter Bar */
 		public static final int strip2Length = 29;
@@ -493,5 +501,7 @@ public final class Constants {
 
 		/** Right Climber Support */
 		public static final int strip4Length = 17;
+
+		public static final double animationSpeed = 0.03;
 	}
 }

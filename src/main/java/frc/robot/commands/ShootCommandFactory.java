@@ -1,16 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.commands.ArmCommands.ReturnToHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
+import frc.robot.commands.ShooterCommands.CancelShooter;
 import frc.robot.commands.ShooterCommands.FullSend;
 import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
@@ -35,7 +33,7 @@ public class ShootCommandFactory {
         configureSticks();
 
         return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
-                .deadlineWith(new Prepare()).andThen(new Shoot())).deadlineWith(new SetPoint())
+                .deadlineWith(new Prepare()).andThen(new Shoot()).deadlineWith(new SetPoint()))
                 .withName("Aim and Shoot");
     }
 
@@ -44,15 +42,8 @@ public class ShootCommandFactory {
 
         return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
                 .deadlineWith(new Prepare())
-                .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot()))
-                .deadlineWith(new SetPoint()).withName("Aim and Shoot With WaitUntil");
-
-        // return new PassToShooter().andThen(new SetPoint().raceWith(new
-        // WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new
-        // Prepare())));
-        // new ConditionalCommand(new Shoot(), new Prepare(), () ->
-        // xManip.getHID().getLeftBumper())))).withName("Aim and Shoot with WaitUntil");
-        // , new ReturnToHome());
+                .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot())
+                .deadlineWith(new SetPoint())).withName("Aim and Shoot With WaitUntil");
     }
 
     public static Command getAmpCommand() {
@@ -67,7 +58,7 @@ public class ShootCommandFactory {
         configureSticks();
 
         return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp),
-                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new PoopOut(), new ReturnToHome());
+                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new PoopOut(), new CancelShooter());
         // , new ReturnToHome());
     }
 

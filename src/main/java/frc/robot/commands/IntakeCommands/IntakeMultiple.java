@@ -22,6 +22,13 @@ public class IntakeMultiple extends Command {
     }
 
     @Override
+    public void execute() {
+        if (intake.getShooterSensor()) {
+            intake.setBelt(0.3);
+        }
+    }
+
+    @Override
     public void end(boolean interrupted) {
         intake.setExtend(false);
         intake.setIntake(0);

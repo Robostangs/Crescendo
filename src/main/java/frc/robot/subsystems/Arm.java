@@ -40,7 +40,7 @@ public class Arm extends SubsystemBase {
     private MechanismLigament2d shooterLigament, shooterExtension, elbowLigament;
     private MechanismLigament2d simShooterLigament, simShooterExtension, simElbowLigament;
 
-    @Override
+@Override
     public void periodic() {
         updateArmPosition();
 
@@ -49,7 +49,7 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Velocity", getVelocityRotations());
         SmartDashboard.putNumber("Arm/Setpoint", Units.rotationsToDegrees(motionMagicDutyCycle.Position));
         SmartDashboard.putNumber("Arm/Position Error",
-                Units.rotationsToDegrees(motionMagicDutyCycle.Position - getArmPosition()));
+                Units.rotationsToDegrees(motionMagicDutyCycle.Position) - getArmPosition());
         SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
 
         if (Shooter.getInstance().getCurrentCommand() == null) {

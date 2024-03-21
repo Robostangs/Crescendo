@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -12,6 +13,7 @@ import frc.robot.Robot;
 
 public class Intake extends SubsystemBase {
     private Solenoid solenoid;
+    private Compressor compressor;
     private TalonFX intakeMotor, beltMotor;
     private DigitalInput shooterSensor;
     private boolean holding, setExtend;
@@ -28,6 +30,9 @@ public class Intake extends SubsystemBase {
     private Intake() {
         solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.solenoidID);
         shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
+
+        compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+        compressor.enableDigital();
         
         intakeMotor = new TalonFX(Constants.IntakeConstants.intakeMotorID, "*");
         beltMotor = new TalonFX(Constants.IntakeConstants.beltMotorID, "*");

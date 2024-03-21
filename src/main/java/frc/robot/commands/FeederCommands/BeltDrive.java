@@ -22,4 +22,9 @@ public class BeltDrive extends Command {
     public void execute() {
         intake.setBelt(manualAdjust.get());
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        intake.setBelt(0);
+    }
 }

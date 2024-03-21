@@ -32,6 +32,11 @@ public class Lighting extends SubsystemBase {
     @Override
     public void periodic() {
         if (auto) {
+            mCANdle.clearAnimation(0);
+            mCANdle.clearAnimation(1);
+            mCANdle.clearAnimation(2);
+            mCANdle.clearAnimation(3);
+
             LEDState state;
 
             if (DriverStation.isDisabled()) {
@@ -103,6 +108,7 @@ public class Lighting extends SubsystemBase {
         LEDState state = LEDState.kRobostangsOrange;
         LarsonAnimation animation = new LarsonAnimation(state.getColor()[0], state.getColor()[1], state.getColor()[2]);
 
+        setCANdleLights(state);
         setRightBarAnimation(animation);
         setLeftBarAnimation(animation);
         setLeftClimberSupportAnimation(animation);
@@ -148,42 +154,59 @@ public class Lighting extends SubsystemBase {
     }
 
     public void setRightBarAnimation(Animation animation) {
-        animation.setSpeed(0.1);
+        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(8);
         animation.setNumLed(Lights.strip1Length);
         mCANdle.animate(animation, 0);
     }
 
     public void setLeftBarAnimation(Animation animation) {
-        animation.setSpeed(0.1);
+        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(8 + Lights.strip1Length);
         animation.setNumLed(Lights.strip2Length);
         mCANdle.animate(animation, 1);
     }
 
     public void setLeftClimberSupportAnimation(Animation animation) {
-        animation.setSpeed(0.1);
+        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length);
         animation.setNumLed(Lights.strip3Length);
         mCANdle.animate(animation, 2);
     }
 
     public void setRightClimberSupportAnimation(Animation animation) {
-        animation.setSpeed(0.1);
+        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length + Lights.strip3Length);
         animation.setNumLed(Lights.strip4Length);
         mCANdle.animate(animation, 3);
     }
 
+    public void setCANdleLights(LEDState state) {
+        mCANdle.setLEDs(state.getColor()[0], state.getColor()[1], state.getColor()[2], 0, 0, 8);
+    }
+
     public static Command getStrobeCommand(LEDState state) {
         int[] color = state.getColor();
 
+        
         return Lighting.getInstance().runOnce(() -> {
             Lighting.getInstance().autoSetLights(false);
+            Lighting.getInstance().oldState = LEDState.kBlink;
+            Lighting.getInstance().timer.restart();
+            Lighting.getInstance().setCANdleLights(state);
             Lighting.getInstance().setRightBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setLeftBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setLeftClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setRightClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
         });
+    }
+
+    public boolean getAutoMode() {
+        return auto;
+    }
+
+    public boolean getTimeExpired() {
+        // System.out.println("Timer: " + timer.get());
+        return timer.hasElapsed(1);
     }
 }

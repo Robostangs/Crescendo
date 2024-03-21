@@ -3,28 +3,24 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Shooter;
 
-public class ReturnToHome extends Command {
-    Shooter shooter;
+public class ReturnHome extends Command {
     Arm arm;
 
-    public ReturnToHome() {
-        shooter = Shooter.getInstance();
+    public ReturnHome() {
         arm = Arm.getInstance();
 
-        this.addRequirements(shooter, arm);
-        this.setName("Return To Home");
+        this.addRequirements(arm);
+        this.setName("Return Home");
     }
 
     @Override
     public void initialize() {
-        shooter.shoot(0, 0);
         arm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isInRangeOfTarget(Constants.ArmConstants.SetPoints.kIntake);
+        return true;
     }
 }

@@ -6,14 +6,14 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class QuickFeed extends Command {
-    Intake mIntake;
-    Shooter mShooter;
+    Intake intake;
+    Shooter shooter;
 
     public QuickFeed() {
-        mIntake = Intake.getInstance();
-        mShooter = Shooter.getInstance();
+        intake = Intake.getInstance();
+        shooter = Shooter.getInstance();
 
-        this.addRequirements(mIntake, mShooter);
+        this.addRequirements(intake, shooter);
         this.setName("Quick Feed");
     }
 
@@ -22,7 +22,13 @@ public class QuickFeed extends Command {
         SmartDashboard.putString("Intake/Status", "Quick Feed");
         SmartDashboard.putString("Shooter/Status", "Quick Feed");
         
-        mIntake.setBelt(0.5);
-        mShooter.setFeederMotor(0.5);
+        intake.setBelt(0.5);
+        shooter.setFeederMotor(0.5);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        intake.setBelt(0);
+        shooter.setFeederMotor(0);
     }
 }

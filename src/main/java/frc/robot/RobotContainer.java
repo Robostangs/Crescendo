@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -20,7 +21,6 @@ import frc.robot.Constants.Lights.LEDState;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.FineAdjust;
-import frc.robot.commands.ArmCommands.ReturnToHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ClimberCommands.AlrightTranslate;
 import frc.robot.commands.ClimberCommands.Extend;
@@ -31,6 +31,7 @@ import frc.robot.commands.FeederCommands.QuickFeed;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
 import frc.robot.commands.IntakeCommands.IntakeMultiple;
 import frc.robot.commands.ShooterCommands.AimAndShoot;
+import frc.robot.commands.ShooterCommands.CancelShooter;
 import frc.robot.commands.ShooterCommands.Feed;
 import frc.robot.commands.ShooterCommands.FeedAndShoot;
 import frc.robot.commands.ShooterCommands.PoopOut;
@@ -67,11 +68,16 @@ public class RobotContainer {
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
-		// mShooter.setDefaultCommand(new ReturnToHome());
 		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
-		mLighting.setDefaultCommand(new WaitCommand(2).andThen(mLighting.runOnce(() -> mLighting.autoSetLights(true))));
+		mLighting.setDefaultCommand(
+			mLighting.runOnce(() -> {
+				if (mLighting.getTimeExpired() && !mLighting.getAutoMode()) {
+					mLighting.autoSetLights(true);
+				}
+			})
+		);
 
-
+		mShooter.setDefaultCommand(new CancelShooter());
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -107,8 +113,9 @@ public class RobotContainer {
 		// 		xDrive::getRightTriggerAxis, true));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()));
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.StartingNotes.center)
+		);
+				// .alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()));
 
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		// Square up to the speaker and press this to reset odometry to the speaker

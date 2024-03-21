@@ -57,6 +57,10 @@ public class Robot extends TimedRobot {
 	public SequentialCommandGroup autonCommand;
 	public Command pathPlannerCommand;
 	public static AutoManager autoManager;
+	private static Shooter mShooter= Shooter.getInstance();
+	private static Alert ShuffleBoardCamera = new Alert("Alerts","Failed to add camera to Shuffleboard", Alert.AlertType.WARNING);
+	private static Alert InvalidAuto = new Alert("Alerts","Invalid Auto", Alert.AlertType.ERROR);
+	private static Alert forwAuto = new Alert("Alerts","this Auto is going forward", Alert.AlertType.INFO);
 
 	@Override
 	public void robotInit() {
@@ -151,6 +155,7 @@ public class Robot extends TimedRobot {
 
 			catch (Exception e) {
 				System.out.println("Failed to add camera to Shuffleboard");
+				ShuffleBoardCamera.set(true);
 			}
 		}
 
@@ -180,6 +185,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
+
 		CommandScheduler.getInstance().run();
 	}
 
@@ -224,11 +230,13 @@ public class Robot extends TimedRobot {
 				pathPlannerCommand = new PrintCommand(
 						"Null Path: " + startingPose.getSelected() + autoChooser.getSelected());
 				System.out.println("Invalid Auto");
+				InvalidAuto.set(true);
 			}
 		} catch (Exception e) {
 			System.out.println("Auto not working actual problem");
 			pathPlannerCommand = new PrintCommand("Autobuilder Exception");
 			e.printStackTrace();
+			forwAuto.set(true);
 		}
 
 		autonCommand = new SequentialCommandGroup(
@@ -261,6 +269,7 @@ public class Robot extends TimedRobot {
 		autoField.setRobotPose(Drivetrain.getInstance().getPose());
 		NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("Auto Timer").setDouble(timer.get());
 
+		
 		if (timer.get() < pathDelayEntry.getDouble(0)) {
 			autoManager.postAutoStatus("Path Delay");
 		}
@@ -299,6 +308,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
+
 	}
 
 	@Override

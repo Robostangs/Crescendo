@@ -136,6 +136,7 @@ public class AutoManager extends Command {
                 .withWidget(BuiltInWidgets.kBooleanBox);
         Robot.autoTab.addBoolean("Ready To Shoot", () -> mShooter.readyToShootAdvanced()).withPosition(2, 1)
                 .withSize(2, 1).withWidget(BuiltInWidgets.kBooleanBox);
+                
         Robot.autoTab.addString("Auto Status", () -> status).withPosition(2, 4).withSize(2, 1)
                 .withWidget(BuiltInWidgets.kTextView);
     }

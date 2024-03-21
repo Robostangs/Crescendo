@@ -5,14 +5,21 @@ import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Alert;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Alert.AlertType;
 
 import java.util.List;
+
+import javax.sound.sampled.AudioSystem;
+
 import java.util.ArrayList;
 
 public class PathPlannerCommand {
     private static String lastAutoName;
+    private static Alert nullAuto = new Alert("Alerts", "Null auto", AlertType.WARNING);
+    private static Alert publishfail = new Alert("Alerts", "Publishing failed", AlertType.ERROR)
 
     public static void publishTrajectory(String autoName) {
         if (autoName == null) {
@@ -49,9 +56,13 @@ public class PathPlannerCommand {
         
         catch (RuntimeException e) {
             System.out.println("Null Auto: " + autoName);
+            nullAuto.setText("Null auto"+ autoName);
+            nullAuto.set(true);
+            
         } 
         
         catch (Exception e) {
+            publishfail.set(true);
             e.printStackTrace();
         }
 

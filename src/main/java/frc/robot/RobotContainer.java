@@ -29,6 +29,7 @@ import frc.robot.commands.FeederCommands.QuickFeed;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
 import frc.robot.commands.IntakeCommands.IntakeMultiple;
 import frc.robot.commands.ShooterCommands.AimAndShoot;
+import frc.robot.commands.ShooterCommands.Feed;
 import frc.robot.commands.ShooterCommands.FeedAndShoot;
 import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
@@ -110,7 +111,7 @@ public class RobotContainer {
 										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
 				.withName("Zero Swerve 2 Speaker"));
 
-		xDrive.povLeft().onTrue(new IntakeMultiple().alongWith(new PassToShooter()));
+		xDrive.povLeft().onTrue(new IntakeMultiple().alongWith(new Feed()));
 
 		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false));
 		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true));

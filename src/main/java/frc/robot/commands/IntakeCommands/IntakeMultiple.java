@@ -1,6 +1,7 @@
 package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 
 public class IntakeMultiple extends Command {
@@ -16,8 +17,8 @@ public class IntakeMultiple extends Command {
     @Override
     public void initialize() {
         intake.setExtend(true);
-        intake.setIntake(1);
-        intake.setBelt(1);
+        intake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
+        intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
     }
 
     @Override

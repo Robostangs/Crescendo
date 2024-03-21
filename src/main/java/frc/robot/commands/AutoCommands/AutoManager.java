@@ -340,7 +340,7 @@ public class AutoManager extends Command {
                     mIntake.setExtend(true);
                 }
 
-                mIntake.setIntake(1);
+                mIntake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
 
                 // this code must pull the piece off the ground and into the shooter
                 mIntake.setBelt(beltIntakeAndHandoffSpeed);

@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Vision.LimelightHelpers;
-import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.HomeClimber;
@@ -116,7 +115,7 @@ public class Robot extends TimedRobot {
 				.withProperties(Map.of("min", 0, "max", 15, "block increment", 1));
 
 		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 0)
-				.withWidget("Msatch Time");
+				.withWidget("Match Time");
 
 		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getHolding()).withSize(2, 2).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
@@ -160,26 +159,15 @@ public class Robot extends TimedRobot {
 
 		Lighting.getInstance().autoSetLights(true);
 
-		// this is for stop and go shooting
-		NamedCommands.registerCommand("Shoot", ShootCommandFactory.getAimAndShootCommand().deadlineWith(new Align(false)));
+		// NamedCommands.registerCommand("Shoot",
+		// ShootCommandFactory.getAimAndShootCommand().deadlineWith(new Align(false)));
+
 		NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command (Ignore)"));
+		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
+				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).deadlineWith(new Align(false))));
+
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
-
-		// use this for on the fly shooting
-		// NamedCommands.registerCommand("Drive by", new InstantCommand(() -> autoManager.shoot = true)
-		// 		.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false)));
-
-
-		// use this for shooter regression
-		// SmartDashboard.putNumber("Arm/Desired Setpoint",
-		// Constants.ArmConstants.SetPoints.kIntake);
-		// setpointCommand = new TrackSetPoint(() ->
-		// SmartDashboard.getNumber("Arm/Desired Setpoint",
-		// Constants.ArmConstants.SetPoints.kIntake));
-		// teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand).withPosition(2,
-		// 2).withSize(2, 2);
-
 	}
 
 	@Override

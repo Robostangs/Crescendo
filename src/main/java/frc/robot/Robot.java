@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants.Lights.LEDState;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
@@ -161,7 +162,7 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 		Shuffleboard.selectTab(disabledTab.getTitle());
 
-		// Lighting.getInstance().autoSetLights(true);
+		Lighting.getInstance().autoSetLights(true);
 
 		// NamedCommands.registerCommand("Shoot",
 		// ShootCommandFactory.getAimAndShootCommand().deadlineWith(new Align(false)));
@@ -182,7 +183,8 @@ public class Robot extends TimedRobot {
 			Shuffleboard.startRecording();
 		}
 
-		Lighting.getInstance().autoSetLights(true);
+
+		Lighting.getLarsonCommand(LEDState.kRobostangsOrange).schedule();
 	}
 
 	@Override

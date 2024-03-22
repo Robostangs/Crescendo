@@ -10,8 +10,10 @@ public class SetPoint extends Command {
     boolean autoAim;
 
     /**
-     * <p>Set the shooter to a specific position
-     * <p>Only use this if the shooter sensor is not working
+     * <p>
+     * Set the shooter to a specific position
+     * <p>
+     * Only use this if the shooter sensor is not working
      * 
      * @param target in degrees of THE SHOOTER, not the extension bar
      */
@@ -53,14 +55,13 @@ public class SetPoint extends Command {
     public void execute() {
         if (autoAim) {
             armSetpoint = mArm.calculateArmSetpoint();
+            mArm.setMotionMagic(armSetpoint);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        // if (interrupted) {
-            mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
-        // }
+        mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
     }
 
     @Override

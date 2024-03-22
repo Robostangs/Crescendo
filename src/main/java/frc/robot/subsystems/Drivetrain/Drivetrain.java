@@ -81,28 +81,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
             }
 
-            // LimelightResults rearResults =
-            // LimelightHelpers.getLatestResults(Constants.Vision.llAprilTagRear);
-            // int howManyTagsFront =
-            // NetworkTableInstance.getDefault().getTable(Constants.Vision.llAprilTag)
-
-            // if (LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.26
-            // && rearResults.targetingResults.targets_Fiducials.length > 1) {
-            // this.addVisionMeasurement(rearResults.targetingResults.getBotPose2d_wpiBlue(),
-            // Timer.getFPGATimestamp() - rearResults.targetingResults.latency_pipeline /
-            // 1000);
-            // }
-
-            // // LimelightResults frontResults =
-            // LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
-
-            // if (LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.26
-            // && frontResults.targetingResults.targets_Fiducials.length > 1) {
-            // this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
-            // Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline /
-            // 1000);
-            // }
-
             mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
             mField.getObject("Front LL pose").setPose(frontPoseEstimate.pose);
 
@@ -111,7 +89,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
         SmartDashboard.putNumber("Swerve/Rotation Error", (angleToSpeaker() -
                 getPose().getRotation().getDegrees()));
-
     }
 
     private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();

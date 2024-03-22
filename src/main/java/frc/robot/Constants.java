@@ -361,7 +361,7 @@ public final class Constants {
 		public static final double c = 1.98502;
 
 		public static class SetPoints {
-			public static final double kCenterToWingPass = -30;
+			public static final double kCenterToWingPass = 0;
 			public static final double kSubwoofer = kArmMinAngle;
 			public static final double kAmp = 46;
 			public static final double kIntake = kArmMinAngle;
@@ -471,7 +471,7 @@ public final class Constants {
 
 			kPink(new int[] { 255, 192, 203 }),
 
-			kBlink(new int[] { 0, 0, 0 });
+			kCustom(new int[] { 0, 0, 0 });
 
 			public final int[] color;
 
@@ -504,6 +504,6 @@ public final class Constants {
 		/** Right Climber Support */
 		public static final int strip4Length = 17;
 
-		public static final double animationSpeed = 0.03;
+		public static final double animationSpeed = 0.06;
 	}
 }

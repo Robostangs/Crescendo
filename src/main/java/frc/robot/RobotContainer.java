@@ -69,14 +69,6 @@ public class RobotContainer {
 		removeDefaultCommands();
 
 		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
-		mLighting.setDefaultCommand(
-			mLighting.runOnce(() -> {
-				if (mLighting.getTimeExpired() && !mLighting.getAutoMode()) {
-					mLighting.autoSetLights(true);
-				}
-			})
-		);
-
 		mShooter.setDefaultCommand(new CancelShooter());
 
 		if (Robot.isSimulation()) {
@@ -100,23 +92,25 @@ public class RobotContainer {
 	}
 
 	private void configureDriverBinds() {
-		new Trigger(() -> Timer.getMatchTime() > 25 && Timer.getMatchTime() < 30)
-				.onTrue(new InstantCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
-						.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)));
+		new Trigger(() -> Timer.getMatchTime() > 25).and(() -> Timer.getMatchTime() < 30)
+				.whileTrue(new RunCommand(() -> {
+					xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
+				})
+						.finallyDo(() -> {
+							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
+						}));
 
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
-				
-		// xDrive.b().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
-		// 		xDrive::getRightTriggerAxis, true));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.StartingNotes.center)
-		);
-				// .alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()));
+		// .andThen(ShootCommandFactory.getAmpCommand()));
+		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
 
+		xDrive.povUp().onTrue(new IntakeMultiple().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain
@@ -126,28 +120,26 @@ public class RobotContainer {
 										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
 				.withName("Zero Swerve 2 Speaker"));
 
-		xDrive.povLeft().onTrue(new IntakeMultiple().alongWith(new Feed()));
 
 		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
 		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
 	}
 
 	private void configureManipBinds() {
+		new Trigger(() -> Timer.getMatchTime() > 25).and(() -> Timer.getMatchTime() < 30)
+				.whileTrue(new RunCommand(() -> {
+					xManip.getHID().setRumble(RumbleType.kBothRumble, 1);
+				})
+						.finallyDo(() -> {
+							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
+						}));
+
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
 
-		new Trigger(() -> Timer.getMatchTime() > 25).and(() -> Timer.getMatchTime() < 30)
-				.whileTrue(new RunCommand(() -> {
-					xManip.getHID().setRumble(RumbleType.kBothRumble, 1);
-					xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
-				})
-						.finallyDo(() -> {
-							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
-							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
-						}));
 
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.x().whileTrue(new QuickFeed());
@@ -160,15 +152,13 @@ public class RobotContainer {
 						() -> -Constants.ClimberConstants.RightMotor.kRetractPower));
 
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
-		xManip.povRight().toggleOnTrue(ShootCommandFactory.getContinuousShootCommand());
+		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
 		xManip.povDown().whileTrue(new Spit());
 		xManip.povLeft()
 				.toggleOnTrue(new PassToShooter().andThen(
 						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).alongWith(new Prepare()),
+						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()),
 						new Shoot()));
-
-		// make this the command for shooting cross map
-		// xManip.povLeft().toggleOnTrue(new DeployAndIntake(true));
 
 		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
 		// left bumper is the universal shoot button

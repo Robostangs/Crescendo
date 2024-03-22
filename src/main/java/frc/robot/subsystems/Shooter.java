@@ -154,21 +154,21 @@ public class Shooter extends SubsystemBase {
                 .getValueAsDouble() * 60) > threshold);
     }
 
-    public void setShooterMotors(double topShooterPIDTarget, double bottomShooterPIDTarget) {
+    public void setShooterMotors(double topShooterPercentOutput, double bottomShooterPercentOutput) {
 
         // dont use PID to get to 0rpm
-        if (topShooterPIDTarget == 0d) {
+        if (topShooterPercentOutput == 0d) {
             topShooter.set(0);
         }
 
         else {
             topShooter
                     .setControl(shootPid
-                            .withVelocity((Constants.MotorConstants.falconShooterLoadRPM * topShooterPIDTarget) / 60));
+                            .withVelocity((Constants.MotorConstants.falconShooterLoadRPM * topShooterPercentOutput) / 60));
         }
 
         // dont use PID to get to 0rpm
-        if (bottomShooterPIDTarget == 0d) {
+        if (bottomShooterPercentOutput == 0d) {
             bottomShooter.set(0);
         }
 
@@ -176,12 +176,12 @@ public class Shooter extends SubsystemBase {
             bottomShooter
                     .setControl(shootPid
                             .withVelocity(
-                                    (Constants.MotorConstants.falconShooterLoadRPM * bottomShooterPIDTarget) / 60));
+                                    (Constants.MotorConstants.falconShooterLoadRPM * bottomShooterPercentOutput) / 60));
         }
     }
 
-    public void setShooterMotors(double shooterPIDTarget) {
-        setShooterMotors(shooterPIDTarget, shooterPIDTarget);
+    public void setShooterMotors(double shooterPercentOutput) {
+        setShooterMotors(shooterPercentOutput, shooterPercentOutput);
     }
 
     public void setFeederMotor(double setVal) {

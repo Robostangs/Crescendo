@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.LarsonAnimation;
-import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
@@ -11,17 +10,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.Lights;
 import frc.robot.Constants.Lights.LEDState;
-import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
-@SuppressWarnings("unused")
 public class Lighting extends SubsystemBase {
     CANdle mCANdle;
-    LEDState mState;
     boolean auto = false;
     int[] oldColor = new int[3];
     LEDState oldState;
@@ -36,6 +31,7 @@ public class Lighting extends SubsystemBase {
             mCANdle.clearAnimation(1);
             mCANdle.clearAnimation(2);
             mCANdle.clearAnimation(3);
+            mCANdle.clearAnimation(4);
 
             LEDState state;
 
@@ -87,34 +83,16 @@ public class Lighting extends SubsystemBase {
             oldState = state;
         }
 
-        // // if not in auto light mode
-        // else {
-        // int[] color = new int[3];
-
-        // color = mState.getColor();
-
-        // if (color != oldColor) {
-        // mCANdle.setLEDs(color[0], color[1], color[2]);
-        // }
-
-        // oldColor = color;
-        // }
+        else {
+            if (timer.advanceIfElapsed(1)) {
+                mLighting.autoSetLights(true);
+            }
+        }
     }
 
     private Lighting() {
         mCANdle = new CANdle(Lights.CANdleID);
         mCANdle.configLEDType(LEDStripType.GRB);
-
-        LEDState state = LEDState.kRobostangsOrange;
-        LarsonAnimation animation = new LarsonAnimation(state.getColor()[0], state.getColor()[1], state.getColor()[2]);
-
-        setCANdleLights(state);
-        setRightBarAnimation(animation);
-        setLeftBarAnimation(animation);
-        setLeftClimberSupportAnimation(animation);
-        setRightClimberSupportAnimation(animation);
-        // mCANdle.animate(new StrobeAnimation(mState.getColor()[0],
-        // mState.getColor()[1], mState.getColor()[2], 0, 0.5, Lights.strip1Length, 7));
     }
 
     private static Lighting mLighting;
@@ -125,11 +103,6 @@ public class Lighting extends SubsystemBase {
         }
 
         return mLighting;
-    }
-
-    public void setLights(LEDState state) {
-        autoSetLights(false);
-        mState = state;
     }
 
     public void autoSetLights(boolean autoSet) {
@@ -185,27 +158,40 @@ public class Lighting extends SubsystemBase {
         mCANdle.setLEDs(state.getColor()[0], state.getColor()[1], state.getColor()[2], 0, 0, 8);
     }
 
+    public void setCANdleAnimation(Animation animation) {
+        animation.setSpeed(Lights.animationSpeed);
+        animation.setLedOffset(0);
+        animation.setNumLed(8);
+        mCANdle.animate(animation, 4);
+    }
+
     public static Command getStrobeCommand(LEDState state) {
         int[] color = state.getColor();
 
         return Lighting.getInstance().runOnce(() -> {
             Lighting.getInstance().autoSetLights(false);
-            Lighting.getInstance().oldState = LEDState.kBlink;
+            Lighting.getInstance().oldState = LEDState.kCustom;
             Lighting.getInstance().timer.restart();
-            Lighting.getInstance().setCANdleLights(state);
+            Lighting.getInstance().setCANdleAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setRightBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setLeftBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setLeftClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setRightClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
-        });
+        }).ignoringDisable(true);
     }
 
-    public boolean getAutoMode() {
-        return auto;
-    }
+    public static Command getLarsonCommand(LEDState state) {
+        int[] color = state.getColor();
 
-    public boolean getTimeExpired() {
-        // System.out.println("Timer: " + timer.get());
-        return timer.hasElapsed(1);
+        return Lighting.getInstance().runOnce(() -> {
+            Lighting.getInstance().autoSetLights(false);
+            Lighting.getInstance().oldState = LEDState.kCustom;
+            Lighting.getInstance().timer.restart();
+            Lighting.getInstance().setCANdleLights(state);
+            Lighting.getInstance().setRightBarAnimation(new LarsonAnimation(color[0], color[1], color[2]));
+            Lighting.getInstance().setLeftBarAnimation(new LarsonAnimation(color[0], color[1], color[2]));
+            Lighting.getInstance().setLeftClimberSupportAnimation(new LarsonAnimation(color[0], color[1], color[2]));
+            Lighting.getInstance().setRightClimberSupportAnimation(new LarsonAnimation(color[0], color[1], color[2]));
+        }).ignoringDisable(true);
     }
 }

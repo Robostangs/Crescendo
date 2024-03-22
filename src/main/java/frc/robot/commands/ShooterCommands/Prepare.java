@@ -15,13 +15,11 @@ public class Prepare extends Command {
 
     @Override
     public void initialize() {
-        shooter.setShooterMotors(1);  
+        shooter.setShooterMotors(1);
     }
 
     @Override
     public boolean isFinished() {
-        // return shooter.readyToShoot();
-        
         return false;
     }
 }

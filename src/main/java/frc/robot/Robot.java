@@ -29,10 +29,10 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.HomeClimber;
-import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -168,7 +168,8 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command (Ignore)"));
 		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
-				.andThen(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
+				.andThen(new WaitUntilCommand(() -> autoManager.shoot == false)));
+				// .andThen(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
 
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
@@ -180,6 +181,8 @@ public class Robot extends TimedRobot {
 			atComp = true;
 			Shuffleboard.startRecording();
 		}
+
+		Lighting.getInstance().autoSetLights(true);
 	}
 
 	@Override

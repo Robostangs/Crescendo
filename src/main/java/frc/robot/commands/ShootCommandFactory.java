@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.ArmCommands.ReturnHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
@@ -51,15 +52,16 @@ public class ShootCommandFactory {
 
         return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut())
                 .withName("Amp Shoot");
-        // , new ReturnToHome());
     }
 
     public static Command getAmpCommandWithWaitUntil() {
         configureSticks();
 
-        return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp),
-                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new PoopOut(), new CancelShooter());
-        // , new ReturnToHome());
+        return new PassToShooter().andThen(
+                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
+                        .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
+                new PoopOut(),
+                new CancelShooter().raceWith(new ReturnHome()));
     }
 
     public static Command getPrepareAndShootCommand() {
@@ -73,14 +75,7 @@ public class ShootCommandFactory {
         configureSticks();
 
         return new Prepare().raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())).andThen(new Shoot())
-                // .raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()),
-                // new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
-                // .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new
-                // Shoot())
                 .withName("Prepare and Shoot");
-        // return new RepeatCommand(
-        // new ConditionalCommand(new Shoot(), new Prepare(), () ->
-        // xManip.getHID().getLeftBumper()));
     }
 
     public static Command getContinuousShootCommand() {

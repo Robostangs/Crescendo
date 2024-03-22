@@ -44,7 +44,7 @@ public final class Constants {
 		public static final int llAprilTagWithLightsPipelineIndex = 2;
 
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.55, 0.55, Units.degreesToRadians(200));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.55, 0.55, Units.degreesToRadians(300));
 
 		/** The height (in meters) of the speaker */
 		public static final Pose2d SpeakerPoseBlue = new Pose2d(0, 5.55, Rotation2d.fromDegrees(0));
@@ -409,7 +409,8 @@ public final class Constants {
 			public static final double kGearboxRotationsToMechanismMeters = 18.1430612 / 0.0889;
 			public static final double kMaxExtensionMeters = 0.6604;
 			public static final double kExtensionThreshold = kMaxExtensionMeters - 0.482;
-			public static final double kExtensionPower = 0.35;
+			public static final double kExtensionPower = 0.5;
+			public static final double kRetractPower = 1;
 
 			// 0.0889 meters moves
 			// 18.1430612 rotations
@@ -426,6 +427,7 @@ public final class Constants {
 			public static final double kMaxExtensionMeters = LeftMotor.kMaxExtensionMeters;
 			public static final double kExtensionThreshold = LeftMotor.kExtensionThreshold;
 			public static final double kExtensionPower = LeftMotor.kExtensionPower;
+			public static final double kRetractPower = LeftMotor.kRetractPower;
 		}
 
 		public static class LeftBrakeSolenoid {

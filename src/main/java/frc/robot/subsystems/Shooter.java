@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
 
         fxConfig.Slot0.kP = 0.07;
         fxConfig.Slot0.kI = 0.01;
-        fxConfig.Slot0.kV = 10.5 / 88.9;
+        fxConfig.Slot0.kV = 10.6 / 87.6;
         fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         fxConfig.Audio.AllowMusicDurDisable = true;
         topShooter.getConfigurator().apply(fxConfig);
@@ -150,7 +150,7 @@ public class Shooter extends SubsystemBase {
         threshold = Constants.MotorConstants.falconShooterThresholdRPM * setVal;
 
         SmartDashboard.putNumber("Shooter/Ready To Shoot threshold", threshold);
-        return ((topShooter.getVelocity().getValueAsDouble() * 60) > threshold && (bottomShooter.getVelocity()
+        return ((topShooter.getVelocity().getValueAsDouble() * 60) > threshold - 500 && (bottomShooter.getVelocity()
                 .getValueAsDouble() * 60) > threshold);
     }
 

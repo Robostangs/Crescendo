@@ -61,8 +61,8 @@ public class Lighting extends SubsystemBase {
 
             else if (Intake.getInstance().getShooterSensor()) {
 
-                if (Shooter.getInstance().readyToShootAdvanced()) {
-                    if (Drivetrain.getInstance().readyToShoot()) {
+                if (Drivetrain.getInstance().readyToShoot()) {
+                    if (Shooter.getInstance().readyToShootAdvanced()) {
                         state = LEDState.kGreen;
                     }
 
@@ -188,7 +188,6 @@ public class Lighting extends SubsystemBase {
     public static Command getStrobeCommand(LEDState state) {
         int[] color = state.getColor();
 
-        
         return Lighting.getInstance().runOnce(() -> {
             Lighting.getInstance().autoSetLights(false);
             Lighting.getInstance().oldState = LEDState.kBlink;

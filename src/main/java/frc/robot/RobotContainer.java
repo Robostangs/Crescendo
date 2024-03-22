@@ -156,8 +156,8 @@ public class RobotContainer {
 
 		xManip.rightStick().toggleOnTrue(new Extend());
 		xManip.leftStick()
-				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kExtensionPower,
-						() -> -Constants.ClimberConstants.RightMotor.kExtensionPower));
+				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
+						() -> -Constants.ClimberConstants.RightMotor.kRetractPower));
 
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 		xManip.povRight().toggleOnTrue(ShootCommandFactory.getContinuousShootCommand());

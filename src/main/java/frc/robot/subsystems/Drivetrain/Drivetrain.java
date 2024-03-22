@@ -68,7 +68,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
             PoseEstimate frontPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
 
-            if (frontPoseEstimate.tagCount > 1 && frontPoseEstimate.avgTagArea > 0.26) {
+            if (frontPoseEstimate.tagCount > 1 && frontPoseEstimate.avgTagArea > 0.4) {
                 this.addVisionMeasurement(frontPoseEstimate.pose,
                         Timer.getFPGATimestamp() - frontPoseEstimate.latency / 1000);
             }
@@ -76,7 +76,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             PoseEstimate rearPoseEstimate = LimelightHelpers
                     .getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
 
-            if (rearPoseEstimate.tagCount > 1 && rearPoseEstimate.avgTagArea > 0.26) {
+            if (rearPoseEstimate.tagCount > 1 && rearPoseEstimate.avgTagArea > 0.4) {
                 this.addVisionMeasurement(rearPoseEstimate.pose,
                         Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
             }

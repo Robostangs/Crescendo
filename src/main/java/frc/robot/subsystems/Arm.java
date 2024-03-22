@@ -495,7 +495,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return isInRangeOfTarget(getArmTarget()) && Math.abs(getVelocity()) < 0.1;
+        return isInRangeOfTarget(getArmTarget()) && Math.abs(getVelocity()) < 0.05;
     }
 
     private static Arm mInstance;

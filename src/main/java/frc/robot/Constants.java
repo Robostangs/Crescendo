@@ -341,7 +341,7 @@ public final class Constants {
 		public static final double kArmMinAngle = -61.6 - shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 		public static final double shooterOffset = 67.3 + shooterTrapezoidalOffset;
-		public static final double kInRangeThreshold = 2.5;
+		public static final double kInRangeThreshold = 3.25;
 
 		/*
 		 * Interpolation between distance vs shooting angle (horizontal dist. to

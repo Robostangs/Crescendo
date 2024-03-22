@@ -36,9 +36,9 @@ public final class Constants {
 		public static final String llAprilTagRear = "limelight-rear";
 		public static final String llPython = "limelight-python";
 
-		public static final String llAprilTagRearIP = "http://10.5.48.21:5801/stream.mjpg";
-		public static final String llPythonIP = "http://10.5.48.22:5801/stream.mjpg";
-		public static final String llAprilTagIP = "http://10.5.48.23:5801/stream.mjpg";
+		public static final String llAprilTagRearIP = "http://10.5.48.21:5800/stream.mjpg";
+		public static final String llPythonIP = "http://10.5.48.22:5800/stream.mjpg";
+		public static final String llAprilTagIP = "http://10.5.48.23:5800/stream.mjpg";
 		public static final int llPythonPipelineIndex = 0;
 		public static final int llAprilTagPipelineIndex = 1;
 		public static final int llAprilTagWithLightsPipelineIndex = 2;
@@ -491,7 +491,7 @@ public final class Constants {
 		public static final double lowVoltageThreshold = 12.5;
 
 		/** Right Shooter Bar */
-		public static final int strip1Length = 39;
+		public static final int strip1Length = 40;
 
 		/** Left Shooter Bar */
 		public static final int strip2Length = 29;

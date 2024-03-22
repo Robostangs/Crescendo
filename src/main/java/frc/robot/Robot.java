@@ -33,7 +33,6 @@ import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -54,13 +53,13 @@ public class Robot extends TimedRobot {
 
 	public static boolean atComp = false;
 
-	public SequentialCommandGroup autonCommand;
-	public Command pathPlannerCommand;
+	public static SequentialCommandGroup autonCommand;
+	public static Command pathPlannerCommand;
 	public static AutoManager autoManager;
-	private static Shooter mShooter= Shooter.getInstance();
-	private static Alert ShuffleBoardCamera = new Alert("Alerts","Failed to add camera to Shuffleboard", Alert.AlertType.WARNING);
-	private static Alert InvalidAuto = new Alert("Alerts","Invalid Auto", Alert.AlertType.ERROR);
-	private static Alert forwAuto = new Alert("Alerts","this Auto is going forward", Alert.AlertType.INFO);
+
+	public static Alert ShuffleBoardCamera = new Alert("Alerts","Failed to add camera to Shuffleboard", Alert.AlertType.WARNING);
+	public static Alert InvalidAuto = new Alert("Alerts","Invalid Auto", Alert.AlertType.ERROR);
+	public static Alert forwAuto = new Alert("Alerts","this Auto is going forward", Alert.AlertType.INFO);
 
 	@Override
 	public void robotInit() {

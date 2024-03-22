@@ -168,7 +168,7 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command (Ignore)"));
 		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
-				.alongWith(new WaitUntilCommand(() -> autoManager.shoot == false).deadlineWith(new Align(false))));
+				.andThen(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
 
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());

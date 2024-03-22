@@ -25,6 +25,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -37,6 +39,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Robot;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.Vision.LimelightHelpers.LimelightResults;
+import frc.robot.Vision.LimelightHelpers.PoseEstimate;
 import frc.robot.subsystems.Music;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -65,27 +68,45 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         // estimation but the new LLResults should help with that
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
 
-            LimelightResults rearResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTagRear);
+            PoseEstimate frontPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
 
-            if (LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.26
-                    && rearResults.targetingResults.targets_Fiducials.length > 1) {
-                this.addVisionMeasurement(rearResults.targetingResults.getBotPose2d_wpiBlue(),
-                        Timer.getFPGATimestamp() - rearResults.targetingResults.latency_pipeline / 1000);
+            if (frontPoseEstimate.tagCount > 1 && frontPoseEstimate.avgTagArea > 0.26) {
+                this.addVisionMeasurement(frontPoseEstimate.pose,
+                        Timer.getFPGATimestamp() - frontPoseEstimate.latency / 1000);
             }
 
-            LimelightResults frontResults = LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
+            PoseEstimate rearPoseEstimate = LimelightHelpers
+                    .getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
 
-            if (LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.26
-                    && frontResults.targetingResults.targets_Fiducials.length > 1) {
-                this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
-                        Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline / 1000);
+            if (rearPoseEstimate.tagCount > 1 && rearPoseEstimate.avgTagArea > 0.26) {
+                this.addVisionMeasurement(rearPoseEstimate.pose,
+                        Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
             }
 
-            // mField.getObject("Rear LL pose")
-            // .setPose(rearResults.targetingResults.getBotPose2d_wpiBlue());
+            // LimelightResults rearResults =
+            // LimelightHelpers.getLatestResults(Constants.Vision.llAprilTagRear);
+            // int howManyTagsFront =
+            // NetworkTableInstance.getDefault().getTable(Constants.Vision.llAprilTag)
 
-            // mField.getObject("Front LL pose")
-            // .setPose(frontResults.targetingResults.getBotPose2d_wpiBlue());
+            // if (LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.26
+            // && rearResults.targetingResults.targets_Fiducials.length > 1) {
+            // this.addVisionMeasurement(rearResults.targetingResults.getBotPose2d_wpiBlue(),
+            // Timer.getFPGATimestamp() - rearResults.targetingResults.latency_pipeline /
+            // 1000);
+            // }
+
+            // // LimelightResults frontResults =
+            // LimelightHelpers.getLatestResults(Constants.Vision.llAprilTag);
+
+            // if (LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.26
+            // && frontResults.targetingResults.targets_Fiducials.length > 1) {
+            // this.addVisionMeasurement(frontResults.targetingResults.getBotPose2d_wpiBlue(),
+            // Timer.getFPGATimestamp() - frontResults.targetingResults.latency_pipeline /
+            // 1000);
+            // }
+
+            mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
+            mField.getObject("Front LL pose").setPose(frontPoseEstimate.pose);
 
         }
 
@@ -310,7 +331,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
      * @return true if the robot is within 15 degrees, false otherwise
      */
     public boolean isInRangeOfTarget() {
-        return isInRangeOfTarget(10);
+        return isInRangeOfTarget(8);
     }
 
     // TODO: make sure this works

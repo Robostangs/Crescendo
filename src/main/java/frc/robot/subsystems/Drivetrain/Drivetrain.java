@@ -64,8 +64,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     public void periodic() {
         super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
 
-        // TODO: looooots of loop overunns in here, prolly just due to LL pose
-        // estimation but the new LLResults should help with that
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
 
             PoseEstimate frontPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
@@ -334,7 +332,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         return isInRangeOfTarget(8);
     }
 
-    // TODO: make sure this works
     public boolean readyToShoot() {
         return this.isInRangeOfTarget() &&
                 Math.abs(this.getState().speeds.omegaRadiansPerSecond) < 0.05;

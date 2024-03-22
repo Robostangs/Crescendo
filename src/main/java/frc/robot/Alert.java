@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-// TODO: devin needs to implement this
 /** Class for managing persistent alerts to be sent over NetworkTables. */
 public class Alert {
   private static Map<String, SendableAlerts> groups = new HashMap<String, SendableAlerts>();

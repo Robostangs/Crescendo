@@ -8,6 +8,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "amp start to shoot position"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "far left"
           }
         },

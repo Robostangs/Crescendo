@@ -30,7 +30,7 @@ public class Shooter extends SubsystemBase {
         // fxConfig.CurrentLimits.SupplyCurrentThreshold = 60;
         // fxConfig.CurrentLimits.SupplyTimeThreshold = 0.5;
 
-        fxConfig.Slot0.kP = 0.07;
+        fxConfig.Slot0.kP = 0.02;
         fxConfig.Slot0.kI = 0.01;
         fxConfig.Slot0.kV = 10.6 / 87.6;
         fxConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2131093660335472,
-        "y": 6.003107390474041
+        "x": 2.0012259052295884,
+        "y": 6.277344448207415
       },
       "isLocked": false,
       "linkedName": "Close Center Note"
@@ -20,8 +20,8 @@
         "y": 6.861746112381113
       },
       "prevControl": {
-        "x": 2.0823449656158575,
-        "y": 6.903671483268893
+        "x": 2.2963068796507966,
+        "y": 6.570050047507502
       },
       "nextControl": null,
       "isLocked": false,

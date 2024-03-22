@@ -8,13 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "amp start to shoot position"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "far left"
+            "pathName": "center to center note"
           }
         },
         {
@@ -26,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid left far"
+            "pathName": "center to far left"
           }
         },
         {
@@ -38,7 +32,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center shoot to close left"
+            "pathName": "center mid left far"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "far center mid"
           }
         },
         {
@@ -50,6 +56,6 @@
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Center",
   "choreoAuto": false
 }

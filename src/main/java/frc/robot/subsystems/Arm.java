@@ -144,6 +144,8 @@ public class Arm extends SubsystemBase {
         motionMagicDutyCycle = new MotionMagicTorqueCurrentFOC(
                 Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
         motionMagicDutyCycle.Slot = 0;
+        
+        setMotionMagic(Constants.ArmConstants.kArmMinAngle);
 
         BaseStatusSignal.setUpdateFrequencyForAll(50, armMotor.getClosedLoopError(), armMotor.getClosedLoopReference(),
                 armMotor.getClosedLoopReferenceSlope());

@@ -30,6 +30,7 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.HomeClimber;
+import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
@@ -121,13 +122,15 @@ public class Robot extends TimedRobot {
 		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 0)
 				.withWidget("Match Time");
 
-		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getHolding()).withSize(2, 2).withPosition(0, 2)
+		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getShooterSensor()).withSize(2, 2).withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
 		teleopTab
 				.addBoolean("Ready To Shoot",
 						() -> Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot())
 				.withSize(2, 2)
 				.withPosition(0, 0);
+
+		disabledTab.add("Alerts", SmartDashboard.getData("Alerts")).withWidget("Alerts").withSize(3, 3);
 
 		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Autonomous")
 				.getEntry("Path Delay");
@@ -169,8 +172,8 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake", new PrintCommand("Intake Command (Ignore)"));
 		NamedCommands.registerCommand("Shoot", new InstantCommand(() -> autoManager.shoot = true)
-				.andThen(new WaitUntilCommand(() -> autoManager.shoot == false)));
-				// .andThen(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
+				// .andThen(new WaitUntilCommand(() -> autoManager.shoot == false)));
+				.andThen(new WaitUntilCommand(() -> autoManager.shoot == false).raceWith(new Align(false))));
 
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());

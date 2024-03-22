@@ -61,7 +61,9 @@ public class SetPoint extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+        if (interrupted) {
+            mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+        }
     }
 
     @Override

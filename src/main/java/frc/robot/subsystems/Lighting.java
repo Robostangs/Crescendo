@@ -40,16 +40,6 @@ public class Lighting extends SubsystemBase {
                     state = LEDState.kWhite;
                 }
 
-                else if (DriverStation.getAlliance().isPresent()) {
-                    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                        state = LEDState.kBlue;
-                    }
-
-                    else {
-                        state = LEDState.kRed;
-                    }
-                }
-
                 else {
                     state = LEDState.kOff;
                 }
@@ -84,7 +74,7 @@ public class Lighting extends SubsystemBase {
         }
 
         else {
-            if (timer.advanceIfElapsed(1)) {
+            if (timer.advanceIfElapsed(1) && DriverStation.isEnabled()) {
                 mLighting.autoSetLights(true);
             }
         }

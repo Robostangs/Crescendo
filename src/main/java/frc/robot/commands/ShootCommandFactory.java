@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.ArmCommands.ReturnHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
@@ -41,7 +42,7 @@ public class ShootCommandFactory {
         configureSticks();
 
         return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
-                .deadlineWith(new Prepare())
+                .deadlineWith(new Prepare()).raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
                 .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot())
                 .deadlineWith(new SetPoint())).withName("Aim and Shoot");
     }
@@ -60,7 +61,7 @@ public class ShootCommandFactory {
                 new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
                         .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
                 new PoopOut(),
-                new CancelShooter()).withName("Amp Shot");
+                new CancelShooter().alongWith(new ReturnHome())).withName("Amp Shot");
     }
 
     public static Command getPrepareAndShootCommand() {

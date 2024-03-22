@@ -68,21 +68,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
             PoseEstimate frontPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
 
-            if (frontPoseEstimate.tagCount > 1 && frontPoseEstimate.avgTagArea > 0.4) {
+            if (frontPoseEstimate.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
                 this.addVisionMeasurement(frontPoseEstimate.pose,
                         Timer.getFPGATimestamp() - frontPoseEstimate.latency / 1000);
+                mField.getObject("Front LL pose").setPose(frontPoseEstimate.pose);
+
             }
 
             PoseEstimate rearPoseEstimate = LimelightHelpers
                     .getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
 
-            if (rearPoseEstimate.tagCount > 1 && rearPoseEstimate.avgTagArea > 0.4) {
+            if (rearPoseEstimate.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
                 this.addVisionMeasurement(rearPoseEstimate.pose,
                         Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
+                mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
             }
-
-            mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
-            mField.getObject("Front LL pose").setPose(frontPoseEstimate.pose);
 
         }
 
@@ -311,7 +311,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     public boolean readyToShoot() {
         return this.isInRangeOfTarget() &&
-                Math.abs(this.getState().speeds.omegaRadiansPerSecond) < 0.05;
+                Math.abs(this.getState().speeds.omegaRadiansPerSecond) < 0.1;
     }
 
     private static Drivetrain mInstance;

@@ -92,7 +92,7 @@ public class RobotContainer {
 	}
 
 	private void configureDriverBinds() {
-		new Trigger(() -> Timer.getMatchTime() > 25).and(() -> Timer.getMatchTime() < 30)
+		new Trigger(() -> Timer.getMatchTime() > 15).and(() -> Timer.getMatchTime() < 20)
 				.whileTrue(new RunCommand(() -> {
 					xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
 				})
@@ -126,7 +126,7 @@ public class RobotContainer {
 	}
 
 	private void configureManipBinds() {
-		new Trigger(() -> Timer.getMatchTime() > 25).and(() -> Timer.getMatchTime() < 30)
+		new Trigger(() -> Timer.getMatchTime() > 15).and(() -> Timer.getMatchTime() < 20)
 				.whileTrue(new RunCommand(() -> {
 					xManip.getHID().setRumble(RumbleType.kBothRumble, 1);
 				})
@@ -166,7 +166,9 @@ public class RobotContainer {
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())
 				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
-	}
+
+		
+					}
 
 	public RobotContainer() {
 		logger = new Telemetry();

@@ -102,9 +102,9 @@ public class Align extends Command {
     @Override
     public void execute() {
         driveRequest.TargetDirection = getTargetRotation.get();
-        double rotationError = driveRequest.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees();
+        // double rotationError = driveRequest.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees();
 
-        SmartDashboard.putNumber("Swerve/Rotation Error", rotationError);
+        // SmartDashboard.putNumber("Swerve/Rotation Error", rotationError);
 
         driveRequest
                 .withVelocityX(-translateY.get()

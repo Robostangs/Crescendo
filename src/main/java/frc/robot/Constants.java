@@ -44,7 +44,7 @@ public final class Constants {
 		public static final int llAprilTagWithLightsPipelineIndex = 2;
 
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.55, 0.55, Units.degreesToRadians(300));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.42, 0.42, Units.degreesToRadians(100));
 
 		/** The height (in meters) of the speaker */
 		public static final Pose2d SpeakerPoseBlue = new Pose2d(0, 5.55, Rotation2d.fromDegrees(0));
@@ -250,7 +250,7 @@ public final class Constants {
 		// public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.5,
 		// 10);
 
-		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0, 2);
+		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0.1, 0.5);
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
@@ -319,6 +319,7 @@ public final class Constants {
 
 	public static class ArmConstants {
 		public static final int armMotorID = 53;
+		public static final int armCoderID = 50;
 		public static final boolean armMotorInverted = true;
 
 		// TODO: need new values for new shooter, will probably be lower
@@ -326,23 +327,20 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrent = 6.04 - 1;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 8 - 1;
 
+		public static final double shooterTrapezoidalOffset = 2.6;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = 60.4;
+
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
 		 * is the max output of the Arm Motor
 		 */
 		public static final double rateOfMotion = 0.5;
 
-		/** 60 degrees */
+
 		public static final double kArmMaxAngle = 60;
-		/** 300 degrees */
-		public static final double kArmMinAngle = -63;
-
+		public static final double kArmMinAngle = -61.6 - shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
-
-		public static final double shooterOffset = 67.67;
-
-		public static final double hardStopOffset = shooterOffset + kArmMinAngle;
-
+		public static final double shooterOffset = 67.3 + shooterTrapezoidalOffset;
 		public static final double kInRangeThreshold = 2.5;
 
 		/*
@@ -379,7 +377,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.15;
+		public static final double feederFeedForward = 0.125;
 		public static final double shooterPoopSpeed = 0.5;
 	}
 

@@ -4,7 +4,9 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -28,8 +30,9 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
  */
 public class Arm extends SubsystemBase {
     private TalonFX armMotor;
-    private double shooterExtensionSetpoint = 0;
+    private CANcoder armCoder;
 
+    private double shooterExtensionSetpoint = 0;
     private double armPosition;
 
     public boolean ArmIsBroken = false;
@@ -48,6 +51,7 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
         SmartDashboard.putNumber("Arm/Velocity", getVelocityRotations());
         SmartDashboard.putNumber("Arm/Setpoint", Units.rotationsToDegrees(motionMagicDutyCycle.Position));
+        // SmartDashboard.putNumber("Arm/Setpoint", Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble()));
         SmartDashboard.putNumber("Arm/Position Error",
                 Units.rotationsToDegrees(motionMagicDutyCycle.Position) - getArmPosition());
         SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
@@ -92,9 +96,10 @@ public class Arm extends SubsystemBase {
 
     private Arm() {
         armMotor = new TalonFX(Constants.ArmConstants.armMotorID, "rio");
+        armCoder = new CANcoder(Constants.ArmConstants.armCoderID, "rio");
 
         setArmMotorConfig(getArmMotorConfig());
-        armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
+        // armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
         Music.getInstance().addFalcon(armMotor);
 
         double shooterHeightInches = 22;
@@ -144,7 +149,7 @@ public class Arm extends SubsystemBase {
         motionMagicDutyCycle = new MotionMagicTorqueCurrentFOC(
                 Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
         motionMagicDutyCycle.Slot = 0;
-        
+
         setMotionMagic(Constants.ArmConstants.kArmMinAngle);
 
         BaseStatusSignal.setUpdateFrequencyForAll(50, armMotor.getClosedLoopError(), armMotor.getClosedLoopReference(),
@@ -418,7 +423,11 @@ public class Arm extends SubsystemBase {
 
     public TalonFXConfiguration getArmMotorConfig() {
         TalonFXConfiguration armMotorConfig = new TalonFXConfiguration();
-        armMotorConfig.Feedback.SensorToMechanismRatio = 100;
+        armMotorConfig.Feedback.RotorToSensorRatio = 100;
+        armMotorConfig.Feedback.SensorToMechanismRatio = 1;
+
+        armMotorConfig.Feedback.FeedbackRemoteSensorID = armCoder.getDeviceID();
+        armMotorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
         armMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         armMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
@@ -430,9 +439,9 @@ public class Arm extends SubsystemBase {
 
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
-        armMotorConfig.Slot0.kP = 400;
-        armMotorConfig.Slot0.kI = 0.03;
-        motionMagicConfigs.MotionMagicCruiseVelocity = 0.75;
+        armMotorConfig.Slot0.kP = 250;
+        armMotorConfig.Slot0.kI = 0.3;
+        motionMagicConfigs.MotionMagicCruiseVelocity = 0.5;
         motionMagicConfigs.MotionMagicAcceleration = 0.5;
 
         // armMotorConfig.Slot0.kA = 0.0;
@@ -444,7 +453,7 @@ public class Arm extends SubsystemBase {
         // armMotorConfig.Slot0.kV = 04;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000
-        motionMagicConfigs.MotionMagicJerk = 5000;
+        motionMagicConfigs.MotionMagicJerk = 0;
 
         armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         armMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;

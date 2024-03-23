@@ -112,6 +112,8 @@ public class RobotContainer {
 		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
 
 		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+		
+		//deploys intake(right pannel)
 		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
 
 

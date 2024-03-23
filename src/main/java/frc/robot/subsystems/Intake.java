@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase {
         if (getShooterSensor()) {
             setHolding(true);
         }
-        SmartDashboard.putBoolean("Shooter/Shooter Sensor", getShooterSensor());
+        SmartDashboard.putBoolean("Intake/Shooter Sensor", getShooterSensor());
         SmartDashboard.putBoolean("Intake/Holding", holding);
     }
     

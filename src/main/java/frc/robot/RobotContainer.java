@@ -21,6 +21,7 @@ import frc.robot.Constants.Lights.LEDState;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.FineAdjust;
+import frc.robot.commands.ArmCommands.ReturnHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ClimberCommands.AlrightTranslate;
 import frc.robot.commands.ClimberCommands.Extend;
@@ -110,6 +111,9 @@ public class RobotContainer {
 		// .andThen(ShootCommandFactory.getAmpCommand()));
 		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
 
+		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
+		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
+
 		xDrive.povUp().onTrue(new IntakeMultiple().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		// Square up to the speaker and press this to reset odometry to the speaker
@@ -120,9 +124,7 @@ public class RobotContainer {
 										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
 				.withName("Zero Swerve 2 Speaker"));
 
-
-		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
-		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
+		xDrive.leftBumper().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 	}
 
 	private void configureManipBinds() {
@@ -146,10 +148,10 @@ public class RobotContainer {
 		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil());
 		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil());
 
-		xManip.rightStick().toggleOnTrue(new Extend());
+		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(LEDState.kWhite)));
 		xManip.leftStick()
 				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
-						() -> -Constants.ClimberConstants.RightMotor.kRetractPower));
+						() -> -Constants.ClimberConstants.RightMotor.kRetractPower).alongWith(Lighting.getStrobeCommand(Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
 
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
@@ -160,8 +162,8 @@ public class RobotContainer {
 						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()),
 						new Shoot()));
 
-		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
 		// left bumper is the universal shoot button
+		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
 
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())

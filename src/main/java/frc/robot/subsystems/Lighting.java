@@ -74,7 +74,7 @@ public class Lighting extends SubsystemBase {
         }
 
         else {
-            if (timer.advanceIfElapsed(1) && DriverStation.isEnabled()) {
+            if (timer.advanceIfElapsed(3) && DriverStation.isEnabled()) {
                 mLighting.autoSetLights(true);
             }
         }

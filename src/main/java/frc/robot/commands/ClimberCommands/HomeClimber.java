@@ -39,7 +39,10 @@ public class HomeClimber extends Command {
         climber.setLeftClimbPower(0);
         climber.setRightClimbPower(0);
 
-        DataLogManager.log("Climber has been Homed");
+        if (!interrupted) {
+            DataLogManager.log("Climber has been Homed");            
+        }
+        
         climber.setLeftPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
         climber.setRightPosition(Constants.ClimberConstants.kHardStopPositionRelativeToSwitchMeters);
     }

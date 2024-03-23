@@ -377,7 +377,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.125;
+		public static final double feederFeedForward = 0.11;
 		public static final double shooterPoopSpeed = 0.5;
 	}
 
@@ -459,7 +459,7 @@ public final class Constants {
 
 			kYellowRed(new int[] { 255, 255, 0 }),
 
-			kRobostangsOrange(new int[] { 255, 110, 0 }),
+			kRobostangsOrange(new int[] { 255, 100, 0 }),
 
 			kPurple(new int[] { 128, 0, 128 }),
 

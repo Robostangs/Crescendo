@@ -17,4 +17,9 @@ public class CancelShooter extends Command {
     public void initialize() {
         shooter.shoot(0, 0);
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

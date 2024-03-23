@@ -185,9 +185,6 @@ public class Robot extends TimedRobot {
 			atComp = true;
 			Shuffleboard.startRecording();
 		}
-
-
-		Lighting.getLarsonCommand(LEDState.kRobostangsOrange).schedule();
 	}
 
 	@Override
@@ -320,7 +317,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopExit() {
-		Arm.getInstance().setBrake(true);
+		Lighting.getLarsonCommand(LEDState.kRobostangsOrange).schedule();
 	}
 
 	@Override

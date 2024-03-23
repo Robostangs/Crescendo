@@ -148,7 +148,7 @@ public class Robot extends TimedRobot {
 						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 				// rear camera (shooting cam)
 				teleopTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0)
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(9, 0)
 						.withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
 
 				// front camera (intake cam)
@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
 						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 				// rear camera (shooting cam)
 				autoTab.add(new HttpCamera(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagRearIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withPosition(9, 0)
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(9, 0)
 						.withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
 			}
 

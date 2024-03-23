@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5985733638133945,
-        "y": 3.2686349354180195
+        "x": 2.383817858544808,
+        "y": 3.1158011406931907
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.914887487182382,
-        "y": 2.65014663825624
+        "x": 3.700131981913796,
+        "y": 2.4973128435314114
       },
       "isLocked": false,
       "linkedName": "Close Right Shoot Position"

@@ -100,7 +100,7 @@ public class RobotContainer {
 						.finallyDo(() -> {
 							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
-
+ 
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
@@ -159,6 +159,8 @@ public class RobotContainer {
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
 		xManip.povDown().whileTrue(new Spit());
+
+		//Feeds it to shooter and does MRHHHHHHHHHHH untill left bumper it pressed
 		xManip.povLeft()
 				.toggleOnTrue(new PassToShooter().andThen(
 						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).deadlineWith(new Prepare()),

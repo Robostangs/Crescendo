@@ -36,9 +36,9 @@ public final class Constants {
 		public static final String llAprilTagRear = "limelight-rear";
 		public static final String llPython = "limelight-python";
 
-		public static final String llAprilTagRearIP = "http://10.5.48.21:5800/stream.mjpg";
-		public static final String llPythonIP = "http://10.5.48.22:5800/stream.mjpg";
-		public static final String llAprilTagIP = "http://10.5.48.23:5800/stream.mjpg";
+		public static final String llAprilTagRearIP = "http://10.5.48.11:5800/stream.mjpg";
+		public static final String llPythonIP = "http://10.5.48.12:5800/stream.mjpg";
+		public static final String llAprilTagIP = "http://10.5.48.13:5800/stream.mjpg";
 		public static final int llPythonPipelineIndex = 0;
 		public static final int llAprilTagPipelineIndex = 1;
 		public static final int llAprilTagWithLightsPipelineIndex = 2;
@@ -163,7 +163,7 @@ public final class Constants {
 			private static final int kFrontLeftDriveMotorId = 11;
 			private static final int kFrontLeftSteerMotorId = 12;
 			private static final int kFrontLeftEncoderId = 10;
-			private static final double kFrontLeftEncoderOffset = -0.30908203125;
+			private static final double kFrontLeftEncoderOffset = -0.315673828125;
 
 			private static final double kFrontLeftXPosInches = 12.875;
 			private static final double kFrontLeftYPosInches = 12.05;
@@ -172,7 +172,8 @@ public final class Constants {
 			private static final int kFrontRightDriveMotorId = 21;
 			private static final int kFrontRightSteerMotorId = 22;
 			private static final int kFrontRightEncoderId = 20;
-			private static final double kFrontRightEncoderOffset = -0.370361328125;
+			private static final double kFrontRightEncoderOffset = -0.3701171875;
+
 
 			private static final double kFrontRightXPosInches = 12.875;
 			private static final double kFrontRightYPosInches = -12.05;
@@ -181,7 +182,8 @@ public final class Constants {
 			private static final int kBackLeftDriveMotorId = 31;
 			private static final int kBackLeftSteerMotorId = 32;
 			private static final int kBackLeftEncoderId = 30;
-			private static final double kBackLeftEncoderOffset = -0.18701171875;
+			private static final double kBackLeftEncoderOffset = 0.14404296875;
+
 
 			private static final double kBackLeftXPosInches = -12.875;
 			private static final double kBackLeftYPosInches = 12.05;
@@ -190,7 +192,8 @@ public final class Constants {
 			private static final int kBackRightDriveMotorId = 41;
 			private static final int kBackRightSteerMotorId = 42;
 			private static final int kBackRightEncoderId = 40;
-			private static final double kBackRightEncoderOffset = -0.075439453125;
+			private static final double kBackRightEncoderOffset = -0.06640625;
+
 
 			private static final double kBackRightXPosInches = -12.875;
 			private static final double kBackRightYPosInches = -12.05;

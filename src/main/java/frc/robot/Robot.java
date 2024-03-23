@@ -69,6 +69,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		DataLogManager.start(Constants.logDirectory);
+		DriverStation.startDataLog(DataLogManager.getLog());
+		
 		CommandScheduler.getInstance()
 				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
 		CommandScheduler.getInstance()

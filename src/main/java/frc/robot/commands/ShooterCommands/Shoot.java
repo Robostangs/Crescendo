@@ -19,17 +19,22 @@ public class Shoot extends Command {
     @Override
     public void initialize() {
         shooter.setShooterMotors(1);
+        shooter.setFeederMotor(0);
     }
 
     @Override
     public void execute() {
-        if (shooter.readyToShoot() && !force) {
+        if (force || shooter.readyToShoot()) {
             shooter.setFeederMotor(1);
         }
     }
 
     @Override
     public boolean isFinished() {
+        if (force) {
+            return false;
+        }
+        
         return !Intake.getInstance().getShooterSensor();
     }
 

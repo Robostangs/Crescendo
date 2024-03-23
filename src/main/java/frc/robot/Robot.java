@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.Lights.LEDState;
 import frc.robot.Vision.LimelightHelpers;
+import frc.robot.commands.ArmCommands.TrackSetPoint;
 import frc.robot.commands.AutoCommands.AutoManager;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.HomeClimber;
@@ -58,6 +59,8 @@ public class Robot extends TimedRobot {
 	public static SequentialCommandGroup autonCommand;
 	public static Command pathPlannerCommand;
 	public static AutoManager autoManager;
+
+	public static Command setpointCommand;
 
 	public static Alert ShuffleBoardCamera = new Alert("Alerts","Failed to add camera to Shuffleboard", Alert.AlertType.WARNING);
 	public static Alert InvalidAuto = new Alert("Alerts","Invalid Auto", Alert.AlertType.ERROR);
@@ -177,6 +180,11 @@ public class Robot extends TimedRobot {
 
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+
+		// use this for shooter regression
+		SmartDashboard.putNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake);
+		setpointCommand = new TrackSetPoint(() -> SmartDashboard.getNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake));
+		teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand).withPosition(2, 2).withSize(2, 2);
 	}
 
 	@Override
@@ -243,6 +251,8 @@ public class Robot extends TimedRobot {
 			forwAuto.set(true);
 		}
 
+		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(() -> Robot.autoManager.shoot = autoShoot.getSelected())
 						.alongWith(new WaitUntilCommand(() -> Robot.autoManager.shoot == false)),
@@ -292,7 +302,7 @@ public class Robot extends TimedRobot {
 		robotContainer.configureDefaultBinds();
 
 		Arm.getInstance().setBrake(true);
-		// Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
 		Shooter.getInstance().setShooterBrake(true);
 

@@ -15,6 +15,8 @@ import frc.robot.Constants.Lights.LEDState;
 import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
+import java.util.function.Supplier;
+
 public class Lighting extends SubsystemBase {
     CANdle mCANdle;
     boolean auto = false;
@@ -155,10 +157,11 @@ public class Lighting extends SubsystemBase {
         mCANdle.animate(animation, 4);
     }
 
-    public static Command getStrobeCommand(LEDState state) {
-        int[] color = state.getColor();
+    public static Command getStrobeCommand(Supplier<LEDState> state) {
+        // int[] color = state.get().getColor();
 
         return Lighting.getInstance().runOnce(() -> {
+            int[] color = state.get().getColor();
             Lighting.getInstance().autoSetLights(false);
             Lighting.getInstance().oldState = LEDState.kCustom;
             Lighting.getInstance().timer.restart();

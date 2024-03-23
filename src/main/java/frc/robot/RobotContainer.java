@@ -70,7 +70,7 @@ public class RobotContainer {
 		removeDefaultCommands();
 
 		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
-		mShooter.setDefaultCommand(new CancelShooter());
+		// mShooter.setDefaultCommand(new CancelShooter());
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -104,15 +104,16 @@ public class RobotContainer {
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
-				xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
+				xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.StartingNotes.center)
 		// .andThen(ShootCommandFactory.getAmpCommand()));
 		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
 
-		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
-		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(LEDState.kRed)));
+		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+
 
 		xDrive.povUp().onTrue(new IntakeMultiple().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
@@ -136,6 +137,8 @@ public class RobotContainer {
 							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
 
+						
+
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
@@ -148,22 +151,22 @@ public class RobotContainer {
 		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil());
 		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil());
 
-		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(LEDState.kWhite)));
+		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite)));
 		xManip.leftStick()
 				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
-						() -> -Constants.ClimberConstants.RightMotor.kRetractPower).alongWith(Lighting.getStrobeCommand(Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
+						() -> -Constants.ClimberConstants.RightMotor.kRetractPower).alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
 
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
 		xManip.povDown().whileTrue(new Spit());
 		xManip.povLeft()
 				.toggleOnTrue(new PassToShooter().andThen(
-						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).alongWith(new Prepare()),
-						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()),
-						new Shoot()));
+						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).deadlineWith(new Prepare()),
+						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare()),
+						new Shoot(false)));
 
 		// left bumper is the universal shoot button
-		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
+		xManip.rightBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
 
 		// absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())

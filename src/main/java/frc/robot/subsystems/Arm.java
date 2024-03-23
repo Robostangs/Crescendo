@@ -65,7 +65,7 @@ public class Arm extends SubsystemBase {
         }
 
         motionMagicDutyCycle.FeedForward *= Rotation2d.fromDegrees(getShooterExtensionPosition())
-                .minus(Rotation2d.fromDegrees(20)).getCos();
+                .minus(Rotation2d.fromDegrees(30)).getCos();
 
         if (getArmPosition() > Constants.ArmConstants.kArmMaxAngle) {
             motionMagicDutyCycle.FeedForward = -8;
@@ -440,7 +440,7 @@ public class Arm extends SubsystemBase {
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
         armMotorConfig.Slot0.kP = 250;
-        armMotorConfig.Slot0.kI = 0.3;
+        armMotorConfig.Slot0.kI = 3;
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.5;
         motionMagicConfigs.MotionMagicAcceleration = 0.5;
 

@@ -34,7 +34,7 @@ public class ShootCommandFactory {
         configureSticks();
 
         return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
-                .deadlineWith(new Prepare()).andThen(new Shoot()).deadlineWith(new SetPoint()))
+                .deadlineWith(new Prepare()).andThen(new Shoot(false)).deadlineWith(new SetPoint()))
                 .withName("Auto Aim and Shoot");
     }
 
@@ -43,7 +43,7 @@ public class ShootCommandFactory {
 
         return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
                 .deadlineWith(new Prepare()).raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
-                .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot())
+                .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot(false))
                 .deadlineWith(new SetPoint())).withName("Aim and Shoot");
     }
 
@@ -68,20 +68,20 @@ public class ShootCommandFactory {
         configureSticks();
 
         return new Prepare().raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()))
-                .andThen(new Shoot()).withName("Auto Prepare and Shoot");
+                .andThen(new Shoot(false)).withName("Auto Prepare and Shoot");
     }
 
     public static Command getPrepareAndShootCommandWithWaitUntil() {
         configureSticks();
 
-        return new Prepare().raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())).andThen(new Shoot())
+        return new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare()).andThen(new Shoot(true))
                 .withName("Prepare and Shoot");
     }
 
     public static Command getRapidFireCommand() {
         configureSticks();
 
-        return new Shoot()
+        return new Shoot(false)
                 .andThen(new BeltDrive(() -> Constants.IntakeConstants.beltIntakeSpeed).alongWith(new FullSend()))
                 .withName("Rapid Fire");
     }
@@ -92,7 +92,7 @@ public class ShootCommandFactory {
         return new PassToShooter().andThen(
                 new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
                         .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass)),
-                new Shoot(),
+                new Shoot(false),
                 new CancelShooter()).withName("Pass to Center");
     }
 }

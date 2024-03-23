@@ -6,9 +6,11 @@ import frc.robot.subsystems.Shooter;
 
 public class Shoot extends Command {
     Shooter shooter;
+    boolean force;
 
-    public Shoot() {
+    public Shoot(boolean force) {
         shooter = Shooter.getInstance();
+        this.force = force;
 
         this.addRequirements(shooter);
         this.setName("Shoot");
@@ -21,7 +23,7 @@ public class Shoot extends Command {
 
     @Override
     public void execute() {
-        if (shooter.readyToShoot()) {
+        if (shooter.readyToShoot() && !force) {
             shooter.setFeederMotor(1);
         }
     }

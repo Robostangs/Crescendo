@@ -47,8 +47,10 @@ public class Shooter extends SubsystemBase {
         topShooter.setInverted(Constants.ShooterConstants.leftShootIsInverted);
 
         SmartDashboard.putString("Shooter/Status", "Idle");
-
+        SmartDashboard.putNumber("Shooter/Ready To Shoot threshold", Constants.MotorConstants.falconShooterThresholdRPM);
+        
         Music.getInstance().addFalcon(topShooter, bottomShooter, feedMotor);
+
     }
 
     public void setShoot(double feederDutyCycle, double shooterDutyCycle) {

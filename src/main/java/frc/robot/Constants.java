@@ -289,7 +289,7 @@ public final class Constants {
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
 		public static final double falconShooterLoadRPM = 5400;
-		public static final double falconShooterThresholdRPM = falconShooterLoadRPM * 0.9;
+		public static final double falconShooterThresholdRPM = falconShooterLoadRPM * 0.875;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -327,7 +327,7 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrent = 6.04 - 1;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 8 - 1;
 
-		public static final double shooterTrapezoidalOffset = 2.6;
+		public static final double shooterTrapezoidalOffset = -2.6;
 		public static final double angleOfShooterReferencePointSittingOnHardStop = 60.4;
 
 		/**

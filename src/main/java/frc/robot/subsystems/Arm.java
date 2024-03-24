@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -98,8 +99,21 @@ public class Arm extends SubsystemBase {
         armMotor = new TalonFX(Constants.ArmConstants.armMotorID, "rio");
         armCoder = new CANcoder(Constants.ArmConstants.armCoderID, "rio");
 
-        setArmMotorConfig(getArmMotorConfig());
-        // armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
+        if (BaseStatusSignal.isAllGood(armCoder.getPosition())) {
+            setArmMotorConfig(getArmMotorConfig());
+        }
+
+        else {
+            DataLogManager.log("Using Internal encoder cuz CANcoder failed");
+            // TODO: make this create an alert
+            var txConfig = getArmMotorConfig();
+            txConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+            txConfig.Feedback.RotorToSensorRatio = 1;
+            txConfig.Feedback.SensorToMechanismRatio = 100;
+            setArmMotorConfig(txConfig);
+            armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
+        }
+
         Music.getInstance().addFalcon(armMotor);
 
         double shooterHeightInches = 22;
@@ -443,14 +457,6 @@ public class Arm extends SubsystemBase {
         armMotorConfig.Slot0.kI = 3;
         motionMagicConfigs.MotionMagicCruiseVelocity = 0.5;
         motionMagicConfigs.MotionMagicAcceleration = 0.5;
-
-        // armMotorConfig.Slot0.kA = 0.0;
-        // armMotorConfig.Slot0.kD = 0.0;
-        // armMotorConfig.Slot0.kG = 0.0;
-        // armMotorConfig.Slot0.kI = 5;
-        // armMotorConfig.Slot0.kP = 60;
-        // armMotorConfig.Slot0.kS = 0;
-        // armMotorConfig.Slot0.kV = 04;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000
         motionMagicConfigs.MotionMagicJerk = 0;

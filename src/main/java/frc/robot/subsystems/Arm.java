@@ -20,8 +20,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Alert;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Alert.AlertType;
 import frc.robot.commands.ArmCommands.FineAdjust;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
@@ -43,6 +45,8 @@ public class Arm extends SubsystemBase {
     private Mechanism2d armMechanism, simArmMechanism;
     private MechanismLigament2d shooterLigament, shooterExtension, elbowLigament;
     private MechanismLigament2d simShooterLigament, simShooterExtension, simElbowLigament;
+
+    private Alert armIsBrokenAlert = new Alert("The arm has failed!", AlertType.ERROR);
 
 @Override
     public void periodic() {
@@ -76,12 +80,15 @@ public class Arm extends SubsystemBase {
             SmartDashboard.putString("Arm/Status", "Setpoint");
             if (!ArmIsBroken) {
                 armMotor.setControl(motionMagicDutyCycle);
+                armIsBrokenAlert.set(false);
             }
         }
 
         if (ArmIsBroken) {
             SmartDashboard.putString("Arm/Status", "ARM IS BROKEN");
+            armIsBrokenAlert.set(true);
         }
+
 
         if (Robot.isReal()) {
             shooterExtension.setAngle(getShooterExtensionPosition() - 90);
@@ -105,7 +112,8 @@ public class Arm extends SubsystemBase {
 
         else {
             DataLogManager.log("Using Internal encoder cuz CANcoder failed");
-            // TODO: make this create an alert
+            new Alert("CANcoder failed", AlertType.ERROR).set(true);
+
             var txConfig = getArmMotorConfig();
             txConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
             txConfig.Feedback.RotorToSensorRatio = 1;

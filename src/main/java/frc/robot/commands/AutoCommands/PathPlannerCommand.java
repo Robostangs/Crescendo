@@ -15,8 +15,9 @@ import java.util.ArrayList;
 
 public class PathPlannerCommand {
     private static String lastAutoName;
-    private static Alert nullAuto = new Alert("Alerts", "Null auto", AlertType.WARNING);
-    private static Alert publishfail = new Alert("Alerts", "Publishing failed", AlertType.ERROR);
+    private static Alert nullAuto = new Alert("Auto", "Null auto", AlertType.WARNING);
+    private static Alert publishfail = new Alert("Auto", "Publishing failed", AlertType.ERROR);
+    private static Alert noAutoSelected = new Alert("Auto", "No Auto Selected", AlertType.WARNING);
 
     public static void publishTrajectory(String autoName) {
         if (autoName == null) {
@@ -25,12 +26,13 @@ public class PathPlannerCommand {
             Robot.teleopField.getObject(Constants.AutoConstants.kFieldObjectName)
                     .setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
             lastAutoName = "null";
+            noAutoSelected.set(true);
             return;
         } 
         
         else if (autoName.equals(lastAutoName)) {
             return;
-        } 
+        }
         
         else {
             lastAutoName = autoName;
@@ -49,13 +51,15 @@ public class PathPlannerCommand {
 
                         poses.add(pose);
                     }));
+            nullAuto.set(false);
+            publishfail.set(false);
+            noAutoSelected.set(false);
         } 
         
         catch (RuntimeException e) {
             System.out.println("Null Auto: " + autoName);
-            nullAuto.setText("Null auto"+ autoName);
+            nullAuto.setText("Null auto: " + autoName);
             nullAuto.set(true);
-            
         } 
         
         catch (Exception e) {

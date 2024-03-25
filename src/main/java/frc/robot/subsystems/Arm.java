@@ -13,7 +13,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -106,20 +105,17 @@ public class Arm extends SubsystemBase {
         armMotor = new TalonFX(Constants.ArmConstants.armMotorID, "rio");
         armCoder = new CANcoder(Constants.ArmConstants.armCoderID, "rio");
 
-        if (BaseStatusSignal.isAllGood(armCoder.getPosition())) {
-            setArmMotorConfig(getArmMotorConfig());
-        }
-
-        else {
-            DataLogManager.log("Using Internal encoder cuz CANcoder failed");
-            new Alert("CANcoder failed", AlertType.ERROR).set(true);
-
+        if (Robot.verifyMotor(armMotor)) {
             var txConfig = getArmMotorConfig();
             txConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
             txConfig.Feedback.RotorToSensorRatio = 1;
             txConfig.Feedback.SensorToMechanismRatio = 100;
             setArmMotorConfig(txConfig);
             armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
+        }
+
+        else {
+            setArmMotorConfig(getArmMotorConfig());
         }
 
         Music.getInstance().addFalcon(armMotor);

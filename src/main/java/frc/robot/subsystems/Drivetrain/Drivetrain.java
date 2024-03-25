@@ -134,6 +134,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     private Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
 
+        for (SwerveModule mod : super.Modules) {
+            Robot.verifyMotors(mod.getDriveMotor(), mod.getSteerMotor());
+            Robot.verifyCANcoders(mod.getCANcoder());
+        }
+
         if (Constants.Vision.UseLimelight) {
             LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
                     Constants.Vision.llAprilTagPipelineIndex);

@@ -30,7 +30,7 @@ import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
 import frc.robot.commands.FeederCommands.QuickFeed;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
-import frc.robot.commands.IntakeCommands.IntakeMultiple;
+import frc.robot.commands.IntakeCommands.MultiIntake;
 import frc.robot.commands.ShooterCommands.AimAndShoot;
 import frc.robot.commands.ShooterCommands.CancelShooter;
 import frc.robot.commands.ShooterCommands.Feed;
@@ -99,7 +99,7 @@ public class RobotContainer {
 						.finallyDo(() -> {
 							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
- 
+
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
@@ -107,16 +107,17 @@ public class RobotContainer {
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.StartingNotes.center)
-		// .andThen(ShootCommandFactory.getAmpCommand()));
-		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
+				// .andThen(ShootCommandFactory.getAmpCommand()));
+				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
 
-		xDrive.leftStick().toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
-		
-		//deploys intake(right pannel)
-		xDrive.rightStick().toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+		// just runs feeder
+		xDrive.leftStick()
+				.toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+		// deploys intake(right paddle)
+		xDrive.rightStick()
+				.toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
 
-
-		xDrive.povUp().onTrue(new IntakeMultiple().alongWith(new Feed()));
+		xDrive.povUp().onTrue(new MultiIntake().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain
@@ -127,6 +128,10 @@ public class RobotContainer {
 				.withName("Zero Swerve 2 Speaker"));
 
 		xDrive.leftBumper().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		xDrive.rightBumper()
+				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
+						() -> -Constants.ClimberConstants.RightMotor.kRetractPower)
+						.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
 	}
 
 	private void configureManipBinds() {
@@ -137,16 +142,13 @@ public class RobotContainer {
 						.finallyDo(() -> {
 							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
-						//just for commit on Q59
-
-						
+		// just for commit on Q59
 
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
-
 
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.x().whileTrue(new QuickFeed());
@@ -156,13 +158,14 @@ public class RobotContainer {
 		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite)));
 		xManip.leftStick()
 				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
-						() -> -Constants.ClimberConstants.RightMotor.kRetractPower).alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
+						() -> -Constants.ClimberConstants.RightMotor.kRetractPower)
+						.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
 
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
 		xManip.povDown().whileTrue(new Spit());
 
-		//Feeds it to shooter and does MRHHHHHHHHHHH untill left bumper it pressed
+		// Feeds it to shooter and does MRHHHHHHHHHHH until left bumper it pressed
 		xManip.povLeft()
 				.toggleOnTrue(new PassToShooter().andThen(
 						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).deadlineWith(new Prepare()),
@@ -172,12 +175,10 @@ public class RobotContainer {
 		// left bumper is the universal shoot button
 		xManip.rightBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
 
-		// absolute worst case scenario
+		// TODO: test, absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())
 				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
-
-		
-					}
+	}
 
 	public RobotContainer() {
 		logger = new Telemetry();

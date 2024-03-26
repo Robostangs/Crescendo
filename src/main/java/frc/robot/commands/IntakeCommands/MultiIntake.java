@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 
-public class IntakeMultiple extends Command {
+public class MultiIntake extends Command {
     Intake intake;
 
-    public IntakeMultiple() {
+    public MultiIntake() {
         intake = Intake.getInstance();
 
         this.addRequirements(intake);
@@ -25,6 +25,12 @@ public class IntakeMultiple extends Command {
     public void execute() {
         if (intake.getShooterSensor()) {
             intake.setBelt(0.3);
+            intake.setIntake(0.3);
+        }
+
+        else {
+            intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+            intake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
         }
     }
 

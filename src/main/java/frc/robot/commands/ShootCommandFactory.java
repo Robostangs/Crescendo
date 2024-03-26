@@ -62,7 +62,8 @@ public class ShootCommandFactory {
                                                 .deadlineWith(new Prepare())
                                                 .andThen(new Shoot(false)
                                                                 .withTimeout(Constants.OperatorConstants.shootTimeout),
-                                                                new Spit().withTimeout(Constants.AutoConstants.spitTime))))
+                                                                new Spit().withTimeout(
+                                                                                Constants.AutoConstants.spitTime))))
                                 .withName("Auto Aim and Shoot with Timeouts");
         }
 
@@ -79,7 +80,9 @@ public class ShootCommandFactory {
         public static Command getAmpCommand() {
                 configureSticks();
 
-                return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut())
+                return new PassToShooter()
+                                .andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut(),
+                                                new CancelShooter().alongWith(new ReturnHome()))
                                 .withName("Auto Amp Shot");
         }
 

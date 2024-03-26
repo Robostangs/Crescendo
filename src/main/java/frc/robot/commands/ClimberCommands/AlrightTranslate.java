@@ -38,9 +38,4 @@ public class AlrightTranslate extends Command {
 		climber.setLeftClimbPower(0);
 		climber.setRightClimbPower(0);
 	}
-
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
 }

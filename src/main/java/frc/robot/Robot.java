@@ -274,8 +274,7 @@ public class Robot extends TimedRobot {
 
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(timer::restart),
-				new ConditionalCommand(ShootCommandFactory.getPrepareAndShootCommandWithTimeouts(),
-						new PrintCommand("Not shooting at start"), autoShoot::getSelected),
+				ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(pathDelayEntry.getDouble(0)), pathPlannerCommand,
 				new InstantCommand(timer::stop));
 
@@ -348,7 +347,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopExit() {
-		Lighting.getLarsonCommand(LEDState.kRobostangsOrange).schedule();
+		Lighting.getLarsonCommand(() -> LEDState.kRobostangsOrange).schedule();
 	}
 
 	@Override

@@ -29,11 +29,8 @@ public class Lighting extends SubsystemBase {
     @Override
     public void periodic() {
         if (auto) {
-            mCANdle.clearAnimation(0);
-            mCANdle.clearAnimation(1);
-            mCANdle.clearAnimation(2);
-            mCANdle.clearAnimation(3);
-            mCANdle.clearAnimation(4);
+
+            clearAnimations();
 
             LEDState state;
 
@@ -76,7 +73,7 @@ public class Lighting extends SubsystemBase {
         }
 
         else {
-            if (timer.advanceIfElapsed(3) && DriverStation.isEnabled()) {
+            if (timer.get() > 3 && DriverStation.isEnabled()) {
                 mLighting.autoSetLights(true);
             }
         }
@@ -158,33 +155,38 @@ public class Lighting extends SubsystemBase {
     }
 
     public static Command getStrobeCommand(Supplier<LEDState> state) {
-        // int[] color = state.get().getColor();
-
         return Lighting.getInstance().runOnce(() -> {
             int[] color = state.get().getColor();
             Lighting.getInstance().autoSetLights(false);
             Lighting.getInstance().oldState = LEDState.kCustom;
-            Lighting.getInstance().timer.restart();
+            Lighting.getInstance().timer.reset();
             Lighting.getInstance().setCANdleAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setRightBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setLeftBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setLeftClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setRightClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
-        }).ignoringDisable(true);
+        }).finallyDo(() -> Lighting.getInstance().timer.start()).ignoringDisable(true);
     }
 
-    public static Command getLarsonCommand(LEDState state) {
-        int[] color = state.getColor();
-
+    public static Command getLarsonCommand(Supplier<LEDState> state) {
         return Lighting.getInstance().runOnce(() -> {
+            int[] color = state.get().getColor();
             Lighting.getInstance().autoSetLights(false);
             Lighting.getInstance().oldState = LEDState.kCustom;
-            Lighting.getInstance().timer.restart();
-            Lighting.getInstance().setCANdleLights(state);
+            Lighting.getInstance().timer.reset();
+            Lighting.getInstance().setCANdleLights(state.get());
             Lighting.getInstance().setRightBarAnimation(new LarsonAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setLeftBarAnimation(new LarsonAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setLeftClimberSupportAnimation(new LarsonAnimation(color[0], color[1], color[2]));
             Lighting.getInstance().setRightClimberSupportAnimation(new LarsonAnimation(color[0], color[1], color[2]));
-        }).ignoringDisable(true);
+        }).finallyDo(() -> Lighting.getInstance().timer.start()).ignoringDisable(true);
+    }
+
+    public void clearAnimations() {
+        mCANdle.clearAnimation(0);
+        mCANdle.clearAnimation(1);
+        mCANdle.clearAnimation(2);
+        mCANdle.clearAnimation(3);
+        mCANdle.clearAnimation(4);
     }
 }

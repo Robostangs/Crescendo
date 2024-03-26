@@ -31,6 +31,7 @@ import frc.robot.Alert.AlertType;
 import frc.robot.Constants.Lights.LEDState;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.ShootCommandFactory;
+import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ArmCommands.TrackSetPoint;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.HomeClimber;
@@ -186,7 +187,8 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		NamedCommands.registerCommand("Shoot",
-				ShootCommandFactory.getAimAndShootCommand().deadlineWith(new Align(false)));
+				ShootCommandFactory.getAimAndShootCommandWithTimeouts().deadlineWith(new Align(false)));
+		NamedCommands.registerCommand("Lower Arm", new SetPoint(Constants.ArmConstants.kArmMinAngle));
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 	}
@@ -227,6 +229,11 @@ public class Robot extends TimedRobot {
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
+		// TODO: this means it will always track the speaker, however will not allow us to pick up the piece
+		// however if, in the paths, we tell the arm to go down then the problem should be solved
+		// this should be removed if we cant feed to shooter very well
+		// Arm.getInstance().setDefaultCommand(new SetPoint());
+
 		Shuffleboard.selectTab(autoTab.getTitle());
 		robotContainer.removeDefaultCommands();
 
@@ -256,7 +263,8 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::stop));
 
 		if (autoShoot.getSelected()) {
-			autonCommand.beforeStarting(ShootCommandFactory.getAimAndShootCommand());
+			// we want prepare and shoot because we know that at the beginning of the match, the robot will start in a position where it is ready to shoot off rip
+			autonCommand.beforeStarting(ShootCommandFactory.getPrepareAndShootCommand());
 		}
 
 		if (Constants.Vision.UseLimelight && Robot.isReal()) {

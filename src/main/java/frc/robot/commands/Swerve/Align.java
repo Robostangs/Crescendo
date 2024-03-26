@@ -79,10 +79,6 @@ public class Align extends Command {
     public void initialize() {
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
 
-        // TODO: cuz faster drivertrain this needs to be redone
-        // note align will have smaller error but more important changes in
-        // rotation, so if that needs a different pid controller we can make that happen
-        // drive.HeadingController = new PhoenixPIDController(4.0, 20, 0.3);
         if (note) {
             driveRequest.HeadingController = new PhoenixPIDController(15, 0.1, 0);
         } 

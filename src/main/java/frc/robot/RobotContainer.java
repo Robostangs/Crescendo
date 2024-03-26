@@ -70,7 +70,6 @@ public class RobotContainer {
 		removeDefaultCommands();
 
 		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
-		// mShooter.setDefaultCommand(new CancelShooter());
 
 		if (Robot.isSimulation()) {
 			drivetrain

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.28,
-        "y": 5.55
+        "x": 1.4042941372919784,
+        "y": 5.547272904730995
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4324494126451235,
-        "y": 4.128465494159952
+        "x": 2.556743549937102,
+        "y": 4.125738398890948
       },
       "isLocked": false,
       "linkedName": "Center Start Position"

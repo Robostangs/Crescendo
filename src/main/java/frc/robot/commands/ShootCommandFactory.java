@@ -33,9 +33,31 @@ public class ShootCommandFactory {
     public static Command getAimAndShootCommand() {
         configureSticks();
 
-        return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
-                .deadlineWith(new Prepare()).andThen(new Shoot(false)).deadlineWith(new SetPoint()))
+        // return new PassToShooter().andThen(
+        // new SetPoint().raceWith(
+        // new WaitUntilCommand(() -> Arm.getInstance().atSetpoint()).deadlineWith(new
+        // Prepare())),
+        // new Shoot(false)).withName("Auto Aim and Shoot");
+
+        return new PassToShooter()
+                .andThen(new SetPoint().raceWith(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
+                        .deadlineWith(new Prepare()).andThen(new Shoot(false))))
                 .withName("Auto Aim and Shoot");
+
+        // return new PassToShooter().andThen(new WaitUntilCommand(() ->
+        // Arm.getInstance().atSetpoint())
+        // .deadlineWith(new Prepare()).andThen(new Shoot(false)).deadlineWith(new
+        // SetPoint()))
+        // .withName("Auto Aim and Shoot");
+    }
+
+    public static Command getAimAndShootCommandWithTimeouts() {
+        configureSticks();
+
+        return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
+                .andThen(new SetPoint().raceWith(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint()).withTimeout(Constants.OperatorConstants.setpointTimeout)
+                        .deadlineWith(new Prepare()).andThen(new Shoot(false).withTimeout(Constants.OperatorConstants.shootTimeout), new Shoot(true))))
+                .withName("Auto Aim and Shoot With Setpoints");
     }
 
     public static Command getAimAndShootCommandWithWaitUntil() {
@@ -74,7 +96,8 @@ public class ShootCommandFactory {
     public static Command getPrepareAndShootCommandWithWaitUntil() {
         configureSticks();
 
-        return new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare()).andThen(new Shoot(true))
+        return new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare())
+                .andThen(new Shoot(true))
                 .withName("Prepare and Shoot");
     }
 

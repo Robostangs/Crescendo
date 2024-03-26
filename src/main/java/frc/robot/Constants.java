@@ -319,6 +319,9 @@ public final class Constants {
 		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * 0.07;
 
 		public static final double setpointTimeout = 2;
+		public static final double feedTimeout = 1;
+		public static final double shootTimeout = 0.5;
+
 	}
 
 	public static class ArmConstants {
@@ -326,7 +329,6 @@ public final class Constants {
 		public static final int armCoderID = 50;
 		public static final boolean armMotorInverted = true;
 
-		// TODO: need new values for new shooter, will probably be lower
 		public static final double kFeedForwardDutyCycle = 0.025;
 		public static final double kFeedForwardTorqueCurrent = 6.04 - 1;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 8 - 1;

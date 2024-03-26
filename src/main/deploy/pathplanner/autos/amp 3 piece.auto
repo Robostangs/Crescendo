@@ -42,9 +42,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "center shoot to close left"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "center shoot to close left"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
           }
         },
         {

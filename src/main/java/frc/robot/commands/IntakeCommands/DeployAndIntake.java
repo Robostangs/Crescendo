@@ -46,7 +46,6 @@ public class DeployAndIntake extends Command {
         }
 
         shooter.setFeederMotor(0);
-        intake.setIntake(0);
         intake.setBelt(0);
     }
 }

@@ -191,7 +191,11 @@ public class Robot extends TimedRobot {
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		NamedCommands.registerCommand("Shoot",
 				ShootCommandFactory.getAimAndShootCommandWithTimeouts().deadlineWith(new Align(false)));
-		NamedCommands.registerCommand("Lower Arm", new SetPoint(Constants.ArmConstants.kArmMinAngle));
+		NamedCommands.registerCommand("Lower Arm",
+				// doing this so that we dont have to wait for arm velocity to be 0, and as soon as it is under then just end this command and follow path
+				new SetPoint(Constants.ArmConstants.kArmMinAngle).raceWith(new WaitUntilCommand(
+						// TODO: is 4 degrees too much?
+						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4))).withTimeout(Constants.OperatorConstants.setpointTimeout).withName("Lowering arm to hard stop"));
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 	}

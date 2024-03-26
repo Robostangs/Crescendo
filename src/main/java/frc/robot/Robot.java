@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -198,7 +197,8 @@ public class Robot extends TimedRobot {
 				new SetPoint(Constants.ArmConstants.kArmMinAngle).raceWith(new WaitUntilCommand(
 						// TODO: is 4 degrees too much?
 						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4)))
-						.withTimeout(Constants.OperatorConstants.setpointTimeout)
+						// we dont want to put a timeout on this because its important
+						// .withTimeout(Constants.OperatorConstants.setpointTimeout)
 						.withName("Lowering arm to hard stop"));
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());

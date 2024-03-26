@@ -110,12 +110,12 @@ public class Arm extends SubsystemBase {
             txConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
             txConfig.Feedback.RotorToSensorRatio = 1;
             txConfig.Feedback.SensorToMechanismRatio = 100;
-            setArmMotorConfig(txConfig);
+            applyArmMotorConfig(txConfig);
             armMotor.setPosition(Units.degreesToRotations(Constants.ArmConstants.kArmMinAngle));
         }
 
         else {
-            setArmMotorConfig(getArmMotorConfig());
+            applyArmMotorConfig(getArmMotorConfig());
         }
 
         Music.getInstance().addFalcon(armMotor);
@@ -473,7 +473,7 @@ public class Arm extends SubsystemBase {
         return armMotorConfig;
     }
 
-    public void setArmMotorConfig(TalonFXConfiguration config) {
+    public void applyArmMotorConfig(TalonFXConfiguration config) {
         armMotor.getConfigurator().apply(config);
     }
 
@@ -497,7 +497,7 @@ public class Arm extends SubsystemBase {
             ArmIsBroken = false;
         }
 
-        setArmMotorConfig(armMotorConfig);
+        applyArmMotorConfig(armMotorConfig);
     }
 
     public void toggleArmMotorLimits() {

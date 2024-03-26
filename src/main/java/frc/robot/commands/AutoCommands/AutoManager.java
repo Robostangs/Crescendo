@@ -187,7 +187,7 @@
 
 //         // if the shoot variable has been enabled
 //         if (shoot) {
-//             // TODO: is this worth doing, it currently causes the pathing to be off but wont
+//             // is this worth doing, it currently causes the pathing to be off but wont
 //             // have any effect if the piece is shot quickly (hopefully)
 //             if (slowDownWhileShooting) {
 //                 Drivetrain.getInstance().autoRequest.slowDownRate = drivetrainShootSpeed;

@@ -267,6 +267,8 @@ public final class Constants {
 
 		public static final String kFieldObjectName = "path";
 
+		public static final double spitTime = 0.5;
+
 		public static class WayPoints {
 			public static class Blue {
 				public static final Pose2d kAmp = new Pose2d(1.81, 7.75, Rotation2d.fromDegrees(-90));
@@ -320,6 +322,7 @@ public final class Constants {
 		public static final double setpointTimeout = 2;
 		public static final double feedTimeout = 1;
 		public static final double shootTimeout = 0.5;
+		public static final double chargeUpTimeout = 3;
 
 	}
 

@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -66,9 +67,9 @@ public class Robot extends TimedRobot {
 
 	public static Command setpointCommand;
 
-	public static Alert ShuffleBoardCamera = new Alert("Alerts", "Failed to add camera to Shuffleboard",
+	public static Alert ShuffleBoardCamera = new Alert("Failed to add camera to Shuffleboard",
 			Alert.AlertType.ERROR);
-	public static Alert forwardAuto = new Alert("Alerts", "Robot will travel forward", Alert.AlertType.INFO);
+	public static Alert forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 
 	@Override
 	public void robotInit() {
@@ -190,12 +191,15 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		NamedCommands.registerCommand("Shoot",
-				ShootCommandFactory.getAimAndShootCommandWithTimeouts().deadlineWith(new Align(false)));
+				ShootCommandFactory.getAimAndShootCommandWithTimeouts().deadlineWith(new Align(false)).withName("Align and Shoot"));
 		NamedCommands.registerCommand("Lower Arm",
-				// doing this so that we dont have to wait for arm velocity to be 0, and as soon as it is under then just end this command and follow path
+				// doing this so that we dont have to wait for arm velocity to be 0, and as soon
+				// as it is under then just end this command and follow path
 				new SetPoint(Constants.ArmConstants.kArmMinAngle).raceWith(new WaitUntilCommand(
 						// TODO: is 4 degrees too much?
-						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4))).withTimeout(Constants.OperatorConstants.setpointTimeout).withName("Lowering arm to hard stop"));
+						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4)))
+						.withTimeout(Constants.OperatorConstants.setpointTimeout)
+						.withName("Lowering arm to hard stop"));
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 	}
@@ -268,14 +272,18 @@ public class Robot extends TimedRobot {
 
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
-		autonCommand = new SequentialCommandGroup(new WaitUntilCommand(pathDelayEntry.getDouble(0)), pathPlannerCommand,
+		autonCommand = new SequentialCommandGroup(
+				new InstantCommand(timer::restart),
+				new ConditionalCommand(ShootCommandFactory.getPrepareAndShootCommandWithTimeouts(),
+						new PrintCommand("Not shooting at start"), autoShoot::getSelected),
+				new WaitUntilCommand(pathDelayEntry.getDouble(0)), pathPlannerCommand,
 				new InstantCommand(timer::stop));
 
-		if (autoShoot.getSelected()) {
-			// we want prepare and shoot because we know that at the beginning of the match,
-			// the robot will start in a position where it is ready to shoot off rip
-			autonCommand.beforeStarting(ShootCommandFactory.getPrepareAndShootCommand());
-		}
+		// if (autoShoot.getSelected()) {
+		// 	// we want prepare and shoot because we know that at the beginning of the match,
+		// 	// the robot will start in a position where it is ready to shoot off rip
+		// 	autonCommand.beforeStarting(ShootCommandFactory.getPrepareAndShootCommand());
+		// }
 
 		if (Constants.Vision.UseLimelight && Robot.isReal()) {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
@@ -285,8 +293,7 @@ public class Robot extends TimedRobot {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 		}
 
-		autonCommand.schedule();
-		timer.restart();
+		autonCommand.withName("Auto Command").schedule();
 		HomeClimber.getHomingCommand().schedule();
 	}
 
@@ -387,7 +394,7 @@ public class Robot extends TimedRobot {
 		for (TalonFX falcon : falcons) {
 			if (falcon.getPosition().getStatus().isError()) {
 				DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position");
-				new Alert("Device Failure", "TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
+				new Alert("TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
 						AlertType.ERROR)
 						.set(true);
 			}
@@ -404,7 +411,7 @@ public class Robot extends TimedRobot {
 	public static boolean verifyMotor(TalonFX falcon) {
 		if (falcon.getPosition().getStatus().isError()) {
 			DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position");
-			new Alert("Device Failure", "TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
+			new Alert("TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
 					AlertType.ERROR)
 					.set(true);
 			return true;
@@ -423,7 +430,7 @@ public class Robot extends TimedRobot {
 	public static boolean verifyCANcoders(CANcoder CANcoder) {
 		if (CANcoder.getPosition().getStatus().isError()) {
 			DataLogManager.log("CANcoder #" + CANcoder.getDeviceID() + " has failed to return position");
-			new Alert("Device Failure", "CANcoder ID #" + CANcoder.getDeviceID() + " has failed to return position",
+			new Alert("CANcoder ID #" + CANcoder.getDeviceID() + " has failed to return position",
 					AlertType.ERROR)
 					.set(true);
 			return true;

@@ -15,9 +15,9 @@ import java.util.ArrayList;
 
 public class PathPlannerCommand {
     private static String lastAutoName;
-    private static Alert nullAuto = new Alert("Auto", "Null auto", AlertType.WARNING);
-    private static Alert publishfail = new Alert("Auto", "Publishing failed", AlertType.ERROR);
-    private static Alert noAutoSelected = new Alert("Auto", "No Auto Selected", AlertType.WARNING);
+    private static Alert nullAuto = new Alert("Null auto", AlertType.WARNING);
+    private static Alert publishfail = new Alert("Publishing failed", AlertType.ERROR);
+    private static Alert noAutoSelected = new Alert("No Auto Selected", AlertType.WARNING);
 
     public static void publishTrajectory(String autoName) {
         if (autoName == null) {

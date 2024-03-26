@@ -21,15 +21,12 @@ public class Spit extends Command {
     public void initialize() {
         SmartDashboard.putString("Intake/Status", "Spitting");
         SmartDashboard.putString("Shooter/Status", "Spitting");
-    }
 
-    @Override
-    public void execute() {
-        shooter.shoot(0.5, 0.5);
+        shooter.shoot(1, 1);
 
         intake.setExtend(false);
-        intake.setIntake(-0.5);
-        intake.setBelt(-0.5);
+        intake.setIntake(-1);
+        intake.setBelt(-1);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
         setExtend = false;
 
         if (Robot.isSimulation()) {
-            SmartDashboard.putBoolean("Shooter/Simulated Shooter Sensor", false);
+            SmartDashboard.putBoolean("Intake/Simulated Shooter Sensor", false);
         }
     }
 
@@ -72,7 +72,7 @@ public class Intake extends SubsystemBase {
      */
     public boolean getShooterSensor() {
         if (Robot.isSimulation()) {
-            return SmartDashboard.getBoolean("Shooter/Simulated Shooter Sensor", false);
+            return SmartDashboard.getBoolean("Intake/Simulated Shooter Sensor", false);
         }
         
         return !shooterSensor.get();

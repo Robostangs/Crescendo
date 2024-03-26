@@ -18,104 +18,123 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shooter;
 
 public class ShootCommandFactory {
-    static boolean configured;
+        static boolean configured;
 
-    static CommandXboxController xDrive, xManip;
+        static CommandXboxController xDrive, xManip;
 
-    public static void configureSticks() {
-        if (!configured) {
-            configured = true;
-            xDrive = RobotContainer.xDrive;
-            xManip = RobotContainer.xManip;
+        public static void configureSticks() {
+                if (!configured) {
+                        configured = true;
+                        xDrive = RobotContainer.xDrive;
+                        xManip = RobotContainer.xManip;
+                }
         }
-    }
 
-    public static Command getAimAndShootCommand() {
-        configureSticks();
+        public static Command getAimAndShootCommand() {
+                configureSticks();
 
-        // return new PassToShooter().andThen(
-        // new SetPoint().raceWith(
-        // new WaitUntilCommand(() -> Arm.getInstance().atSetpoint()).deadlineWith(new
-        // Prepare())),
-        // new Shoot(false)).withName("Auto Aim and Shoot");
+                // return new PassToShooter().andThen(
+                // new SetPoint().raceWith(
+                // new WaitUntilCommand(() -> Arm.getInstance().atSetpoint()).deadlineWith(new
+                // Prepare())),
+                // new Shoot(false)).withName("Auto Aim and Shoot");
 
-        return new PassToShooter()
-                .andThen(new SetPoint().raceWith(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
-                        .deadlineWith(new Prepare()).andThen(new Shoot(false))))
-                .withName("Auto Aim and Shoot");
+                return new PassToShooter()
+                                .andThen(new SetPoint()
+                                                .raceWith(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
+                                                                .deadlineWith(new Prepare()).andThen(new Shoot(false))))
+                                .withName("Auto Aim and Shoot");
 
-        // return new PassToShooter().andThen(new WaitUntilCommand(() ->
-        // Arm.getInstance().atSetpoint())
-        // .deadlineWith(new Prepare()).andThen(new Shoot(false)).deadlineWith(new
-        // SetPoint()))
-        // .withName("Auto Aim and Shoot");
-    }
+                // return new PassToShooter().andThen(new WaitUntilCommand(() ->
+                // Arm.getInstance().atSetpoint())
+                // .deadlineWith(new Prepare()).andThen(new Shoot(false)).deadlineWith(new
+                // SetPoint()))
+                // .withName("Auto Aim and Shoot");
+        }
 
-    public static Command getAimAndShootCommandWithTimeouts() {
-        configureSticks();
+        public static Command getAimAndShootCommandWithTimeouts() {
+                configureSticks();
 
-        return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
-                .andThen(new SetPoint().raceWith(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint()).withTimeout(Constants.OperatorConstants.setpointTimeout)
-                        .deadlineWith(new Prepare()).andThen(new Shoot(false).withTimeout(Constants.OperatorConstants.shootTimeout), new Shoot(true))))
-                .withName("Auto Aim and Shoot With Setpoints");
-    }
+                return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
+                                .andThen(new SetPoint().raceWith(new WaitUntilCommand(
+                                                () -> Arm.getInstance().atSetpoint())
+                                                .withTimeout(Constants.OperatorConstants.setpointTimeout)
+                                                .deadlineWith(new Prepare())
+                                                .andThen(new Shoot(false)
+                                                                .withTimeout(Constants.OperatorConstants.shootTimeout),
+                                                                new Spit().withTimeout(Constants.AutoConstants.spitTime))))
+                                .withName("Auto Aim and Shoot with Timeouts");
+        }
 
-    public static Command getAimAndShootCommandWithWaitUntil() {
-        configureSticks();
+        public static Command getAimAndShootCommandWithWaitUntil() {
+                configureSticks();
 
-        return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
-                .deadlineWith(new Prepare()).raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
-                .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot(false))
-                .deadlineWith(new SetPoint())).withName("Aim and Shoot");
-    }
+                return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
+                                .deadlineWith(new Prepare())
+                                .raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
+                                .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot(false))
+                                .deadlineWith(new SetPoint())).withName("Aim and Shoot");
+        }
 
-    public static Command getAmpCommand() {
-        configureSticks();
+        public static Command getAmpCommand() {
+                configureSticks();
 
-        return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut())
-                .withName("Auto Amp Shot");
-    }
+                return new PassToShooter().andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut())
+                                .withName("Auto Amp Shot");
+        }
 
-    public static Command getAmpCommandWithWaitUntil() {
-        configureSticks();
+        public static Command getAmpCommandWithWaitUntil() {
+                configureSticks();
 
-        return new PassToShooter().andThen(
-                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
-                        .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
-                new PoopOut(),
-                new CancelShooter().alongWith(new ReturnHome())).withName("Amp Shot");
-    }
+                return new PassToShooter().andThen(
+                                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
+                                                .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
+                                new PoopOut(),
+                                new CancelShooter().alongWith(new ReturnHome())).withName("Amp Shot");
+        }
 
-    public static Command getPrepareAndShootCommand() {
-        configureSticks();
+        public static Command getPrepareAndShootCommand() {
+                configureSticks();
 
-        return new Prepare().raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()))
-                .andThen(new Shoot(false)).withName("Auto Prepare and Shoot");
-    }
+                return new Prepare().raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()))
+                                .andThen(new Shoot(false)).withName("Auto Prepare and Shoot");
+        }
 
-    public static Command getPrepareAndShootCommandWithWaitUntil() {
-        configureSticks();
+        public static Command getPrepareAndShootCommandWithTimeouts() {
+                configureSticks();
 
-        return new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare())
-                .andThen(new Shoot(true))
-                .withName("Prepare and Shoot");
-    }
+                return new Prepare().raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()))
+                                .withTimeout(Constants.OperatorConstants.chargeUpTimeout)
+                                .andThen(new Shoot(false).withTimeout(Constants.OperatorConstants.shootTimeout),
+                                                new Spit().withTimeout(Constants.AutoConstants.spitTime))
+                                .withName("Auto Prepare and Shoot with Timeouts");
+        }
 
-    public static Command getRapidFireCommand() {
-        configureSticks();
+        public static Command getPrepareAndShootCommandWithWaitUntil() {
+                configureSticks();
 
-        return new Shoot(false)
-                .andThen(new BeltDrive(() -> Constants.IntakeConstants.beltIntakeSpeed).alongWith(new FullSend()))
-                .withName("Rapid Fire");
-    }
+                return new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare())
+                                .andThen(new Shoot(true))
+                                .withName("Prepare and Shoot");
+        }
 
-    public static Command getCenterToWingCommand() {
-        configureSticks();
+        public static Command getRapidFireCommand() {
+                configureSticks();
 
-        return new PassToShooter().andThen(
-                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
-                        .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass)),
-                new Shoot(false),
-                new CancelShooter()).withName("Pass to Center");
-    }
+                return new Shoot(false)
+                                .andThen(new BeltDrive(() -> Constants.IntakeConstants.beltIntakeSpeed)
+                                                .alongWith(new FullSend()))
+                                .withName("Rapid Fire");
+        }
+
+        public static Command getCenterToWingCommand() {
+                configureSticks();
+
+                return new PassToShooter().andThen(
+                                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
+                                                .deadlineWith(new SetPoint(
+                                                                Constants.ArmConstants.SetPoints.kCenterToWingPass)),
+                                new Shoot(false),
+                                new CancelShooter()).withName("Pass to Center");
+        }
 }

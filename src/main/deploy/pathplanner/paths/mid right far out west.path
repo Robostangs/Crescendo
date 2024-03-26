@@ -101,6 +101,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 2.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Lower Arm"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {

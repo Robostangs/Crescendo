@@ -267,6 +267,7 @@ public final class Constants {
 
 		public static final String kFieldObjectName = "path";
 
+		// this shouldnt be super long but enough time
 		public static final double spitTime = 0.5;
 
 		public static class WayPoints {

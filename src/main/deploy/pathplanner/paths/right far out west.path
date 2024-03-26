@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.383817858544808,
-        "y": 3.1158011406931907
+        "x": 2.345298991523909,
+        "y": 3.405991001796819
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.921876971493391,
-        "y": 0.6209151346554705
+        "x": 2.8183549468950795,
+        "y": 2.224716954063538
       },
       "isLocked": false,
       "linkedName": "Close Right Shoot Position"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 2.383817858544808,
-        "y": 3.1158011406931907
+        "x": 2.345298991523909,
+        "y": 3.405991001796819
       },
       "prevControl": {
-        "x": 2.6841513239810846,
-        "y": 2.3176849483959905
+        "x": 2.690381612244706,
+        "y": 2.1358779245336272
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,19 +49,24 @@
       "waypointRelativePos": 0.7,
       "rotationDegrees": 10.480024361942101,
       "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": 0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.0,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 450.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -50.061417991201914,
+    "rotation": -42.370000000000005,
     "rotateFast": false
   },
   "reversed": false,

@@ -155,22 +155,25 @@ public class Robot extends TimedRobot {
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			try {
-				// front camera (intake cam) - teleop tab
-				teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
-						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-				// rear camera (shooting cam) - teleop tab
-				// teleopTab.add(new HttpCamera(Constants.Vision.llAprilTagRear,
-				// Constants.Vision.llAprilTagRearIP))
-				// .withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(9, 0)
-				// .withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
-
 				// front camera (intake cam) - auto tab
 				autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
 						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(4, 0)
 						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
+				// front camera (intake cam) - teleop tab
+				teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
+						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
+				// TODO: should we get rid of rear camera?
 				// rear camera (shooting cam) - auto tab
 				// autoTab.add(new HttpCamera(Constants.Vision.llAprilTagRear,
+				// Constants.Vision.llAprilTagRearIP))
+				// .withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(9, 0)
+				// .withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
+
+				// rear camera (shooting cam) - teleop tab
+				// teleopTab.add(new HttpCamera(Constants.Vision.llAprilTagRear,
 				// Constants.Vision.llAprilTagRearIP))
 				// .withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(9, 0)
 				// .withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
@@ -229,8 +232,10 @@ public class Robot extends TimedRobot {
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
-		// TODO: this means it will always track the speaker, however will not allow us to pick up the piece
-		// however if, in the paths, we tell the arm to go down then the problem should be solved
+		// TODO: this means it will always track the speaker, however will not allow us
+		// to pick up the piece
+		// however if, in the paths, we tell the arm to go down then the problem should
+		// be solved
 		// this should be removed if we cant feed to shooter very well
 		// Arm.getInstance().setDefaultCommand(new SetPoint());
 
@@ -263,7 +268,8 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::stop));
 
 		if (autoShoot.getSelected()) {
-			// we want prepare and shoot because we know that at the beginning of the match, the robot will start in a position where it is ready to shoot off rip
+			// we want prepare and shoot because we know that at the beginning of the match,
+			// the robot will start in a position where it is ready to shoot off rip
 			autonCommand.beforeStarting(ShootCommandFactory.getPrepareAndShootCommand());
 		}
 
@@ -377,7 +383,8 @@ public class Robot extends TimedRobot {
 		for (TalonFX falcon : falcons) {
 			if (falcon.getPosition().getStatus().isError()) {
 				DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position");
-				new Alert("Device Failure", "TalonFX ID #" + falcon.getDeviceID() + " has failed to return position", AlertType.ERROR)
+				new Alert("Device Failure", "TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
+						AlertType.ERROR)
 						.set(true);
 			}
 		}
@@ -393,7 +400,8 @@ public class Robot extends TimedRobot {
 	public static boolean verifyMotor(TalonFX falcon) {
 		if (falcon.getPosition().getStatus().isError()) {
 			DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position");
-			new Alert("Device Failure", "TalonFX ID #" + falcon.getDeviceID() + " has failed to return position", AlertType.ERROR)
+			new Alert("Device Failure", "TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
+					AlertType.ERROR)
 					.set(true);
 			return true;
 		}
@@ -411,7 +419,8 @@ public class Robot extends TimedRobot {
 	public static boolean verifyCANcoders(CANcoder CANcoder) {
 		if (CANcoder.getPosition().getStatus().isError()) {
 			DataLogManager.log("CANcoder #" + CANcoder.getDeviceID() + " has failed to return position");
-			new Alert("Device Failure", "CANcoder ID #" + CANcoder.getDeviceID() + " has failed to return position", AlertType.ERROR)
+			new Alert("Device Failure", "CANcoder ID #" + CANcoder.getDeviceID() + " has failed to return position",
+					AlertType.ERROR)
 					.set(true);
 			return true;
 		}

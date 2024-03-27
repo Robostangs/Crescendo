@@ -76,7 +76,7 @@ public class Arm extends SubsystemBase {
         }
 
         if (!(this.getCurrentCommand() instanceof FineAdjust)) {
-            SmartDashboard.putString("Arm/Status", "Setpoint");
+            postStatus("Setpoint");
             if (!ArmIsBroken) {
                 armMotor.setControl(motionMagicDutyCycle);
                 armIsBrokenAlert.set(false);
@@ -84,7 +84,7 @@ public class Arm extends SubsystemBase {
         }
 
         if (ArmIsBroken) {
-            SmartDashboard.putString("Arm/Status", "ARM IS BROKEN");
+            postStatus("ARM IS BROKEN");
             armIsBrokenAlert.set(true);
         }
 
@@ -506,6 +506,10 @@ public class Arm extends SubsystemBase {
 
     public boolean atSetpoint() {
         return isInRangeOfTarget(getArmTarget()) && Math.abs(getVelocity()) < 0.05;
+    }
+
+    public void postStatus(String status) {
+        SmartDashboard.putString("Arm/status", status);
     }
 
     private static Arm mInstance;

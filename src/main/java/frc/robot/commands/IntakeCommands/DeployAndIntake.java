@@ -1,6 +1,5 @@
 package frc.robot.commands.IntakeCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
@@ -27,7 +26,7 @@ public class DeployAndIntake extends Command {
         if (deploy) {
             intake.setExtend(true);
             intake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
-            SmartDashboard.putString("Intake/Status", "Deploying Intake");
+            intake.postStatus("Deploying Intake");
         }
 
         intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);

@@ -1,6 +1,5 @@
 package frc.robot.commands.FeederCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -19,8 +18,8 @@ public class QuickFeed extends Command {
 
     @Override
     public void execute() {
-        SmartDashboard.putString("Intake/Status", "Quick Feed");
-        SmartDashboard.putString("Shooter/Status", "Quick Feed");
+        intake.postStatus("Quick Feed");
+        shooter.postStatus("Quick Feed");
         
         intake.setBelt(0.5);
         shooter.setFeederMotor(0.5);

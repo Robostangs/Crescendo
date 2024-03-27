@@ -319,6 +319,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 Math.abs(this.getState().speeds.omegaRadiansPerSecond) < 0.1;
     }
 
+    public void postStatus(String status) {
+        SmartDashboard.putString("Swerve/status", status);
+    }
+
     private static Drivetrain mInstance;
 
     public static Drivetrain getInstance() {

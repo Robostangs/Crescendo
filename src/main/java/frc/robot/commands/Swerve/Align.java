@@ -89,7 +89,7 @@ public class Align extends Command {
 
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Align PID", driveRequest.HeadingController);
-        SmartDashboard.putString("Swerve/status", "Aligning");
+        drivetrain.postStatus("Aligning");
 
         driveRequest.Deadband = Constants.OperatorConstants.deadband;
         driveRequest.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;

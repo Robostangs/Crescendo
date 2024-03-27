@@ -1,6 +1,5 @@
 package frc.robot.commands.Swerve;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -36,7 +35,7 @@ public class xDrive extends Command {
 
     @Override
     public void initialize() {
-        SmartDashboard.putString("Swerve/status", "xDrive");
+        drivetrain.postStatus("xDrive");
     }
 
     @Override

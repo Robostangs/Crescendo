@@ -36,6 +36,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Lower Arm"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "far mid"

@@ -39,7 +39,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid right far out west"
+            "pathName": "right far out west"
           }
         },
         {
@@ -49,15 +49,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Lower Arm"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "far mid"
+            "pathName": "mid right far out west"
           }
         },
         {

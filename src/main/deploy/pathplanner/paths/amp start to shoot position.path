@@ -8,38 +8,54 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7821734592233878,
-        "y": 6.572037189424595
+        "x": 2.2563411932379425,
+        "y": 7.7150996246436945
       },
       "isLocked": false,
       "linkedName": "Amp Start Position"
     },
     {
       "anchor": {
-        "x": 3.576217899608659,
-        "y": 6.312595840054362
+        "x": 2.9,
+        "y": 7.720384834288188
       },
       "prevControl": {
-        "x": 1.5810897990890134,
-        "y": 6.173082892566112
+        "x": 2.21,
+        "y": 7.720384834288188
+      },
+      "nextControl": {
+        "x": 3.51,
+        "y": 7.720384834288188
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.58278358686347,
+        "y": 7.483084859688239
+      },
+      "prevControl": {
+        "x": 3.980685378037423,
+        "y": 7.6631382938691806
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Shoot Position"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": 0,
-      "rotateFast": false
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 450.0
   },

@@ -18,14 +18,16 @@ public class PassToShooter extends Command {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+        intake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
         shooter.setFeederMotor(Constants.ShooterConstants.feederFeedForward);
     }
 
     @Override
     public void end(boolean interrupted) {
         intake.setBelt(0);
+        intake.setIntake(0);
         shooter.setFeederMotor(0);
     }
 

@@ -51,6 +51,14 @@ public class PathPlannerCommand {
 
                         poses.add(pose);
                     }));
+            if (Robot.isRed()) {
+                Robot.teleopField.getObject("Starting Pose").setPose(GeometryUtil.flipFieldPose(PathPlannerAuto.getStaringPoseFromAutoFile(autoName)));
+            }
+
+            else {
+                Robot.teleopField.getObject("Starting Pose").setPose(PathPlannerAuto.getStaringPoseFromAutoFile(autoName));
+            }
+            
             nullAuto.set(false);
             publishfail.set(false);
             noAutoSelected.set(false);

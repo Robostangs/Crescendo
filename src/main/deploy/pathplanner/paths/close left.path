@@ -8,67 +8,60 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9761327717099881,
-        "y": 7.260037135815013
-      },
-      "isLocked": false,
-      "linkedName": "Amp Start Position"
-    },
-    {
-      "anchor": {
-        "x": 2.5413268233943875,
-        "y": 7.019471020423523
-      },
-      "prevControl": {
-        "x": 2.2001922175505544,
-        "y": 7.086812337734958
-      },
-      "nextControl": {
-        "x": 3.1131983838041752,
-        "y": 6.9065813177922655
+        "x": 1.4281461725886417,
+        "y": 6.743350595960451
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.576217899608659,
-        "y": 6.312595840054362
+        "x": 2.521967516157255,
+        "y": 6.983781009228686
       },
       "prevControl": {
-        "x": 3.385418483276385,
-        "y": 6.763044095555073
+        "x": 2.1518246879086353,
+        "y": 6.896782895417644
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Shoot Position"
+      "linkedName": "Close Left Note"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.7,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 450.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 12.69,
+    "rotation": 28.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp Side Paths",
-  "previewStartingState": {
-    "rotation": 60.0,
-    "velocity": 0
-  },
+  "folder": "Starting Notes",
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

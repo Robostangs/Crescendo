@@ -109,6 +109,10 @@ public class Intake extends SubsystemBase {
         setHolding(setExtend);
     }
 
+    public void postStatus(String status) {
+        SmartDashboard.putString("Intake/status", status);
+    }
+
     private static Intake mInstance;
 
     public static Intake getInstance() {

@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
 
 	public static ShuffleboardTab autoTab, teleopTab, disabledTab;
 
+	/** Use teleopField for everything */
 	public static Field2d teleopField = new Field2d(), autoField = new Field2d();
 	public static PowerDistribution pdh = new PowerDistribution();
 	public static Timer timer = new Timer();

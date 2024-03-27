@@ -37,19 +37,13 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "center shoot to close left"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "center to center note"
+                  "pathName": "left to center note"
                 }
               },
               {

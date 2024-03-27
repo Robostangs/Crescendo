@@ -8,27 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9761327717099881,
-        "y": 7.260037135815013
+        "x": 1.142527798944487,
+        "y": 8.067070833215741
       },
       "isLocked": false,
       "linkedName": "Amp Start Position"
-    },
-    {
-      "anchor": {
-        "x": 2.980236761399449,
-        "y": 6.983662240472629
-      },
-      "prevControl": {
-        "x": 2.3042643863065506,
-        "y": 6.9890662188731785
-      },
-      "nextControl": {
-        "x": 3.6115237114923966,
-        "y": 6.978615494231879
-      },
-      "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
@@ -36,8 +20,8 @@
         "y": 7.12725366654437
       },
       "prevControl": {
-        "x": 3.587962821851569,
-        "y": 7.000764941344698
+        "x": 4.10110323239165,
+        "y": 7.711417793205958
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.55,
       "rotationDegrees": 0,
       "rotateFast": true
     }
@@ -60,15 +44,12 @@
     "maxAngularAcceleration": 450.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 20.64,
+    "velocity": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Amp Side Paths",
-  "previewStartingState": {
-    "rotation": 60.0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

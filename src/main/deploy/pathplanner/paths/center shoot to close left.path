@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.576217899608659,
-        "y": 6.312595840054362
+        "x": 4.14,
+        "y": 7.12725366654437
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1819654935606168,
-        "y": 6.845771714691578
+        "x": 3.592357265825642,
+        "y": 7.159974458837807
       },
       "isLocked": false,
       "linkedName": "Left Shoot Position"
@@ -47,8 +47,13 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.25,
-      "rotationDegrees": 160.33229723134147,
+      "rotationDegrees": 180.0,
       "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [
@@ -67,7 +72,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 450.0
   },

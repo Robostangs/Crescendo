@@ -39,13 +39,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center mid right far"
+            "pathName": "center mid left far"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Lower Arm"
           }
         },
         {

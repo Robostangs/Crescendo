@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -21,6 +22,7 @@ import frc.robot.Constants.Lights.LEDState;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.FineAdjust;
+import frc.robot.commands.ArmCommands.ReturnHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ClimberCommands.AlrightTranslate;
 import frc.robot.commands.ClimberCommands.Extend;
@@ -52,6 +54,7 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 public class RobotContainer {
 	public static final CommandXboxController xDrive = new CommandXboxController(0);
 	public static final CommandXboxController xManip = new CommandXboxController(1);
+	public static final CommandXboxController xPit = new CommandXboxController(2);
 	private static final GenericHID simController = new GenericHID(3);
 
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
@@ -169,6 +172,44 @@ public class RobotContainer {
 
 		
 					}
+		
+		private void configurePitBinds(){
+
+			//shoots no matter where arm is
+			//press right bumper to prepare and then left bumper to acually shoot
+			xPit.rightBumper().toggleOnTrue(new Prepare()
+			.raceWith(new WaitUntilCommand(xPit.leftBumper()))
+			.andThen(new Shoot()));
+			
+			//move the arm based oon the right stick
+			new Trigger(() -> Math.abs(xPit.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
+			.whileTrue(new FineAdjust(() -> -xPit.getRightY()));
+
+
+			//back right pannel to extend the climber
+			xPit.rightStick().toggleOnTrue(new Extend());
+			//back left pannel to retract the climber
+			xPit.leftStick().toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
+					() -> -Constants.ClimberConstants.RightMotor.kRetractPower));
+
+
+			//press x to go to amp and left bumper to shoot
+			xPit.x().toggleOnTrue(new PassToShooter().andThen(
+                new WaitUntilCommand(() -> xPit.getHID().getLeftBumper())
+                        .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
+                new PoopOut(),
+                new CancelShooter().alongWith(new ReturnHome())));
+
+			//press up arrow to make the robot go perfectly straight
+			xPit.povUp().whileTrue(new xDrive(() -> 0.0, () -> 0.3,() -> 0.0, () -> 0.0));
+			//press left arrow to deploy the intake
+			xPit.povLeft().toggleOnTrue(new DeployAndIntake(true));
+			//press right arrow to belt feed
+			xPit.povRight().toggleOnTrue(new DeployAndIntake(false));
+			
+			
+		}
+
 
 	public RobotContainer() {
 		logger = new Telemetry();

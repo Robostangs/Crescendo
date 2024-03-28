@@ -40,11 +40,11 @@ public class ShootCommandFactory {
                 .withName("Auto Aim and Shoot");
     }
 
-    public static Command getAimAndShootCommandWithWaitUntil() {
+    public static Command getAimAndShootCommandWithWaitUntil(BooleanSupplier leftbump) {
         configureSticks();
 
         return new PassToShooter().andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
-                .deadlineWith(new Prepare()).raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
+                .deadlineWith(new Prepare()).raceWith(new WaitUntilCommand(leftbump))
                 .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()), new Shoot())
                 .deadlineWith(new SetPoint())).withName("Aim and Shoot");
     }
@@ -56,11 +56,11 @@ public class ShootCommandFactory {
                 .withName("Auto Amp Shot");
     }
 
-    public static Command getAmpCommandWithWaitUntil() {
+    public static Command getAmpCommandWithWaitUntil (BooleanSupplier leftbump) {
         configureSticks();
 
         return new PassToShooter().andThen(
-                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
+                new WaitUntilCommand(leftbump)
                         .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
                 new PoopOut(),
                 new CancelShooter().alongWith(new ReturnHome())).withName("Amp Shot");
@@ -73,10 +73,10 @@ public class ShootCommandFactory {
                 .andThen(new Shoot()).withName("Auto Prepare and Shoot");
     }
 
-    public static Command getPrepareAndShootCommandWithWaitUntil() {
+    public static Command getPrepareAndShootCommandWithWaitUntil (BooleanSupplier leftbump) {
         configureSticks();
 
-        return new Prepare().raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())).andThen(new Shoot())
+        return new Prepare().raceWith(new WaitUntilCommand(leftbump)).andThen(new Shoot())
                 .withName("Prepare and Shoot");
     }
 

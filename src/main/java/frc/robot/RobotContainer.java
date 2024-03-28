@@ -111,7 +111,7 @@ public class RobotContainer {
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.StartingNotes.center)
 		// .andThen(ShootCommandFactory.getAmpCommand()));
-		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
+		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xManip.leftBumper())).withName("Auto-pilot Amp shot"));
 
 		xDrive.povUp().onTrue(new IntakeMultiple().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
@@ -146,8 +146,8 @@ public class RobotContainer {
 
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.x().whileTrue(new QuickFeed());
-		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil());
-		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil());
+		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xManip.leftBumper()));
+		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xManip.leftBumper()));
 
 		xManip.rightStick().toggleOnTrue(new Extend());
 		xManip.leftStick()
@@ -163,7 +163,7 @@ public class RobotContainer {
 						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()),
 						new Shoot()));
 
-		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
+		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));
 		// left bumper is the universal shoot button
 
 		// absolute worst case scenario
@@ -173,13 +173,11 @@ public class RobotContainer {
 		
 					}
 		
-		private void configurePitBinds(){
+		public static void configurePitBinds(){
 
 			//shoots no matter where arm is
 			//press right bumper to prepare and then left bumper to acually shoot
-			xPit.rightBumper().toggleOnTrue(new Prepare()
-			.raceWith(new WaitUntilCommand(xPit.leftBumper()))
-			.andThen(new Shoot()));
+			xPit.rightBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xPit.leftBumper()));
 			
 			//move the arm based oon the right stick
 			new Trigger(() -> Math.abs(xPit.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
@@ -194,11 +192,7 @@ public class RobotContainer {
 
 
 			//press x to go to amp and left bumper to shoot
-			xPit.x().toggleOnTrue(new PassToShooter().andThen(
-                new WaitUntilCommand(() -> xPit.getHID().getLeftBumper())
-                        .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
-                new PoopOut(),
-                new CancelShooter().alongWith(new ReturnHome())));
+			xPit.x().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xPit.leftBumper()));
 
 			//press up arrow to make the robot go perfectly straight
 			xPit.povUp().whileTrue(new xDrive(() -> 0.0, () -> 0.3,() -> 0.0, () -> 0.0));

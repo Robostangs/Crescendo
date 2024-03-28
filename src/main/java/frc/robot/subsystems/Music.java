@@ -56,9 +56,6 @@ public class Music extends SubsystemBase {
         } else {
             mOrchestra.pause();
         }
-
-        
-
     }
 
     private void playMusic(String chrpFile) {

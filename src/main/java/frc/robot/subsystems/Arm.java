@@ -76,7 +76,7 @@ public class Arm extends SubsystemBase {
         }
 
         if (!(this.getCurrentCommand() instanceof FineAdjust)) {
-            postStatus("Setpoint");
+            // postStatus("Setpoint");
             if (!ArmIsBroken) {
                 armMotor.setControl(motionMagicDutyCycle);
                 armIsBrokenAlert.set(false);
@@ -169,6 +169,7 @@ public class Arm extends SubsystemBase {
         motionMagicDutyCycle.Slot = 0;
 
         setMotionMagic(Constants.ArmConstants.kArmMinAngle);
+        postStatus("Idle");
 
         BaseStatusSignal.setUpdateFrequencyForAll(50, armMotor.getClosedLoopError(), armMotor.getClosedLoopReference(),
                 armMotor.getClosedLoopReferenceSlope());

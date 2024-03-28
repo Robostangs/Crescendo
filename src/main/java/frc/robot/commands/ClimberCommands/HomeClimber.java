@@ -19,6 +19,7 @@ public class HomeClimber extends Command {
     public void initialize() {
         climber.setReverseSoftLimitState(false);
         climber.setCurrentLimits(Constants.ClimberConstants.kHomingCurrentLimit);
+        climber.postStatus("Homing Climber");
     }
 
     @Override
@@ -38,6 +39,7 @@ public class HomeClimber extends Command {
         climber.setCurrentLimits(Constants.ClimberConstants.kDefaultStatorCurrentLimit);
         climber.setLeftClimbPower(0);
         climber.setRightClimbPower(0);
+        climber.postStatus("Climber Homed");
 
         if (!interrupted) {
             DataLogManager.log("Climber has been Homed");            

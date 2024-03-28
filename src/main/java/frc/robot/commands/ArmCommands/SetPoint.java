@@ -54,7 +54,6 @@ public class SetPoint extends Command {
         }
 
         arm.setMotionMagic(armSetpoint);
-
     }
 
     @Override
@@ -68,6 +67,7 @@ public class SetPoint extends Command {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
+            arm.postStatus("Returning Home");
             arm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
         }
     }

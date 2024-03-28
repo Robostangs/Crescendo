@@ -46,6 +46,8 @@ public class Intake extends SubsystemBase {
         if (Robot.isSimulation()) {
             SmartDashboard.putBoolean("Intake/Simulated Shooter Sensor", false);
         }
+
+        postStatus("Idle");
     }
 
     public void setExtend(boolean deploy) {

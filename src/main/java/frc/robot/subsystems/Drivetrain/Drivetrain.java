@@ -166,6 +166,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         for (SwerveModule module : Modules) {
             Music.getInstance().addFalcon(module.getDriveMotor(), module.getSteerMotor());
         }
+
+        postStatus("Idle");
     }
 
     private void configurePathPlanner() {

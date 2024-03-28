@@ -20,13 +20,14 @@ public class Shoot extends Command {
     public void initialize() {
         shooter.setShooterMotors(1);
         shooter.setFeederMotor(0);
+        shooter.postStatus("Shooting");
     }
     
     @Override
     public void execute() {
         if (force || shooter.readyToShoot()) {
             shooter.setFeederMotor(1);
-            shooter.postStatus("Shooting");
+            shooter.postStatus("Shot Fired");
         }
     }
 
@@ -44,5 +45,6 @@ public class Shoot extends Command {
         Intake.getInstance().setHolding(false);
         shooter.setShooterMotors(0);
         shooter.setFeederMotor(0);
-    }    
+        shooter.postStatus("Stopping Shooter");
+    }
 }

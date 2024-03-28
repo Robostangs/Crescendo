@@ -25,6 +25,15 @@ public class Climber extends SubsystemBase {
         setRightClimbPower(0);
     };
 
+    @Override
+    public void periodic() {
+        mLeftPosition.refresh();
+        mRightPosition.refresh();
+
+        SmartDashboard.putNumber("Climber/Left Motor Position", getLeftPosition());
+        SmartDashboard.putNumber("Climber/Right Motor Position", getRightPosition());
+    }
+
     private Climber() {
         mLeftClimberMotor = new TalonFX(Constants.ClimberConstants.LeftMotor.kId, "*");
         mRightClimberMotor = new TalonFX(Constants.ClimberConstants.RightMotor.kId, "*");
@@ -49,6 +58,8 @@ public class Climber extends SubsystemBase {
 
         mLeftPosition = mLeftClimberMotor.getPosition();
         mRightPosition = mRightClimberMotor.getPosition();
+
+        postStatus("Idle");
     }
 
     public void setLeftClimbPower(double power) {
@@ -75,15 +86,6 @@ public class Climber extends SubsystemBase {
 
     public void setRightPosition(double position) {
         mRightClimberMotor.setPosition(position);
-    }
-
-    @Override
-    public void periodic() {
-        mLeftPosition.refresh();
-        mRightPosition.refresh();
-
-        SmartDashboard.putNumber("Climber/Left Motor Position", getLeftPosition());
-        SmartDashboard.putNumber("Climber/Right Motor Position", getRightPosition());
     }
 
     public void setCurrentLimits(double kCurrentLimit) {
@@ -115,5 +117,7 @@ public class Climber extends SubsystemBase {
                 .withReverseSoftLimitEnable(!limitOverride).withForwardSoftLimitEnable(!limitOverride));
     }
 
-    
+    public void postStatus(String status) {
+        SmartDashboard.putString("Climber/status", status);
+    }
 }

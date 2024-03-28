@@ -14,6 +14,12 @@ public class Extend extends Command {
 		this.setName("Extend Climber");
 	}
 
+
+	@Override
+	public void initialize() {
+		climber.postStatus("Retracting");
+	}
+
 	@Override
 	public void execute() {
 		if (climber.getLeftPosition() < ClimberConstants.LeftMotor.kMaxExtensionMeters - ClimberConstants.LeftMotor.kExtensionThreshold) {

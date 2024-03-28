@@ -115,8 +115,8 @@ public class Align extends Command {
     @Override
     public void end(boolean interrupted) {
         LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
-
         drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
+        drivetrain.postStatus("Aligned");
     }
 
     @Override
@@ -125,10 +125,13 @@ public class Align extends Command {
             return false;
         }
 
-        // if (note) {
-        //     return false;
-        // }
+        if (note) {
+            return false;
+        }
 
-        return !Intake.getInstance().getHolding();
+        else {
+            return !Intake.getInstance().getHolding();
+        }
+
     }
 }

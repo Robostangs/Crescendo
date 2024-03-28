@@ -30,5 +30,6 @@ public class FineAdjust extends Command {
     @Override
     public void end(boolean interrupted) {
         arm.setMotionMagic(arm.getArmPosition());
+        arm.postStatus("Holding " + arm.getArmPosition() + " degrees");
     }
 }

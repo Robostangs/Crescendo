@@ -26,6 +26,7 @@ import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ClimberCommands.AlrightTranslate;
 import frc.robot.commands.ClimberCommands.Extend;
 import frc.robot.commands.ClimberCommands.HomeClimber;
+import frc.robot.commands.ClimberCommands.Retract;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
 import frc.robot.commands.FeederCommands.QuickFeed;
@@ -67,7 +68,8 @@ public class RobotContainer {
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
-		mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
+		// mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
+		mClimber.setDefaultCommand(new AlrightTranslate(() -> -xManip.getLeftTriggerAxis(), () -> -xManip.getRightTriggerAxis()));
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -126,10 +128,8 @@ public class RobotContainer {
 				.withName("Zero Swerve 2 Speaker"));
 
 		xDrive.leftBumper().onTrue(new ReturnHome().alongWith(new CancelShooter()));
-		xDrive.rightBumper()
-				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
-						() -> -Constants.ClimberConstants.RightMotor.kRetractPower)
-						.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
+		xDrive.rightBumper().toggleOnTrue(new Retract()
+				.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
 	}
 
 	private void configureManipBinds() {
@@ -155,8 +155,7 @@ public class RobotContainer {
 
 		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite)));
 		xManip.leftStick()
-				.toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
-						() -> -Constants.ClimberConstants.RightMotor.kRetractPower)
+				.toggleOnTrue(new Retract()
 						.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
 
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());

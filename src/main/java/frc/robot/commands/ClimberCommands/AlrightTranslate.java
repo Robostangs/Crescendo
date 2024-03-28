@@ -20,11 +20,12 @@ public class AlrightTranslate extends Command {
 		mRightSupplier = rightSupplier;
 
 		this.addRequirements(climber);
-		this.setName("Climb Time");
+		this.setName("Alright Translate");
 	}
 
 	@Override
 	public void initialize() {
+		climber.postStatus("Manually Translating");
 	}
 
 	@Override
@@ -35,6 +36,7 @@ public class AlrightTranslate extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		climber.postStatus("Idle");
 		climber.setLeftClimbPower(0);
 		climber.setRightClimbPower(0);
 	}

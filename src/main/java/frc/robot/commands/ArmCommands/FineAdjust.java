@@ -18,6 +18,11 @@ public class FineAdjust extends Command {
     }
 
     @Override
+    public void initialize() {
+        arm.postStatus("Manually Adjusting Arm");
+    }
+
+    @Override
     public void execute() {
         arm.aimRaw(manualAdjust.get() * Constants.ArmConstants.rateOfMotion);
     }

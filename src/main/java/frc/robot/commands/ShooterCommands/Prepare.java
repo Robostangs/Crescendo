@@ -16,6 +16,7 @@ public class Prepare extends Command {
     @Override
     public void initialize() {
         shooter.setShooterMotors(1);
+        shooter.postStatus("Preparing");
     }
 
     @Override

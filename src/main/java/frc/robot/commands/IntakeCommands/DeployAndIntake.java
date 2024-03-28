@@ -29,6 +29,11 @@ public class DeployAndIntake extends Command {
             intake.postStatus("Deploying Intake");
         }
 
+        else {
+            intake.postStatus("Intaking");
+            shooter.postStatus("Feeding");
+        }
+
         intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
         intake.setHolding(true);
         shooter.setFeederMotor(Constants.ShooterConstants.feederFeedForward);

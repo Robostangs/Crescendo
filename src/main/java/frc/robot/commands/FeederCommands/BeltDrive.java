@@ -21,6 +21,7 @@ public class BeltDrive extends Command {
     @Override
     public void execute() {
         intake.setBelt(manualAdjust.get());
+        intake.postStatus("Manually Adjusting Belt");
     }
 
     @Override

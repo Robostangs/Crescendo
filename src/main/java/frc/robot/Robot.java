@@ -158,7 +158,7 @@ public class Robot extends TimedRobot {
 			try {
 				// front camera (intake cam) - auto tab
 				autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(4, 0)
+						.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
 						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 				// front camera (intake cam) - teleop tab

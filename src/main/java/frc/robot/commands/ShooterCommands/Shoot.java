@@ -21,11 +21,12 @@ public class Shoot extends Command {
         shooter.setShooterMotors(1);
         shooter.setFeederMotor(0);
     }
-
+    
     @Override
     public void execute() {
         if (force || shooter.readyToShoot()) {
             shooter.setFeederMotor(1);
+            shooter.postStatus("Shooting");
         }
     }
 

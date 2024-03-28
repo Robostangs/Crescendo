@@ -15,6 +15,7 @@ public class FullSend extends Command {
 
     @Override
     public void initialize() {
+        shooter.postStatus("SEND IT");
         shooter.shoot(1, 1);
     }
 

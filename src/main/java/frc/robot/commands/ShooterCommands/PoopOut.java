@@ -18,6 +18,7 @@ public class PoopOut extends Command {
     @Override
     public void execute() {
         shooter.shoot(Constants.ShooterConstants.feederShootValue, Constants.ShooterConstants.shooterPoopSpeed);
+        shooter.postStatus("Pooping");
     }
 
     @Override

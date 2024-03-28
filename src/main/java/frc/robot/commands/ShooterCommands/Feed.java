@@ -17,6 +17,7 @@ public class Feed extends Command {
 
     @Override
     public void initialize() {
+        shooter.postStatus("Feeding");
         shooter.setFeederMotor(Constants.ShooterConstants.feederFeedForward);
     }
 

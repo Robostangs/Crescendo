@@ -16,6 +16,7 @@ public class CancelShooter extends Command {
     @Override
     public void initialize() {
         shooter.shoot(0, 0);
+        shooter.postStatus("Stopping Shooter");
     }
 
     @Override

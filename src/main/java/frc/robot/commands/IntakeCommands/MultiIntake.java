@@ -11,7 +11,7 @@ public class MultiIntake extends Command {
         intake = Intake.getInstance();
 
         this.addRequirements(intake);
-        this.setName("Intake Multiple");
+        this.setName("Multi Intake");
     }
 
     @Override
@@ -19,6 +19,7 @@ public class MultiIntake extends Command {
         intake.setExtend(true);
         intake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
         intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
+        intake.postStatus("Intaking Multiple");
     }
 
     @Override

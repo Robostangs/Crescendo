@@ -5,7 +5,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 
 public class SetPoint extends Command {
-    Arm mArm;
+    Arm arm;
     double armSetpoint;
     boolean autoAim;
 
@@ -18,12 +18,12 @@ public class SetPoint extends Command {
      * @param target in degrees of THE SHOOTER, not the extension bar
      */
     public SetPoint(double target) {
-        mArm = Arm.getInstance();
+        arm = Arm.getInstance();
         armSetpoint = target;
 
         autoAim = false;
 
-        this.addRequirements(mArm);
+        this.addRequirements(arm);
         this.setName("Setpoint: " + armSetpoint + " degrees");
     }
 
@@ -34,35 +34,41 @@ public class SetPoint extends Command {
      * Only use this if the shooter sensor is not working
      */
     public SetPoint() {
-        mArm = Arm.getInstance();
+        arm = Arm.getInstance();
 
         autoAim = true;
 
         this.setName("Auto Setpoint");
-        this.addRequirements(mArm);
+        this.addRequirements(arm);
     }
 
     @Override
     public void initialize() {
         if (autoAim) {
-            armSetpoint = mArm.calculateArmSetpoint();
+            armSetpoint = arm.calculateArmSetpoint();
+            arm.postStatus("Tracking Speaker");
         }
 
-        mArm.setMotionMagic(armSetpoint);
+        else {
+            arm.postStatus("Traveling to " + armSetpoint + " degrees");
+        }
+
+        arm.setMotionMagic(armSetpoint);
+
     }
 
     @Override
     public void execute() {
         if (autoAim) {
-            armSetpoint = mArm.calculateArmSetpoint();
-            mArm.setMotionMagic(armSetpoint);
+            armSetpoint = arm.calculateArmSetpoint();
+            arm.setMotionMagic(armSetpoint);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            mArm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+            arm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
         }
     }
 
@@ -73,7 +79,7 @@ public class SetPoint extends Command {
         }
 
         else {
-            return mArm.atSetpoint();
+            return arm.atSetpoint();
         }
     }
 }

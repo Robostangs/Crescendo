@@ -17,6 +17,7 @@ public class ReturnHome extends Command {
     @Override
     public void initialize() {
         arm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+        arm.postStatus("Returning Home");
     }
 
     @Override

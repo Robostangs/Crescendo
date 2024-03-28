@@ -20,7 +20,7 @@ public class QuickFeed extends Command {
     public void execute() {
         intake.postStatus("Quick Feed");
         shooter.postStatus("Quick Feed");
-        
+
         intake.setBelt(0.5);
         shooter.setFeederMotor(0.5);
     }

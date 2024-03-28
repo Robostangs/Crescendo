@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
@@ -15,6 +16,7 @@ import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class ShootCommandFactory {
@@ -55,16 +57,28 @@ public class ShootCommandFactory {
         public static Command getAimAndShootCommandWithTimeouts() {
                 configureSticks();
 
-                return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
-                                .andThen(new SetPoint().raceWith(new WaitUntilCommand(
-                                                () -> Arm.getInstance().atSetpoint())
-                                                .withTimeout(Constants.OperatorConstants.setpointTimeout)
-                                                .deadlineWith(new Prepare())
-                                                .andThen(new Shoot(false)
-                                                                .withTimeout(Constants.OperatorConstants.shootTimeout),
-                                                                new Spit().withTimeout(
-                                                                                Constants.AutoConstants.spitTime))))
+                // return new
+                // PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
+                // .andThen(new SetPoint().raceWith(new WaitUntilCommand(
+                // () -> Arm.getInstance().atSetpoint())
+                // .withTimeout(Constants.OperatorConstants.setpointTimeout)
+                // .deadlineWith(new Prepare())
+                // .andThen(new Shoot(false)
+                // .withTimeout(Constants.OperatorConstants.shootTimeout)
+                // // TODO: try this
+                // .onlyIf(() -> Intake.getInstance().getShooterSensor()),
+                // new Spit().withTimeout(Constants.AutoConstants.spitTime))))
+                // .withName("Auto Aim and Shoot with Timeouts");
+
+                return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout).andThen(new ConditionalCommand(new SetPoint().raceWith(new WaitUntilCommand(
+                                () -> Arm.getInstance().atSetpoint())
+                                .withTimeout(Constants.OperatorConstants.setpointTimeout)
+                                .deadlineWith(new Prepare())
+                                .andThen(new Shoot(false)
+                                                .withTimeout(Constants.OperatorConstants.shootTimeout))),
+                                new Spit().withTimeout(Constants.AutoConstants.spitTime), () -> Intake.getInstance().getShooterSensor()))
                                 .withName("Auto Aim and Shoot with Timeouts");
+
         }
 
         public static Command getAimAndShootCommandWithWaitUntil() {

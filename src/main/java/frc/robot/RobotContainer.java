@@ -217,6 +217,7 @@ public class RobotContainer {
 		drivetrain.registerTelemetry((telemetry) -> logger.telemeterize(telemetry));
 		configureDriverBinds();
 		configureManipBinds();
+		configurePitBinds();
 		configureDefaultBinds();
 
 		if (Robot.isSimulation()) {

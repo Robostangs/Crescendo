@@ -68,8 +68,10 @@ public class RobotContainer {
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
-		// mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber Default (no moving)"));
-		mClimber.setDefaultCommand(new AlrightTranslate(() -> -xManip.getLeftTriggerAxis(), () -> -xManip.getRightTriggerAxis()));
+		// mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber
+		// Default (no moving)"));
+		mClimber.setDefaultCommand(
+				new AlrightTranslate(() -> -xManip.getLeftTriggerAxis(), () -> -xManip.getRightTriggerAxis()));
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -112,10 +114,12 @@ public class RobotContainer {
 
 		// just runs feeder
 		xDrive.leftStick()
-				.toggleOnTrue(new DeployAndIntake(false).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+				.toggleOnTrue(new DeployAndIntake(false).andThen(new BeltDrive(() -> -1d).raceWith(new WaitCommand(1))
+						.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))));
 		// deploys intake(right paddle)
 		xDrive.rightStick()
-				.toggleOnTrue(new DeployAndIntake(true).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+				.toggleOnTrue(new DeployAndIntake(true).andThen(new BeltDrive(() -> -1d).raceWith(new WaitCommand(1))
+						.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))));
 
 		xDrive.povUp().onTrue(new MultiIntake().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));

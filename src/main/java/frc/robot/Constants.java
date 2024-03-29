@@ -65,7 +65,9 @@ public final class Constants {
 		}
 
 		public static final double kMaxSpeedMetersPerSecond = 6;
-		public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
+
+		// public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
+		public static final double kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond / 0.44;
 
 		public static final double maxModuleSpeed = 6;
 
@@ -80,11 +82,13 @@ public final class Constants {
 		public static final Translation2d centerOfRotation = new Translation2d(0, 0);
 
 		/**
-		 * distance from the center of the robot to the furthest module (meters) should
-		 * be 17.27
+		 * distance from the center of the robot to the furthest module (meters)
+		 * should be 0.438658 meters (17.27 inches)
 		 */
-		public static final double driveBaseRadius = Units
-				.inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
+		// public static final double driveBaseRadius = Units
+		// 		.inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
+		
+		public static final double driveBaseRadius = 0.44;
 
 		public class TunerConstants {
 			// The steer motor uses any SwerveModule.SteerRequestType control request with
@@ -257,13 +261,16 @@ public final class Constants {
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
-		public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
-		public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond * 4
-				/ 6;
+		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
-		public static final double kMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(360d * 4);
-		public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = Units.degreesToRadians(360 * 2.5);
+		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.kMaxAngularSpeedRadiansPerSecond;
+		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared / SwerveConstants.driveBaseRadius;
+		// public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
+		// public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond * 4
+				// / 6;
+
+		// public static final double kMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(360d * 4);
+		// public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = Units.degreesToRadians(360 * 2.5);
 
 		public static final String kFieldObjectName = "path";
 
@@ -318,7 +325,7 @@ public final class Constants {
 		public static final double slowDownMultiplier = 0.5;
 
 		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.07;
-		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedMetersPerSecond * 0.07;
+		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.07;
 
 		public static final double setpointTimeout = 2;
 		public static final double feedTimeout = 1;

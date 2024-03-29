@@ -33,7 +33,7 @@ public class PathToPoint extends SequentialCommandGroup {
                                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
                                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared,
                                 Constants.AutoConstants.kMaxAngularSpeedRadiansPerSecond,
-                                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondPerSecond),
+                                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared),
                         0.0,
                         0.0));
     }

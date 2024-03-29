@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.14,
-        "y": 7.12725366654437
+        "x": 4.575063617719828,
+        "y": 7.47613688745896
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.041659469985606,
-        "y": 6.313034459402252
+        "x": 4.476723087705435,
+        "y": 6.661917680316842
       },
       "isLocked": false,
       "linkedName": "Left Shoot Position"
@@ -64,12 +64,12 @@
     },
     {
       "anchor": {
-        "x": 4.14,
-        "y": 7.12725366654437
+        "x": 4.575063617719828,
+        "y": 7.47613688745896
       },
       "prevControl": {
-        "x": 4.025269381649874,
-        "y": 6.315884909547597
+        "x": 4.460332999369703,
+        "y": 6.664768130462186
       },
       "nextControl": null,
       "isLocked": false,
@@ -121,7 +121,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 20.64,
+    "rotation": 24.08,
     "rotateFast": false
   },
   "reversed": false,

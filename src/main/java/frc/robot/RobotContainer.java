@@ -114,12 +114,14 @@ public class RobotContainer {
 
 		// just runs feeder
 		xDrive.leftStick()
-				.toggleOnTrue(new DeployAndIntake(false).onlyIf(() -> !Intake.getInstance().getShooterSensor()).andThen(new BeltDrive(() -> -1d).raceWith(new WaitCommand(1))
-						.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))));
+				.toggleOnTrue(new DeployAndIntake(false).onlyIf(() -> !Intake.getInstance().getShooterSensor())
+						.andThen(new BeltDrive(() -> -1d).raceWith(new WaitCommand(1))
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))));
 		// deploys intake(right paddle)
 		xDrive.rightStick()
-				.toggleOnTrue(new DeployAndIntake(true).onlyIf(() -> !Intake.getInstance().getShooterSensor()).andThen(new BeltDrive(() -> -1d).raceWith(new WaitCommand(1))
-						.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))));
+				.toggleOnTrue(new DeployAndIntake(true).onlyIf(() -> !Intake.getInstance().getShooterSensor())
+						.andThen(new BeltDrive(() -> -1d).raceWith(new WaitCommand(1))
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))));
 
 		xDrive.povUp().onTrue(new MultiIntake().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));

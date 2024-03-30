@@ -41,7 +41,7 @@ public class ShootCommandFactory {
                 // Prepare())),
                 // new Shoot(false)).withName("Auto Aim and Shoot");
 
-                return new PassToShooter().onlyIf(() -> !Intake.getInstance().getShooterSensor())
+                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new SetPoint()
                                                 .raceWith(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
                                                                 .deadlineWith(new Prepare()).andThen(new Shoot(false))))
@@ -69,8 +69,8 @@ public class ShootCommandFactory {
                 // new Spit().withTimeout(Constants.AutoConstants.spitTime))))
                 // .withName("Auto Aim and Shoot with Timeouts");
 
-                return new PassToShooter().onlyIf(() -> !Intake.getInstance().getShooterSensor())
-                                .withTimeout(Constants.OperatorConstants.feedTimeout)
+                return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
+                                .unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new ConditionalCommand(new SetPoint().raceWith(new WaitUntilCommand(
                                                 () -> Arm.getInstance().atSetpoint())
                                                 .withTimeout(Constants.OperatorConstants.setpointTimeout)
@@ -86,7 +86,7 @@ public class ShootCommandFactory {
         public static Command getAimAndShootCommandWithWaitUntil() {
                 configureSticks();
 
-                return new PassToShooter().onlyIf(() -> !Intake.getInstance().getShooterSensor())
+                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new WaitUntilCommand(() -> Arm.getInstance().atSetpoint())
                                                 .deadlineWith(new Prepare())
                                                 .raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
@@ -99,7 +99,7 @@ public class ShootCommandFactory {
         public static Command getAmpCommand() {
                 configureSticks();
 
-                return new PassToShooter().onlyIf(() -> !Intake.getInstance().getShooterSensor())
+                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut(),
                                                 new CancelShooter().alongWith(new ReturnHome()))
                                 .withName("Auto Amp Shot");
@@ -108,7 +108,7 @@ public class ShootCommandFactory {
         public static Command getAmpCommandWithWaitUntil() {
                 configureSticks();
 
-                return new PassToShooter().onlyIf(() -> !Intake.getInstance().getShooterSensor()).andThen(
+                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor()).andThen(
                                 new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
                                                 .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
                                 new PoopOut(),
@@ -152,7 +152,7 @@ public class ShootCommandFactory {
         public static Command getCenterToWingCommand() {
                 configureSticks();
 
-                return new PassToShooter().onlyIf(() -> !Intake.getInstance().getShooterSensor()).andThen(
+                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor()).andThen(
                                 new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
                                                 .deadlineWith(new SetPoint(
                                                                 Constants.ArmConstants.SetPoints.kCenterToWingPass)),

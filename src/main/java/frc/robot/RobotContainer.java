@@ -2,18 +2,11 @@ package frc.robot;
 
 import com.pathplanner.lib.util.GeometryUtil;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -34,7 +27,6 @@ import frc.robot.commands.IntakeCommands.DeployAndIntake;
 import frc.robot.commands.IntakeCommands.MultiIntake;
 import frc.robot.commands.ShooterCommands.CancelShooter;
 import frc.robot.commands.ShooterCommands.Feed;
-import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.Align;
@@ -55,12 +47,12 @@ public class RobotContainer {
 	private static final GenericHID simController = new GenericHID(3);
 
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
-	private final Arm mArm = Arm.getInstance();
-	private final Shooter mShooter = Shooter.getInstance();
-	private final Intake mIntake = Intake.getInstance();
-	private final Climber mClimber = Climber.getInstance();
-	private final Music mMusic = Music.getInstance();
-	private final Lighting mLighting = Lighting.getInstance();
+	private final Arm arm = Arm.getInstance();
+	private final Shooter shooter = Shooter.getInstance();
+	private final Intake intake = Intake.getInstance();
+	private final Climber climber = Climber.getInstance();
+	private final Music music = Music.getInstance();
+	private final Lighting lighting = Lighting.getInstance();
 
 	private final Telemetry logger;
 	public Field2d field;
@@ -68,9 +60,7 @@ public class RobotContainer {
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
 
-		// mClimber.setDefaultCommand(mClimber.run(mClimber.stopClimber).withName("Climber
-		// Default (no moving)"));
-		mClimber.setDefaultCommand(
+		climber.setDefaultCommand(
 				new AlrightTranslate(() -> -xManip.getLeftTriggerAxis(), () -> -xManip.getRightTriggerAxis()));
 
 		if (Robot.isSimulation()) {
@@ -114,14 +104,14 @@ public class RobotContainer {
 
 		// just runs feeder
 		xDrive.leftStick()
-				.toggleOnTrue(new DeployAndIntake(false).onlyIf(() -> !Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).raceWith(new WaitCommand(1))
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))));
+				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
+						.andThen(new BeltDrive(() -> -1d).withTimeout(1))
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)));
 		// deploys intake(right paddle)
 		xDrive.rightStick()
-				.toggleOnTrue(new DeployAndIntake(true).onlyIf(() -> !Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).raceWith(new WaitCommand(1))
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))));
+				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+						.andThen(new BeltDrive(() -> -1d).withTimeout(1))
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)));
 
 		xDrive.povUp().onTrue(new MultiIntake().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
@@ -180,7 +170,7 @@ public class RobotContainer {
 
 		// TODO: test, absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())
-				.onTrue(mArm.runOnce(mArm::toggleArmMotorLimits));
+				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
 	}
 
 	public RobotContainer() {

@@ -7,6 +7,7 @@ package frc.robot.commands.ClimberCommands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Climber;
 
 public class AlrightTranslate extends Command {
@@ -30,8 +31,15 @@ public class AlrightTranslate extends Command {
 
 	@Override
 	public void execute() {
-		climber.setLeftClimbPower(mLeftSupplier.getAsDouble());
-		climber.setRightClimbPower(mRightSupplier.getAsDouble());
+		if (Math.abs(mLeftSupplier.getAsDouble()) > OperatorConstants.kManipDeadzone) {
+			climber.setLeftClimbPower(mLeftSupplier.getAsDouble());
+		}
+
+		if (Math.abs(mRightSupplier.getAsDouble()) > OperatorConstants.kManipDeadzone) {
+			climber.setRightClimbPower(mRightSupplier.getAsDouble());
+		}
+
+
 	}
 
 	@Override

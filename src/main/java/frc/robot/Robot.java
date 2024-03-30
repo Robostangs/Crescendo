@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.util.Map;
 
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -373,6 +374,7 @@ public class Robot extends TimedRobot {
 
 	public static void verifyMotors(TalonFX... falcons) {
 		for (TalonFX falcon : falcons) {
+			falcon.getConfigurator().apply(new AudioConfigs().withAllowMusicDurDisable(true));
 			if (falcon.getPosition().getStatus().isError()) {
 				DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position");
 				new Alert("TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
@@ -390,6 +392,7 @@ public class Robot extends TimedRobot {
 	 * @return false if the position is available, true if not available
 	 */
 	public static boolean verifyMotor(TalonFX falcon) {
+		falcon.getConfigurator().apply(new AudioConfigs().withAllowMusicDurDisable(true));
 		if (falcon.getPosition().getStatus().isError()) {
 			DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position");
 			new Alert("TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",

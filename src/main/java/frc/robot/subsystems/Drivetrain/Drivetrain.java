@@ -4,14 +4,11 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.configs.MountPoseConfigs;
-import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import com.ctre.phoenix6.configs.Pigeon2FeaturesConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -24,10 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -38,7 +31,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Robot;
 import frc.robot.Vision.LimelightHelpers;
-import frc.robot.Vision.LimelightHelpers.LimelightResults;
 import frc.robot.Vision.LimelightHelpers.PoseEstimate;
 import frc.robot.subsystems.Music;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -243,8 +235,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     // ankur is mine hehehehhehehehehehehhehe
     public Pose2d getPose() {
-        Pose2d pose = getState().Pose;
-
         return getState().Pose;
     }
 
@@ -269,8 +259,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         /* Swerve Pose calculated in meters */
         Pose2d currentPose = Drivetrain.getInstance().getPose();
         double SpeakerY = speakerPose.getY();
-
-        double Ydeadband = 1;
 
         double distToSpeakerMeters = Math.sqrt(
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)

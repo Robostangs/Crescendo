@@ -65,7 +65,6 @@ public class ShootCommandFactory {
                 // .deadlineWith(new Prepare())
                 // .andThen(new Shoot(false)
                 // .withTimeout(Constants.OperatorConstants.shootTimeout)
-                // // TODO: try this
                 // .onlyIf(() -> Intake.getInstance().getShooterSensor()),
                 // new Spit().withTimeout(Constants.AutoConstants.spitTime))))
                 // .withName("Auto Aim and Shoot with Timeouts");
@@ -137,7 +136,7 @@ public class ShootCommandFactory {
                 configureSticks();
 
                 return new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare())
-                                .andThen(new Shoot(true))
+                                .andThen(new Shoot(true).until(() -> !xManip.getHID().getLeftBumper()))
                                 .withName("Prepare and Shoot");
         }
 

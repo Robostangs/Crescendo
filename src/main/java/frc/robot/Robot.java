@@ -165,19 +165,6 @@ public class Robot extends TimedRobot {
 				teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
 						.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
 						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-
-				// TODO: should we get rid of rear camera?
-				// rear camera (shooting cam) - auto tab
-				// autoTab.add(new HttpCamera(Constants.Vision.llAprilTagRear,
-				// Constants.Vision.llAprilTagRearIP))
-				// .withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(9, 0)
-				// .withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
-
-				// rear camera (shooting cam) - teleop tab
-				// teleopTab.add(new HttpCamera(Constants.Vision.llAprilTagRear,
-				// Constants.Vision.llAprilTagRearIP))
-				// .withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(9, 0)
-				// .withProperties(Map.of("Show Crosshair", true, "Show Controls", false));
 			} catch (Exception e) {
 				System.out.println("Failed to add camera to Shuffleboard");
 				ShuffleBoardCamera.set(true);
@@ -185,6 +172,7 @@ public class Robot extends TimedRobot {
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);
+
 		Shuffleboard.selectTab(disabledTab.getTitle());
 
 		Lighting.getInstance().autoSetLights(true);
@@ -208,6 +196,7 @@ public class Robot extends TimedRobot {
 	public void driverStationConnected() {
 		if (DriverStation.isFMSAttached()) {
 			atComp = true;
+			Shuffleboard.selectTab(autoTab.getTitle());
 			Shuffleboard.startRecording();
 		}
 	}
@@ -239,13 +228,6 @@ public class Robot extends TimedRobot {
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
-
-		// TODO: this means it will always track the speaker, however will not allow us
-		// to pick up the piece
-		// however if, in the paths, we tell the arm to go down then the problem should
-		// be solved
-		// this should be removed if we cant feed to shooter very well
-		// Arm.getInstance().setDefaultCommand(new SetPoint());
 
 		Shuffleboard.selectTab(autoTab.getTitle());
 		robotContainer.removeDefaultCommands();

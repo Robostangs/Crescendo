@@ -258,6 +258,7 @@ public final class Constants {
 		// 10);
 
 		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0.1, 0.5);
+		// TODO: improve rotation pid
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;

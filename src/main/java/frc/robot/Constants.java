@@ -110,8 +110,9 @@ public final class Constants {
 			/** The closed-loop output type to use for the drive motors */
 			private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
+			// TODO: tune this number
 			/** The stator current at which the wheels start to slip */
-			private static final double kSlipCurrentA = 80.0;
+			private static final double kSlipCurrentA = 200.0;
 
 			/** Theoretical free speed (m/s) at 12v applied output */
 			public static final double kSpeedAt12VoltsMps = 5.96;
@@ -121,12 +122,12 @@ public final class Constants {
 			 * Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns
 			 * This may need to be tuned to your individual robot
 			 */
-			// private static final double kCoupleRatio = 3.125;
-			private static final double kCoupleRatio = 6.12;
+			private static final double kCoupleRatio = 3.125;
+			// private static final double kCoupleRatio = 6.12;
 
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
-			private static final double kWheelRadiusInches = 2 * 6.3 / 6.6;
+			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6);
 
 			private static final boolean kSteerMotorReversed = false;
 			private static final boolean kInvertLeftSide = true;

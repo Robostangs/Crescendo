@@ -106,7 +106,7 @@ public class Arm extends SubsystemBase {
         armMotor = new TalonFX(Constants.ArmConstants.armMotorID, "rio");
         armCoder = new CANcoder(Constants.ArmConstants.armCoderID, "rio");
 
-        if (Robot.verifyMotor(armMotor)) {
+        if (Robot.verifyCANcoder(armCoder)) {
             var txConfig = getArmMotorConfig();
             txConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
             txConfig.Feedback.RotorToSensorRatio = 1;

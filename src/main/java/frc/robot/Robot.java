@@ -470,7 +470,7 @@ public class Robot extends TimedRobot {
 	 * @param coder a CANcoder
 	 * @return false if the position is available, true if not available
 	 */
-	public static boolean verifyCANcoders(CANcoder coder) {
+	public static boolean verifyCANcoder(CANcoder coder) {
 		StatusCode status = coder.getPosition().getStatus();
 		if (status.isError()) {
 			DataLogManager.log("TalonFX #" + coder.getDeviceID() + " has failed to return position with status: "

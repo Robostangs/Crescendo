@@ -128,7 +128,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         for (SwerveModule mod : super.Modules) {
             Robot.verifyMotors(mod.getDriveMotor(), mod.getSteerMotor());
-            Robot.verifyCANcoders(mod.getCANcoder());
+            Robot.verifyCANcoder(mod.getCANcoder());
         }
 
         if (Constants.Vision.UseLimelight) {

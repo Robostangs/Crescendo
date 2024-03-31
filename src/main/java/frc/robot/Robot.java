@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Boolean> autoShoot = new SendableChooser<>();
 	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
 
-	public static ShuffleboardTab autoTab, teleopTab, disabledTab;
+	public static ShuffleboardTab teleopTab, autoTab, disabledTab;
 
 	/** Use teleopField for everything */
 	public static Field2d teleopField = new Field2d(), autoField = new Field2d();
@@ -76,8 +76,8 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 
-		autoTab = Shuffleboard.getTab("Autonomous");
 		teleopTab = Shuffleboard.getTab("Teleoperated");
+		autoTab = Shuffleboard.getTab("Autonomous");
 		disabledTab = Shuffleboard.getTab("Disabled");
 
 		robotContainer = new RobotContainer();
@@ -194,12 +194,12 @@ public class Robot extends TimedRobot {
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
 			autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-					.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
+					.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(6, 0)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 			// front camera (intake cam) - teleop tab
 			teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-					.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
+					.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(6, 0)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 		}
 

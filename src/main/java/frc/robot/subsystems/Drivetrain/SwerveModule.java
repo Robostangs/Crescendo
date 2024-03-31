@@ -27,6 +27,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
 
 /**
  * Swerve Module class that encapsulates a swerve module powered by CTR
@@ -334,7 +335,7 @@ public class SwerveModule {
             case Velocity:
                 switch (m_driveClosedLoopOutput) {
                     case Voltage:
-                        m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet).withEnableFOC(false));
+                        m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet).withEnableFOC(Constants.SwerveConstants.enableFOC));
                         break;
 
                     case TorqueCurrentFOC:

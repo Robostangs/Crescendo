@@ -90,6 +90,8 @@ public final class Constants {
 		
 		public static final double driveBaseRadius = 0.44;
 
+		public static final boolean enableFOC = true;
+
 		public class TunerConstants {
 			// The steer motor uses any SwerveModule.SteerRequestType control request with
 			// the

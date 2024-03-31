@@ -43,7 +43,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * so it can be used in command-based projects easily.
  */
 public class Drivetrain extends SwerveDrivetrain implements Subsystem {
-
     private static final double kSimLoopPeriod = 0.005;
 
     private Notifier m_simNotifier = null;

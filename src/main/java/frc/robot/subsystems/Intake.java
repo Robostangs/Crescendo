@@ -34,8 +34,10 @@ public class Intake extends SubsystemBase {
         compressor = new Compressor(PneumaticsModuleType.CTREPCM);
         compressor.enableDigital();
         
-        intakeMotor = new TalonFX(Constants.IntakeConstants.intakeMotorID, "*");
-        beltMotor = new TalonFX(Constants.IntakeConstants.beltMotorID, "*");
+        intakeMotor = new TalonFX(Constants.IntakeConstants.intakeMotorID, "rio");
+        beltMotor = new TalonFX(Constants.IntakeConstants.beltMotorID, "rio");
+
+        Robot.verifyMotors(intakeMotor, beltMotor);
         
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorInverted);
         beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);

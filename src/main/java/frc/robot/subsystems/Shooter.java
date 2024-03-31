@@ -8,6 +8,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Shooter extends SubsystemBase {
     private TalonFX bottomShooter, topShooter, feedMotor;
@@ -24,6 +25,8 @@ public class Shooter extends SubsystemBase {
         bottomShooter = new TalonFX(Constants.ShooterConstants.bottomShooterMotorID, "rio");
         topShooter = new TalonFX(Constants.ShooterConstants.topShooterMotorID, "rio");
         feedMotor = new TalonFX(Constants.ShooterConstants.feedMotor, "rio");
+
+        Robot.verifyMotors(bottomShooter, topShooter, feedMotor);
 
         TalonFXConfiguration fxConfig = new TalonFXConfiguration();
         // fxConfig.CurrentLimits.SupplyCurrentLimit = 30;

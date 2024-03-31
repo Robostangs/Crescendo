@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Climber extends SubsystemBase {
 
@@ -37,6 +38,8 @@ public class Climber extends SubsystemBase {
     private Climber() {
         mLeftClimberMotor = new TalonFX(Constants.ClimberConstants.LeftMotor.kId, "*");
         mRightClimberMotor = new TalonFX(Constants.ClimberConstants.RightMotor.kId, "*");
+
+        Robot.verifyMotors(mLeftClimberMotor, mRightClimberMotor);
 
         mLeftClimberMotor.setInverted(Constants.ClimberConstants.LeftMotor.kInverted);
         mRightClimberMotor.setInverted(Constants.ClimberConstants.RightMotor.kInverted);

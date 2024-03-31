@@ -27,6 +27,7 @@ public class PathPlannerCommand {
                     .setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
             lastAutoName = "null";
             noAutoSelected.set(true);
+            nullAuto.set(false);
             return;
         } 
         
@@ -62,7 +63,7 @@ public class PathPlannerCommand {
             nullAuto.set(false);
             publishfail.set(false);
             noAutoSelected.set(false);
-        } 
+        }
         
         catch (RuntimeException e) {
             System.out.println("Null Auto: " + autoName);

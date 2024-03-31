@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "center to close left note"
+                  "pathName": "center to close right note"
                 }
               },
               {
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "close center"
+                  "pathName": "right to center note"
                 }
               },
               {
@@ -68,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "center to close right"
+                  "pathName": "center to left note"
                 }
               },
               {

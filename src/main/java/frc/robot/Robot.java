@@ -96,8 +96,7 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("2 Piece", " 2 piece");
 		autoChooser.addOption("3 Piece", " 3 piece");
 		autoChooser.addOption("4 Piece (Center Only)", " 4 piece");
-		autoChooser.addOption("All Close Notes (Center Only)", " all close notes");
-		autoChooser.addOption("All Close Notes Fast", " all close notes fast");
+		autoChooser.addOption("All Close Notes", " all close notes");
 		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");

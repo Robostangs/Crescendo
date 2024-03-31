@@ -12,7 +12,7 @@
         "y": 3.4747581115532604
       },
       "isLocked": false,
-      "linkedName": "Right Shoot Position"
+      "linkedName": "Stage Shoot Position"
     },
     {
       "anchor": {
@@ -24,8 +24,8 @@
         "y": 2.4886779007528474
       },
       "nextControl": {
-        "x": 5.440234621209983,
-        "y": 0.8456335431189386
+        "x": 5.598823222662623,
+        "y": 0.673433322183827
       },
       "isLocked": false,
       "linkedName": null
@@ -52,12 +52,12 @@
         "y": 1.5414189067473447
       },
       "prevControl": {
-        "x": 5.4069793695142945,
-        "y": 0.8677245317453599
+        "x": 5.406934013522133,
+        "y": 0.8676836328867498
       },
       "nextControl": {
-        "x": 3.9255134005637737,
-        "y": 2.5105285976208678
+        "x": 3.9255786451808783,
+        "y": 2.51058743064916
       },
       "isLocked": false,
       "linkedName": null
@@ -73,7 +73,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Shoot Position"
+      "linkedName": "Stage Shoot Position"
     }
   ],
   "rotationTargets": [

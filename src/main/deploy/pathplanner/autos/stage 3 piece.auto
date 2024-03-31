@@ -39,6 +39,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "stage note to out west shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "right far out west"
           }
         },

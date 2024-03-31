@@ -67,23 +67,11 @@ public class Robot extends TimedRobot {
 	public static Command pathPlannerCommand;
 
 	public static Command setpointCommand;
-
-	public static Alert ShuffleBoardCamera = new Alert("Failed to add camera to Shuffleboard",
-			Alert.AlertType.ERROR);
+	
 	public static Alert forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 
 	@Override
 	public void robotInit() {
-		DataLogManager.start(Constants.logDirectory);
-		DriverStation.startDataLog(DataLogManager.getLog());
-
-		CommandScheduler.getInstance()
-				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
-		CommandScheduler.getInstance()
-				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
-		CommandScheduler.getInstance()
-				.onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
-
 		autoTab = Shuffleboard.getTab("Autonomous");
 		teleopTab = Shuffleboard.getTab("Teleoperated");
 		disabledTab = Shuffleboard.getTab("Disabled");
@@ -156,20 +144,15 @@ public class Robot extends TimedRobot {
 		disabledTab.add("Alerts", SmartDashboard.getData("Alerts")).withWidget("Alerts").withSize(3, 3);
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
-			try {
-				// front camera (intake cam) - auto tab
-				autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
-						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+			// front camera (intake cam) - auto tab
+			autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+					.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
+					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
-				// front camera (intake cam) - teleop tab
-				teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-						.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
-						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-			} catch (Exception e) {
-				System.out.println("Failed to add camera to Shuffleboard");
-				ShuffleBoardCamera.set(true);
-			}
+			// front camera (intake cam) - teleop tab
+			teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+					.withWidget(BuiltInWidgets.kCameraStream).withSize(10, 8).withPosition(4, 0)
+					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);
@@ -180,11 +163,13 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		NamedCommands.registerCommand("Shoot",
-				ShootCommandFactory.getAimAndShootCommandWithTimeouts().deadlineWith(new Align(false)).withName("Align and Shoot"));
+				ShootCommandFactory.getAimAndShootCommandWithTimeouts().deadlineWith(new Align(false))
+						.withName("Align and Shoot"));
 		NamedCommands.registerCommand("Shoot on the fly", ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 		NamedCommands.registerCommand("Lower Arm",
 				// doing this so that we dont have to wait for arm velocity to be 0, and as soon
-				// as it is within 4 degrees of the setpoint then just end this command and follow path
+				// as it is within 4 degrees of the setpoint then just end this command and
+				// follow path
 				new SetPoint(Constants.ArmConstants.kArmMinAngle).raceWith(new WaitUntilCommand(
 						// TODO: is 4 degrees too much?
 						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4)))
@@ -200,6 +185,18 @@ public class Robot extends TimedRobot {
 			Shuffleboard.selectTab(autoTab.getTitle());
 			Shuffleboard.startRecording();
 		}
+
+		// if a motor or cancoder fails to verify (position isnt available) then this
+		// says that only once driverstation connets should we start logging stuff
+		DataLogManager.start(Constants.logDirectory);
+		DriverStation.startDataLog(DataLogManager.getLog());
+
+		CommandScheduler.getInstance()
+				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
+		CommandScheduler.getInstance()
+				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
+		CommandScheduler.getInstance()
+				.onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
 	}
 
 	@Override
@@ -240,15 +237,16 @@ public class Robot extends TimedRobot {
 				pathPlannerCommand = Drivetrain.getInstance()
 						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.5));
 				forwardAuto.set(true);
+				DataLogManager.log("Backing Up");
 			}
 
 			else {
 				pathPlannerCommand = new PrintCommand(
 						"Null Path: " + startingPose.getSelected() + autoChooser.getSelected());
-				System.out.println("Invalid Auto");
+				DataLogManager.log("Autonomous init: Invalid Auto");
 			}
 		} catch (Exception e) {
-			System.out.println("Auto not working actual problem");
+			DataLogManager.log("Auto not working actual problem");
 			pathPlannerCommand = new PrintCommand("Autobuilder Exception");
 			e.printStackTrace();
 		}
@@ -262,9 +260,10 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::stop));
 
 		// if (autoShoot.getSelected()) {
-		// 	// we want prepare and shoot because we know that at the beginning of the match,
-		// 	// the robot will start in a position where it is ready to shoot off rip
-		// 	autonCommand.beforeStarting(ShootCommandFactory.getPrepareAndShootCommand());
+		// // we want prepare and shoot because we know that at the beginning of the
+		// match,
+		// // the robot will start in a position where it is ready to shoot off rip
+		// autonCommand.beforeStarting(ShootCommandFactory.getPrepareAndShootCommand());
 		// }
 
 		if (Constants.Vision.UseLimelight && Robot.isReal()) {

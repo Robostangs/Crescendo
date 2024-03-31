@@ -12,7 +12,7 @@
         "y": 4.214254320360494
       },
       "isLocked": false,
-      "linkedName": "Right Start Position"
+      "linkedName": "Stage Start Position"
     },
     {
       "anchor": {
@@ -28,7 +28,7 @@
         "y": 4.182396570386485
       },
       "isLocked": false,
-      "linkedName": "Close Right Note"
+      "linkedName": "Close Stage Note"
     },
     {
       "anchor": {

@@ -31,6 +31,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "stage note to out west shoot"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Shoot"

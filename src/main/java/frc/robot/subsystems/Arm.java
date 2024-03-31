@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -288,10 +289,13 @@ public class Arm extends SubsystemBase {
      */
     public void setMotionMagic(double position) {
         if (!validSetpoint(position)) {
+            
+            DataLogManager.log(position + " is not a valid setpoint");
             if (position < Constants.ArmConstants.kArmMinAngle) {
                 position = Constants.ArmConstants.kArmMinAngle;
-            } else {
-                System.out.println(position + " is not a valid setpoint");
+            } 
+            
+            else {
                 position = getArmPosition();
             }
         }
@@ -418,7 +422,6 @@ public class Arm extends SubsystemBase {
         if (validSetpoint(angleToSpeaker)) {
             return angleToSpeaker;
         } else {
-            System.out.println(angleToSpeaker + " is not a valid setpoint");
             return getArmPosition();
         }
     }

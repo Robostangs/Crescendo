@@ -29,7 +29,6 @@ public class Lighting extends SubsystemBase {
     @Override
     public void periodic() {
         if (auto) {
-
             clearAnimations();
 
             LEDState state;

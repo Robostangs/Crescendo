@@ -38,8 +38,6 @@ public class AlrightTranslate extends Command {
 		if (Math.abs(mRightSupplier.getAsDouble()) > OperatorConstants.kManipDeadzone) {
 			climber.setRightClimbPower(mRightSupplier.getAsDouble());
 		}
-
-
 	}
 
 	@Override

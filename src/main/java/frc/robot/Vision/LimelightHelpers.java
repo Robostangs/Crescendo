@@ -26,6 +26,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+// TODO: add the profile downloads for the limelights
+
 @SuppressWarnings("unused")
 public class LimelightHelpers {
 

@@ -1,0 +1,65 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.4395419994543697,
+        "y": 4.196753379617871
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.879952548273433,
+        "y": 3.5564949037814073
+      },
+      "isLocked": false,
+      "linkedName": "Close Stage Note"
+    },
+    {
+      "anchor": {
+        "x": 2.384589288564684,
+        "y": 2.9491797917359976
+      },
+      "prevControl": {
+        "x": 2.171461729837838,
+        "y": 3.1526197341570783
+      },
+      "nextControl": {
+        "x": 2.591067505210863,
+        "y": 2.752086948573736
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.9421196855317784,
+        "y": 1.86007413614181
+      },
+      "prevControl": {
+        "x": 3.440125022414827,
+        "y": 2.037248723124264
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Stage Out West Shoot Position"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 6.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 781.3060842693,
+    "maxAngularAcceleration": 390.6530421347
+  },
+  "goalEndState": {
+    "velocity": 6.0,
+    "rotation": -42.89999999999998,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Stage Side Paths",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

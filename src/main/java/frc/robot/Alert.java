@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 /** Class for managing persistent alerts to be sent over NetworkTables. */
 public class Alert {
-  private static Map<String, SendableAlerts> groups = new HashMap<String, SendableAlerts>();
+  public static Map<String, SendableAlerts> groups = new HashMap<String, SendableAlerts>();
 
   private final AlertType type;
   private boolean active = false;
@@ -98,7 +98,7 @@ public class Alert {
     this.text = text;
   }
 
-  private static class SendableAlerts implements Sendable {
+  static class SendableAlerts implements Sendable {
     public final List<Alert> alerts = new ArrayList<>();
 
     public String[] getStrings(AlertType type) {

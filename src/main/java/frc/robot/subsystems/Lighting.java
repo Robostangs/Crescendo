@@ -5,6 +5,7 @@ import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
+import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,10 +26,16 @@ public class Lighting extends SubsystemBase {
 
     boolean blink = false;
     Timer timer = new Timer();
+    
+    public static Runnable startTimer = () -> {
+        Lighting.getInstance().timer.start();
+    };
 
     @Override
     public void periodic() {
         if (auto) {
+            timer.reset();
+
             clearAnimations();
 
             LEDState state;
@@ -78,21 +85,6 @@ public class Lighting extends SubsystemBase {
         }
     }
 
-    private Lighting() {
-        mCANdle = new CANdle(Lights.CANdleID);
-        mCANdle.configLEDType(LEDStripType.GRB);
-    }
-
-    private static Lighting mLighting;
-
-    public static Lighting getInstance() {
-        if (mLighting == null) {
-            mLighting = new Lighting();
-        }
-
-        return mLighting;
-    }
-
     public void autoSetLights(boolean autoSet) {
         auto = autoSet;
     }
@@ -115,28 +107,24 @@ public class Lighting extends SubsystemBase {
     }
 
     public void setRightBarAnimation(Animation animation) {
-        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(8);
         animation.setNumLed(Lights.strip1Length);
         mCANdle.animate(animation, 0);
     }
 
     public void setLeftBarAnimation(Animation animation) {
-        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(8 + Lights.strip1Length);
         animation.setNumLed(Lights.strip2Length);
         mCANdle.animate(animation, 1);
     }
 
     public void setLeftClimberSupportAnimation(Animation animation) {
-        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length);
         animation.setNumLed(Lights.strip3Length);
         mCANdle.animate(animation, 2);
     }
 
     public void setRightClimberSupportAnimation(Animation animation) {
-        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length + Lights.strip3Length);
         animation.setNumLed(Lights.strip4Length);
         mCANdle.animate(animation, 3);
@@ -147,7 +135,6 @@ public class Lighting extends SubsystemBase {
     }
 
     public void setCANdleAnimation(Animation animation) {
-        animation.setSpeed(Lights.animationSpeed);
         animation.setLedOffset(0);
         animation.setNumLed(8);
         mCANdle.animate(animation, 4);
@@ -156,29 +143,35 @@ public class Lighting extends SubsystemBase {
     public static Command getStrobeCommand(Supplier<LEDState> state) {
         return Lighting.getInstance().runOnce(() -> {
             int[] color = state.get().getColor();
+            StrobeAnimation animation = new StrobeAnimation(color[0], color[1], color[2]);
+            animation.setSpeed(Lights.strobeAnimationSpeed);
             Lighting.getInstance().autoSetLights(false);
             Lighting.getInstance().oldState = LEDState.kCustom;
             Lighting.getInstance().timer.reset();
-            Lighting.getInstance().setCANdleAnimation(new StrobeAnimation(color[0], color[1], color[2]));
-            Lighting.getInstance().setRightBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
-            Lighting.getInstance().setLeftBarAnimation(new StrobeAnimation(color[0], color[1], color[2]));
-            Lighting.getInstance().setLeftClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
-            Lighting.getInstance().setRightClimberSupportAnimation(new StrobeAnimation(color[0], color[1], color[2]));
-        }).finallyDo(() -> Lighting.getInstance().timer.start()).ignoringDisable(true);
+            Lighting.getInstance().setCANdleAnimation(animation);
+            Lighting.getInstance().setRightBarAnimation(animation);
+            Lighting.getInstance().setLeftBarAnimation(animation);
+            Lighting.getInstance().setLeftClimberSupportAnimation(animation);
+            Lighting.getInstance().setRightClimberSupportAnimation(animation);
+        }).ignoringDisable(true);
     }
 
     public static Command getLarsonCommand(Supplier<LEDState> state) {
         return Lighting.getInstance().runOnce(() -> {
             int[] color = state.get().getColor();
+            LarsonAnimation animation = new LarsonAnimation(color[0], color[1], color[2]);
+            animation.setSize(Lights.larsonAnimationSize);
+            animation.setSpeed(Lights.larsonAnimationSpeed);
+            animation.setBounceMode(BounceMode.Front);
             Lighting.getInstance().autoSetLights(false);
             Lighting.getInstance().oldState = LEDState.kCustom;
             Lighting.getInstance().timer.reset();
             Lighting.getInstance().setCANdleLights(state.get());
-            Lighting.getInstance().setRightBarAnimation(new LarsonAnimation(color[0], color[1], color[2]));
-            Lighting.getInstance().setLeftBarAnimation(new LarsonAnimation(color[0], color[1], color[2]));
-            Lighting.getInstance().setLeftClimberSupportAnimation(new LarsonAnimation(color[0], color[1], color[2]));
-            Lighting.getInstance().setRightClimberSupportAnimation(new LarsonAnimation(color[0], color[1], color[2]));
-        }).finallyDo(() -> Lighting.getInstance().timer.start()).ignoringDisable(true);
+            Lighting.getInstance().setRightBarAnimation(animation);
+            Lighting.getInstance().setLeftBarAnimation(animation);
+            Lighting.getInstance().setLeftClimberSupportAnimation(animation);
+            Lighting.getInstance().setRightClimberSupportAnimation(animation);
+        }).ignoringDisable(true);
     }
 
     public void clearAnimations() {
@@ -187,5 +180,20 @@ public class Lighting extends SubsystemBase {
         mCANdle.clearAnimation(2);
         mCANdle.clearAnimation(3);
         mCANdle.clearAnimation(4);
+    }
+
+    private Lighting() {
+        mCANdle = new CANdle(Lights.CANdleID);
+        mCANdle.configLEDType(LEDStripType.GRB);
+    }
+
+    private static Lighting mLighting;
+
+    public static Lighting getInstance() {
+        if (mLighting == null) {
+            mLighting = new Lighting();
+        }
+
+        return mLighting;
     }
 }

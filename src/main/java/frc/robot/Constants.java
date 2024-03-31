@@ -466,7 +466,6 @@ public final class Constants {
 
 			/** Ready To Shoot */
 			kGreen(new int[] { 0, 255, 0 }),
-			kGreenBlink(new int[] { 0, 255, 0 }),
 
 			/** Alliance Color */
 			kRed(new int[] { 255, 0, 0 }),
@@ -519,6 +518,9 @@ public final class Constants {
 		/** Right Climber Support */
 		public static final int strip4Length = 17;
 
-		public static final double animationSpeed = 0.06;
+		public static final double larsonAnimationSpeed = 0.06;
+		/** Standard is 2 LEDs */
+		public static final int larsonAnimationSize = 5;
+		public static final double strobeAnimationSpeed = 0.12;
 	}
 }

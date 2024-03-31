@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.74,
-        "y": 6.7
+        "x": 3.9443991246625467,
+        "y": 6.023158875881564
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.142527798944487,
-        "y": 8.067070833215741
+        "x": 4.2146162725281835,
+        "y": 6.557013881394483
       },
       "isLocked": false,
-      "linkedName": "Amp Start Position"
+      "linkedName": "Center Shoot Position"
     },
     {
       "anchor": {
@@ -20,21 +20,15 @@
         "y": 7.47613688745896
       },
       "prevControl": {
-        "x": 4.536166850111479,
-        "y": 8.060301014120547
+        "x": 4.453024883432643,
+        "y": 7.112989807562815
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Amp Shoot Position"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.55,
-      "rotationDegrees": 0,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -44,12 +38,12 @@
     "maxAngularAcceleration": 390.6530421347
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0,
-    "rotateFast": false
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Amp Side Paths",
+  "folder": "Center Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

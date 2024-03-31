@@ -95,7 +95,8 @@ public class RobotContainer {
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
-				xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+				xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed))
+				.finallyDo(Lighting.startTimer));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.StartingNotes.center)
@@ -105,13 +106,15 @@ public class RobotContainer {
 		// just runs feeder
 		xDrive.leftStick()
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).withTimeout(1))
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+						.andThen(new BeltDrive(() -> -1d).withTimeout(1)
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+						.finallyDo(Lighting.startTimer));
 		// deploys intake(right paddle)
 		xDrive.rightStick()
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).withTimeout(1))
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+						.andThen(new BeltDrive(() -> -1d).withTimeout(1)
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+						.finallyDo(Lighting.startTimer));
 
 		xDrive.povUp().onTrue(new MultiIntake().alongWith(new Feed()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
@@ -125,7 +128,8 @@ public class RobotContainer {
 
 		xDrive.leftBumper().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 		xDrive.rightBumper().toggleOnTrue(new Retract()
-				.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
+				.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue))
+				.finallyDo(Lighting.startTimer));
 	}
 
 	private void configureManipBinds() {
@@ -149,10 +153,12 @@ public class RobotContainer {
 		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil());
 		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil());
 
-		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite)));
+		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
+				.finallyDo(Lighting.startTimer));
 		xManip.leftStick()
 				.toggleOnTrue(new Retract()
-						.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue)));
+						.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue))
+						.finallyDo(Lighting.startTimer));
 
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());

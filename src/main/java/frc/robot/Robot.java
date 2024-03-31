@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.util.Map;
 
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -36,6 +37,7 @@ import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ArmCommands.TrackSetPoint;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.HomeClimber;
+import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
@@ -50,7 +52,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<String> startingPose = new SendableChooser<>();
 	public static SendableChooser<String> autoChooser = new SendableChooser<>();
 	public static SendableChooser<Boolean> autoShoot = new SendableChooser<>();
-	public static NetworkTableEntry pathDelayEntry;
+	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
 
 	public static ShuffleboardTab autoTab, teleopTab, disabledTab;
 
@@ -67,11 +69,13 @@ public class Robot extends TimedRobot {
 	public static Command pathPlannerCommand;
 
 	public static Command setpointCommand;
-	
-	public static Alert forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
+
+	public static Alert forwardAuto;
 
 	@Override
 	public void robotInit() {
+		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
+
 		autoTab = Shuffleboard.getTab("Autonomous");
 		teleopTab = Shuffleboard.getTab("Teleoperated");
 		disabledTab = Shuffleboard.getTab("Disabled");
@@ -102,46 +106,90 @@ public class Robot extends TimedRobot {
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);
 
-		autoTab.add("Starting Pose Selector", startingPose).withSize(2, 1).withPosition(0, 0)
+		autoTab.add("Starting Pose Selector", startingPose)
+				.withSize(3, 1)
+				.withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
-		autoTab.add("Path Selector", autoChooser).withSize(2, 1).withPosition(0, 1)
+
+		autoTab.add("Path Selector", autoChooser)
+				.withSize(3, 1)
+				.withPosition(0, 3)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
-		autoTab.add("Shoot Selector", autoShoot).withSize(2, 1).withPosition(0, 2)
+
+		autoTab.add("Shoot Selector", autoShoot)
+				.withSize(3, 1)
+				.withPosition(3, 2)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
-		autoTab.addNumber("Auto Countdown", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 1)
-				.withWidget("Match Time");
-		autoTab.add("Path Delay", 0).withSize(2, 1).withWidget(BuiltInWidgets.kNumberSlider).withPosition(0, 3)
-				.withProperties(Map.of("min", 0, "max", 15, "block increment", 1));
-		autoTab.addBoolean("Ready To Shoot", () -> Shooter.getInstance().readyToShootAdvanced()).withPosition(2, 0)
-				.withSize(2, 1).withWidget(BuiltInWidgets.kBooleanBox);
 
-		autoTab.addString("Auto Status", () -> status).withPosition(2, 3).withSize(2, 1)
-				.withWidget(BuiltInWidgets.kTextView);
+		autoTab.add("Path Delay", 0)
+				.withSize(3, 1)
+				.withPosition(3, 3)
+				.withWidget(BuiltInWidgets.kNumberSlider)
+				.withProperties(Map.of("min_value", 0, "max_value", 15, "block increment", 1, "divisions", 6));
+				// .withProperties(Map.of("min_value", 0, "min", 0, "max_value", 15, "max", 15, "block increment", 1, "divisions", 6));
 
-		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime()).withSize(2, 2).withPosition(2, 0)
-				.withWidget("Match Time");
+		autoTab.addNumber("Auto Countdown", () -> Timer.getMatchTime())
+				.withSize(3, 2)
+				.withPosition(3, 0)
+				.withWidget("Match Time")
+				.withProperties(Map.of("red_start_time", -1, "yellow_start_time", -1));
 
-		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getShooterSensor()).withSize(2, 2).withPosition(0, 2)
+		autoTab.addBoolean("Ready To Shoot", () -> Shooter.getInstance().readyToShootAdvanced())
+				.withSize(3, 2)
+				.withPosition(0, 0)
 				.withWidget(BuiltInWidgets.kBooleanBox);
+
 		teleopTab
 				.addBoolean("Ready To Shoot",
 						() -> Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot())
-				.withSize(2, 2)
+				.withSize(3, 2)
 				.withPosition(0, 0);
-		// use this for shooter regression
-		setpointCommand = new TrackSetPoint(
-				() -> SmartDashboard.getNumber("Arm/Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake));
-		teleopTab.add(setpointCommand).withWidget(BuiltInWidgets.kCommand).withPosition(2, 2).withSize(2, 1);
-		teleopTab.add("Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake).withWidget(BuiltInWidgets.kTextView)
-				.withPosition(2, 3).withSize(2, 1);
 
-		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable(autoTab.getTitle())
+		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime())
+				.withSize(3, 2)
+				.withPosition(3, 0)
+				.withWidget("Match Time")
+				.withProperties(Map.of("red_start_time", 15, "yellow_start_time", 30));
+
+		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getShooterSensor())
+				.withSize(3, 2)
+				.withPosition(0, 2)
+				.withWidget(BuiltInWidgets.kBooleanBox);
+
+		teleopTab.add("Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake)
+				.withSize(3, 1)
+				.withPosition(3, 3)
+				.withWidget(BuiltInWidgets.kTextView)
+				.withProperties(Map.of("show_submit_button", true));
+
+		pathDelayEntry = NetworkTableInstance.getDefault()
+				.getTable("Shuffleboard")
+				.getSubTable(autoTab.getTitle())
 				.getEntry("Path Delay");
 
-		pathDelayEntry = NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable(teleopTab.getTitle())
+		desiredSetpointEntry = NetworkTableInstance.getDefault()
+				.getTable("Shuffleboard")
+				.getSubTable(teleopTab.getTitle())
 				.getEntry("Desired Setpoint");
 
-		disabledTab.add("Alerts", SmartDashboard.getData("Alerts")).withWidget("Alerts").withSize(3, 3);
+		// use this for shooter regression
+		setpointCommand = new TrackSetPoint(
+				() -> desiredSetpointEntry.getDouble(Constants.ArmConstants.SetPoints.kIntake));
+
+		teleopTab.add(setpointCommand)
+				.withSize(3, 1)
+				.withPosition(3, 2)
+				.withWidget(BuiltInWidgets.kCommand);
+
+		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+
+		disabledTab.add("Command Scheduler", CommandScheduler.getInstance());
+
+		Alert.groups.forEach((group, alert) -> {
+			disabledTab.add(group, alert)
+					.withSize(5, 5)
+					.withWidget("Alerts");
+		});
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
@@ -161,9 +209,15 @@ public class Robot extends TimedRobot {
 
 		Lighting.getInstance().autoSetLights(true);
 
-		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
+		NamedCommands.registerCommand("Intake",
+				new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+						.andThen(new BeltDrive(() -> -1d).withTimeout(1)
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+						.finallyDo(Lighting.startTimer));
 		NamedCommands.registerCommand("Shoot",
-				ShootCommandFactory.getAimAndShootCommandWithTimeouts().deadlineWith(new Align(false))
+				ShootCommandFactory.getAimAndShootCommandWithTimeouts()
+						.deadlineWith(new Align(false),
+								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
 						.withName("Align and Shoot"));
 		NamedCommands.registerCommand("Shoot on the fly", ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 		NamedCommands.registerCommand("Lower Arm",
@@ -174,8 +228,6 @@ public class Robot extends TimedRobot {
 						// TODO: is 4 degrees too much?
 						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4)))
 						.withName("Lowering arm to hard stop"));
-
-		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 	}
 
 	@Override
@@ -235,7 +287,7 @@ public class Robot extends TimedRobot {
 		} catch (RuntimeException e) {
 			if (autoChooser.getSelected().equals("back-up")) {
 				pathPlannerCommand = Drivetrain.getInstance()
-						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.5));
+						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.75));
 				forwardAuto.set(true);
 				DataLogManager.log("Backing Up");
 			}
@@ -256,7 +308,9 @@ public class Robot extends TimedRobot {
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(timer::restart),
 				ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
-				new WaitUntilCommand(pathDelayEntry.getDouble(0)), pathPlannerCommand,
+				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
+				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
+				pathPlannerCommand,
 				new InstantCommand(timer::stop));
 
 		// if (autoShoot.getSelected()) {
@@ -282,19 +336,11 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {
 		autoField.setRobotPose(Drivetrain.getInstance().getPose());
 		NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("Auto Timer").setDouble(timer.get());
-
-		if (timer.get() < pathDelayEntry.getDouble(0)) {
-			postAutoStatus("Path Delay");
-		}
 	}
 
 	@Override
 	public void autonomousExit() {
 		timer.stop();
-	}
-
-	public void postAutoStatus(String status) {
-		this.status = status;
 	}
 
 	@Override
@@ -373,14 +419,24 @@ public class Robot extends TimedRobot {
 
 	public static void verifyMotors(TalonFX... falcons) {
 		for (TalonFX falcon : falcons) {
-			falcon.getConfigurator().apply(new AudioConfigs().withAllowMusicDurDisable(true));
-			if (falcon.getPosition().getStatus().isError()) {
-				DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position");
-				new Alert("TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
-						AlertType.ERROR)
-						.set(true);
-			}
+			verifyMotor(falcon);
 		}
+
+		// for (TalonFX falcon : falcons) {
+		// falcon.getConfigurator().apply(new
+		// AudioConfigs().withAllowMusicDurDisable(true));
+		// if (!falcon.getPosition().getStatus().isOK()) {
+		// DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to
+		// return position with status: "
+		// + falcon.getPosition().getStatus().getDescription());
+		// new Alert(
+		// "TalonFX ID #" + falcon.getDeviceID() + " has failed to return position with
+		// status: "
+		// + falcon.getPosition().getStatus().getDescription(),
+		// AlertType.ERROR)
+		// .set(true);
+		// }
+		// }
 	}
 
 	/**
@@ -392,11 +448,15 @@ public class Robot extends TimedRobot {
 	 */
 	public static boolean verifyMotor(TalonFX falcon) {
 		falcon.getConfigurator().apply(new AudioConfigs().withAllowMusicDurDisable(true));
-		if (falcon.getPosition().getStatus().isError()) {
-			DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position");
-			new Alert("TalonFX ID #" + falcon.getDeviceID() + " has failed to return position",
-					AlertType.ERROR)
-					.set(true);
+
+		StatusCode status = falcon.getPosition().getStatus();
+		if (status.isError()) {
+			DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position with status: "
+					+ status.getDescription());
+			new Alert(
+					"TalonFX ID #" + falcon.getDeviceID() + " has failed to return position with status: "
+							+ status.getDescription(),
+					AlertType.ERROR).set(true);
 			return true;
 		}
 
@@ -407,15 +467,18 @@ public class Robot extends TimedRobot {
 	 * Will return false if the CANcoder is verified and connected, true if there is
 	 * some error getting position
 	 * 
-	 * @param CANcoder a CANcoder
+	 * @param coder a CANcoder
 	 * @return false if the position is available, true if not available
 	 */
-	public static boolean verifyCANcoders(CANcoder CANcoder) {
-		if (CANcoder.getPosition().getStatus().isError()) {
-			DataLogManager.log("CANcoder #" + CANcoder.getDeviceID() + " has failed to return position");
-			new Alert("CANcoder ID #" + CANcoder.getDeviceID() + " has failed to return position",
-					AlertType.ERROR)
-					.set(true);
+	public static boolean verifyCANcoders(CANcoder coder) {
+		StatusCode status = coder.getPosition().getStatus();
+		if (status.isError()) {
+			DataLogManager.log("TalonFX #" + coder.getDeviceID() + " has failed to return position with status: "
+					+ status.getDescription());
+			new Alert(
+					"TalonFX ID #" + coder.getDeviceID() + " has failed to return position with status: "
+							+ status.getDescription(),
+					AlertType.ERROR).set(true);
 			return true;
 		}
 

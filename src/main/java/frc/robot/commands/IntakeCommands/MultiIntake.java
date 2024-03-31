@@ -26,7 +26,7 @@ public class MultiIntake extends Command {
     public void execute() {
         if (intake.getShooterSensor()) {
             intake.setBelt(0.3);
-            intake.setIntake(0.3);
+            intake.setIntake(0.6);
         }
 
         else {

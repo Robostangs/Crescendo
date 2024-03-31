@@ -23,6 +23,7 @@
       "/Shuffleboard/Autonomous/Path Selector": "String Chooser",
       "/Shuffleboard/Autonomous/Shoot Selector": "String Chooser",
       "/Shuffleboard/Autonomous/Starting Pose Selector": "String Chooser",
+      "/Shuffleboard/Disabled/Command Scheduler": "Scheduler",
       "/Shuffleboard/Teleop/InstantCommand": "Command",
       "/Shuffleboard/Teleop/ParallelCommandGroup": "Command",
       "/Shuffleboard/Teleop/Setpoint: -67.0 degrees": "Command",
@@ -64,7 +65,7 @@
           "visible": true
         }
       },
-      "/Shuffleboard/Teleop/Track Setpoint": {
+      "/Shuffleboard/Teleoperated/Track Setpoint": {
         "window": {
           "visible": true
         }

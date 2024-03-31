@@ -76,7 +76,11 @@ public class ShootCommandFactory {
                                                 .withTimeout(Constants.OperatorConstants.setpointTimeout)
                                                 .deadlineWith(new Prepare())
                                                 .andThen(new Shoot(false)
-                                                                .withTimeout(Constants.OperatorConstants.shootTimeout))),
+                                                                .withTimeout(Constants.OperatorConstants.shootTimeout),
+                                                                new Shoot(true).withTimeout(
+                                                                                Constants.AutoConstants.spitTime)
+                                                                                .onlyIf(() -> Intake.getInstance()
+                                                                                                .getShooterSensor()))),
                                                 new Spit().withTimeout(Constants.AutoConstants.spitTime),
                                                 () -> Intake.getInstance().getShooterSensor()))
                                 .withName("Auto Aim and Shoot with Timeouts");
@@ -128,7 +132,7 @@ public class ShootCommandFactory {
                 return new Prepare().raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()))
                                 .withTimeout(Constants.OperatorConstants.chargeUpTimeout)
                                 .andThen(new Shoot(false).withTimeout(Constants.OperatorConstants.shootTimeout),
-                                                new Spit().withTimeout(Constants.AutoConstants.spitTime))
+                                        new Shoot(true).onlyIf(() -> Intake.getInstance().getShooterSensor()))
                                 .withName("Auto Prepare and Shoot with Timeouts");
         }
 

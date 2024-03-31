@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 7.949166455683477,
-        "y": 2.4366686253566368
+        "x": 8.111731910055097,
+        "y": 2.4355289057912533
       },
       "prevControl": {
-        "x": 7.95703623226933,
-        "y": 2.216240140057782
+        "x": 8.11960168664095,
+        "y": 2.2151004204923983
       },
       "nextControl": {
-        "x": 7.941267086237876,
-        "y": 2.65792599177791
+        "x": 8.103832540609497,
+        "y": 2.6567862722125266
       },
       "isLocked": false,
       "linkedName": "Far Mid Right Note"
@@ -68,8 +68,8 @@
         "y": 4.892453456150855
       },
       "prevControl": {
-        "x": 4.628133646024275,
-        "y": 4.349904121324491
+        "x": 4.815277284175273,
+        "y": 3.9646327776670107
       },
       "nextControl": null,
       "isLocked": true,
@@ -80,6 +80,11 @@
     {
       "waypointRelativePos": 2.0,
       "rotationDegrees": 0.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": 27.0,
       "rotateFast": false
     }
   ],

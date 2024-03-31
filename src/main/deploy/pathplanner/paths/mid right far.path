@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.657967183462639,
-        "y": 2.7221683764853806
+        "x": 4.879228195451544,
+        "y": 2.895250334119408
       },
       "isLocked": false,
       "linkedName": "Stage Shoot Position"
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 7.949166455683477,
-        "y": 2.4366686253566368
+        "x": 8.115617317664361,
+        "y": 2.4355807112260432
       },
       "prevControl": {
-        "x": 7.949166455683477,
-        "y": 2.3766686253566367
+        "x": 8.115617317664361,
+        "y": 2.1855807112260432
       },
       "nextControl": {
-        "x": 7.949166455683477,
-        "y": 2.496668625356637
+        "x": 8.115617317664361,
+        "y": 2.7655807112260433
       },
       "isLocked": false,
       "linkedName": "Far Mid Right Note"
@@ -81,6 +81,16 @@
       "waypointRelativePos": 2,
       "rotationDegrees": 0.0,
       "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.45,
+      "rotationDegrees": 38.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": -90.0,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],

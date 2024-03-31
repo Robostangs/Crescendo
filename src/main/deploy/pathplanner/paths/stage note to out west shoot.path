@@ -61,5 +61,5 @@
   "reversed": false,
   "folder": "Stage Side Paths",
   "previewStartingState": null,
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 7.905814612555151,
-        "y": 0.8956351894185275
+        "x": 8.116860648099326,
+        "y": 0.7762526348962228
       },
       "prevControl": {
-        "x": 7.912639394538049,
-        "y": 1.1124847834880862
+        "x": 8.123685430082224,
+        "y": 0.9931022289657819
       },
       "nextControl": {
-        "x": 7.899875123047671,
-        "y": 0.7069147450285239
+        "x": 8.110921158591847,
+        "y": 0.5875321905062192
       },
       "isLocked": false,
       "linkedName": "Far Right Note"
@@ -79,7 +79,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 2.0,
-      "rotationDegrees": -17.95281632021816,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     }
   ],
@@ -87,7 +87,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.35,
+      "waypointRelativePos": 1.3,
       "command": {
         "type": "parallel",
         "data": {

@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 7.963982810033472,
-        "y": 7.455734564134717
+        "x": 8.122611051361037,
+        "y": 7.45
       },
       "prevControl": {
-        "x": 7.953501911099847,
-        "y": 7.681908324127511
+        "x": 8.112130152427413,
+        "y": 7.6761737599927935
       },
       "nextControl": {
-        "x": 7.976006947384265,
-        "y": 7.1962583138129235
+        "x": 8.134635188711831,
+        "y": 7.190523749678206
       },
       "isLocked": false,
       "linkedName": "Far left Note"
@@ -55,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "parallel",
         "data": {

@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.6011675128866925,
-        "y": 1.3056021984942303
+        "x": 5.134836210706347,
+        "y": 1.4349069328187127
       },
       "isLocked": false,
       "linkedName": "Stage Out West Shoot Position"
     },
     {
       "anchor": {
-        "x": 7.905814612555151,
-        "y": 0.8956351894185275
+        "x": 8.116860648099326,
+        "y": 0.7762526348962228
       },
       "prevControl": {
-        "x": 8.191174904485226,
-        "y": 0.47054657167349984
+        "x": 8.127147678853657,
+        "y": 0.6199828159497818
       },
       "nextControl": {
-        "x": 7.742918367761655,
-        "y": 1.1382945274321374
+        "x": 8.106551366576078,
+        "y": 0.9328604642669712
       },
       "isLocked": false,
       "linkedName": "Far Right Note"
@@ -36,8 +36,8 @@
         "y": 1.86007413614181
       },
       "prevControl": {
-        "x": 4.562151976522285,
-        "y": 1.3380854532755555
+        "x": 5.131106219401453,
+        "y": 1.4576495186916056
       },
       "nextControl": null,
       "isLocked": false,
@@ -51,7 +51,7 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.95,
+      "waypointRelativePos": 1,
       "rotationDegrees": 0,
       "rotateFast": false
     }
@@ -60,7 +60,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {

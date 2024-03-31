@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 7.977550941212994,
-        "y": 5.786057488781644
+        "x": 8.12,
+        "y": 5.79
       },
       "prevControl": {
-        "x": 7.9869336729414195,
-        "y": 5.433789358319458
+        "x": 8.129382731728423,
+        "y": 5.437731869537814
       },
       "nextControl": {
-        "x": 7.974888365614025,
-        "y": 5.886022035953032
+        "x": 8.11733742440103,
+        "y": 5.889964547171388
       },
       "isLocked": false,
       "linkedName": "Mid Left Note"
@@ -55,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {

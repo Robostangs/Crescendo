@@ -133,7 +133,7 @@ public class RobotContainer {
 				.withName("Zero Swerve 2 Speaker"));
 
 		xDrive.leftBumper().onTrue(new ReturnHome().alongWith(new CancelShooter()));
-		xDrive.rightBumper().toggleOnTrue(new Retract()
+		xDrive.rightBumper().toggleOnTrue(new Extend()
 				.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue))
 				.finallyDo(Lighting.startTimer));
 	}

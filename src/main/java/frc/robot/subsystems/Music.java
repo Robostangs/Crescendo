@@ -29,9 +29,13 @@ public class Music extends SubsystemBase {
     private Music() {
         mOrchestra = new Orchestra();
         queueMusic = (chrpFile) -> mOrchestra.loadMusic(chrpFile);
+        
         queueMusic.accept("Sith.chrp");
+        queueMusic.accept("underpressure.chrp");
+        queueMusic.accept("sweetcaroline.chrp");
+        queueMusic.accept("anotheronebitesthedust.chrp");
         SmartDashboard.putBoolean("Music/Play Music", false);
-        SmartDashboard.putString("Music/Music File", "Sith.chrp");
+        // SmartDashboard.putString("Music/Music File", "Sith.chrp");
     }
 
     public void addFalcon(TalonFX... falcons) {

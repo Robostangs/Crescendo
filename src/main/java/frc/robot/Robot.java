@@ -39,6 +39,7 @@ import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
+import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 
@@ -125,7 +126,8 @@ public class Robot extends TimedRobot {
 				.withPosition(3, 3)
 				.withWidget(BuiltInWidgets.kNumberSlider)
 				.withProperties(Map.of("min_value", 0, "max_value", 15, "block increment", 1, "divisions", 6));
-				// .withProperties(Map.of("min_value", 0, "min", 0, "max_value", 15, "max", 15, "block increment", 1, "divisions", 6));
+		// .withProperties(Map.of("min_value", 0, "min", 0, "max_value", 15, "max", 15,
+		// "block increment", 1, "divisions", 6));
 
 		autoTab.addNumber("Auto Countdown", () -> Timer.getMatchTime())
 				.withSize(3, 2)
@@ -234,12 +236,13 @@ public class Robot extends TimedRobot {
 		if (DriverStation.isFMSAttached()) {
 			atComp = true;
 			Shuffleboard.selectTab(autoTab.getTitle());
-			Shuffleboard.startRecording();
+			// Shuffleboard.startRecording();
 		}
 
-		// if a motor or cancoder fails to verify (position isnt available) then this
-		// says that only once driverstation connets should we start logging stuff
+		// other than if a motor or cancoder fails to verify (position isnt available),
+		// only once driverstation connects should we start logging stuff
 		DataLogManager.start(Constants.logDirectory);
+		DataLogManager.log("Driverstation connected");
 		DriverStation.startDataLog(DataLogManager.getLog());
 
 		CommandScheduler.getInstance()
@@ -252,7 +255,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
-
 		CommandScheduler.getInstance().run();
 	}
 
@@ -274,6 +276,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
+		// TODO: stage all close notes is going to be weird for now
+
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
@@ -306,7 +310,9 @@ public class Robot extends TimedRobot {
 
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(timer::restart),
-				ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
+				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could also add a lil time thing in there
+				new Shoot(true).until(() -> !Intake.getInstance().getShooterSensor()),
+				// ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
 				pathPlannerCommand,
@@ -329,6 +335,9 @@ public class Robot extends TimedRobot {
 
 		autonCommand.withName("Auto Command").schedule();
 		HomeClimber.getHomingCommand().schedule();
+		// test this instead of prepare and shoot cuz we can start the path immediatly
+		// ShootCommandFactory.getAimAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected).andThen(new
+		// DeployAndIntake(true)).schedule();
 	}
 
 	@Override

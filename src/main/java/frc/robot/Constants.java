@@ -331,7 +331,7 @@ public final class Constants {
 		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.07;
 		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.07;
 
-		public static final double setpointTimeout = 2;
+		public static final double setpointTimeout = 1;
 		public static final double feedTimeout = 1;
 		public static final double shootTimeout = 1;
 		public static final double chargeUpTimeout = 2;

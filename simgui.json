@@ -116,11 +116,19 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Swerve/Module 0": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
   "NetworkTables": {
     "transitory": {
+      "FMSInfo": {
+        "open": true
+      },
       "Shuffleboard": {
         ".metadata": {
           "Auto": {

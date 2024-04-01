@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.signals.Licensing_IsSeasonPassedValue;
 import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -122,7 +123,10 @@ public class RobotContainer {
 								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
 						.finallyDo(Lighting.startTimer));
 
-		xDrive.povUp().onTrue(new MultiIntake().alongWith(new Feed()));
+		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
+		Lighting.getStrobeCommand(() -> LEDState.kPurple)).
+		finallyDo(Lighting.startTimer));
+
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain

@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,6 +49,7 @@ import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lighting;
+import frc.robot.subsystems.Music;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -58,6 +60,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Boolean> autoShoot = new SendableChooser<>();
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
+	public static SendableChooser<String> songChooser = new SendableChooser<>();
 
 	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
 
@@ -94,6 +97,16 @@ public class Robot extends TimedRobot {
 		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
 
 		SmartDashboard.putData("Field", teleopField);
+
+
+		songChooser.setDefaultOption("The defult option is nothing", "");
+        songChooser.addOption("Imperial March", "Sith.chrp");
+        songChooser.addOption("Under Pressure ", "underpressure.chrp");
+        songChooser.addOption("Sweet Caroline", "sweetcaroline.chrp");
+        songChooser.addOption("Another One Bites The Dust ", "anotheronebitesthedust.chrp");
+
+
+
 
 		startingPose.addOption("Amp Side", "amp"); // left
 		startingPose.setDefaultOption("Center", "center"); // center
@@ -189,6 +202,10 @@ public class Robot extends TimedRobot {
 				.withSize(3, 1)
 				.withPosition(3, 2)
 				.withWidget(BuiltInWidgets.kCommand);
+
+
+
+		disabledTab.add("Song Selector", songChooser).withPosition(5, 0).withSize(3, 2);
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
@@ -335,6 +352,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
+		if(!songChooser.equals("")){
+			Music.getInstance().playMusic(songChooser.getSelected());
+		}
 	}
 
 	@Override

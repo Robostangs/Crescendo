@@ -6,6 +6,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -44,6 +49,7 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 public class RobotContainer {
 	public static final CommandXboxController xDrive = new CommandXboxController(0);
 	public static final CommandXboxController xManip = new CommandXboxController(1);
+	public static final CommandXboxController xPit = new CommandXboxController(2);
 	private static final GenericHID simController = new GenericHID(3);
 
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
@@ -100,7 +106,8 @@ public class RobotContainer {
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
+		// .andThen(ShootCommandFactory.getAmpCommand()));
+		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper())).withName("Auto-pilot Amp shot"));
 
 		// just runs feeder
 		xDrive.leftStick()
@@ -149,8 +156,8 @@ public class RobotContainer {
 
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.x().whileTrue(new QuickFeed());
-		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil());
-		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil());
+		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xManip.leftBumper()));
+		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xManip.leftBumper()));
 
 		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
 				.finallyDo(Lighting.startTimer));
@@ -170,13 +177,47 @@ public class RobotContainer {
 						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare()),
 						new Shoot(false)));
 
+		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));
 		// left bumper is the universal shoot button
-		xManip.rightBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil());
 
 		// TODO: test, absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())
 				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-	}
+
+		
+					}
+		
+		public static void configurePitBinds(){
+
+			//shoots no matter where arm is
+			//press right bumper to prepare and then left bumper to acually shoot
+			xPit.rightBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xPit.leftBumper()));
+			
+			//move the arm based oon the right stick
+			new Trigger(() -> Math.abs(xPit.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
+			.whileTrue(new FineAdjust(() -> -xPit.getRightY()));
+
+
+			//back right pannel to extend the climber
+			xPit.rightStick().toggleOnTrue(new Extend());
+			//back left pannel to retract the climber
+			xPit.leftStick().toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
+					() -> -Constants.ClimberConstants.RightMotor.kRetractPower));
+
+
+			//press x to go to amp and left bumper to shoot
+			xPit.x().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xPit.leftBumper()));
+
+			//press up arrow to make the robot go perfectly straight
+			xPit.povUp().whileTrue(new xDrive(() -> 0.0, () -> 0.3,() -> 0.0, () -> 0.0));
+			//press left arrow to deploy the intake
+			xPit.povLeft().toggleOnTrue(new DeployAndIntake(true));
+			//press right arrow to belt feed
+			xPit.povRight().toggleOnTrue(new DeployAndIntake(false));
+			
+			
+		}
+
 
 	public RobotContainer() {
 		logger = new Telemetry();
@@ -184,6 +225,7 @@ public class RobotContainer {
 		drivetrain.registerTelemetry((telemetry) -> logger.telemeterize(telemetry));
 		configureDriverBinds();
 		configureManipBinds();
+		configurePitBinds();
 		configureDefaultBinds();
 
 		if (Robot.isSimulation()) {

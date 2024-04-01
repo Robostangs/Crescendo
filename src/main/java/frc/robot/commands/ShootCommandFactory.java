@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -18,6 +20,8 @@ import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+
+import java.util.function.BooleanSupplier;
 
 public class ShootCommandFactory {
         static boolean configured;
@@ -85,13 +89,13 @@ public class ShootCommandFactory {
 
         }
 
-        public static Command getAimAndShootCommandWithWaitUntil() {
+        public static Command getAimAndShootCommandWithWaitUntil(BooleanSupplier waitUntil) {
                 configureSticks();
 
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new Prepare().until(() -> Arm.getInstance().atSetpoint())
-                                                .raceWith(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()))
-                                                .andThen(new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()),
+                                                .raceWith(new WaitUntilCommand(waitUntil))
+                                                .andThen(new WaitUntilCommand(waitUntil),
                                                                 new Shoot(false))
                                                 .deadlineWith(new SetPoint()))
                                 .withName("Aim and Shoot");
@@ -106,11 +110,11 @@ public class ShootCommandFactory {
                                 .withName("Auto Amp Shot");
         }
 
-        public static Command getAmpCommandWithWaitUntil() {
+        public static Command getAmpCommandWithWaitUntil(BooleanSupplier waitUntil) {
                 configureSticks();
 
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor()).andThen(
-                                new SetPoint(Constants.ArmConstants.SetPoints.kAmp).until(() -> xManip.getHID().getLeftBumper()),
+                                new SetPoint(Constants.ArmConstants.SetPoints.kAmp).until(waitUntil),
                                 // new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
                                 //                 .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
                                 new PoopOut(),
@@ -134,12 +138,12 @@ public class ShootCommandFactory {
                                 .withName("Auto Prepare and Shoot with Timeouts");
         }
 
-        public static Command getPrepareAndShootCommandWithWaitUntil() {
+        public static Command getPrepareAndShootCommandWithWaitUntil(BooleanSupplier waitUntil) {
                 configureSticks();
 
-                return new Prepare().until(() -> xManip.getHID().getLeftBumper())
+                return new Prepare().until(waitUntil)
                 // WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare())
-                                .andThen(new Shoot(true).until(() -> !xManip.getHID().getLeftBumper()))
+                                .andThen(new Shoot(true).until(waitUntil))
                                 .withName("Prepare and Shoot");
         }
 
@@ -152,11 +156,11 @@ public class ShootCommandFactory {
                                 .withName("Rapid Fire");
         }
 
-        public static Command getCenterToWingCommand() {
+        public static Command getCenterToWingCommand(BooleanSupplier waitUntil) {
                 configureSticks();
 
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor()).andThen(
-                                new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
+                                new WaitUntilCommand(waitUntil)
                                                 .deadlineWith(new SetPoint(
                                                                 Constants.ArmConstants.SetPoints.kCenterToWingPass)),
                                 new Shoot(false),

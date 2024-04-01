@@ -355,7 +355,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		// TODO: stage all close notes is going to be weird for now
+		// TODO: stage all close notes is going to be weird for now cuz testing shooting on the fly
+		// approx 1.5 seconds from beginning path (close notes) to reaching first close note
 
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);

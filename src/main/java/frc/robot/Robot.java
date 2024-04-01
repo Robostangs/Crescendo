@@ -36,7 +36,9 @@ import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ArmCommands.TrackSetPoint;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
+import frc.robot.commands.ClimberCommands.Extend;
 import frc.robot.commands.ClimberCommands.HomeClimber;
+import frc.robot.commands.ClimberCommands.Retract;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
 import frc.robot.commands.ShooterCommands.Shoot;
@@ -53,9 +55,12 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<String> startingPose = new SendableChooser<>();
 	public static SendableChooser<String> autoChooser = new SendableChooser<>();
 	public static SendableChooser<Boolean> autoShoot = new SendableChooser<>();
+	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
+	public static SendableChooser<Command> armCommands = new SendableChooser<>();
+
 	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
 
-	public static ShuffleboardTab teleopTab, autoTab, disabledTab;
+	public static ShuffleboardTab teleopTab, autoTab, disabledTab, testTab;
 
 	/** Use teleopField for everything */
 	public static Field2d teleopField = new Field2d(), autoField = new Field2d();
@@ -80,6 +85,7 @@ public class Robot extends TimedRobot {
 		teleopTab = Shuffleboard.getTab("Teleoperated");
 		autoTab = Shuffleboard.getTab("Autonomous");
 		disabledTab = Shuffleboard.getTab("Disabled");
+		testTab = Shuffleboard.getTab("Test");
 
 		robotContainer = new RobotContainer();
 
@@ -87,8 +93,8 @@ public class Robot extends TimedRobot {
 
 		SmartDashboard.putData("Field", teleopField);
 
-		startingPose.setDefaultOption("Center", "center"); // center
 		startingPose.addOption("Amp Side", "amp"); // left
+		startingPose.setDefaultOption("Center", "center"); // center
 		startingPose.addOption("Stage Side", "stage"); // right
 
 		autoChooser.setDefaultOption("Sit and Shit", " null");
@@ -109,7 +115,7 @@ public class Robot extends TimedRobot {
 		autoTab.add("Starting Pose Selector", startingPose)
 				.withSize(3, 1)
 				.withPosition(0, 2)
-				.withWidget(BuiltInWidgets.kComboBoxChooser);
+				.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
 		autoTab.add("Path Selector", autoChooser)
 				.withSize(3, 1)
@@ -119,13 +125,13 @@ public class Robot extends TimedRobot {
 		autoTab.add("Shoot Selector", autoShoot)
 				.withSize(3, 1)
 				.withPosition(3, 2)
-				.withWidget(BuiltInWidgets.kComboBoxChooser);
+				.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
 		autoTab.add("Path Delay", 0)
 				.withSize(3, 1)
 				.withPosition(3, 3)
 				.withWidget(BuiltInWidgets.kNumberSlider)
-				.withProperties(Map.of("min_value", 0, "max_value", 15, "block increment", 1, "divisions", 6));
+				.withProperties(Map.of("min_value", 0, "max_value", 15, "block increment", 1, "Divisions", 6));
 		// .withProperties(Map.of("min_value", 0, "min", 0, "max_value", 15, "max", 15,
 		// "block increment", 1, "divisions", 6));
 
@@ -190,7 +196,70 @@ public class Robot extends TimedRobot {
 			disabledTab.add(group, alert)
 					.withSize(5, 5)
 					.withWidget("Alerts");
+
+			testTab.add(group, alert)
+					.withSize(2, 3)
+					.withPosition(0, 0)
+					.withWidget("Alerts");
 		});
+
+		// drive forward command
+		swerveCommands.setDefaultOption("Do Nothing",
+				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
+		swerveCommands.addOption("Drive Forward",
+				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25))
+						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+		swerveCommands.addOption("Drive Backwards",
+				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25))
+						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+		swerveCommands.addOption("Drive Left",
+				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25))
+						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+		swerveCommands.addOption("Drive Right",
+				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25))
+						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+		swerveCommands.addOption("Rotate",
+				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+						.withRotationalRate(Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.25))
+						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+
+		testTab.add("Swerve Commands", swerveCommands)
+				.withSize(6, 1)
+				.withPosition(2, 2)
+				.withWidget(BuiltInWidgets.kSplitButtonChooser);
+
+		testTab.add("Extend Climber", new Extend())
+				.withPosition(6, 0)
+				.withSize(2, 1)
+				.withWidget(BuiltInWidgets.kCommand);
+
+		testTab.add("Retract Climber", new Retract())
+				.withPosition(6, 1)
+				.withSize(2, 1)
+				.withWidget(BuiltInWidgets.kCommand);
+
+		armCommands.setDefaultOption("Intake", new SetPoint(Constants.ArmConstants.SetPoints.kIntake));
+		armCommands.addOption("Track Speaker", new SetPoint());
+		armCommands.addOption("0 degrees", new SetPoint(0));
+		armCommands.addOption("Amp", new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
+
+		testTab.add("Arm Commands", armCommands)
+				.withPosition(2, 1)
+				.withSize(4, 1)
+				.withWidget(BuiltInWidgets.kSplitButtonChooser);
+
+		testTab.add("Intake (without deploying)", new DeployAndIntake(false))
+				.withSize(2, 1)
+				.withPosition(2, 0)
+				.withWidget(BuiltInWidgets.kCommand);
+		testTab.add("Intake (with deploying)", new DeployAndIntake(true))
+				.withSize(2, 1)
+				.withPosition(4, 0)
+				.withWidget(BuiltInWidgets.kCommand);
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
@@ -310,8 +379,9 @@ public class Robot extends TimedRobot {
 
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(timer::restart),
-				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could also add a lil time thing in there
-				new Shoot(true).until(() -> !Intake.getInstance().getShooterSensor()),
+				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
+				// also add a lil time thing in there
+				new Shoot(true).until(() -> !Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				// ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
@@ -389,11 +459,20 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testInit() {
 		CommandScheduler.getInstance().cancelAll();
-		RobotContainer.configurePitBinds();
+		Shuffleboard.selectTab(testTab.getTitle());
+		HomeClimber.getHomingCommand().schedule();
+		// RobotContainer.configurePitBinds();
 	}
 
 	@Override
 	public void testPeriodic() {
+		if (!swerveCommands.getSelected().isScheduled()) {
+			swerveCommands.getSelected().schedule();
+		}
+
+		if (!armCommands.getSelected().isScheduled()) {
+			armCommands.getSelected().schedule();
+		}
 	}
 
 	@Override
@@ -430,22 +509,6 @@ public class Robot extends TimedRobot {
 		for (TalonFX falcon : falcons) {
 			verifyMotor(falcon);
 		}
-
-		// for (TalonFX falcon : falcons) {
-		// falcon.getConfigurator().apply(new
-		// AudioConfigs().withAllowMusicDurDisable(true));
-		// if (!falcon.getPosition().getStatus().isOK()) {
-		// DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to
-		// return position with status: "
-		// + falcon.getPosition().getStatus().getDescription());
-		// new Alert(
-		// "TalonFX ID #" + falcon.getDeviceID() + " has failed to return position with
-		// status: "
-		// + falcon.getPosition().getStatus().getDescription(),
-		// AlertType.ERROR)
-		// .set(true);
-		// }
-		// }
 	}
 
 	/**

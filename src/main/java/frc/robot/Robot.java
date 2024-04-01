@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -76,11 +77,12 @@ public class Robot extends TimedRobot {
 
 	public static Command setpointCommand;
 
-	public static Alert forwardAuto;
+	public static Alert forwardAuto, wrongAlliance;
 
 	@Override
 	public void robotInit() {
 		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
+		wrongAlliance = new Alert("Switch to Blue alliance for best results", Alert.AlertType.INFO);
 
 		teleopTab = Shuffleboard.getTab("Teleoperated");
 		autoTab = Shuffleboard.getTab("Autonomous");
@@ -204,28 +206,36 @@ public class Robot extends TimedRobot {
 		});
 
 		// drive forward command
-		swerveCommands.setDefaultOption("Do Nothing",
-				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
+		swerveCommands.setDefaultOption("Reset Gyro to subwoofer",
+				Drivetrain.getInstance()
+						.runOnce(() -> Drivetrain.getInstance()
+								.seedFieldRelative(!Robot.isRed()
+										? Constants.AutoConstants.WayPoints.Blue.CenterStartPosition
+										: GeometryUtil
+												.flipFieldPose(
+														Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
+						.withName("Zero Swerve 2 Speaker").andThen(
+								Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.SwerveDriveBrake())));
 		swerveCommands.addOption("Drive Forward",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25))
-						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25)));
+		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
 		swerveCommands.addOption("Drive Backwards",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25))
-						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25)));
+		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
 		swerveCommands.addOption("Drive Left",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25))
-						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25)));
+		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
 		swerveCommands.addOption("Drive Right",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25))
-						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25)));
+		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
 		swerveCommands.addOption("Rotate",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withRotationalRate(Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.25))
-						.beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withRotationalRate(Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.25)));
+		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
 
 		testTab.add("Swerve Commands", swerveCommands)
 				.withSize(6, 1)
@@ -473,10 +483,13 @@ public class Robot extends TimedRobot {
 		if (!armCommands.getSelected().isScheduled()) {
 			armCommands.getSelected().schedule();
 		}
+
+		wrongAlliance.set(Robot.isRed());
 	}
 
 	@Override
 	public void testExit() {
+		wrongAlliance.set(false);
 	}
 
 	@Override

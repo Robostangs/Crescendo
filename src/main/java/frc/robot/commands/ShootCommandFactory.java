@@ -21,8 +21,6 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-import java.util.function.BooleanSupplier;
-
 public class ShootCommandFactory {
         static boolean configured;
 

@@ -9,32 +9,32 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class PathToPoint extends SequentialCommandGroup {
-    private Drivetrain drivetrain;
-    private Pose2d targetPose;
+        private Drivetrain drivetrain;
+        private Pose2d targetPose;
 
-    /**
-     * Command to set the drivetrain to a specific position on the field while
-     * avoiding field obstacles
-     * 
-     * @param targetPose the position that the robot should move to
-     */
-    public PathToPoint(Pose2d targetPose) {
-        drivetrain = Drivetrain.getInstance();
+        /**
+         * Command to set the drivetrain to a specific position on the field while
+         * avoiding field obstacles
+         * 
+         * @param targetPose the position that the robot should move to
+         */
+        public PathToPoint(Pose2d targetPose) {
+                drivetrain = Drivetrain.getInstance();
 
-        this.targetPose = targetPose;
+                this.targetPose = targetPose;
 
-        this.setName("PathToPoint");
-        this.addRequirements(drivetrain);
+                this.setName("PathToPoint");
+                this.addRequirements(drivetrain);
 
-        this.addCommands(
-                AutoBuilder.pathfindToPoseFlipped(
-                        this.targetPose,
-                        new PathConstraints(
-                                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-                                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared,
-                                Constants.AutoConstants.kMaxAngularSpeedRadiansPerSecond,
-                                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared),
-                        0.0,
-                        0.0));
-    }
+                this.addCommands(
+                                AutoBuilder.pathfindToPoseFlipped(
+                                                this.targetPose,
+                                                new PathConstraints(
+                                                                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                                                                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared,
+                                                                Constants.AutoConstants.kMaxAngularSpeedRadiansPerSecond,
+                                                                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared),
+                                                0.0,
+                                                0.0));
+        }
 }

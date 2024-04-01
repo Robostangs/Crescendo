@@ -14,6 +14,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -172,9 +173,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         Constants.AutoConstants.rotationPID,
                         SwerveConstants.maxModuleSpeed,
                         Constants.SwerveConstants.driveBaseRadius,
-                        new ReplanningConfig(true, false, 1, 0.25)),
+                        new ReplanningConfig(true, true, 1, 0.25)),
                 Robot::isRed,
                 this);
+
+        // dont really care about the target pose
+        // PathPlannerLogging.setLogTargetPoseCallback((pose) -> getField()
+        //         .getObject("Target Pose").setPose(pose));
+        PathPlannerLogging.setLogActivePathCallback((poses) -> getField()
+                .getObject("Trajectory").setPoses(poses));
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {

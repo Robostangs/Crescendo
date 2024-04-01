@@ -99,8 +99,7 @@ public class RobotContainer {
 				.finallyDo(Lighting.startTimer));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.StartingNotes.center)
-				// .andThen(ShootCommandFactory.getAmpCommand()));
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
 				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil()).withName("Auto-pilot Amp shot"));
 
 		// just runs feeder
@@ -198,13 +197,16 @@ public class RobotContainer {
 						false));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
-				.whileTrue(new SetPoint());
+				.toggleOnTrue(new SetPoint());
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
-				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp));
+				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
+						.andThen(ShootCommandFactory.getAmpCommand()).withName("Auto-pilot Amp shot"));
 
-		new Trigger(() -> simController.getRawButtonPressed(3))
-				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSpeakerRight));
+		new Trigger(() -> simController.getRawButtonPressed(4))
+				.toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
+		// .toggleOnTrue(new
+		// PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSpeakerRight));
 
 		// new Trigger(() -> simController.getRawButtonPressed(3))
 		// .whileTrue(new AimAndShoot());

@@ -48,7 +48,6 @@ import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lighting;
-import frc.robot.subsystems.Music;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -60,6 +59,8 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
+
+	public static final double swerveTestSpeed = 0.1;
 
 	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
 
@@ -162,7 +163,7 @@ public class Robot extends TimedRobot {
 				.withPosition(0, 0);
 
 		teleopTab.addNumber("Match Time", () -> Timer.getMatchTime())
-				.withSize(3, 2)
+				.withSize(3, 4)
 				.withPosition(3, 0)
 				.withWidget("Match Time")
 				.withProperties(Map.of("red_start_time", 15, "yellow_start_time", 30));
@@ -172,30 +173,30 @@ public class Robot extends TimedRobot {
 				.withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
 
-		teleopTab.add("Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake)
+		testTab.add("Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake)
 				.withSize(3, 1)
-				.withPosition(3, 3)
+				.withPosition(2, 0)
 				.withWidget(BuiltInWidgets.kTextView)
 				.withProperties(Map.of("show_submit_button", true));
 
-		pathDelayEntry = NetworkTableInstance.getDefault()
-				.getTable("Shuffleboard")
-				.getSubTable(autoTab.getTitle())
-				.getEntry("Path Delay");
-
 		desiredSetpointEntry = NetworkTableInstance.getDefault()
 				.getTable("Shuffleboard")
-				.getSubTable(teleopTab.getTitle())
+				.getSubTable(testTab.getTitle())
 				.getEntry("Desired Setpoint");
 
 		// use this for shooter regression
 		setpointCommand = new TrackSetPoint(
 				() -> desiredSetpointEntry.getDouble(Constants.ArmConstants.SetPoints.kIntake));
 
-		teleopTab.add(setpointCommand)
-				.withSize(3, 1)
-				.withPosition(3, 2)
+		testTab.add(setpointCommand)
+				.withSize(2, 1)
+				.withPosition(5, 0)
 				.withWidget(BuiltInWidgets.kCommand);
+
+		pathDelayEntry = NetworkTableInstance.getDefault()
+				.getTable("Shuffleboard")
+				.getSubTable(autoTab.getTitle())
+				.getEntry("Path Delay");
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
@@ -203,7 +204,7 @@ public class Robot extends TimedRobot {
 
 		disabledTab.add("Song Selector", songChooser)
 				.withSize(5, 1)
-				.withPosition(0, 5)
+				.withPosition(5, 0)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 
 		Alert.groups.forEach((group, alert) -> {
@@ -226,43 +227,36 @@ public class Robot extends TimedRobot {
 										: GeometryUtil
 												.flipFieldPose(
 														Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
-						.withName("Zero Swerve 2 Speaker").andThen(
-								Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.SwerveDriveBrake())));
+						.withName("Zero Swerve 2 Speaker"));
+		// .andThen(
+		// Drivetrain.getInstance().applyRequest(() -> new
+		// SwerveRequest.SwerveDriveBrake())));
+
 		swerveCommands.addOption("Drive Forward",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25)));
-		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)));
+
 		swerveCommands.addOption("Drive Backwards",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25)));
-		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)));
+
 		swerveCommands.addOption("Drive Left",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25)));
-		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)));
+
 		swerveCommands.addOption("Drive Right",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 0.25)));
-		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)));
+
 		swerveCommands.addOption("Rotate",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withRotationalRate(Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.25)));
-		// .beforeStarting(() -> Drivetrain.getInstance().seedFieldRelative()));
+						.withRotationalRate(
+								Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * swerveTestSpeed)));
 
 		testTab.add("Swerve Commands", swerveCommands)
-				.withSize(6, 1)
+				.withSize(9, 1)
 				.withPosition(2, 2)
 				.withWidget(BuiltInWidgets.kSplitButtonChooser);
-
-		testTab.add("Extend Climber", new Extend())
-				.withPosition(6, 0)
-				.withSize(2, 1)
-				.withWidget(BuiltInWidgets.kCommand);
-
-		testTab.add("Retract Climber", new Retract())
-				.withPosition(6, 1)
-				.withSize(2, 1)
-				.withWidget(BuiltInWidgets.kCommand);
 
 		armCommands.setDefaultOption("Intake", new SetPoint(Constants.ArmConstants.SetPoints.kIntake));
 		armCommands.addOption("Track Speaker", new SetPoint());
@@ -270,17 +264,28 @@ public class Robot extends TimedRobot {
 		armCommands.addOption("Amp", new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
 
 		testTab.add("Arm Commands", armCommands)
+				.withSize(5, 1)
 				.withPosition(2, 1)
-				.withSize(4, 1)
 				.withWidget(BuiltInWidgets.kSplitButtonChooser);
+
+		testTab.add("Extend Climber", new Extend())
+				.withSize(2, 1)
+				.withPosition(9, 0)
+				.withWidget(BuiltInWidgets.kCommand);
+
+		testTab.add("Retract Climber", new Retract())
+				.withSize(2, 1)
+				.withPosition(9, 1)
+				.withWidget(BuiltInWidgets.kCommand);
+
+		testTab.add("Intake (with deploying)", new DeployAndIntake(true))
+				.withSize(2, 1)
+				.withPosition(7, 0)
+				.withWidget(BuiltInWidgets.kCommand);
 
 		testTab.add("Intake (without deploying)", new DeployAndIntake(false))
 				.withSize(2, 1)
-				.withPosition(2, 0)
-				.withWidget(BuiltInWidgets.kCommand);
-		testTab.add("Intake (with deploying)", new DeployAndIntake(true))
-				.withSize(2, 1)
-				.withPosition(4, 0)
+				.withPosition(7, 1)
 				.withWidget(BuiltInWidgets.kCommand);
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
@@ -408,7 +413,8 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::restart),
 				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
 				// also add a lil time thing in there
-				// new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
+				// new Shoot(true).onlyWhile(() ->
+				// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				// ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
@@ -431,7 +437,8 @@ public class Robot extends TimedRobot {
 		}
 
 		// shooting at the start
-		new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected).schedule();
+		new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected)
+				.schedule();
 		autonCommand.withName("Auto Command").schedule();
 		HomeClimber.getHomingCommand().schedule();
 		// test this instead of prepare and shoot cuz we can start the path immediatly
@@ -506,7 +513,7 @@ public class Robot extends TimedRobot {
 		wrongAlliance.set(Robot.isRed());
 
 		// if(!songChooser.equals("")){
-		Music.getInstance().playMusic(songChooser.getSelected());
+		// Music.getInstance().playMusic(songChooser.getSelected());
 		// }
 	}
 
@@ -558,8 +565,8 @@ public class Robot extends TimedRobot {
 		falcon.getConfigurator().apply(new AudioConfigs().withAllowMusicDurDisable(true));
 
 		StatusCode status = falcon.getPosition().getStatus();
-		if (status.isError()) {
-			DataLogManager.log("TalonFX #" + falcon.getDeviceID() + " has failed to return position with status: "
+		if (status.isError() && Robot.isReal()) {
+			DataLogManager.log("TalonFX ID #" + falcon.getDeviceID() + " has failed to return position with status: "
 					+ status.getDescription());
 			new Alert(
 					"TalonFX ID #" + falcon.getDeviceID() + " has failed to return position with status: "
@@ -580,12 +587,12 @@ public class Robot extends TimedRobot {
 	 */
 	public static boolean verifyCANcoder(CANcoder coder) {
 		StatusCode status = coder.getPosition().getStatus();
-		if (status.isError()) {
-			DataLogManager.log("TalonFX #" + coder.getDeviceID() + " has failed to return position with status: "
-					+ status.getDescription());
+		if (status.isError() && Robot.isReal()) {
+			DataLogManager.log("CANcoder ID #" + coder.getDeviceID() + " has failed to return position with status: "
+					+ status.getDescription() + ". Error Code: " + status.value);
 			new Alert(
-					"TalonFX ID #" + coder.getDeviceID() + " has failed to return position with status: "
-							+ status.getDescription(),
+					"CANcoder ID #" + coder.getDeviceID() + " has failed to return position with status: "
+							+ status.getName() + ". Error Code: " + status.value,
 					AlertType.ERROR).set(true);
 			return true;
 		}

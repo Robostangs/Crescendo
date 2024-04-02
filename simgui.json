@@ -37,6 +37,7 @@
       "/Shuffleboard/Test/Retract Climber": "Command",
       "/Shuffleboard/Test/Song Selector": "String Chooser",
       "/Shuffleboard/Test/Swerve Commands": "String Chooser",
+      "/Shuffleboard/Test/Track Setpoint": "Command",
       "/SmartDashboard/Align PID": "PIDController",
       "/SmartDashboard/Arm": "Subsystem",
       "/SmartDashboard/Arm/Target Profile": "Mechanism2d",
@@ -93,6 +94,10 @@
           "arrowSize": 100,
           "style": "Box/Image"
         },
+        "Trajectory": {
+          "arrowSize": 0,
+          "style": "Line"
+        },
         "bottom": 1476,
         "height": 8.210550308227539,
         "left": 150,
@@ -115,11 +120,6 @@
         "right": 2961,
         "top": 79,
         "width": 16.541748046875,
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Swerve/Module 0": {
         "window": {
           "visible": true
         }

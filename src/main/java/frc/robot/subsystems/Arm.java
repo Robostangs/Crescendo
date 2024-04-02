@@ -48,7 +48,7 @@ public class Arm extends SubsystemBase {
 
     private Alert armIsBrokenAlert = new Alert("The arm has failed!", AlertType.ERROR);
 
-@Override
+    @Override
     public void periodic() {
         updateArmPosition();
 
@@ -56,7 +56,8 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
         SmartDashboard.putNumber("Arm/Velocity", getVelocityRotations());
         SmartDashboard.putNumber("Arm/Setpoint", Units.rotationsToDegrees(motionMagicDutyCycle.Position));
-        // SmartDashboard.putNumber("Arm/Setpoint", Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble()));
+        // SmartDashboard.putNumber("Arm/Setpoint",
+        // Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble()));
         SmartDashboard.putNumber("Arm/Position Error",
                 Units.rotationsToDegrees(motionMagicDutyCycle.Position) - getArmPosition());
         SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
@@ -89,7 +90,6 @@ public class Arm extends SubsystemBase {
             armIsBrokenAlert.set(true);
         }
 
-
         if (Robot.isReal()) {
             shooterExtension.setAngle(getShooterExtensionPosition() - 90);
             simShooterExtension.setAngle(
@@ -107,6 +107,7 @@ public class Arm extends SubsystemBase {
         armCoder = new CANcoder(Constants.ArmConstants.armCoderID, "rio");
 
         if (Robot.verifyCANcoder(armCoder)) {
+            new Alert("Arm CANcoder is not functioning, falling back onto internal encoder", AlertType.ERROR).set(true);
             var txConfig = getArmMotorConfig();
             txConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
             txConfig.Feedback.RotorToSensorRatio = 1;
@@ -293,12 +294,12 @@ public class Arm extends SubsystemBase {
      */
     public void setMotionMagic(double position) {
         if (!validSetpoint(position)) {
-            
+
             DataLogManager.log(position + " is not a valid setpoint");
             if (position < Constants.ArmConstants.kArmMinAngle) {
                 position = Constants.ArmConstants.kArmMinAngle;
-            } 
-            
+            }
+
             else {
                 position = getArmPosition();
             }

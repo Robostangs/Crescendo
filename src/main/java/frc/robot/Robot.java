@@ -234,24 +234,29 @@ public class Robot extends TimedRobot {
 
 		swerveCommands.addOption("Drive Forward",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)).withName("Drive Forward"));
+						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withName("Drive Forward"));
 
 		swerveCommands.addOption("Drive Backwards",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)).withName("Drive Backwards"));
+						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withName("Drive Backwards"));
 
 		swerveCommands.addOption("Drive Left",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)).withName("Drive Left"));
+						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withName("Drive Left"));
 
 		swerveCommands.addOption("Drive Right",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)).withName("Drive Right"));
+						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withName("Drive Right"));
 
 		swerveCommands.addOption("Rotate",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
 						.withRotationalRate(
-								Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * swerveTestSpeed)).withName("Rotate"));
+								Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * swerveTestSpeed))
+						.withName("Rotate"));
 
 		testTab.add("Swerve Commands", swerveCommands)
 				.withSize(9, 1)
@@ -292,12 +297,16 @@ public class Robot extends TimedRobot {
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
 			autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-					.withWidget(BuiltInWidgets.kCameraStream).withSize(8, 7).withPosition(6, 0)
+					.withSize(8, 7)
+					.withPosition(6, 0)
+					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 			// front camera (intake cam) - teleop tab
 			teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-					.withWidget(BuiltInWidgets.kCameraStream).withSize(8, 7).withPosition(6, 0)
+					.withSize(8, 7)
+					.withPosition(6, 0)
+					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 		}
 
@@ -414,8 +423,7 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::restart),
 				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
 				// also add a lil time thing in there
-				new Shoot(true).onlyWhile(() ->
-				Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
+				new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				// ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
@@ -437,9 +445,11 @@ public class Robot extends TimedRobot {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 		}
 
-		// shooting at the start wont work cuz the pathPlannerCommand takes up all subsystems
-		// new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected)
-		// 		.schedule();
+		// shooting at the start wont work cuz the pathPlannerCommand takes up all
+		// subsystems
+		// new Shoot(true).onlyWhile(() ->
+		// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected)
+		// .schedule();
 		autonCommand.withName("Auto Command").schedule();
 		HomeClimber.getHomingCommand().schedule();
 		// test this instead of prepare and shoot cuz we can start the path immediatly

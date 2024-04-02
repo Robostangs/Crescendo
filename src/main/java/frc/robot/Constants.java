@@ -346,11 +346,11 @@ public final class Constants {
 		public static final double kFeedForwardDutyCycle = 0.025;
 
 		// TODO: lower these numbers so pid works better
-		public static final double kFeedForwardTorqueCurrent = 6.04 - 1;
-		public static final double kFeedForwardTorqueCurrentWhileShooting = 7;
+		public static final double kFeedForwardTorqueCurrent = 3.5;
+		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
-		public static final double shooterTrapezoidalOffset = -2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = 60.4;
+		public static final double shooterTrapezoidalOffset = 2.6;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -61.5;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -360,10 +360,10 @@ public final class Constants {
 
 
 		public static final double kArmMaxAngle = 60;
-		public static final double kArmMinAngle = -61.6 - shooterTrapezoidalOffset;
+		public static final double kArmMinAngle = angleOfShooterReferencePointSittingOnHardStop + shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
-		public static final double shooterOffset = 67.3 + shooterTrapezoidalOffset;
-		public static final double kInRangeThreshold = 3.25;
+		public static final double shooterOffset = 67.4 - shooterTrapezoidalOffset;
+		public static final double kInRangeThreshold = 1.75;
 
 		/*
 		 * Interpolation between distance vs shooting angle (horizontal dist. to
@@ -399,7 +399,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.2;
+		public static final double feederFeedForward = 0.16;
 		public static final double shooterPoopSpeed = 0.5;
 	}
 

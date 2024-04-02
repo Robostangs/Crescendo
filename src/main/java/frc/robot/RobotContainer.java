@@ -124,6 +124,8 @@ public class RobotContainer {
 								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
 						.finallyDo(Lighting.startTimer));
 
+		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
 				Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
 
@@ -136,7 +138,6 @@ public class RobotContainer {
 										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
 				.withName("Zero Swerve 2 Speaker"));
 
-		xDrive.leftBumper().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 		xDrive.rightBumper().toggleOnTrue(new Extend()
 				.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue))
 				.finallyDo(Lighting.startTimer));
@@ -161,7 +162,7 @@ public class RobotContainer {
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.x().whileTrue(new QuickFeed());
 		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xManip.leftBumper()));
-		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(() -> xManip.getHID().getLeftBumper()));
+		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xManip.leftBumper()));
 
 		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
 				.finallyDo(Lighting.startTimer));
@@ -242,7 +243,7 @@ public class RobotContainer {
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
 				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-						.andThen(ShootCommandFactory.getAmpCommand())
+						.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
 						.until(() -> Math.abs(xDrive.getLeftX()) > Constants.OperatorConstants.kDriverDeadzone
 								|| Math.abs(xDrive.getLeftY()) > Constants.OperatorConstants.kDriverDeadzone
 								|| Math.abs(xDrive.getRightX()) > Constants.OperatorConstants.kDriverDeadzone)

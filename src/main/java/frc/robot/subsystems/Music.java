@@ -18,6 +18,7 @@ public class Music extends SubsystemBase {
 
     private static Music mInstance;
 
+    private static Alert itWorks = new Alert("IT WORKS", AlertType.INFO);
 
     public static Music getInstance() {
         if (mInstance == null) {
@@ -79,8 +80,10 @@ public class Music extends SubsystemBase {
             mOrchestra.loadMusic(chrpFile);
             mOrchestra.play();
         }
+
+        
         if(mOrchestra.isPlaying()){
-            new Alert("ITS PLAYING", AlertType.INFO);
-    }
+            itWorks.set(true);
+        }
 }
 }

@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -205,7 +204,8 @@ public class Robot extends TimedRobot {
 
 
 
-		disabledTab.add("Song Selector", songChooser).withPosition(5, 0).withSize(3, 2);
+		testTab.add("Song Selector", songChooser).withPosition(0, 4
+		).withSize(3, 2);
 
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
@@ -352,9 +352,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
-		if(!songChooser.equals("")){
-			Music.getInstance().playMusic(songChooser.getSelected());
-		}
+
 	}
 
 	@Override
@@ -506,6 +504,10 @@ public class Robot extends TimedRobot {
 		}
 
 		wrongAlliance.set(Robot.isRed());
+
+		// if(!songChooser.equals("")){
+			Music.getInstance().playMusic(songChooser.getSelected());
+		// }
 	}
 
 	@Override

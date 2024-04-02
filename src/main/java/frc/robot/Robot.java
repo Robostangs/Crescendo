@@ -42,6 +42,7 @@ import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.ClimberCommands.Retract;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
 import frc.robot.commands.Swerve.Align;
+import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
@@ -57,6 +58,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
+	public static SendableChooser<Command> pathToPointCommandChooser = new SendableChooser<>();
 
 	public static final double swerveTestSpeed = 0.1;
 
@@ -120,6 +122,18 @@ public class Robot extends TimedRobot {
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);
 
+		pathToPointCommandChooser.setDefaultOption("None", new InstantCommand());
+		pathToPointCommandChooser.addOption("Far Amp Note",
+				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farLeft));
+		pathToPointCommandChooser.addOption("Far Mid Amp Note",
+				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farMidLeft));
+		pathToPointCommandChooser.addOption("Far Center Note",
+				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farCenter));
+		pathToPointCommandChooser.addOption("Far Mid Source Note",
+				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farMidRight));
+		pathToPointCommandChooser.addOption("Far Source Note",
+				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farRight));
+
 		autoTab.add("Starting Pose Selector", startingPose)
 				.withSize(3, 1)
 				.withPosition(0, 3)
@@ -133,6 +147,11 @@ public class Robot extends TimedRobot {
 		autoTab.add("Shoot Selector", autoShoot)
 				.withSize(3, 1)
 				.withPosition(3, 3)
+				.withWidget(BuiltInWidgets.kSplitButtonChooser);
+
+		autoTab.add("Center-line Sprint Path to Point Selector", pathToPointCommandChooser)
+				.withSize(6, 1)
+				.withPosition(0, 4)
 				.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
 		autoTab.add("Path Delay", 0)
@@ -323,7 +342,7 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true)
 				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
-				
+
 		NamedCommands.registerCommand("Shoot",
 				ShootCommandFactory.getAimAndShootCommandWithTimeouts()
 						.deadlineWith(new Align(false),
@@ -426,13 +445,16 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::restart),
 				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
 				// also add a lil time thing in there
-				// new BeltDrive(() -> 1d).raceWith(new FullSend()).withTimeout(0.75).onlyIf(autoShoot::getSelected),
-				// new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
+				// new BeltDrive(() -> 1d).raceWith(new
+				// FullSend()).withTimeout(0.75).onlyIf(autoShoot::getSelected),
+				// new Shoot(true).onlyWhile(() ->
+				// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
 				pathPlannerCommand,
-				new InstantCommand(timer::stop));
+				new InstantCommand(timer::stop),
+				pathToPointCommandChooser.getSelected());
 
 		// if (autoShoot.getSelected()) {
 		// // we want prepare and shoot because we know that at the beginning of the

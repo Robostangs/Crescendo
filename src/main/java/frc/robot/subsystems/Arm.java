@@ -187,6 +187,10 @@ public class Arm extends SubsystemBase {
         return isInRangeOfTarget(target, Constants.ArmConstants.kInRangeThreshold);
     }
 
+    public boolean isInRangeOfTarget() {
+        return isInRangeOfTarget(getArmTarget());
+    }
+
     /**
      * whether the arm is within the specified degrees of the target setpoint
      * 

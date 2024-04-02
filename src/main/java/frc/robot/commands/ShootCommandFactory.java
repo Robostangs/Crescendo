@@ -73,14 +73,17 @@ public class ShootCommandFactory {
 
                 return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
                                 .unless(() -> Intake.getInstance().getShooterSensor())
-                                .andThen(new ConditionalCommand(new SetPoint().raceWith(new WaitUntilCommand(
-                                                () -> Arm.getInstance().atSetpoint())
-                                                .withTimeout(Constants.OperatorConstants.setpointTimeout)
-                                                .deadlineWith(new Prepare())
-                                                .andThen(new Shoot(false)
-                                                                .withTimeout(Constants.OperatorConstants.shootTimeout),
-                                                                new Shoot(true).until(() -> !Intake.getInstance()
-                                                                                .getShooterSensor()))),
+                                .andThen(new ConditionalCommand(
+                                                new SetPoint().raceWith(
+                                                                new WaitUntilCommand(() -> Arm.getInstance()
+                                                                                .isInRangeOfTarget())
+                                                                                .withTimeout(Constants.OperatorConstants.setpointTimeout)
+                                                                                .deadlineWith(new Prepare())
+                                                                                .andThen(new Shoot(false)
+                                                                                                .withTimeout(Constants.OperatorConstants.shootTimeout),
+                                                                                                new Shoot(true).onlyWhile(
+                                                                                                                () -> Intake.getInstance()
+                                                                                                                                .getShooterSensor()))),
                                                 new Spit().withTimeout(Constants.AutoConstants.spitTime),
                                                 () -> Intake.getInstance().getShooterSensor()))
                                 .withName("Auto Aim and Shoot with Timeouts");
@@ -91,11 +94,14 @@ public class ShootCommandFactory {
                 configureSticks();
 
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
-                                .andThen(new Prepare().until(() -> Arm.getInstance().atSetpoint())
-                                                .raceWith(new WaitUntilCommand(waitUntil))
-                                                .andThen(new WaitUntilCommand(waitUntil),
-                                                                new Shoot(false))
-                                                .deadlineWith(new SetPoint()))
+                                .andThen(new SetPoint()
+                                                .raceWith(new Prepare().until(waitUntil).andThen(new Shoot(false))),
+                                                new CancelShooter().alongWith(new ReturnHome()))
+                                // new Prepare().until(waitUntil).andThen(new Shoot(false))
+                                // .raceWith(new WaitUntilCommand(waitUntil))
+                                // .andThen(new WaitUntilCommand(waitUntil),
+                                // new Shoot(false))
+                                // .deadlineWith(new SetPoint()))
                                 .withName("Aim and Shoot");
         }
 
@@ -112,9 +118,8 @@ public class ShootCommandFactory {
                 configureSticks();
 
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor()).andThen(
-                                new SetPoint(Constants.ArmConstants.SetPoints.kAmp).until(waitUntil),
-                                // new WaitUntilCommand(() -> xManip.getHID().getLeftBumper())
-                                //                 .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
+                                new WaitUntilCommand(waitUntil)
+                                                .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
                                 new PoopOut(),
                                 new CancelShooter().alongWith(new ReturnHome())).withName("Amp Shot");
         }
@@ -132,7 +137,7 @@ public class ShootCommandFactory {
                 return new Prepare().until(() -> Shooter.getInstance().readyToShoot())
                                 .withTimeout(Constants.OperatorConstants.chargeUpTimeout)
                                 .andThen(new Shoot(false).withTimeout(Constants.OperatorConstants.shootTimeout),
-                                                new Shoot(true).until(() -> !Intake.getInstance().getShooterSensor()))
+                                                new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()))
                                 .withName("Auto Prepare and Shoot with Timeouts");
         }
 
@@ -140,8 +145,9 @@ public class ShootCommandFactory {
                 configureSticks();
 
                 return new Prepare().until(waitUntil)
-                // WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare())
-                                .andThen(new Shoot(true).until(waitUntil))
+                                // WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new
+                                // Prepare())
+                                .andThen(new Shoot(true).onlyWhile(waitUntil))
                                 .withName("Prepare and Shoot");
         }
 

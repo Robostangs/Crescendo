@@ -516,10 +516,10 @@ public final class Constants {
 		public static final int strip2Length = 29;
 
 		/** Left Climber Support */
-		public static final int strip3Length = 16;
+		public static final int strip3Length = 33;
 
 		/** Right Climber Support */
-		public static final int strip4Length = 17;
+		public static final int strip4Length = 33;
 
 		public static final double larsonAnimationSpeed = 0.06;
 		/** Standard is 2 LEDs */

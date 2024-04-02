@@ -155,7 +155,7 @@ public class Shooter extends SubsystemBase {
         threshold = Constants.MotorConstants.falconShooterThresholdRPM * setVal;
 
         SmartDashboard.putNumber("Shooter/Ready To Shoot threshold", threshold);
-        return ((topShooter.getVelocity().getValueAsDouble() * 60) > threshold - 500 && (bottomShooter.getVelocity()
+        return ((topShooter.getVelocity().getValueAsDouble() * 60) > threshold && (bottomShooter.getVelocity()
                 .getValueAsDouble() * 60) > threshold);
     }
 

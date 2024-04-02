@@ -37,9 +37,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Lower Arm"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "center mid left far"
+            "pathName": "far mid"
           }
         },
         {
@@ -49,15 +55,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Lower Arm"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "far center mid"
+            "pathName": "center mid left far"
           }
         },
         {

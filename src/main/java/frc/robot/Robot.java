@@ -42,7 +42,7 @@ import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.ClimberCommands.Retract;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
-import frc.robot.commands.ShooterCommands.Shoot;
+import frc.robot.commands.ShooterCommands.FullSend;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 
@@ -124,22 +124,22 @@ public class Robot extends TimedRobot {
 
 		autoTab.add("Starting Pose Selector", startingPose)
 				.withSize(3, 1)
-				.withPosition(0, 2)
+				.withPosition(0, 3)
 				.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
 		autoTab.add("Path Selector", autoChooser)
 				.withSize(3, 1)
-				.withPosition(0, 3)
+				.withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 
 		autoTab.add("Shoot Selector", autoShoot)
 				.withSize(3, 1)
-				.withPosition(3, 2)
+				.withPosition(3, 3)
 				.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
 		autoTab.add("Path Delay", 0)
 				.withSize(3, 1)
-				.withPosition(3, 3)
+				.withPosition(3, 2)
 				.withWidget(BuiltInWidgets.kNumberSlider)
 				.withProperties(Map.of("min_value", 0, "max_value", 15, "block increment", 1, "Divisions", 6));
 		// .withProperties(Map.of("min_value", 0, "min", 0, "max_value", 15, "max", 15,
@@ -423,7 +423,8 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::restart),
 				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
 				// also add a lil time thing in there
-				new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
+				new BeltDrive(() -> 1d).raceWith(new FullSend()).withTimeout(0.75).onlyIf(autoShoot::getSelected),
+				// new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				// ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),

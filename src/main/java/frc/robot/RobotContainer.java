@@ -242,7 +242,11 @@ public class RobotContainer {
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
 				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-						.andThen(ShootCommandFactory.getAmpCommand()).withName("Auto-pilot Amp shot"));
+						.andThen(ShootCommandFactory.getAmpCommand())
+						.until(() -> Math.abs(xDrive.getLeftX()) > Constants.OperatorConstants.kDriverDeadzone
+								|| Math.abs(xDrive.getLeftY()) > Constants.OperatorConstants.kDriverDeadzone
+								|| Math.abs(xDrive.getRightX()) > Constants.OperatorConstants.kDriverDeadzone)
+						.withName("Auto-pilot Amp shot"));
 
 		new Trigger(() -> simController.getRawButtonPressed(4))
 				.toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());

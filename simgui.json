@@ -74,11 +74,6 @@
           "visible": true
         }
       },
-      "/Shuffleboard/Teleoperated/Track Setpoint": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Arm/Target Profile": {
         "window": {
           "visible": true

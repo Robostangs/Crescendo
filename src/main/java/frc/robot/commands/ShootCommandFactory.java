@@ -76,7 +76,7 @@ public class ShootCommandFactory {
                                 .andThen(new ConditionalCommand(
                                                 new SetPoint().raceWith(
                                                                 new WaitUntilCommand(() -> Arm.getInstance()
-                                                                                .isInRangeOfTarget())
+                                                                                .atSetpoint())
                                                                                 .withTimeout(Constants.OperatorConstants.setpointTimeout)
                                                                                 .deadlineWith(new Prepare())
                                                                                 .andThen(new Shoot(false)

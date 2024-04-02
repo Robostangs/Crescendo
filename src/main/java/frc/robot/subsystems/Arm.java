@@ -62,13 +62,13 @@ public class Arm extends SubsystemBase {
                 Units.rotationsToDegrees(motionMagicDutyCycle.Position) - getArmPosition());
         SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
 
-        if (Shooter.getInstance().getCurrentCommand() == null) {
+        // if (Shooter.getInstance().getCurrentCommand() == null) {
             motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrent;
-        }
+        // }
 
-        else {
-            motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrentWhileShooting;
-        }
+        // else {
+        //     motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrentWhileShooting;
+        // }
 
         motionMagicDutyCycle.FeedForward *= Rotation2d.fromDegrees(getShooterExtensionPosition())
                 .minus(Rotation2d.fromDegrees(30)).getCos();
@@ -463,10 +463,16 @@ public class Arm extends SubsystemBase {
 
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
 
+        // armMotorConfig.Slot0.kP = 250;
+        // armMotorConfig.Slot0.kI = 3;
         armMotorConfig.Slot0.kP = 250;
-        armMotorConfig.Slot0.kI = 3;
-        motionMagicConfigs.MotionMagicCruiseVelocity = 0.5;
-        motionMagicConfigs.MotionMagicAcceleration = 0.5;
+        armMotorConfig.Slot0.kI = 150;
+        armMotorConfig.Slot0.kD = 30;
+        armMotorConfig.Slot0.kS = 4;
+        armMotorConfig.Slot0.kA = 3;
+
+        motionMagicConfigs.MotionMagicCruiseVelocity = 1;
+        motionMagicConfigs.MotionMagicAcceleration = 1;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000
         motionMagicConfigs.MotionMagicJerk = 0;
@@ -514,7 +520,7 @@ public class Arm extends SubsystemBase {
 
     // TODO: increase velocity threshold (for shooting on the fly)
     public boolean atSetpoint() {
-        return isInRangeOfTarget() && Math.abs(getVelocity()) < 0.05;
+        return isInRangeOfTarget() && Math.abs(getVelocity()) < 0.075;
     }
 
     public void postStatus(String status) {

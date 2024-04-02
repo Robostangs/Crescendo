@@ -84,7 +84,7 @@ public class Align extends Command {
         } 
         
         else {
-            driveRequest.HeadingController = new PhoenixPIDController(10, 0.5, 0);
+            driveRequest.HeadingController = new PhoenixPIDController(40, 10, 0.25);
         }
 
         // this is for tuning and now we can tune the PID controller

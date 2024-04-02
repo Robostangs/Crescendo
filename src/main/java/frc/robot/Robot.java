@@ -40,9 +40,7 @@ import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.Extend;
 import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.ClimberCommands.Retract;
-import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
-import frc.robot.commands.ShooterCommands.FullSend;
 import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 
@@ -428,10 +426,9 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::restart),
 				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
 				// also add a lil time thing in there
-				new BeltDrive(() -> 1d).raceWith(new FullSend()).withTimeout(0.75).onlyIf(autoShoot::getSelected),
-				// new Shoot(true).onlyWhile(() ->
-				// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
-				// ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
+				// new BeltDrive(() -> 1d).raceWith(new FullSend()).withTimeout(0.75).onlyIf(autoShoot::getSelected),
+				// new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
+				ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
 				pathPlannerCommand,

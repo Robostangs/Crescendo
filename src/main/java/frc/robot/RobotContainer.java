@@ -161,7 +161,7 @@ public class RobotContainer {
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.x().whileTrue(new QuickFeed());
 		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xManip.leftBumper()));
-		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xManip.leftBumper()));
+		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(() -> xManip.getHID().getLeftBumper()));
 
 		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
 				.finallyDo(Lighting.startTimer));

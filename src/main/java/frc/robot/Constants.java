@@ -114,7 +114,7 @@ public final class Constants {
 
 			// TODO: tune this number
 			/** The stator current at which the wheels start to slip */
-			private static final double kSlipCurrentA = 200.0;
+			private static final double kSlipCurrentA = 80.0;
 
 			/** Theoretical free speed (m/s) at 12v applied output */
 			public static final double kSpeedAt12VoltsMps = 5.96;
@@ -397,7 +397,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.11;
+		public static final double feederFeedForward = 0.2;
 		public static final double shooterPoopSpeed = 0.5;
 	}
 

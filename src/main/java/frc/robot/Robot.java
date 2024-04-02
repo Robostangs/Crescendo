@@ -353,17 +353,18 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.selectTab(disabledTab.getTitle());
+		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		PathPlannerCommand.publishTrajectory(startingPose.getSelected() + autoChooser.getSelected());
 		autoField.setRobotPose(Drivetrain.getInstance().getPose());
-		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
 	}
 
 	@Override
 	public void disabledExit() {
+		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
 	}
 
 	@Override

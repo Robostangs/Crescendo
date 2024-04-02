@@ -283,7 +283,7 @@ public final class Constants {
 
 		public static class WayPoints {
 			public static class Blue {
-				public static final Pose2d kAmp = new Pose2d(1.81, 7.75, Rotation2d.fromDegrees(-90));
+				public static final Pose2d kAmp = new Pose2d(1.81, 7.65, Rotation2d.fromDegrees(-90));
 				public static final Pose2d kHumanPlayer = new Pose2d(13.8, 1.2, Rotation2d.fromDegrees(0));
 				public static final Pose2d kSpeakerLeft = new Pose2d(2.6, 6.45, Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseBlue.getY(),

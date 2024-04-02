@@ -316,11 +316,16 @@ public class Robot extends TimedRobot {
 
 		Lighting.getInstance().autoSetLights(true);
 
-		NamedCommands.registerCommand("Intake",
-				new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).withTimeout(1)
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
-						.finallyDo(Lighting.startTimer));
+		// NamedCommands.registerCommand("Intake",
+		// new DeployAndIntake(true).unless(() ->
+		// Intake.getInstance().getShooterSensor())
+		// .andThen(new BeltDrive(() -> -1d).withTimeout(1)
+		// .alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+		// .finallyDo(Lighting.startTimer));
+
+		NamedCommands.registerCommand("Intake", new DeployAndIntake(true)
+				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
+				
 		NamedCommands.registerCommand("Shoot",
 				ShootCommandFactory.getAimAndShootCommandWithTimeouts()
 						.deadlineWith(new Align(false),
@@ -424,7 +429,8 @@ public class Robot extends TimedRobot {
 				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
 				// also add a lil time thing in there
 				new BeltDrive(() -> 1d).raceWith(new FullSend()).withTimeout(0.75).onlyIf(autoShoot::getSelected),
-				// new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
+				// new Shoot(true).onlyWhile(() ->
+				// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				// ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),

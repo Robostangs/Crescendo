@@ -128,6 +128,7 @@ public class Arm extends SubsystemBase {
         double shooterExtensionAngle = -90;
         double elbowLigamentAngle = -Constants.ArmConstants.shooterOffset;
         double rootXInches = Units.metersToInches(0.7493);
+        // double rootXInches = Units.metersToInches(0.46);
         double rootYInches = 4;
 
         if (Robot.isReal()) {

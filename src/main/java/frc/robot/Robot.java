@@ -234,31 +234,32 @@ public class Robot extends TimedRobot {
 
 		swerveCommands.addOption("Drive Forward",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)));
+						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)).withName("Drive Forward"));
 
 		swerveCommands.addOption("Drive Backwards",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)));
+						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)).withName("Drive Backwards"));
 
 		swerveCommands.addOption("Drive Left",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)));
+						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)).withName("Drive Left"));
 
 		swerveCommands.addOption("Drive Right",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)));
+						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed)).withName("Drive Right"));
 
 		swerveCommands.addOption("Rotate",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
 						.withRotationalRate(
-								Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * swerveTestSpeed)));
+								Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * swerveTestSpeed)).withName("Rotate"));
 
 		testTab.add("Swerve Commands", swerveCommands)
 				.withSize(9, 1)
 				.withPosition(2, 2)
 				.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
-		armCommands.setDefaultOption("Intake", new SetPoint(Constants.ArmConstants.SetPoints.kIntake));
+		armCommands.setDefaultOption("Nothing", new InstantCommand());
+		armCommands.addOption("Intake", new SetPoint(Constants.ArmConstants.SetPoints.kIntake));
 		armCommands.addOption("Track Speaker", new SetPoint());
 		armCommands.addOption("0 degrees", new SetPoint(0));
 		armCommands.addOption("Amp", new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
@@ -413,8 +414,8 @@ public class Robot extends TimedRobot {
 				new InstantCommand(timer::restart),
 				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
 				// also add a lil time thing in there
-				// new Shoot(true).onlyWhile(() ->
-				// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
+				new Shoot(true).onlyWhile(() ->
+				Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				// ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
@@ -436,9 +437,9 @@ public class Robot extends TimedRobot {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 		}
 
-		// shooting at the start
-		new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected)
-				.schedule();
+		// shooting at the start wont work cuz the pathPlannerCommand takes up all subsystems
+		// new Shoot(true).onlyWhile(() -> Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected)
+		// 		.schedule();
 		autonCommand.withName("Auto Command").schedule();
 		HomeClimber.getHomingCommand().schedule();
 		// test this instead of prepare and shoot cuz we can start the path immediatly
@@ -492,26 +493,34 @@ public class Robot extends TimedRobot {
 		Lighting.getLarsonCommand(() -> LEDState.kRobostangsOrange).schedule();
 	}
 
+	Command lastSwerve, lastArm;
+
 	@Override
 	public void testInit() {
 		CommandScheduler.getInstance().cancelAll();
 		Shuffleboard.selectTab(testTab.getTitle());
 		HomeClimber.getHomingCommand().schedule();
-		// RobotContainer.configurePitBinds();
+
+		lastSwerve = swerveCommands.getSelected();
+		lastArm = armCommands.getSelected();
+		lastSwerve.schedule();
+		lastArm.schedule();
 	}
 
 	@Override
 	public void testPeriodic() {
-		if (!swerveCommands.getSelected().isScheduled()) {
+		if (swerveCommands.getSelected() != lastSwerve) {
 			swerveCommands.getSelected().schedule();
 		}
 
-		if (!armCommands.getSelected().isScheduled()) {
+		if (armCommands.getSelected() != lastArm) {
 			armCommands.getSelected().schedule();
 		}
 
 		wrongAlliance.set(Robot.isRed());
 
+		lastSwerve = swerveCommands.getSelected();
+		lastArm = armCommands.getSelected();
 		// if(!songChooser.equals("")){
 		// Music.getInstance().playMusic(songChooser.getSelected());
 		// }

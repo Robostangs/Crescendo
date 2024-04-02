@@ -15,14 +15,14 @@ public class Retract extends Command {
 	}
 
 	@Override
-	public void execute() {
+	public void initialize() {
 		climber.setLeftClimbPower(ClimberConstants.LeftMotor.kRetractPower);
 		climber.setRightClimbPower(ClimberConstants.RightMotor.kRetractPower);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		climber.postStatus("Idle");
+		climber.postStatus("Retracted");
 		climber.setLeftClimbPower(0);
 		climber.setRightClimbPower(0);
 	}

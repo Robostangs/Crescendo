@@ -64,12 +64,12 @@ public final class Constants {
 			kSpeaker, kAmp, None
 		}
 
-		public static final double kMaxSpeedMetersPerSecond = 6;
+		public static final double kMaxSpeedMetersPerSecond = TunerConstants.kSpeedAt12VoltsMps;
 
 		// public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
 		public static final double kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond / 0.44;
 
-		public static final double maxModuleSpeed = 6;
+		public static final double maxModuleSpeed = TunerConstants.kSpeedAt12VoltsMps;
 
 		/** Distance (inches) between the 2 left side CANcoders */
 		public static final double driveBaseWidth = 24.75;
@@ -90,6 +90,7 @@ public final class Constants {
 		
 		public static final double driveBaseRadius = 0.44;
 
+		// TODO: test with off for faster speed lower acceleration
 		public static final boolean enableFOC = true;
 
 		public class TunerConstants {
@@ -260,7 +261,7 @@ public final class Constants {
 		// 10);
 
 		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0.1, 0.5);
-		// TODO: improve rotation pid
+		// TODO: tune rotation pid
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
@@ -343,8 +344,10 @@ public final class Constants {
 		public static final boolean armMotorInverted = true;
 
 		public static final double kFeedForwardDutyCycle = 0.025;
+
+		// TODO: lower these numbers so pid works better
 		public static final double kFeedForwardTorqueCurrent = 6.04 - 1;
-		public static final double kFeedForwardTorqueCurrentWhileShooting = 8 - 1;
+		public static final double kFeedForwardTorqueCurrentWhileShooting = 7;
 
 		public static final double shooterTrapezoidalOffset = -2.6;
 		public static final double angleOfShooterReferencePointSittingOnHardStop = 60.4;
@@ -477,7 +480,8 @@ public final class Constants {
 
 			kYellowRed(new int[] { 255, 255, 0 }),
 
-			kRobostangsOrange(new int[] { 255, 100, 0 }),
+			// TODO: make this looks better
+			kRobostangsOrange(new int[] { 255, 80, 0 }),
 
 			kPurple(new int[] { 128, 0, 128 }),
 

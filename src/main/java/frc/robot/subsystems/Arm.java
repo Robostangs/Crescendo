@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -21,9 +22,9 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Alert;
+import frc.robot.Alert.AlertType;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Alert.AlertType;
 import frc.robot.commands.ArmCommands.FineAdjust;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
@@ -52,12 +53,11 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         updateArmPosition();
 
-        SmartDashboard.putBoolean("Arm/At Setpoint", isInRangeOfTarget(getArmTarget()));
+        SmartDashboard.putBoolean("Arm/At Setpoint", atSetpoint());
         SmartDashboard.putNumber("Arm/Arm Position", getArmPosition());
-        SmartDashboard.putNumber("Arm/Velocity", getVelocityRotations());
+        SmartDashboard.putNumber("Arm/Velocity", getVelocity());
         SmartDashboard.putNumber("Arm/Setpoint", Units.rotationsToDegrees(motionMagicDutyCycle.Position));
-        // SmartDashboard.putNumber("Arm/Setpoint",
-        // Units.rotationsToDegrees(armMotor.getClosedLoopReference().getValueAsDouble()));
+
         SmartDashboard.putNumber("Arm/Position Error",
                 Units.rotationsToDegrees(motionMagicDutyCycle.Position) - getArmPosition());
         SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
@@ -81,13 +81,13 @@ public class Arm extends SubsystemBase {
             // postStatus("Setpoint");
             if (!ArmIsBroken) {
                 armMotor.setControl(motionMagicDutyCycle);
-                armIsBrokenAlert.set(false);
+                // armIsBrokenAlert.set(false);
             }
         }
 
         if (ArmIsBroken) {
             postStatus("ARM IS BROKEN");
-            armIsBrokenAlert.set(true);
+            // armIsBrokenAlert.set(true);
         }
 
         if (Robot.isReal()) {
@@ -352,10 +352,6 @@ public class Arm extends SubsystemBase {
         double angleToSpeaker = -1214.45 * Math.pow(Units.metersToInches(distToSpeakerMeters),
                 -0.796924) + -3.57488;
 
-        // double angleToSpeaker = Math.atan2(81.5, (-10 +
-        // Units.metersToInches(distToSpeakerMeters)));
-        // angleToSpeaker = -Units.radiansToDegrees(angleToSpeaker);
-
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)",
                 distToSpeakerMeters);
         SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)",
@@ -506,6 +502,8 @@ public class Arm extends SubsystemBase {
             ArmIsBroken = false;
         }
 
+        armIsBrokenAlert.set(ArmIsBroken);
+
         applyArmMotorConfig(armMotorConfig);
     }
 
@@ -513,8 +511,9 @@ public class Arm extends SubsystemBase {
         lastDitchEffortSetArmMotorWithoutSoftLimits(!ArmIsBroken);
     }
 
+    // TODO: increase velocity threshold (for shooting on the fly)
     public boolean atSetpoint() {
-        return isInRangeOfTarget(getArmTarget()) && Math.abs(getVelocity()) < 0.05;
+        return isInRangeOfTarget() && Math.abs(getVelocity()) < 0.05;
     }
 
     public void postStatus(String status) {

@@ -218,7 +218,7 @@ public class Robot extends TimedRobot {
 		});
 
 		// drive forward command
-		swerveCommands.setDefaultOption("Reset Gyro to subwoofer",
+		swerveCommands.setDefaultOption("Do Nothing (Reset Gyro)",
 				Drivetrain.getInstance()
 						.runOnce(() -> Drivetrain.getInstance()
 								.seedFieldRelative(!Robot.isRed()

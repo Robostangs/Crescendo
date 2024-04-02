@@ -22,12 +22,22 @@ public class PassToShooter extends Command {
         intake.setBelt(Constants.IntakeConstants.beltIntakeSpeed);
         intake.setIntake(Constants.IntakeConstants.intakeMotorSpeed);
         shooter.setFeederMotor(Constants.ShooterConstants.feederFeedForward);
-        intake.postStatus("Intaking");
+        intake.postStatus("Passing to Shooter");
         shooter.postStatus("Feeding");
     }
 
     @Override
     public void end(boolean interrupted) {
+        if (!interrupted) {
+            intake.postStatus("Passed to Shooter");
+            shooter.postStatus("Pass Received");
+        }
+
+        else {
+            intake.postStatus("Pass Canceled");
+            shooter.postStatus("Pass Canceled");
+        }
+
         intake.setBelt(0);
         intake.setIntake(0);
         shooter.setFeederMotor(0);

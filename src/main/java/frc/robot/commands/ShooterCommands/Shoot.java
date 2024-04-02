@@ -20,7 +20,7 @@ public class Shoot extends Command {
     public void initialize() {
         shooter.setShooterMotors(1);
         shooter.setFeederMotor(0);
-        shooter.postStatus("Shooting");
+        shooter.postStatus("Charging Shooter");
     }
     
     @Override

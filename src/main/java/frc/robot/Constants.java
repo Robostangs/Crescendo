@@ -112,9 +112,8 @@ public final class Constants {
 			/** The closed-loop output type to use for the drive motors */
 			private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
-			// TODO: tune this number
 			/** The stator current at which the wheels start to slip */
-			private static final double kSlipCurrentA = 80.0;
+			private static final double kSlipCurrentA = Robot.isSimulation() ? 200.0 : 80.0;
 
 			/** Theoretical free speed (m/s) at 12v applied output */
 			public static final double kSpeedAt12VoltsMps = 5.96;

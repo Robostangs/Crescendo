@@ -107,8 +107,9 @@ public class RobotContainer {
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-		// .andThen(ShootCommandFactory.getAmpCommand()));
-		.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper())).withName("Auto-pilot Amp shot"));
+				// .andThen(ShootCommandFactory.getAmpCommand()));
+				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
+				.withName("Auto-pilot Amp shot"));
 
 		// just runs feeder
 		xDrive.leftStick()
@@ -124,8 +125,7 @@ public class RobotContainer {
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
-		Lighting.getStrobeCommand(() -> LEDState.kPurple)).
-		finallyDo(Lighting.startTimer));
+				Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
 
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		// Square up to the speaker and press this to reset odometry to the speaker
@@ -188,40 +188,35 @@ public class RobotContainer {
 		xManip.start().and(() -> xManip.back().getAsBoolean())
 				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
 
-		
-					}
-		
-		public static void configurePitBinds(){
+	}
 
-			//shoots no matter where arm is
-			//press right bumper to prepare and then left bumper to acually shoot
-			xPit.rightBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xPit.leftBumper()));
-			
-			//move the arm based oon the right stick
-			new Trigger(() -> Math.abs(xPit.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
-			.whileTrue(new FineAdjust(() -> -xPit.getRightY()));
+	public static void configurePitBinds() {
 
+		// shoots no matter where arm is
+		// press right bumper to prepare and then left bumper to acually shoot
+		xPit.rightBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xPit.leftBumper()));
 
-			//back right pannel to extend the climber
-			xPit.rightStick().toggleOnTrue(new Extend());
-			//back left pannel to retract the climber
-			xPit.leftStick().toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
-					() -> -Constants.ClimberConstants.RightMotor.kRetractPower));
+		// move the arm based oon the right stick
+		new Trigger(() -> Math.abs(xPit.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
+				.whileTrue(new FineAdjust(() -> -xPit.getRightY()));
 
+		// back right pannel to extend the climber
+		xPit.rightStick().toggleOnTrue(new Extend());
+		// back left pannel to retract the climber
+		xPit.leftStick().toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
+				() -> -Constants.ClimberConstants.RightMotor.kRetractPower));
 
-			//press x to go to amp and left bumper to shoot
-			xPit.x().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xPit.leftBumper()));
+		// press x to go to amp and left bumper to shoot
+		xPit.x().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xPit.leftBumper()));
 
-			//press up arrow to make the robot go perfectly straight
-			xPit.povUp().whileTrue(new xDrive(() -> 0.0, () -> 0.3,() -> 0.0, () -> 0.0));
-			//press left arrow to deploy the intake
-			xPit.povLeft().toggleOnTrue(new DeployAndIntake(true));
-			//press right arrow to belt feed
-			xPit.povRight().toggleOnTrue(new DeployAndIntake(false));
-			
-			
-		}
+		// press up arrow to make the robot go perfectly straight
+		xPit.povUp().whileTrue(new xDrive(() -> 0.0, () -> 0.3, () -> 0.0, () -> 0.0));
+		// press left arrow to deploy the intake
+		xPit.povLeft().toggleOnTrue(new DeployAndIntake(true));
+		// press right arrow to belt feed
+		xPit.povRight().toggleOnTrue(new DeployAndIntake(false));
 
+	}
 
 	public RobotContainer() {
 		logger = new Telemetry();

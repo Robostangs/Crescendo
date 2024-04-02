@@ -72,7 +72,6 @@ public class Robot extends TimedRobot {
 	public static RobotContainer robotContainer;
 
 	public static boolean atComp = false;
-	public String status = "";
 
 	public static SequentialCommandGroup autonCommand;
 	public static Command pathPlannerCommand;
@@ -97,15 +96,11 @@ public class Robot extends TimedRobot {
 
 		SmartDashboard.putData("Field", teleopField);
 
-
 		songChooser.setDefaultOption("The defult option is nothing", "");
-        songChooser.addOption("Imperial March", "Sith.chrp");
-        songChooser.addOption("Under Pressure ", "underpressure.chrp");
-        songChooser.addOption("Sweet Caroline", "sweetcaroline.chrp");
-        songChooser.addOption("Another One Bites The Dust ", "anotheronebitesthedust.chrp");
-
-
-
+		songChooser.addOption("Imperial March", "Sith.chrp");
+		songChooser.addOption("Under Pressure ", "underpressure.chrp");
+		songChooser.addOption("Sweet Caroline", "sweetcaroline.chrp");
+		songChooser.addOption("Another One Bites The Dust ", "anotheronebitesthedust.chrp");
 
 		startingPose.addOption("Amp Side", "amp"); // left
 		startingPose.setDefaultOption("Center", "center"); // center
@@ -202,14 +197,14 @@ public class Robot extends TimedRobot {
 				.withPosition(3, 2)
 				.withWidget(BuiltInWidgets.kCommand);
 
-
-
-		testTab.add("Song Selector", songChooser).withPosition(0, 4
-		).withSize(3, 2);
-
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
 		disabledTab.add("Command Scheduler", CommandScheduler.getInstance());
+
+		disabledTab.add("Song Selector", songChooser)
+				.withSize(3, 2)
+				.withPosition(0, 6)
+				.withWidget(BuiltInWidgets.kComboBoxChooser);
 
 		Alert.groups.forEach((group, alert) -> {
 			disabledTab.add(group, alert)
@@ -373,8 +368,10 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		// TODO: stage all close notes is going to be weird for now cuz testing shooting on the fly
-		// approx 1.5 seconds from beginning path (close notes) to reaching first close note
+		// TODO: stage all close notes is going to be weird for now cuz testing shooting
+		// on the fly
+		// approx 1.5 seconds from beginning path (close notes) to reaching first close
+		// note
 
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
@@ -506,7 +503,7 @@ public class Robot extends TimedRobot {
 		wrongAlliance.set(Robot.isRed());
 
 		// if(!songChooser.equals("")){
-			Music.getInstance().playMusic(songChooser.getSelected());
+		Music.getInstance().playMusic(songChooser.getSelected());
 		// }
 	}
 

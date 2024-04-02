@@ -202,8 +202,8 @@ public class Robot extends TimedRobot {
 		disabledTab.add("Command Scheduler", CommandScheduler.getInstance());
 
 		disabledTab.add("Song Selector", songChooser)
-				.withSize(3, 2)
-				.withPosition(0, 6)
+				.withSize(5, 1)
+				.withPosition(0, 5)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
 
 		Alert.groups.forEach((group, alert) -> {
@@ -286,12 +286,12 @@ public class Robot extends TimedRobot {
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
 			autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-					.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(6, 0)
+					.withWidget(BuiltInWidgets.kCameraStream).withSize(8, 7).withPosition(6, 0)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 			// front camera (intake cam) - teleop tab
 			teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-					.withWidget(BuiltInWidgets.kCameraStream).withSize(5, 4).withPosition(6, 0)
+					.withWidget(BuiltInWidgets.kCameraStream).withSize(8, 7).withPosition(6, 0)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 		}
 

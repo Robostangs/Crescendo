@@ -428,7 +428,7 @@ public final class Constants {
 			public static final double kMaxExtensionMeters = 0.6604;
 			public static final double kExtensionThreshold = kMaxExtensionMeters - 0.482;
 			public static final double kExtensionPower = 0.5;
-			public static final double kRetractPower = 1;
+			public static final double kRetractPower = -1;
 
 			// 0.0889 meters moves
 			// 18.1430612 rotations

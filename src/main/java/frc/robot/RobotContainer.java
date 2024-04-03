@@ -99,6 +99,12 @@ public class RobotContainer {
 							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
 
+		new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.kDriverDeadzone)
+				.whileTrue(
+						new AlrightTranslate(() -> -xDrive.getLeftTriggerAxis(), () -> -xDrive.getLeftTriggerAxis())
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
+								.finallyDo(Lighting.startTimer));
+
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
@@ -114,18 +120,18 @@ public class RobotContainer {
 		// just runs feeder
 		xDrive.leftStick()
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).withTimeout(1)
+						.andThen(new BeltDrive(() -> -0.5).withTimeout(1)
 								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
 						.finallyDo(Lighting.startTimer));
-		// deploys intake(right paddle)
+		// deploys intake (right paddle)
 		xDrive.rightStick()
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).withTimeout(1)
+						.andThen(new BeltDrive(() -> -0.5).withTimeout(1)
 								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
-		
+
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
 				Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
 
@@ -139,7 +145,7 @@ public class RobotContainer {
 				.withName("Zero Swerve 2 Speaker"));
 
 		xDrive.rightBumper().toggleOnTrue(new Extend()
-				.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue))
+				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
 				.finallyDo(Lighting.startTimer));
 	}
 

@@ -465,14 +465,14 @@ public class Arm extends SubsystemBase {
 
         // armMotorConfig.Slot0.kP = 250;
         // armMotorConfig.Slot0.kI = 3;
-        armMotorConfig.Slot0.kP = 250;
-        armMotorConfig.Slot0.kI = 150;
-        armMotorConfig.Slot0.kD = 30;
-        armMotorConfig.Slot0.kS = 4;
+        armMotorConfig.Slot0.kP = 300;
+        armMotorConfig.Slot0.kI = 300;
+        armMotorConfig.Slot0.kD = 60;
+        armMotorConfig.Slot0.kS = 6;
         armMotorConfig.Slot0.kA = 3;
 
-        motionMagicConfigs.MotionMagicCruiseVelocity = 1;
-        motionMagicConfigs.MotionMagicAcceleration = 1;
+        motionMagicConfigs.MotionMagicCruiseVelocity = 1.5;
+        motionMagicConfigs.MotionMagicAcceleration = 2;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000
         motionMagicConfigs.MotionMagicJerk = 0;
@@ -520,7 +520,7 @@ public class Arm extends SubsystemBase {
 
     // TODO: increase velocity threshold (for shooting on the fly)
     public boolean atSetpoint() {
-        return isInRangeOfTarget() && Math.abs(getVelocity()) < 0.075;
+        return isInRangeOfTarget() && Math.abs(getVelocity()) < 2;
     }
 
     public void postStatus(String status) {

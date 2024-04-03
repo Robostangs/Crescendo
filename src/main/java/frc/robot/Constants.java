@@ -355,7 +355,7 @@ public final class Constants {
 		public static final double kFeedForwardDutyCycle = 0.025;
 
 		// TODO: lower these numbers so pid works better
-		public static final double kFeedForwardTorqueCurrent = 3.5;
+		public static final double kFeedForwardTorqueCurrent = 6.04;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
@@ -408,7 +408,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.11;
+		public static final double feederFeedForward = 0.2;
 		public static final double shooterPoopSpeed = 0.5;
 	}
 

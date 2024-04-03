@@ -393,7 +393,8 @@ public final class Constants {
 		public static class SetPoints {
 			public static final double kCenterToWingPass = 0;
 			public static final double kSubwoofer = kArmMinAngle;
-			public static final double kAmp = 46;
+			// TODO: lower this number, it should be more like 40
+			public static final double kAmp = 40;
 			public static final double kIntake = kArmMinAngle;
 			public static final double kHorizontal = 0;
 		}

@@ -120,8 +120,8 @@ public class Arm extends SubsystemBase {
         double shooterExtensionInches = 7.5;
         double shooterExtensionAngle = -90;
         double elbowLigamentAngle = -Constants.ArmConstants.shooterOffset;
-        double rootXInches = Units.metersToInches(0.7493);
-        // double rootXInches = Units.metersToInches(0.46);
+        // double rootXInches = Units.metersToInches(0.7493);
+        double rootXInches = Units.metersToInches(0.46);
         double rootYInches = 4;
 
         if (Robot.isReal()) {
@@ -455,6 +455,7 @@ public class Arm extends SubsystemBase {
                 .degreesToRotations(Constants.ArmConstants.kArmMinAngle);
 
         MotionMagicConfigs motionMagicConfigs = armMotorConfig.MotionMagic;
+
 
         armMotorConfig.Slot0.kP = 250;
         armMotorConfig.Slot0.kI = 150;

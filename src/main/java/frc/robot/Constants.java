@@ -261,7 +261,6 @@ public final class Constants {
 		// 10);
 
 		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0.1, 0.5);
-		// TODO: tune rotation pid
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
@@ -489,8 +488,7 @@ public final class Constants {
 
 			kYellowRed(new int[] { 255, 255, 0 }),
 
-			// TODO: make this looks better
-			kRobostangsOrange(new int[] { 255, 80, 0 }),
+			kRobostangsOrange(new int[] { 255, 70, 0 }),
 
 			kPurple(new int[] { 128, 0, 128 }),
 

@@ -245,9 +245,6 @@ public class Robot extends TimedRobot {
 												.flipFieldPose(
 														Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
 						.withName("Zero Swerve 2 Speaker"));
-		// .andThen(
-		// Drivetrain.getInstance().applyRequest(() -> new
-		// SwerveRequest.SwerveDriveBrake())));
 
 		swerveCommands.addOption("Drive Forward",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
@@ -314,14 +311,14 @@ public class Robot extends TimedRobot {
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
 			autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-					.withSize(8, 7)
+					.withSize(9, 7)
 					.withPosition(6, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 			// front camera (intake cam) - teleop tab
 			teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
-					.withSize(8, 7)
+					.withSize(9, 7)
 					.withPosition(6, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
@@ -333,15 +330,8 @@ public class Robot extends TimedRobot {
 
 		Lighting.getInstance().autoSetLights(true);
 
-		// NamedCommands.registerCommand("Intake",
-		// new DeployAndIntake(true).unless(() ->
-		// Intake.getInstance().getShooterSensor())
-		// .andThen(new BeltDrive(() -> -1d).withTimeout(1)
-		// .alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
-		// .finallyDo(Lighting.startTimer));
-
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true)
-				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
+				.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
 
 		NamedCommands.registerCommand("Shoot",
 				ShootCommandFactory.getAimAndShootCommandWithTimeouts()
@@ -354,8 +344,7 @@ public class Robot extends TimedRobot {
 				// as it is within 4 degrees of the setpoint then just end this command and
 				// follow path
 				new SetPoint(Constants.ArmConstants.kArmMinAngle).raceWith(new WaitUntilCommand(
-						// TODO: is 4 degrees too much?
-						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4)))
+						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 2)))
 						.withName("Lowering arm to hard stop"));
 	}
 
@@ -364,7 +353,6 @@ public class Robot extends TimedRobot {
 		if (DriverStation.isFMSAttached()) {
 			atComp = true;
 			Shuffleboard.selectTab(autoTab.getTitle());
-			// Shuffleboard.startRecording();
 		}
 
 		// other than if a motor or cancoder fails to verify (position isnt available),
@@ -406,11 +394,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		// TODO: stage all close notes is going to be weird for now cuz testing shooting
-		// on the fly
-		// approx 1.5 seconds from beginning path (close notes) to reaching first close
-		// note
-
+		CommandScheduler.getInstance().cancelAll();
+		
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
@@ -443,25 +428,11 @@ public class Robot extends TimedRobot {
 
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(timer::restart),
-				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
-				// also add a lil time thing in there
-				// new BeltDrive(() -> 1d).raceWith(new
-				// FullSend()).withTimeout(0.75).onlyIf(autoShoot::getSelected),
-				// new Shoot(true).onlyWhile(() ->
-				// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
-				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
 				pathPlannerCommand,
-				new InstantCommand(timer::stop));
-				// pathToPointCommandChooser.getSelected());
-
-		// if (autoShoot.getSelected()) {
-		// // we want prepare and shoot because we know that at the beginning of the
-		// match,
-		// // the robot will start in a position where it is ready to shoot off rip
-		// autonCommand.beforeStarting(ShootCommandFactory.getPrepareAndShootCommand());
-		// }
+				new InstantCommand(timer::stop),
+				pathToPointCommandChooser.getSelected());
 
 		if (Constants.Vision.UseLimelight && Robot.isReal()) {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
@@ -471,16 +442,8 @@ public class Robot extends TimedRobot {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 		}
 
-		// shooting at the start wont work cuz the pathPlannerCommand takes up all
-		// subsystems
-		// new Shoot(true).onlyWhile(() ->
-		// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected)
-		// .schedule();
 		autonCommand.withName("Auto Command").schedule();
 		HomeClimber.getHomingCommand().schedule();
-		// test this instead of prepare and shoot cuz we can start the path immediatly
-		// ShootCommandFactory.getAimAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected).andThen(new
-		// DeployAndIntake(true)).schedule();
 	}
 
 	@Override
@@ -612,10 +575,10 @@ public class Robot extends TimedRobot {
 		StatusCode status = falcon.getPosition().getStatus();
 		if (status.isError() && Robot.isReal()) {
 			DataLogManager.log("TalonFX ID #" + falcon.getDeviceID() + " has failed to return position with status: "
-					+ status.getDescription());
+					+ status.getDescription() + ". Error Code: " + status.value);
 			new Alert(
 					"TalonFX ID #" + falcon.getDeviceID() + " has failed to return position with status: "
-							+ status.getDescription(),
+							+ status.getName() + ". Error Code: " + status.value,
 					AlertType.ERROR).set(true);
 			return true;
 		}

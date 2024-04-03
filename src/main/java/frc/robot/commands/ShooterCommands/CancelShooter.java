@@ -5,6 +5,10 @@ import frc.robot.subsystems.Shooter;
 
 public class CancelShooter extends Command {
     Shooter shooter;
+    public static Runnable cancelShooter = () -> {
+        Shooter.getInstance().shoot(0, 0);
+        Shooter.getInstance().postStatus("Stopping Shooter");
+    };
 
     public CancelShooter() {
         shooter = Shooter.getInstance();

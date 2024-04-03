@@ -21,6 +21,6 @@ public class Prepare extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return shooter.readyToShoot();
     }
 }

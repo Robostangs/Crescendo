@@ -171,18 +171,17 @@ public class RobotContainer {
 						.finallyDo(Lighting.startTimer));
 
 		xManip.povUp().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
-		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
+		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommandWithWaitUntil(xManip.leftBumper()));
 		xManip.povDown().whileTrue(new Spit());
 
-		// Feeds it to shooter and does MRHHHHHHHHHHH until left bumper it pressed
 		xManip.povLeft()
 				.toggleOnTrue(new PassToShooter().andThen(
 						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).deadlineWith(new Prepare()),
 						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare()),
 						new Shoot(false)));
 
-		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));
 		// left bumper is the universal shoot button
+		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));
 
 		// TODO: test, absolute worst case scenario
 		xManip.start().and(() -> xManip.back().getAsBoolean())
@@ -243,42 +242,12 @@ public class RobotContainer {
 		new Trigger(() -> simController.getRawButtonPressed(3))
 				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
 						.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
-						.until(() -> Math.abs(xDrive.getLeftX()) > Constants.OperatorConstants.kDriverDeadzone
-								|| Math.abs(xDrive.getLeftY()) > Constants.OperatorConstants.kDriverDeadzone
-								|| Math.abs(xDrive.getRightX()) > Constants.OperatorConstants.kDriverDeadzone)
+						.until(() -> Math.abs(xDrive.getLeftX()) > Constants.OperatorConstants.kDriverCommandCancelThreshold
+								|| Math.abs(xDrive.getLeftY()) > Constants.OperatorConstants.kDriverCommandCancelThreshold
+								|| Math.abs(xDrive.getRightX()) > Constants.OperatorConstants.kDriverCommandCancelThreshold)
 						.withName("Auto-pilot Amp shot"));
 
 		new Trigger(() -> simController.getRawButtonPressed(4))
 				.toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
-		// .toggleOnTrue(new
-		// PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSpeakerRight));
-
-		// new Trigger(() -> simController.getRawButtonPressed(3))
-		// .whileTrue(new AimAndShoot());
-
-		// new Trigger(() -> simController.getRawButtonPressed(4))
-		// .whileTrue(new SetPoint(Constants.ArmConstants.SetPoints.kHorizontal));
-
-		// new Trigger(() -> simController.getRawButtonPressed(4)).onTrue(new
-		// InstantCommand(() -> mArm.calculateArmSetpoint(), mArm));
-
-		// new Trigger(() -> simController.getRawButtonPressed(2))
-		// .onTrue(new InstantCommand(() -> drivetrain.seedFieldRelative()));
-
-		// new Trigger(() -> simController.getRawButtonPressed(3))
-		// .onTrue(new
-		// SetPoint(Constants.ArmConstants.SetPoints.kSpeakerClosestPoint).withTimeout(1));
-
-		// new Trigger(() -> simController.getRawButtonPressed(3)).onTrue(new
-		// SetPoint(0).withTimeout(1));
-
-		// new Trigger(() -> simController.getRawButtonPressed(3))
-		// .whileTrue(drivetrain.applyRequest(() ->
-		// forwardStraight.withVelocityX(1).withVelocityY(0)));
-
-		// mArm.setDefaultCommand(new FineAdjust(() -> -simController.getRawAxis(2)));
-
-		// new Trigger(() -> simController.getRawButtonPressed(4)).onTrue(new
-		// InstantCommand(Intake.toggleDeploy));
 	}
 }

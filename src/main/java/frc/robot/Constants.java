@@ -333,6 +333,7 @@ public final class Constants {
 
 	public static class OperatorConstants {
 		public static final double kDriverDeadzone = 0.04;
+		public static final double kDriverCommandCancelThreshold = 0.2;
 
 		public static final double kManipDeadzone = 0.07;
 
@@ -342,7 +343,7 @@ public final class Constants {
 		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.07;
 
 		public static final double setpointTimeout = 1;
-		public static final double feedTimeout = 1;
+		public static final double feedTimeout = 0.5;
 		public static final double shootTimeout = 0.5;
 		public static final double chargeUpTimeout = 2;
 

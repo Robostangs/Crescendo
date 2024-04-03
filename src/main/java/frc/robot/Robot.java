@@ -80,12 +80,13 @@ public class Robot extends TimedRobot {
 
 	public static Command setpointCommand;
 
-	public static Alert forwardAuto, wrongAlliance;
+	public static Alert forwardAuto, wrongAlliance, StartingPosition;
 
 	@Override
 	public void robotInit() {
 		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 		wrongAlliance = new Alert("Switch to Blue alliance for best results", Alert.AlertType.INFO);
+		StartingPosition = new Alert("Starting Position Undefined", Alert.AlertType.INFO);
 
 		teleopTab = Shuffleboard.getTab("Teleoperated");
 		autoTab = Shuffleboard.getTab("Autonomous");
@@ -426,6 +427,7 @@ public class Robot extends TimedRobot {
 						break;
 					default:
 						// just dont seed the pose, instead set it to be the robot pose
+						StartingPosition.set(true);
 						System.out.println("Starting Position Undefined");
 						startPose = Drivetrain.getInstance().getPose();
 

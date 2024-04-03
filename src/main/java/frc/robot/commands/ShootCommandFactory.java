@@ -50,16 +50,12 @@ public class ShootCommandFactory {
 
         }
 
+        // works perfectly
         public static Command getAimAndShootCommandWithWaitUntil(BooleanSupplier waitUntil) {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new SetPoint()
                                                 .raceWith(new Prepare().until(waitUntil).andThen(new Shoot(false))),
                                                 new CancelShooter().alongWith(new ReturnHome()))
-                                // new Prepare().until(waitUntil).andThen(new Shoot(false))
-                                // .raceWith(new WaitUntilCommand(waitUntil))
-                                // .andThen(new WaitUntilCommand(waitUntil),
-                                // new Shoot(false))
-                                // .deadlineWith(new SetPoint()))
                                 .withName("Aim and Shoot");
         }
 
@@ -80,9 +76,12 @@ public class ShootCommandFactory {
                                 new CancelShooter().alongWith(new ReturnHome())).withName("Amp Shot");
         }
 
+        // works perfectly
         public static Command getPrepareAndShootCommand() {
-                return new Prepare().raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()))
-                                .andThen(new Shoot(false)).withName("Auto Prepare and Shoot");
+                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor()).andThen(
+                                new Prepare().raceWith(new WaitUntilCommand(() -> Shooter.getInstance().readyToShoot()))
+                                                .andThen(new Shoot(false)))
+                                .withName("Auto Prepare and Shoot");
         }
 
         // works perfectly
@@ -111,11 +110,23 @@ public class ShootCommandFactory {
         }
 
         public static Command getCenterToWingCommand(BooleanSupplier waitUntil) {
-                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor()).andThen(
-                                new WaitUntilCommand(waitUntil)
-                                                .deadlineWith(new SetPoint(
-                                                                Constants.ArmConstants.SetPoints.kCenterToWingPass)),
-                                new Shoot(false),
-                                new CancelShooter().alongWith(new ReturnHome())).withName("Pass to Center");
+                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
+                                .andThen(new Prepare().until(waitUntil), new Shoot(true).onlyWhile(waitUntil))
+                                .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass)
+                                                .handleInterrupt(ReturnHome.ReturnHome))
+                                .finallyDo(CancelShooter.CancelShooter)
+                                .withName("Pass to Center");
+                // .andThen(new WaitUntilCommand(waitUntil).deadlineWith(new Prepare(), new
+                // SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass)))
+
+                // return new PassToShooter().unless(() ->
+                // Intake.getInstance().getShooterSensor())
+                // .andThen(new Prepare(),
+                // new WaitUntilCommand(waitUntil)
+                // .deadlineWith(new SetPoint(
+                // Constants.ArmConstants.SetPoints.kCenterToWingPass)),
+                // new Shoot(false),
+                // new CancelShooter().alongWith(new ReturnHome()))
+                // .withName("Pass to Center");
         }
 }

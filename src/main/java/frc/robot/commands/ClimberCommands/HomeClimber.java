@@ -50,6 +50,6 @@ public class HomeClimber extends Command {
     }
 
     public static Command getHomingCommand() {
-        return new HomeClimber().withTimeout(7).withName("Home Climber 7 Second Timeout");
+        return new HomeClimber().withTimeout(10).withName("Home Climber 7 Second Timeout");
     }
 }

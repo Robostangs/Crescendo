@@ -124,6 +124,22 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Transitory Values": {
+      "open": false
+    },
+    "retained": {
+      "Shuffleboard": {
+        "Autonomous": {
+          "Shoot Selector": {
+            "open": true
+          },
+          "open": true
+        }
+      }
+    },
     "transitory": {
       "FMSInfo": {
         "open": true

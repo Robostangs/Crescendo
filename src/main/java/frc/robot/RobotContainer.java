@@ -125,7 +125,7 @@ public class RobotContainer {
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
-		
+
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
 				Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
 
@@ -139,7 +139,7 @@ public class RobotContainer {
 				.withName("Zero Swerve 2 Speaker"));
 
 		xDrive.rightBumper().toggleOnTrue(new Extend()
-				.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue))
+				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
 				.finallyDo(Lighting.startTimer));
 	}
 
@@ -151,7 +151,6 @@ public class RobotContainer {
 						.finallyDo(() -> {
 							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
-		// just for commit on Q59
 
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));

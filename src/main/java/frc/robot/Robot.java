@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -58,7 +59,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
-	public static SendableChooser<Command> pathToPointCommandChooser = new SendableChooser<>();
+	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
 
 	public static final double swerveTestSpeed = 0.1;
 
@@ -122,17 +123,17 @@ public class Robot extends TimedRobot {
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);
 
-		pathToPointCommandChooser.setDefaultOption("None", new InstantCommand());
+		pathToPointCommandChooser.setDefaultOption("None", new Pose2d());
 		pathToPointCommandChooser.addOption("Far Amp Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farLeft));
+				Constants.AutoConstants.WayPoints.CenterNotes.farLeft);
 		pathToPointCommandChooser.addOption("Far Mid Amp Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farMidLeft));
+				Constants.AutoConstants.WayPoints.CenterNotes.farMidLeft);
 		pathToPointCommandChooser.addOption("Far Center Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farCenter));
+				Constants.AutoConstants.WayPoints.CenterNotes.farCenter);
 		pathToPointCommandChooser.addOption("Far Mid Source Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farMidRight));
+				Constants.AutoConstants.WayPoints.CenterNotes.farMidRight);
 		pathToPointCommandChooser.addOption("Far Source Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farRight));
+				Constants.AutoConstants.WayPoints.CenterNotes.farRight);
 
 		autoTab.add("Starting Pose Selector", startingPose)
 				.withSize(3, 1)
@@ -455,7 +456,12 @@ public class Robot extends TimedRobot {
 				pathPlannerCommand,
 				new InstantCommand(timer::stop));
 				// pathToPointCommandChooser.getSelected());
-
+		if (!pathToPointCommandChooser.equals(null)){
+			autonCommand.addCommands(
+				new PathToPoint(pathToPointCommandChooser.getSelected()).alongWith(new DeployAndIntake(true)
+				.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer)));
+			
+		}		
 		// if (autoShoot.getSelected()) {
 		// // we want prepare and shoot because we know that at the beginning of the
 		// match,

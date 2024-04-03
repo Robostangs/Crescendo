@@ -302,7 +302,7 @@ public final class Constants {
 			}
 
 			public static class CenterNotes {
-				public static final double poseX = (Constants.fieldLength / 2) - 1;
+				public static final double poseX = (Constants.fieldLength / 2) - 0;
 				public static final Pose2d farLeft = new Pose2d(poseX, 7.44, Rotation2d.fromDegrees(0));
 				public static final Pose2d farMidLeft = new Pose2d(poseX, 5.77, Rotation2d.fromDegrees(0));
 				public static final Pose2d farCenter = new Pose2d(poseX, 4.1, Rotation2d.fromDegrees(0));

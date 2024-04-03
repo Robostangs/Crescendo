@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5543913865605505,
-        "y": 4.977990832463147
+        "x": 2.0386542591267003,
+        "y": 5.056180294178771
       },
       "isLocked": false,
       "linkedName": "Close Center Note"
     },
     {
       "anchor": {
-        "x": 2.4395419994543697,
-        "y": 4.196753379617871
+        "x": 2.5868974814872714,
+        "y": 4.3029049206577845
       },
       "prevControl": {
-        "x": 2.2428609394255825,
-        "y": 4.750572089107141
+        "x": 2.0666404969173575,
+        "y": 4.393839333133212
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,8 +39,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -28.889999999999986,
-    "rotateFast": false
+    "rotation": -28.879999999999995,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Starting Notes",

@@ -408,7 +408,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.16;
+		public static final double feederFeedForward = 0.11;
 		public static final double shooterPoopSpeed = 0.5;
 	}
 
@@ -422,7 +422,7 @@ public final class Constants {
 		public static final int shooterSensorPWM_ID = 9;
 		public static final int beltSensorPWM_ID = 1;
 
-		public static final double beltIntakeSpeed = 1;
+		public static final double beltIntakeSpeed = 0.85;
 		public static final double intakeMotorSpeed = 1;
 
 		public static final boolean intakeMotorInverted = true;

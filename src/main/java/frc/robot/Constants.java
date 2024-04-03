@@ -86,8 +86,8 @@ public final class Constants {
 		 * should be 0.438658 meters (17.27 inches)
 		 */
 		// public static final double driveBaseRadius = Units
-		// 		.inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
-		
+		// .inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
+
 		public static final double driveBaseRadius = 0.44;
 
 		// TODO: test with off for faster speed lower acceleration
@@ -181,7 +181,6 @@ public final class Constants {
 			private static final int kFrontRightEncoderId = 20;
 			private static final double kFrontRightEncoderOffset = -0.375244140625;
 
-
 			private static final double kFrontRightXPosInches = 12.875;
 			private static final double kFrontRightYPosInches = -12.05;
 
@@ -191,7 +190,6 @@ public final class Constants {
 			private static final int kBackLeftEncoderId = 30;
 			private static final double kBackLeftEncoderOffset = -0.178955078125;
 
-
 			private static final double kBackLeftXPosInches = -12.875;
 			private static final double kBackLeftYPosInches = 12.05;
 
@@ -200,7 +198,6 @@ public final class Constants {
 			private static final int kBackRightSteerMotorId = 42;
 			private static final int kBackRightEncoderId = 40;
 			private static final double kBackRightEncoderOffset = -0.088623046875;
-
 
 			private static final double kBackRightXPosInches = -12.875;
 			private static final double kBackRightYPosInches = -12.05;
@@ -267,13 +264,18 @@ public final class Constants {
 		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
 		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.kMaxAngularSpeedRadiansPerSecond;
-		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared / SwerveConstants.driveBaseRadius;
-		// public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
-		// public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond * 4
-				// / 6;
+		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
+				/ SwerveConstants.driveBaseRadius;
+		// public static final double kMaxAngularSpeedMetersPerSecond =
+		// SwerveConstants.kMaxAngularSpeedMetersPerSecond;
+		// public static final double kMaxAngularAccelerationMetersPerSecondSquared =
+		// kMaxAngularSpeedMetersPerSecond * 4
+		// / 6;
 
-		// public static final double kMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(360d * 4);
-		// public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = Units.degreesToRadians(360 * 2.5);
+		// public static final double kMaxAngularSpeedRadiansPerSecond =
+		// Units.degreesToRadians(360d * 4);
+		// public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond =
+		// Units.degreesToRadians(360 * 2.5);
 
 		public static final String kFieldObjectName = "path";
 
@@ -301,7 +303,7 @@ public final class Constants {
 			}
 
 			public static class CenterNotes {
-				public static final double poseX = (Constants.fieldLength / 2) - 1;
+				public static final double poseX = (Constants.fieldLength / 2) - 0;
 				public static final Pose2d farLeft = new Pose2d(poseX, 7.44, Rotation2d.fromDegrees(0));
 				public static final Pose2d farMidLeft = new Pose2d(poseX, 5.77, Rotation2d.fromDegrees(0));
 				public static final Pose2d farCenter = new Pose2d(poseX, 4.1, Rotation2d.fromDegrees(0));
@@ -366,9 +368,9 @@ public final class Constants {
 		 */
 		public static final double rateOfMotion = 0.5;
 
-
 		public static final double kArmMaxAngle = 60;
-		public static final double kArmMinAngle = angleOfShooterReferencePointSittingOnHardStop + shooterTrapezoidalOffset;
+		public static final double kArmMinAngle = angleOfShooterReferencePointSittingOnHardStop
+				+ shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 		public static final double shooterOffset = 67.4 - shooterTrapezoidalOffset;
 		public static final double kInRangeThreshold = 1.75;

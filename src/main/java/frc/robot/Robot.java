@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -58,7 +59,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
-	public static SendableChooser<Command> pathToPointCommandChooser = new SendableChooser<>();
+	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
 
 	public static final double swerveTestSpeed = 0.1;
 
@@ -123,17 +124,17 @@ public class Robot extends TimedRobot {
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);
 
-		pathToPointCommandChooser.setDefaultOption("None", new InstantCommand());
+		pathToPointCommandChooser.setDefaultOption("None", null);
 		pathToPointCommandChooser.addOption("Far Amp Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farLeft));
+				Constants.AutoConstants.WayPoints.CenterNotes.farLeft);
 		pathToPointCommandChooser.addOption("Far Mid Amp Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farMidLeft));
+				Constants.AutoConstants.WayPoints.CenterNotes.farMidLeft);
 		pathToPointCommandChooser.addOption("Far Center Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farCenter));
+				Constants.AutoConstants.WayPoints.CenterNotes.farCenter);
 		pathToPointCommandChooser.addOption("Far Mid Source Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farMidRight));
+				Constants.AutoConstants.WayPoints.CenterNotes.farMidRight);
 		pathToPointCommandChooser.addOption("Far Source Note",
-				new PathToPoint(Constants.AutoConstants.WayPoints.CenterNotes.farRight));
+				Constants.AutoConstants.WayPoints.CenterNotes.farRight);
 
 		autoTab.add("Starting Pose Selector", startingPose)
 				.withSize(3, 1)
@@ -396,7 +397,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		CommandScheduler.getInstance().cancelAll();
-		
+
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
@@ -410,6 +411,33 @@ public class Robot extends TimedRobot {
 			if (autoChooser.getSelected().equals("back-up")) {
 				pathPlannerCommand = Drivetrain.getInstance()
 						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.75));
+
+				Pose2d startPose;
+
+				switch (startingPose.getSelected()) {
+					case "amp":
+						startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
+						break;
+					case "center":
+						startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+						break;
+					case "stage":
+						startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
+						break;
+					default:
+						// just dont seed the pose, instead set it to be the robot pose
+						System.out.println("Starting Position Undefined");
+						startPose = Drivetrain.getInstance().getPose();
+
+						break;
+				}
+
+				if (Robot.isRed()) {
+					startPose = GeometryUtil.flipFieldPose(startPose);
+				}
+
+				Drivetrain.getInstance().seedFieldRelative(startPose);
+
 				forwardAuto.set(true);
 				DataLogManager.log("Backing Up");
 			}
@@ -432,8 +460,13 @@ public class Robot extends TimedRobot {
 				ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				pathPlannerCommand,
-				new InstantCommand(timer::stop),
-				pathToPointCommandChooser.getSelected());
+				new InstantCommand(timer::stop));
+
+		if (pathToPointCommandChooser.getSelected() != null) {
+			autonCommand.addCommands(
+					new PathToPoint(pathToPointCommandChooser.getSelected()).alongWith(new DeployAndIntake(true)
+							.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer)));
+		}
 
 		if (Constants.Vision.UseLimelight && Robot.isReal()) {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,

@@ -385,9 +385,9 @@ public final class Constants {
 		 * A decrease in A shifts curve up, no matter the distance, it will shoot lower,
 		 * but closer distances will be effected greater than further distances
 		 */
-		public static final double a = -1170.66;
-		public static final double b = -0.751072;
-		public static final double c = 1.98502;
+		public static final double a = -6789.49;
+		public static final double b = -1.24759;
+		public static final double c = -9.7318;
 
 		public static class SetPoints {
 			public static final double kCenterToWingPass = 0;

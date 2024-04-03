@@ -350,8 +350,8 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        double angleToSpeaker = -1214.45 * Math.pow(Units.metersToInches(distToSpeakerMeters),
-                -0.796924) + -3.57488;
+        double angleToSpeaker = -6798.49 * Math.pow(Units.metersToInches(distToSpeakerMeters),
+                -1.24759) + -9.7318;
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)",
                 distToSpeakerMeters);
@@ -359,7 +359,7 @@ public class Arm extends SubsystemBase {
                 Units.metersToInches(distToSpeakerMeters));
 
         /*
-         * Make sure that we dont accidentally return a stupid value
+         * Make sure that we dont a][\ccidentally return a stupid value
          */
         if (validSetpoint(angleToSpeaker)) {
             return angleToSpeaker;

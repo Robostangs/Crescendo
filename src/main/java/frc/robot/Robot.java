@@ -453,8 +453,8 @@ public class Robot extends TimedRobot {
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
 				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
 				pathPlannerCommand,
-				new InstantCommand(timer::stop),
-				pathToPointCommandChooser.getSelected());
+				new InstantCommand(timer::stop));
+				// pathToPointCommandChooser.getSelected());
 
 		// if (autoShoot.getSelected()) {
 		// // we want prepare and shoot because we know that at the beginning of the

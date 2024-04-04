@@ -25,7 +25,6 @@ public final class Constants {
 	/** Should be 16.542 */
 	public static final double fieldLength = Units.inchesToMeters(76.1 + 250.5) * 2;
 	public static final double fieldHeight = 8.014;
-
 	public static final double kRange = 20;
 
 	public static final String logDirectory = "";
@@ -388,6 +387,7 @@ public final class Constants {
 		public static final double feederFeedForward = 0.16;
 		public static final double shooterPoopSpeed = 0.5;
 	}
+//for Q14
 
 	public static class IntakeConstants {
 		public static final int intakeMotorID = 62;

@@ -266,7 +266,7 @@ public final class Constants {
 				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseBlue.getY(),
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
-				public static final Pose2d kSource = (new Pose2d(15.13, 4.41, Rotation2d.fromDegrees(-60.5)));
+				public static final Pose2d kSource = (new Pose2d(15.13, 1.06, Rotation2d.fromDegrees(-60.5)));
 
 				public static final Pose2d CenterStartPosition = new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(0));
 				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));

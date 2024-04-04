@@ -408,7 +408,7 @@ public final class Constants {
 		public static final boolean intakeIsPositive = true;
 
 		public static final double feederShootValue = 1;
-		public static final double feederFeedForward = 0.2;
+		public static final double feederFeedForward = 0.16;
 		public static final double shooterPoopSpeed = 0.5;
 	}
 

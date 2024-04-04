@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3460380624464954,
-      "y": 5.568116821418829
+      "x": 0.74,
+      "y": 6.7
     },
-    "rotation": 0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "center to center note"
+                  "pathName": "close left"
                 }
               },
               {
@@ -37,43 +37,13 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "center to far left"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center mid left far"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "center shoot to amp shoot"
-          }
-        },
-        {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "amp shoot to close left"
+                  "pathName": "left to center note"
                 }
               },
               {
@@ -83,6 +53,49 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "center to right note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "stage note to out west shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "right far out west"
           }
         },
         {
@@ -94,6 +107,6 @@
       ]
     }
   },
-  "folder": "Center",
+  "folder": "All Close Notes",
   "choreoAuto": false
 }

@@ -120,14 +120,14 @@ public class RobotContainer {
 		// just runs feeder
 		xDrive.leftStick()
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -0.2).withTimeout(1)
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+								.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.finallyDo(Lighting.startTimer));
 		// deploys intake (right paddle)
 		xDrive.rightStick()
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -0.2).withTimeout(1)
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+								.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));

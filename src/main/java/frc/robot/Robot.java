@@ -12,6 +12,7 @@ import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -115,6 +116,7 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("3 Piece", " 3 piece");
 		autoChooser.addOption("4 Piece (Center Only)", " 4 piece");
 		autoChooser.addOption("All Close Notes", " all close notes");
+		autoChooser.addOption("All Close Notes Plus far Piece", " all close notes plus");
 		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
@@ -123,7 +125,7 @@ public class Robot extends TimedRobot {
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);
 
-		pathToPointCommandChooser.setDefaultOption("None", new Pose2d());
+		pathToPointCommandChooser.setDefaultOption("None", null);
 		pathToPointCommandChooser.addOption("Far Amp Note",
 				Constants.AutoConstants.WayPoints.CenterNotes.farLeft);
 		pathToPointCommandChooser.addOption("Far Mid Amp Note",
@@ -407,11 +409,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		// TODO: stage all close notes is going to be weird for now cuz testing shooting
-		// on the fly
-		// approx 1.5 seconds from beginning path (close notes) to reaching first close
-		// note
-
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
@@ -444,30 +441,19 @@ public class Robot extends TimedRobot {
 
 		autonCommand = new SequentialCommandGroup(
 				new InstantCommand(timer::restart),
-				// TODO: try this to see if we can just let it rip slowly at subwoofer, I could
-				// also add a lil time thing in there
-				// new BeltDrive(() -> 1d).raceWith(new
-				// FullSend()).withTimeout(0.75).onlyIf(autoShoot::getSelected),
-				// new Shoot(true).onlyWhile(() ->
-				// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected),
 				ShootCommandFactory.getPrepareAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected),
 				new WaitUntilCommand(() -> timer.get() > pathDelayEntry.getDouble(0)),
-				// new WaitUntilCommand(pathDelayEntry.getDouble(0)),
 				pathPlannerCommand,
 				new InstantCommand(timer::stop));
-				// pathToPointCommandChooser.getSelected());
-		if (!pathToPointCommandChooser.equals(null)){
+
+		if (pathToPointCommandChooser.getSelected() != null) {
 			autonCommand.addCommands(
-				new PathToPoint(pathToPointCommandChooser.getSelected()).alongWith(new DeployAndIntake(true)
-				.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer)));
-			
-		}		
-		// if (autoShoot.getSelected()) {
-		// // we want prepare and shoot because we know that at the beginning of the
-		// match,
-		// // the robot will start in a position where it is ready to shoot off rip
-		// autonCommand.beforeStarting(ShootCommandFactory.getPrepareAndShootCommand());
-		// }
+					new PathToPoint(pathToPointCommandChooser.getSelected()).alongWith(new DeployAndIntake(true)
+							.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer)));
+			Drivetrain.getInstance().getField().getObject("Last Ditch Effort")
+					.setPose(pathToPointCommandChooser.getSelected());
+
+		}
 
 		if (Constants.Vision.UseLimelight && Robot.isReal()) {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
@@ -477,16 +463,8 @@ public class Robot extends TimedRobot {
 			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
 		}
 
-		// shooting at the start wont work cuz the pathPlannerCommand takes up all
-		// subsystems
-		// new Shoot(true).onlyWhile(() ->
-		// Intake.getInstance().getShooterSensor()).onlyIf(autoShoot::getSelected)
-		// .schedule();
 		autonCommand.withName("Auto Command").schedule();
 		HomeClimber.getHomingCommand().schedule();
-		// test this instead of prepare and shoot cuz we can start the path immediatly
-		// ShootCommandFactory.getAimAndShootCommandWithTimeouts().onlyIf(autoShoot::getSelected).andThen(new
-		// DeployAndIntake(true)).schedule();
 	}
 
 	@Override
@@ -498,6 +476,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousExit() {
 		timer.stop();
+		Drivetrain.getInstance().getField().getObject("Last Ditch Effort")
+				.setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
 	}
 
 	@Override

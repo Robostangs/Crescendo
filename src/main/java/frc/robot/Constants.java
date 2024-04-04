@@ -244,21 +244,7 @@ public final class Constants {
 	}
 
 	public static final class AutoConstants {
-
-		/* SIM PID */
-		// public static final PIDConstants translationPID = new
-		// PIDConstants(12.5, 0.5, 0.3);
-		// public static final PIDConstants rotationPID = new
-		// PIDConstants(1.57, 0.07, 0.9, 1);
-
-		/* Old PID */
-		// public static final PIDConstants translationPID = new PIDConstants(0.6, 0.1,
-		// 0.4, 5);
-		// public static final PIDConstants rotationPID = new PIDConstants(1, 0.5, 0.5,
-		// 10);
-
 		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0.1, 0.5);
-		// TODO: tune rotation pid
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
@@ -267,20 +253,9 @@ public final class Constants {
 		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.kMaxAngularSpeedRadiansPerSecond;
 		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
 				/ SwerveConstants.driveBaseRadius;
-		// public static final double kMaxAngularSpeedMetersPerSecond =
-		// SwerveConstants.kMaxAngularSpeedMetersPerSecond;
-		// public static final double kMaxAngularAccelerationMetersPerSecondSquared =
-		// kMaxAngularSpeedMetersPerSecond * 4
-		// / 6;
-
-		// public static final double kMaxAngularSpeedRadiansPerSecond =
-		// Units.degreesToRadians(360d * 4);
-		// public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond =
-		// Units.degreesToRadians(360 * 2.5);
 
 		public static final String kFieldObjectName = "path";
 
-		// this shouldnt be super long but enough time
 		public static final double spitTime = 0.5;
 
 		public static class WayPoints {
@@ -344,7 +319,7 @@ public final class Constants {
 		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.07;
 
 		public static final double setpointTimeout = 1;
-		public static final double feedTimeout = 1;
+		public static final double feedTimeout = 0.5;
 		public static final double shootTimeout = 0.5;
 		public static final double chargeUpTimeout = 2;
 
@@ -357,7 +332,6 @@ public final class Constants {
 
 		public static final double kFeedForwardDutyCycle = 0.025;
 
-		// TODO: lower these numbers so pid works better
 		public static final double kFeedForwardTorqueCurrent = 6.04;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
@@ -492,8 +466,7 @@ public final class Constants {
 
 			kYellowRed(new int[] { 255, 255, 0 }),
 
-			// TODO: make this looks better
-			kRobostangsOrange(new int[] { 255, 80, 0 }),
+			kRobostangsOrange(new int[] { 255, 65, 0 }),
 
 			kPurple(new int[] { 128, 0, 128 }),
 

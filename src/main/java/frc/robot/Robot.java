@@ -344,8 +344,8 @@ public class Robot extends TimedRobot {
 		// .alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
 		// .finallyDo(Lighting.startTimer));
 
-		NamedCommands.registerCommand("Intake", new DeployAndIntake(true)
-				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
+		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
+				// .andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
 
 		NamedCommands.registerCommand("Shoot",
 				ShootCommandFactory.getAimAndShootCommandWithTimeouts()
@@ -358,7 +358,6 @@ public class Robot extends TimedRobot {
 				// as it is within 4 degrees of the setpoint then just end this command and
 				// follow path
 				new SetPoint(Constants.ArmConstants.kArmMinAngle).raceWith(new WaitUntilCommand(
-						// TODO: is 4 degrees too much?
 						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4)))
 						.withName("Lowering arm to hard stop"));
 	}

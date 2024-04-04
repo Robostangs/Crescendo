@@ -518,7 +518,6 @@ public class Arm extends SubsystemBase {
         lastDitchEffortSetArmMotorWithoutSoftLimits(!ArmIsBroken);
     }
 
-    // TODO: increase velocity threshold (for shooting on the fly)
     public boolean atSetpoint() {
         return isInRangeOfTarget() && Math.abs(getVelocity()) < 2;
     }

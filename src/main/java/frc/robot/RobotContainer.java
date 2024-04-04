@@ -193,9 +193,11 @@ public class RobotContainer {
 		// left bumper is the universal shoot button
 
 		// TODO: test, absolute worst case scenario
-		xManip.start().and(() -> xManip.back().getAsBoolean())
-				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-
+		// xManip.start().and(() -> xManip.back().getAsBoolean())
+		// 		.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
+		xManip.back().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		
 	}
 
 	public static void configurePitBinds() {

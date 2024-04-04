@@ -6,8 +6,6 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
-import com.fasterxml.jackson.databind.node.POJONode;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.VecBuilder;
@@ -88,8 +86,8 @@ public final class Constants {
 		 * should be 0.438658 meters (17.27 inches)
 		 */
 		// public static final double driveBaseRadius = Units
-		// 		.inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
-		
+		// .inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
+
 		public static final double driveBaseRadius = 0.44;
 
 		// TODO: test with off for faster speed lower acceleration
@@ -183,7 +181,6 @@ public final class Constants {
 			private static final int kFrontRightEncoderId = 20;
 			private static final double kFrontRightEncoderOffset = -0.375244140625;
 
-
 			private static final double kFrontRightXPosInches = 12.875;
 			private static final double kFrontRightYPosInches = -12.05;
 
@@ -193,7 +190,6 @@ public final class Constants {
 			private static final int kBackLeftEncoderId = 30;
 			private static final double kBackLeftEncoderOffset = -0.178955078125;
 
-
 			private static final double kBackLeftXPosInches = -12.875;
 			private static final double kBackLeftYPosInches = 12.05;
 
@@ -202,7 +198,6 @@ public final class Constants {
 			private static final int kBackRightSteerMotorId = 42;
 			private static final int kBackRightEncoderId = 40;
 			private static final double kBackRightEncoderOffset = -0.088623046875;
-
 
 			private static final double kBackRightXPosInches = -12.875;
 			private static final double kBackRightYPosInches = -12.05;
@@ -270,13 +265,18 @@ public final class Constants {
 		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
 		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.kMaxAngularSpeedRadiansPerSecond;
-		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared / SwerveConstants.driveBaseRadius;
-		// public static final double kMaxAngularSpeedMetersPerSecond = SwerveConstants.kMaxAngularSpeedMetersPerSecond;
-		// public static final double kMaxAngularAccelerationMetersPerSecondSquared = kMaxAngularSpeedMetersPerSecond * 4
-				// / 6;
+		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
+				/ SwerveConstants.driveBaseRadius;
+		// public static final double kMaxAngularSpeedMetersPerSecond =
+		// SwerveConstants.kMaxAngularSpeedMetersPerSecond;
+		// public static final double kMaxAngularAccelerationMetersPerSecondSquared =
+		// kMaxAngularSpeedMetersPerSecond * 4
+		// / 6;
 
-		// public static final double kMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(360d * 4);
-		// public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond = Units.degreesToRadians(360 * 2.5);
+		// public static final double kMaxAngularSpeedRadiansPerSecond =
+		// Units.degreesToRadians(360d * 4);
+		// public static final double kMaxAngularAccelerationRadiansPerSecondPerSecond =
+		// Units.degreesToRadians(360 * 2.5);
 
 		public static final String kFieldObjectName = "path";
 
@@ -291,7 +291,7 @@ public final class Constants {
 				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseBlue.getY(),
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
-				public static final Pose2d kSource = (new Pose2d(15.13,4.41,Rotation2d.fromDegrees(-60.5)));
+				public static final Pose2d kSource = (new Pose2d(15.13, 4.41, Rotation2d.fromDegrees(-60.5)));
 
 				public static final Pose2d CenterStartPosition = new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(0));
 				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));
@@ -370,9 +370,9 @@ public final class Constants {
 		 */
 		public static final double rateOfMotion = 0.5;
 
-
 		public static final double kArmMaxAngle = 60;
-		public static final double kArmMinAngle = angleOfShooterReferencePointSittingOnHardStop + shooterTrapezoidalOffset;
+		public static final double kArmMinAngle = angleOfShooterReferencePointSittingOnHardStop
+				+ shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 		public static final double shooterOffset = 67.4 - shooterTrapezoidalOffset;
 		public static final double kInRangeThreshold = 1.75;
@@ -542,8 +542,8 @@ public final class Constants {
 		public static final double strobeAnimationSpeed = 0.12;
 	}
 
-	public static class ShootPoints{
-		public static enum Points{
+	public static class ShootPoints {
+		public static enum Points {
 			subwoofer,
 			amp,
 			bythestage

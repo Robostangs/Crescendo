@@ -255,12 +255,10 @@ public class RobotContainer {
 				.toggleOnTrue(new SetPoint());
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
-				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-						.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
-						.until(() -> Math.abs(xDrive.getLeftX()) > Constants.OperatorConstants.kDriverDeadzone
-								|| Math.abs(xDrive.getLeftY()) > Constants.OperatorConstants.kDriverDeadzone
-								|| Math.abs(xDrive.getRightX()) > Constants.OperatorConstants.kDriverDeadzone)
-						.withName("Auto-pilot Amp shot"));
+				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSource)
+				// .andThen(ShootCommandFactory.getAmpCommand()));
+				.alongWith(new DeployAndIntake(true))
+				.withName("Auto-pilot Source Intake"));
 
 		new Trigger(() -> simController.getRawButtonPressed(4))
 				.toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());

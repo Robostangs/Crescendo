@@ -112,10 +112,11 @@ public class RobotContainer {
 				.finallyDo(Lighting.startTimer));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
+		
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSource)
 				// .andThen(ShootCommandFactory.getAmpCommand()));
-				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
-				.withName("Auto-pilot Amp shot"));
+				.alongWith(new DeployAndIntake(true))
+				.withName("Auto-pilot Source Intake"));
 
 		// just runs feeder
 		xDrive.leftStick()

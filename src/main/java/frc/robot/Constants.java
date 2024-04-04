@@ -6,6 +6,8 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
+import com.fasterxml.jackson.databind.node.POJONode;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.VecBuilder;
@@ -289,6 +291,7 @@ public final class Constants {
 				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseBlue.getY(),
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
+				public static final Pose2d kSource = (new Pose2d(15.13,4.41,Rotation2d.fromDegrees(-60.5)));
 
 				public static final Pose2d CenterStartPosition = new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(0));
 				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));
@@ -537,5 +540,13 @@ public final class Constants {
 		/** Standard is 2 LEDs */
 		public static final int larsonAnimationSize = 5;
 		public static final double strobeAnimationSpeed = 0.12;
+	}
+
+	public static class ShootPoints{
+		public static enum Points{
+			subwoofer,
+			amp,
+			bythestage
+		}
 	}
 }

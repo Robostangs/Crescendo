@@ -247,7 +247,7 @@ public final class Constants {
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+		public static final double kMaxAccelerationMetersPerSecondSquared = 3.6;
 
 		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.kMaxAngularSpeedRadiansPerSecond;
 		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
@@ -387,9 +387,8 @@ public final class Constants {
 		public static final double feederFeedForward = 0.16;
 		public static final double shooterPoopSpeed = 0.5;
 	}
-//for Q14
 
-	public static class IntakeConstants {
+public static class IntakeConstants {
 		public static final int intakeMotorID = 62;
 		public static final int beltMotorID = 61;
 

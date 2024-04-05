@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9421196855317784,
-        "y": 1.86007413614181
+        "x": 2.7190686223948486,
+        "y": 2.4231375833055786
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.134836210706347,
-        "y": 1.4349069328187127
+        "x": 3.911785147569421,
+        "y": 1.997970379982481
       },
       "isLocked": false,
       "linkedName": "Stage Out West Shoot Position"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 3.9421196855317784,
-        "y": 1.86007413614181
+        "x": 2.7190686223948486,
+        "y": 2.4231375833055786
       },
       "prevControl": {
-        "x": 5.131106219401453,
-        "y": 1.4576495186916056
+        "x": 3.335867279963541,
+        "y": 1.5566823262447964
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,13 +78,13 @@
   ],
   "globalConstraints": {
     "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.6,
     "maxAngularVelocity": 781.3060842693,
     "maxAngularAcceleration": 390.6530421347
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -42.89999999999998,
+    "rotation": -48.85000000000002,
     "rotateFast": false
   },
   "reversed": false,

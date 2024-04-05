@@ -15,6 +15,7 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class Align extends Command {
+    //TODO allign is about 2.3 degres off when shooting from about 10 feet away during the Q34 auto
     Drivetrain drivetrain;
 
     SwerveRequest.FieldCentricFacingAngle driveRequest;

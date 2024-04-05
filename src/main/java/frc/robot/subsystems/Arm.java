@@ -519,7 +519,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return isInRangeOfTarget() && Math.abs(getVelocity()) < 1;
+        return isInRangeOfTarget() && Math.abs(getVelocity()) < 0.5;
     }
 
     public void postStatus(String status) {

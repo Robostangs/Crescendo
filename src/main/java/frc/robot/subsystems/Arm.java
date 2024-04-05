@@ -33,6 +33,9 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
  * ground, then, in tuner X, zero the armCoder
  */
 public class Arm extends SubsystemBase {
+
+    // TODO: -0.287841796875
+    
     private TalonFX armMotor;
     private CANcoder armCoder;
 

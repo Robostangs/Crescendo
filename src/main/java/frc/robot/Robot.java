@@ -519,6 +519,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
+		robotContainer.configurePitBinds();
+
 		CommandScheduler.getInstance().cancelAll();
 		Shuffleboard.selectTab(testTab.getTitle());
 		HomeClimber.getHomingCommand().schedule();

@@ -91,8 +91,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 1.0,
+      "name": "Intake",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -108,7 +108,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "Lower Arm",
       "waypointRelativePos": 2.55,
       "command": {
         "type": "parallel",

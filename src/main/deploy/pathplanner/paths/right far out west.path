@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.7190686223948486,
-        "y": 2.4231375833055786
+        "x": 2.0946267347080147,
+        "y": 3.069157411042095
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.911785147569421,
-        "y": 1.997970379982481
+        "x": 3.2873432598825874,
+        "y": 2.6439902077189976
       },
       "isLocked": false,
       "linkedName": "Stage Out West Shoot Position"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 2.7190686223948486,
-        "y": 2.4231375833055786
+        "x": 2.0946267347080147,
+        "y": 3.069157411042095
       },
       "prevControl": {
-        "x": 3.335867279963541,
-        "y": 1.5566823262447964
+        "x": 2.7114253922767073,
+        "y": 2.202702153981313
       },
       "nextControl": null,
       "isLocked": false,
@@ -60,7 +60,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {

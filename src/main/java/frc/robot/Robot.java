@@ -527,6 +527,7 @@ public class Robot extends TimedRobot {
 		lastArm = armCommands.getSelected();
 		lastSwerve.schedule();
 		lastArm.schedule();
+		
 	}
 
 	@Override

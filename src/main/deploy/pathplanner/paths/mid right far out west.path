@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.7190686223948486,
-        "y": 2.4231375833055786
+        "x": 2.0946267347080147,
+        "y": 3.069157411042095
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.035382745763837,
-        "y": 1.8046492861437993
+        "x": 3.4109408580770024,
+        "y": 2.450669113880316
       },
       "isLocked": false,
       "linkedName": "Stage Out West Shoot Position"

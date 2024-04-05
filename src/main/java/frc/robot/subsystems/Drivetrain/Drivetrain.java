@@ -191,7 +191,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         Constants.AutoConstants.rotationPID,
                         SwerveConstants.maxModuleSpeed,
                         Constants.SwerveConstants.driveBaseRadius,
-                        new ReplanningConfig(true, true, 1, 0.25)),
+                        new ReplanningConfig(false, false, 1, 0.25)),
                 Robot::isRed,
                 this);
 

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
-      "y": 5.55
+      "x": 1.3460380624464954,
+      "y": 5.568116821418829
     },
     "rotation": 0
   },
@@ -61,15 +61,28 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Lower Arm"
+            "pathName": "center shoot to amp shoot"
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "far center mid"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "amp shoot to close left"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
           }
         },
         {

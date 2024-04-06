@@ -12,6 +12,7 @@ import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -116,7 +117,7 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("3 Piece", " 3 piece");
 		autoChooser.addOption("4 Piece (Center Only)", " 4 piece");
 		autoChooser.addOption("All Close Notes", " all close notes");
-		autoChooser.addOption("All Close Notes plus Far Piece", " all close notes plus");
+		autoChooser.addOption("All Close Notes Plus far Piece", " all close notes plus");
 		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
@@ -333,8 +334,15 @@ public class Robot extends TimedRobot {
 
 		Lighting.getInstance().autoSetLights(true);
 
-		NamedCommands.registerCommand("Intake", new DeployAndIntake(true)
-				.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
+		// NamedCommands.registerCommand("Intake",
+		// new DeployAndIntake(true).unless(() ->
+		// Intake.getInstance().getShooterSensor())
+		// .andThen(new BeltDrive(() -> -1d).withTimeout(1)
+		// .alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+		// .finallyDo(Lighting.startTimer));
+
+		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
+				// .andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
 
 		NamedCommands.registerCommand("Shoot",
 				ShootCommandFactory.getAimAndShootCommandWithTimeouts()
@@ -347,7 +355,7 @@ public class Robot extends TimedRobot {
 				// as it is within 4 degrees of the setpoint then just end this command and
 				// follow path
 				new SetPoint(Constants.ArmConstants.kArmMinAngle).raceWith(new WaitUntilCommand(
-						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 2)))
+						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4)))
 						.withName("Lowering arm to hard stop"));
 	}
 
@@ -397,8 +405,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		CommandScheduler.getInstance().cancelAll();
-
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
@@ -468,6 +474,9 @@ public class Robot extends TimedRobot {
 			autonCommand.addCommands(
 					new PathToPoint(pathToPointCommandChooser.getSelected()).alongWith(new DeployAndIntake(true)
 							.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer)));
+			Drivetrain.getInstance().getField().getObject("Last Ditch Effort")
+					.setPose(pathToPointCommandChooser.getSelected());
+
 		}
 
 		if (Constants.Vision.UseLimelight && Robot.isReal()) {
@@ -491,6 +500,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousExit() {
 		timer.stop();
+		Drivetrain.getInstance().getField().getObject("Last Ditch Effort")
+				.setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
 	}
 
 	@Override

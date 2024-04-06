@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.521967516157255,
-        "y": 6.983781009228686
+        "x": 2.586637103829763,
+        "y": 6.959195876725087
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5216376682753368,
-        "y": 5.7726960037253425
+        "x": 1.586307255947845,
+        "y": 5.748110871221744
       },
       "isLocked": false,
       "linkedName": "Close Amp Note"
     },
     {
       "anchor": {
-        "x": 2.5955447605339654,
-        "y": 5.54
+        "x": 2.704693247349458,
+        "y": 5.561525155457719
       },
       "prevControl": {
-        "x": 2.447440121732096,
-        "y": 5.590445347557362
+        "x": 2.3499903573881222,
+        "y": 5.492639276945221
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.35,
-      "rotationDegrees": -22.0,
+      "rotationDegrees": -27.0,
       "rotateFast": false
     }
   ],

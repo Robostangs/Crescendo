@@ -58,6 +58,24 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
 
+            // PoseEstimate front = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.llAprilTag);
+            // LimelightHelpers.SetRobotOrientation(Constants.Vision.llAprilTag, super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+
+            // if (front.tagCount > 1) {
+            //     this.addVisionMeasurement(front.pose,
+            //             Timer.getFPGATimestamp() - front.latency / 1000);
+            //     mField.getObject("Front LL pose").setPose(front.pose);
+            // }
+
+            // PoseEstimate back = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.llAprilTagRear);
+            // LimelightHelpers.SetRobotOrientation(Constants.Vision.llAprilTagRear, super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+
+            // if (back.tagCount > 1) {
+            //     this.addVisionMeasurement(back.pose,
+            //             Timer.getFPGATimestamp() - back.latency / 1000);
+            //     mField.getObject("Rear LL pose").setPose(back.pose);
+            // }
+
             PoseEstimate frontPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
 
             if (frontPoseEstimate.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {

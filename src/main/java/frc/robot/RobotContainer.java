@@ -99,6 +99,12 @@ public class RobotContainer {
 							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
 
+		new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.kDriverDeadzone)
+				.whileTrue(
+						new AlrightTranslate(() -> -xDrive.getLeftTriggerAxis(), () -> -xDrive.getLeftTriggerAxis())
+								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
+								.finallyDo(Lighting.startTimer));
+
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
 		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
@@ -106,22 +112,23 @@ public class RobotContainer {
 				.finallyDo(Lighting.startTimer));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
+
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSource)
 				// .andThen(ShootCommandFactory.getAmpCommand()));
-				.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
-				.withName("Auto-pilot Amp shot"));
+				.alongWith(new DeployAndIntake(true))
+				.withName("Auto-pilot Source Intake"));
 
 		// just runs feeder
 		xDrive.leftStick()
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).withTimeout(1)
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.finallyDo(Lighting.startTimer));
-		// deploys intake(right paddle)
+		// deploys intake (right paddle)
 		xDrive.rightStick()
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(new BeltDrive(() -> -1d).withTimeout(1)
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
+						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
@@ -191,30 +198,36 @@ public class RobotContainer {
 
 	public static void configurePitBinds() {
 
-		// shoots no matter where arm is
-		// press right bumper to prepare and then left bumper to acually shoot
-		xPit.rightBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xPit.leftBumper()));
+		// works perfectly
+		xPit.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 
-		// move the arm based oon the right stick
-		new Trigger(() -> Math.abs(xPit.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
-				.whileTrue(new FineAdjust(() -> -xPit.getRightY()));
+		// works perfectly
+		xPit.b().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 
-		// back right pannel to extend the climber
-		xPit.rightStick().toggleOnTrue(new Extend());
-		// back left pannel to retract the climber
-		xPit.leftStick().toggleOnTrue(new AlrightTranslate(() -> -Constants.ClimberConstants.LeftMotor.kRetractPower,
-				() -> -Constants.ClimberConstants.RightMotor.kRetractPower));
+		// works perfectly
+		xPit.y().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xPit.leftBumper()));
 
-		// press x to go to amp and left bumper to shoot
-		xPit.x().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xPit.leftBumper()));
+		// works perfectly
+		xPit.x().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 
-		// press up arrow to make the robot go perfectly straight
-		xPit.povUp().whileTrue(new xDrive(() -> 0.0, () -> 0.3, () -> 0.0, () -> 0.0));
-		// press left arrow to deploy the intake
-		xPit.povLeft().toggleOnTrue(new DeployAndIntake(true));
-		// press right arrow to belt feed
-		xPit.povRight().toggleOnTrue(new DeployAndIntake(false));
+		// works perfect
+		xPit.povUp().toggleOnTrue(ShootCommandFactory.getAmpCommand());
 
+		// works perfect
+		xPit.povDown().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xPit.leftBumper()));
+
+		// doesnt prepare while setpoint (if shoots early returns to intake improperly)
+		// test 2: it doesnt return to intake, but it can shoot before setpoint
+		xPit.povLeft().toggleOnTrue(ShootCommandFactory.getCenterToWingCommand(xPit.leftBumper()));
+
+		// works perfect
+		xPit.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xPit.leftBumper()));
+
+		// works perfect
+		xPit.rightStick().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithTimeouts());
+
+		// works perfect
+		xPit.leftStick().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
 	}
 
 	public RobotContainer() {

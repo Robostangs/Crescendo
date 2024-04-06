@@ -324,6 +324,8 @@ public final class Constants {
 
 	}
 
+	
+
 	public static class ArmConstants {
 		public static final int armMotorID = 53;
 		public static final int armCoderID = 50;
@@ -334,8 +336,8 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrent = 6.04;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
-		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -61.5; // -62.7
+		public static final double shooterTrapezoidalOffset = 1.2;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -61.4;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -347,7 +349,7 @@ public final class Constants {
 		public static final double kArmMinAngle = angleOfShooterReferencePointSittingOnHardStop
 				+ shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
-		public static final double shooterOffset = 67.4 - shooterTrapezoidalOffset;
+		public static final double shooterOffset = 67 - shooterTrapezoidalOffset;
 		public static final double kInRangeThreshold = 1.75;
 
 		/*

@@ -196,7 +196,10 @@ public class RobotContainer {
 		// TODO: test, absolute worst case scenario
 		// xManip.start().and(() -> xManip.back().getAsBoolean())
 		// 		.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-		xManip.back().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+		.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+		.finallyDo(Lighting.startTimer));
+		
 		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 		
 	}

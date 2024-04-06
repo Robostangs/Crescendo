@@ -35,7 +35,8 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 public class Arm extends SubsystemBase {
 
     // TODO: -0.287841796875
-    
+    // -0.289794921875
+
     private TalonFX armMotor;
     private CANcoder armCoder;
 
@@ -360,6 +361,8 @@ public class Arm extends SubsystemBase {
                 distToSpeakerMeters);
         SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)",
                 Units.metersToInches(distToSpeakerMeters));
+
+        angleToSpeaker-= 1.25;
 
         /*
          * Make sure that we dont a][\ccidentally return a stupid value

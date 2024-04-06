@@ -62,7 +62,7 @@ public class ShootCommandFactory {
         public static Command getAmpCommand() {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut())
-                                .finallyDo(ReturnHome.returnHome)
+                                .finallyDo(ReturnHome.ReturnHome)
                                 // new CancelShooter().alongWith(new ReturnHome()))
                                 .withName("Auto Amp Shot");
         }
@@ -72,7 +72,7 @@ public class ShootCommandFactory {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor()).andThen(
                                 new WaitUntilCommand(waitUntil)
                                                 .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kAmp)),
-                                new PoopOut()).finallyDo(ReturnHome.returnHome)
+                                new PoopOut()).finallyDo(ReturnHome.ReturnHome)
                                 .withName("Amp Shot");
         }
 
@@ -98,7 +98,7 @@ public class ShootCommandFactory {
         public static Command getPrepareAndShootCommandWithWaitUntil(BooleanSupplier waitUntil) {
                 return new Prepare().until(waitUntil)
                                 .andThen(new Shoot(true).onlyWhile(waitUntil))
-                                .finallyDo(CancelShooter.cancelShooter)
+                                .finallyDo(CancelShooter.CancelShooter)
                                 .withName("Prepare and Shoot");
         }
 
@@ -116,7 +116,7 @@ public class ShootCommandFactory {
                                 // Prepare().until(waitUntil)
                                 .andThen(new BeltDrive(() -> Constants.IntakeConstants.beltIntakeSpeed)
                                                 .alongWith(new FullSend()).onlyWhile(waitUntil))
-                                .finallyDo(CancelShooter.cancelShooter)
+                                .finallyDo(CancelShooter.CancelShooter)
                                 .withName("Rapid Fire");
         }
 

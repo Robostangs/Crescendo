@@ -15,6 +15,7 @@ import frc.robot.commands.ShooterCommands.FullSend;
 import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
+import frc.robot.commands.Swerve.Align;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -118,6 +119,11 @@ public class ShootCommandFactory {
                                                 .alongWith(new FullSend()).onlyWhile(waitUntil))
                                 .finallyDo(CancelShooter.CancelShooter)
                                 .withName("Rapid Fire");
+        }
+
+        public static Command getAutonomousShootCommand() {
+                return ShootCommandFactory.getAimAndShootCommandWithTimeouts()
+						.deadlineWith(new Align(false)).withName("Autonomous Shooting Sequence");
         }
 
         public static Command getCenterToWingCommand(BooleanSupplier waitUntil) {

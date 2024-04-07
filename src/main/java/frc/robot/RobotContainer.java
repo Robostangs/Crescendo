@@ -36,6 +36,7 @@ import frc.robot.commands.ShooterCommands.Feed;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.Align;
+import frc.robot.commands.Swerve.DriveToNote;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
 import frc.robot.subsystems.Arm;
@@ -107,9 +108,11 @@ public class RobotContainer {
 
 		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
 				xDrive::getRightTriggerAxis, false));
-		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
-				xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed))
-				.finallyDo(Lighting.startTimer));
+
+		xDrive.b().whileTrue(new DeployAndIntake(true).raceWith(new DriveToNote()));
+		// xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
+				// xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed))
+				// .finallyDo(Lighting.startTimer));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 

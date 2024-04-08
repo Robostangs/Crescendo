@@ -122,11 +122,21 @@ public class ShootCommandFactory {
 
         public static Command getCenterToWingCommand(BooleanSupplier waitUntil) {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
-                                .andThen(new Prepare().until(waitUntil), new Shoot(true).onlyWhile(waitUntil))
-                                .deadlineWith(new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass)
-                                                .handleInterrupt(ReturnHome.ReturnHome))
-                                .finallyDo(CancelShooter.CancelShooter)
+                                .andThen(new WaitUntilCommand(waitUntil).deadlineWith(
+                                                new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass),
+                                                new Prepare()), new Shoot(true))
+                                .finallyDo(ReturnHome.ReturnHome).handleInterrupt(CancelShooter.CancelShooter)
                                 .withName("Pass to Center");
+
+                // return new PassToShooter().unless(() ->
+                // Intake.getInstance().getShooterSensor())
+                // .andThen(new Prepare().until(waitUntil), new
+                // Shoot(true).onlyWhile(waitUntil))
+                // .deadlineWith(new
+                // SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass)
+                // .handleInterrupt(CancelShooter.CancelShooter))
+                // .finallyDo(ReturnHome.ReturnHome)
+                // .withName("Pass to Center");
                 // .andThen(new WaitUntilCommand(waitUntil).deadlineWith(new Prepare(), new
                 // SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass)))
 

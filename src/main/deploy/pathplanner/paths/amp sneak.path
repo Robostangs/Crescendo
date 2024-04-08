@@ -20,28 +20,28 @@
         "y": 7.76
       },
       "prevControl": {
-        "x": 2.21,
-        "y": 7.76
+        "x": 2.210165674554837,
+        "y": 7.744880362517029
       },
       "nextControl": {
-        "x": 3.51,
-        "y": 7.76
+        "x": 3.8204447317985544,
+        "y": 7.780174105802757
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.58278358686347,
-        "y": 7.483084859688239
+        "x": 4.286882028309511,
+        "y": 7.229778095919829
       },
       "prevControl": {
-        "x": 3.8938370203073207,
-        "y": 7.593226188067885
+        "x": 3.5979354617533614,
+        "y": 7.339919424299476
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Amp Shoot Position"
     }
   ],
   "rotationTargets": [

@@ -33,6 +33,10 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
  * ground, then, in tuner X, zero the armCoder
  */
 public class Arm extends SubsystemBase {
+
+    // TODO: -0.287841796875
+    // -0.289794921875
+
     private TalonFX armMotor;
     private CANcoder armCoder;
 
@@ -351,6 +355,8 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)",
                 Units.metersToInches(distToSpeakerMeters));
 
+        angleToSpeaker-= 1.25;
+
         /*
          * Make sure that we dont a][\ccidentally return a stupid value
          */
@@ -512,7 +518,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return isInRangeOfTarget() && Math.abs(getVelocity()) < 2;
+        return isInRangeOfTarget() && Math.abs(getVelocity()) < 0.5;
     }
 
     public void postStatus(String status) {

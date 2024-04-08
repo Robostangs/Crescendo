@@ -25,7 +25,6 @@ public final class Constants {
 	/** Should be 16.542 */
 	public static final double fieldLength = Units.inchesToMeters(76.1 + 250.5) * 2;
 	public static final double fieldHeight = 8.014;
-
 	public static final double kRange = 20;
 
 	public static final String logDirectory = "";
@@ -130,7 +129,7 @@ public final class Constants {
 
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
-			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6);
+			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6); // PROBABLY THE PROBLEM.  NOT CALIBRATED FOR THE CARPET!
 
 			private static final boolean kSteerMotorReversed = false;
 			private static final boolean kInvertLeftSide = true;
@@ -270,7 +269,7 @@ public final class Constants {
 				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseBlue.getY(),
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
-				public static final Pose2d kSource = (new Pose2d(15.13, 4.41, Rotation2d.fromDegrees(-60.5)));
+				public static final Pose2d kSource = (new Pose2d(15.13, 1.06, Rotation2d.fromDegrees(-60.5)));
 
 				public static final Pose2d CenterStartPosition = new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(0));
 				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));
@@ -323,12 +322,14 @@ public final class Constants {
 		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.07;
 		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.07;
 
-		public static final double setpointTimeout = 1;
-		public static final double feedTimeout = 0.5;
+		public static final double setpointTimeout = 4;
+		public static final double feedTimeout = 1;
 		public static final double shootTimeout = 0.5;
 		public static final double chargeUpTimeout = 2;
 
 	}
+
+	
 
 	public static class ArmConstants {
 		public static final int armMotorID = 53;
@@ -340,8 +341,8 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrent = 6.04;
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
-		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -61.5;
+		public static final double shooterTrapezoidalOffset = 1.2;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -61.4;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -353,7 +354,7 @@ public final class Constants {
 		public static final double kArmMinAngle = angleOfShooterReferencePointSittingOnHardStop
 				+ shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
-		public static final double shooterOffset = 67.4 - shooterTrapezoidalOffset;
+		public static final double shooterOffset = 67 - shooterTrapezoidalOffset;
 		public static final double kInRangeThreshold = 1.75;
 
 		/*
@@ -394,7 +395,7 @@ public final class Constants {
 		public static final double shooterPoopSpeed = 1;
 	}
 
-	public static class IntakeConstants {
+public static class IntakeConstants {
 		public static final int intakeMotorID = 62;
 		public static final int beltMotorID = 61;
 

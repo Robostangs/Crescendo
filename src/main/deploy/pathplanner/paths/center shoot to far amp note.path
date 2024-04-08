@@ -3,56 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9421196855317784,
-        "y": 1.86007413614181
+        "x": 3.9443991246625467,
+        "y": 6.023158875881564
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.134836210706347,
-        "y": 1.4349069328187127
+        "x": 5.161516009623296,
+        "y": 6.527795616172816
       },
       "isLocked": false,
-      "linkedName": "Stage Out West Shoot Position"
+      "linkedName": "Center Shoot Position"
     },
     {
       "anchor": {
-        "x": 8.116860648099326,
-        "y": 0.7762526348962228
+        "x": 8.122611051361037,
+        "y": 7.441695291306576
       },
       "prevControl": {
-        "x": 8.127147678853657,
-        "y": 0.6199828159497818
+        "x": 8.122611051361037,
+        "y": 7.541695291306574
       },
       "nextControl": {
-        "x": 8.106551366576078,
-        "y": 0.9328604642669712
+        "x": 8.122611051361037,
+        "y": 7.341695291306571
       },
       "isLocked": false,
-      "linkedName": "Far Right Note"
+      "linkedName": "Far left Note"
     },
     {
       "anchor": {
-        "x": 3.9421196855317784,
-        "y": 1.86007413614181
+        "x": 3.9443991246625467,
+        "y": 6.023158875881564
       },
       "prevControl": {
-        "x": 5.131106219401453,
-        "y": 1.4576495186916056
+        "x": 5.157112547666129,
+        "y": 6.505415668343453
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Stage Out West Shoot Position"
+      "linkedName": "Center Shoot Position"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7,
-      "rotationDegrees": 10.480024361942101,
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 0,
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 21.0,
       "rotateFast": false
     }
   ],
@@ -77,18 +77,18 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 781.3060842693,
     "maxAngularAcceleration": 390.6530421347
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -42.89999999999998,
+    "rotation": 7.64,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Stage Side Paths",
+  "folder": "Center Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

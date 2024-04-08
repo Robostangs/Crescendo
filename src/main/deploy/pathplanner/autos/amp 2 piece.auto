@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "close left"
+                  "pathName": "left to close left note"
                 }
               },
               {
@@ -39,7 +39,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "far left"
+            "pathName": "amp shoot to far amp note"
           }
         },
         {

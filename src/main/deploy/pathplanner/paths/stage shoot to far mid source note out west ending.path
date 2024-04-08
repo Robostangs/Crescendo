@@ -3,61 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.364593006245786,
-        "y": 4.892453456150855
+        "x": 3.9421196855317784,
+        "y": 1.86007413614181
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.483123841045744,
-        "y": 4.426515375647876
+        "x": 5.258433808900766,
+        "y": 1.2415858389800307
       },
       "isLocked": false,
-      "linkedName": "Stage Shoot Position"
+      "linkedName": "Stage Out West Shoot Position"
     },
     {
       "anchor": {
-        "x": 5.083156356127527,
-        "y": 4.09703281038226
+        "x": 5.814771893432676,
+        "y": 1.6064661944138705
       },
       "prevControl": {
-        "x": 4.712145939620533,
-        "y": 4.225618291198205
+        "x": 4.9919984821070065,
+        "y": 1.245034372945482
       },
       "nextControl": {
-        "x": 5.389876668642226,
-        "y": 3.9907291134886833
+        "x": 6.927338215787541,
+        "y": 2.0951996255844354
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.122300218752295,
-        "y": 4.09703281038226
+        "x": 8.111731910055097,
+        "y": 2.4355289057912533
       },
       "prevControl": {
-        "x": 8.122300218752295,
-        "y": 4.23703281038226
+        "x": 8.11960168664095,
+        "y": 2.2151004204923983
       },
       "nextControl": {
-        "x": 8.122300218752295,
-        "y": 3.9570328103822603
+        "x": 8.103832540609497,
+        "y": 2.6567862722125266
       },
       "isLocked": false,
-      "linkedName": "Far Middle Note"
+      "linkedName": "Far Mid Right Note"
     },
     {
       "anchor": {
-        "x": 5.083156356127527,
-        "y": 4.09703281038226
+        "x": 5.9082913521239,
+        "y": 4.061235254942239
       },
       "prevControl": {
-        "x": 5.358699870177518,
-        "y": 4.023865596428315
+        "x": 6.564867314800098,
+        "y": 3.994093574624994
       },
       "nextControl": {
-        "x": 4.72784973058802,
-        "y": 4.191380144159047
+        "x": 5.5800033707858026,
+        "y": 4.094806095100876
       },
       "isLocked": false,
       "linkedName": null
@@ -68,23 +68,23 @@
         "y": 4.892453456150855
       },
       "prevControl": {
-        "x": 4.489133271481406,
-        "y": 4.441124508258709
+        "x": 4.815277284175273,
+        "y": 3.9646327776670107
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "Stage Shoot Position"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2,
-      "rotationDegrees": 0,
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1,
-      "rotationDegrees": -11.901636954116002,
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": 27.0,
       "rotateFast": false
     }
   ],
@@ -92,7 +92,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.3,
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -106,11 +106,28 @@
           ]
         }
       }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 2.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Lower Arm"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 781.3060842693,
     "maxAngularAcceleration": 390.6530421347
   },

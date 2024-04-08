@@ -1,5 +1,7 @@
 package frc.robot.commands.Swerve;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,11 +15,12 @@ public class DriveToNote extends Command {
     SwerveRequest.RobotCentric driveRequest;
     PIDController pidRadianController;
 
+    public static BooleanSupplier thereIsANote = () -> LimelightHelpers.getTX(Constants.Vision.llPython) != 0.00;
+
     public DriveToNote() {
         drivetrain = Drivetrain.getInstance();
         driveRequest = new SwerveRequest.RobotCentric();
 
-        // TODO: tune
         pidRadianController = new PIDController(12, 12, 1);
 
         this.addRequirements(drivetrain);
@@ -40,5 +43,16 @@ public class DriveToNote extends Command {
         drivetrain.setControl(driveRequest
                 .withRotationalRate(Units
                         .degreesToRadians(pidRadianController.calculate(LimelightHelpers.getTX(Constants.Vision.llPython)))));
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+        // return LimelightHelpers.getTX(Constants.Vision.llPython) == 0.00;
     }
 }

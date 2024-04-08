@@ -8,56 +8,56 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.585515268252759,
-        "y": 3.4747581115532604
+        "x": 4.483123841045744,
+        "y": 4.426515375647876
       },
       "isLocked": false,
       "linkedName": "Stage Shoot Position"
     },
     {
       "anchor": {
-        "x": 4.79944782587465,
-        "y": 1.5414189067473447
+        "x": 5.083156356127527,
+        "y": 4.09703281038226
       },
       "prevControl": {
-        "x": 3.9270652107014894,
-        "y": 2.4886779007528474
+        "x": 4.712145939620533,
+        "y": 4.225618291198205
       },
       "nextControl": {
-        "x": 5.598823222662623,
-        "y": 0.673433322183827
+        "x": 5.389876668642226,
+        "y": 3.9907291134886833
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.116860648099326,
-        "y": 0.7762526348962228
+        "x": 8.122300218752295,
+        "y": 4.09703281038226
       },
       "prevControl": {
-        "x": 8.123685430082224,
-        "y": 0.9931022289657819
+        "x": 8.122300218752295,
+        "y": 4.23703281038226
       },
       "nextControl": {
-        "x": 8.110921158591847,
-        "y": 0.5875321905062192
+        "x": 8.122300218752295,
+        "y": 3.9570328103822603
       },
       "isLocked": false,
-      "linkedName": "Far Right Note"
+      "linkedName": "Far Middle Note"
     },
     {
       "anchor": {
-        "x": 4.79944782587465,
-        "y": 1.5414189067473447
+        "x": 5.083156356127527,
+        "y": 4.09703281038226
       },
       "prevControl": {
-        "x": 5.406934013522133,
-        "y": 0.8676836328867498
+        "x": 5.358699870177518,
+        "y": 4.023865596428315
       },
       "nextControl": {
-        "x": 3.9255786451808783,
-        "y": 2.51058743064916
+        "x": 4.72784973058802,
+        "y": 4.191380144159047
       },
       "isLocked": false,
       "linkedName": null
@@ -68,8 +68,8 @@
         "y": 4.892453456150855
       },
       "prevControl": {
-        "x": 4.570312867477587,
-        "y": 3.4706605894693277
+        "x": 4.489133271481406,
+        "y": 4.441124508258709
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,8 +78,13 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2.0,
-      "rotationDegrees": 0.0,
+      "waypointRelativePos": 2,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -11.901636954116002,
       "rotateFast": false
     }
   ],
@@ -104,8 +109,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 781.3060842693,
     "maxAngularAcceleration": 390.6530421347
   },

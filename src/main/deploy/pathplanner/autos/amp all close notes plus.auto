@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "close left"
+                  "pathName": "left to close left note"
                 }
               },
               {
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "left to center note"
+                  "pathName": "close left note to close center note"
                 }
               },
               {
@@ -68,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "center to right note"
+                  "pathName": "close center note to close right note"
                 }
               },
               {
@@ -89,13 +89,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "stage note to out west shoot"
+            "pathName": "close left note to stage out west shoot position"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "right far out west"
+            "pathName": "stage out west shoot to far source note"
           }
         },
         {

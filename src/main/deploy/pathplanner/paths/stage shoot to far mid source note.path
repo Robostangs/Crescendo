@@ -3,93 +3,93 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.575063617719828,
-        "y": 7.47613688745896
+        "x": 4.364593006245786,
+        "y": 4.892453456150855
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.476723087705435,
-        "y": 6.661917680316842
+        "x": 4.879228195451544,
+        "y": 2.895250334119408
       },
       "isLocked": false,
-      "linkedName": "Amp Shoot Position"
+      "linkedName": "Stage Shoot Position"
     },
     {
       "anchor": {
-        "x": 5.056849076661116,
-        "y": 4.283038880892577
+        "x": 4.62,
+        "y": 2.0
       },
       "prevControl": {
-        "x": 4.105392571896255,
-        "y": 4.993810501509892
+        "x": 3.6874976127481682,
+        "y": 2.7710637442972113
       },
       "nextControl": {
-        "x": 5.884967314476444,
-        "y": 3.6644053027867445
+        "x": 6.5414117709334,
+        "y": 0.41123092585442156
+      },
+      "isLocked": true,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.115617317664361,
+        "y": 2.4355807112260432
+      },
+      "prevControl": {
+        "x": 8.115617317664361,
+        "y": 2.1855807112260432
+      },
+      "nextControl": {
+        "x": 8.115617317664361,
+        "y": 2.7655807112260433
+      },
+      "isLocked": false,
+      "linkedName": "Far Mid Right Note"
+    },
+    {
+      "anchor": {
+        "x": 5.9082913521239,
+        "y": 4.061235254942239
+      },
+      "prevControl": {
+        "x": 6.62108232940214,
+        "y": 3.9883450081924403
+      },
+      "nextControl": {
+        "x": 5.583994369936997,
+        "y": 4.0943979741759735
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.122300218752295,
-        "y": 4.09703281038226
+        "x": 4.364593006245786,
+        "y": 4.892453456150855
       },
       "prevControl": {
-        "x": 8.101990761466714,
-        "y": 4.53748674221605
-      },
-      "nextControl": {
-        "x": 8.133947312282656,
-        "y": 3.8444407264211984
-      },
-      "isLocked": false,
-      "linkedName": "Far Middle Note"
-    },
-    {
-      "anchor": {
-        "x": 5.062787514463918,
-        "y": 4.27068693026275
-      },
-      "prevControl": {
-        "x": 5.991559186822077,
-        "y": 3.882966326117838
-      },
-      "nextControl": {
-        "x": 3.9642351895839543,
-        "y": 4.729283357957205
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.575063617719828,
-        "y": 7.47613688745896
-      },
-      "prevControl": {
-        "x": 4.460332999369703,
-        "y": 6.664768130462186
+        "x": 4.832396082401212,
+        "y": 3.9293904234012027
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp Shoot Position"
+      "linkedName": "Stage Shoot Position"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2.0,
-      "rotationDegrees": 0,
+      "waypointRelativePos": 2,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1,
-      "rotationDegrees": -40.0,
-      "rotateFast": true
+      "waypointRelativePos": 1.45,
+      "rotationDegrees": 38.0,
+      "rotateFast": false
     },
     {
-      "waypointRelativePos": 3,
-      "rotationDegrees": -40.0,
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": -90.0,
       "rotateFast": true
     }
   ],
@@ -114,18 +114,18 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 781.3060842693,
     "maxAngularAcceleration": 390.6530421347
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 24.08,
+    "rotation": -7.759999999999991,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp Side Paths",
+  "folder": "Stage Side Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

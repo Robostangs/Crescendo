@@ -1,94 +1,78 @@
 package frc.robot.commands.AutoCommands;
 
-import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.controllers.PathFollowingController;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Alert;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Alert.AlertType;
-import frc.robot.commands.ShootCommandFactory;
-import frc.robot.commands.IntakeCommands.DeployAndIntake;
-import frc.robot.commands.Swerve.Align;
-import frc.robot.commands.Swerve.DriveToNote;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 import java.util.List;
-import java.util.function.*;
 import java.util.ArrayList;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class PathPlannerCommand extends SequentialCommandGroup {
     Drivetrain drivetrain = Drivetrain.getInstance();
 
-    static Supplier<Pose2d> m_poseSupplier = () -> Drivetrain.getInstance().getPose();
-    static Supplier<ChassisSpeeds> m_speedSupplier = () -> Drivetrain.getInstance().getCurrentRobotChassisSpeeds();
-    static Consumer<ChassisSpeeds> m_speedConsumer = speeds -> Drivetrain.getInstance()
-            .setControl(Drivetrain.getInstance().autoRequest.withSpeeds(speeds));
-    static HolonomicPathFollowerConfig config = new HolonomicPathFollowerConfig(
-            Constants.SwerveConstants.maxModuleSpeed, Constants.SwerveConstants.driveBaseRadius,
-            new ReplanningConfig());
-    static BooleanSupplier shouldFlipPathSupplier = Robot::isRed;
+    // static Supplier<Pose2d> m_poseSupplier = () -> Drivetrain.getInstance().getPose();
+    // static Supplier<ChassisSpeeds> m_speedSupplier = () -> Drivetrain.getInstance().getCurrentRobotChassisSpeeds();
+    // static Consumer<ChassisSpeeds> m_speedConsumer = speeds -> Drivetrain.getInstance()
+    //         .setControl(Drivetrain.getInstance().autoRequest.withSpeeds(speeds));
+    // static HolonomicPathFollowerConfig config = new HolonomicPathFollowerConfig(
+    //         Constants.SwerveConstants.maxModuleSpeed, Constants.SwerveConstants.driveBaseRadius,
+    //         new ReplanningConfig());
+    // static BooleanSupplier shouldFlipPathSupplier = Robot::isRed;
 
-    public PathPlannerCommand() {
-        Pose2d startingPose;
+    // public PathPlannerCommand() {
+    //     Pose2d startingPose;
 
-        switch (Robot.startingPose.getSelected()) {
-            case "amp":
-                startingPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
-                break;
-            case "center":
-                startingPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
-                break;
-            case "stage":
-                startingPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
-                break;
-            default:
-                startingPose = drivetrain.getPose();
-                break;
-        }
+    //     switch (Robot.startingPose.getSelected()) {
+    //         case "amp":
+    //             startingPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
+    //             break;
+    //         case "center":
+    //             startingPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+    //             break;
+    //         case "stage":
+    //             startingPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
+    //             break;
+    //         default:
+    //             startingPose = drivetrain.getPose();
+    //             break;
+    //     }
 
-        this.addCommands(new InstantCommand(() -> drivetrain.seedFieldRelative(startingPose)));
+    //     this.addCommands(new InstantCommand(() -> drivetrain.seedFieldRelative(startingPose)));
 
-        // this takes care of first note
+    //     // this takes care of first note
 
-        // this is for far pieces being the first note
-        if (Robot.firstNote.getSelected().contains("far")) {
-            this.addCommands(getPathCommand(Robot.startingPose.getSelected() + " " + "far" + " " + "leave"),
-            new DriveToNote().raceWith(new DeployAndIntake(true)),
+    //     // this is for far pieces being the first note
+    //     if (Robot.firstNote.getSelected().contains("far")) {
+    //         this.addCommands(getPathCommand(Robot.startingPose.getSelected() + " " + "far" + " " + "leave"),
+    //         new DriveToNote().raceWith(new DeployAndIntake(true)),
             
-            );
-        }
+    //         );
+    //     }
 
-        else {
-            this.addCommands(getPathCommand(
-                    Robot.startingPose.getSelected() + " " + "start" + " " + "to" + " " + Robot.firstNote.getSelected())
-                    .raceWith(new DeployAndIntake(true)),
-                    ShootCommandFactory.getAutonomousShootCommand());
-        }
+    //     else {
+    //         this.addCommands(getPathCommand(
+    //                 Robot.startingPose.getSelected() + " " + "start" + " " + "to" + " " + Robot.firstNote.getSelected())
+    //                 .raceWith(new DeployAndIntake(true)),
+    //                 ShootCommandFactory.getAutonomousShootCommand());
+    //     }
 
-        this.addCommands(getPathCommand(Robot.startingPose.getSelected() + " start"));
+    //     this.addCommands(getPathCommand(Robot.startingPose.getSelected() + " start"));
 
-        // PathPlannerAuto.getPathGroupFromAutoFile(lastAutoName)
-        PathPlannerPath.fromPathFile("test");
-    }
+    //     // PathPlannerAuto.getPathGroupFromAutoFile(lastAutoName)
+    //     PathPlannerPath.fromPathFile("test");
+    // }
 
-    public static FollowPathHolonomic getPathCommand(String path) {
-        return new FollowPathHolonomic(PathPlannerPath.fromPathFile("path"), m_poseSupplier, m_speedSupplier,
-                m_speedConsumer, config, shouldFlipPathSupplier, Drivetrain.getInstance());
-    }
+    // public static FollowPathHolonomic getPathCommand(String path) {
+    //     return new FollowPathHolonomic(PathPlannerPath.fromPathFile("path"), m_poseSupplier, m_speedSupplier,
+    //             m_speedConsumer, config, shouldFlipPathSupplier, Drivetrain.getInstance());
+    // }
 
     private static String lastAutoName;
     private static Alert nullAuto = new Alert("Null auto", AlertType.WARNING);

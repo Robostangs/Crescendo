@@ -11,6 +11,7 @@ import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
 import frc.robot.commands.ShooterCommands.CancelShooter;
+import frc.robot.commands.ShooterCommands.ChargeUp;
 import frc.robot.commands.ShooterCommands.FullSend;
 import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
@@ -124,7 +125,8 @@ public class ShootCommandFactory {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new WaitUntilCommand(waitUntil).deadlineWith(
                                                 new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass),
-                                                new Prepare()), new Shoot(true))
+                                                new ChargeUp(0.5)),
+                                                new Shoot(true))
                                 .finallyDo(ReturnHome.ReturnHome).handleInterrupt(CancelShooter.CancelShooter)
                                 .withName("Pass to Center");
 

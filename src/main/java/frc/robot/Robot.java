@@ -483,7 +483,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		Arm.getInstance().setBrake(true);
-		Shooter.getInstance().setShooterBrake(true);
+		Shooter.getInstance().setShooterBrake(false);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
 		Shuffleboard.selectTab(autoTab.getTitle());

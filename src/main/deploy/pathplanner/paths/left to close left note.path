@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4281461725886417,
-        "y": 6.743350595960451
+        "x": 1.7015129493221952,
+        "y": 6.721777133369082
       },
       "isLocked": false,
       "linkedName": null
@@ -20,30 +20,36 @@
         "y": 6.959195876725087
       },
       "prevControl": {
-        "x": 2.2164942755811436,
-        "y": 6.872197762914046
+        "x": 2.1914934524313496,
+        "y": 6.628959350511294
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Close Amp Note"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 30.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 3.5,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 781.3060842693,
     "maxAngularAcceleration": 390.6530421347
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 12.393263508090378,
-    "rotateFast": true
+    "rotation": 30.689999999999998,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Starting Notes",
   "previewStartingState": null,
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

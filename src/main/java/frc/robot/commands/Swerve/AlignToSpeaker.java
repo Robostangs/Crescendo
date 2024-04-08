@@ -14,21 +14,29 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
-public class Align extends Command {
+public class AlignToSpeaker extends Command {
     Drivetrain drivetrain;
 
     SwerveRequest.FieldCentricFacingAngle driveRequest;
 
     Supplier<Double> translateX, translateY, howManyBabiesOnBoard;
     Supplier<Rotation2d> getTargetRotation;
-    boolean note;
 
-    public Align(boolean note) {
-        this(() -> 0.0, () -> 0.0, () -> 0.0, note);
+    public AlignToSpeaker() {
+        this(() -> 0.0, () -> 0.0, () -> 0.0);
     }
 
-    public Align(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard,
-            boolean note) {
+    /**
+     * Command to set the drivetrain to brake mode when not moving
+     * 
+     * @param translateX           the forward to backward movement of the robot
+     * @param translateY           the right to left movement of the robot
+     * @param howManyBabiesOnBoard 1 - the value of how much to slow down (right
+     *                             trigger axis)
+     */
+    public AlignToSpeaker(Supplier<Double> translateX, Supplier<Double> translateY,
+            Supplier<Double> howManyBabiesOnBoard) {
+
         drivetrain = Drivetrain.getInstance();
 
         this.addRequirements(drivetrain);
@@ -41,55 +49,36 @@ public class Align extends Command {
             this.howManyBabiesOnBoard = howManyBabiesOnBoard;
         }
 
-        this.note = note;
-
         this.translateX = translateX;
         this.translateY = translateY;
 
-        if (note) {
-            this.setName("Align to Note");
+        this.setName("Align to Speaker");
 
-            getTargetRotation = () -> {
-                return drivetrain.getPose().getRotation()
-                        .minus(Rotation2d.fromDegrees(LimelightHelpers.getTX(Constants.Vision.llPython)));
-            };
+        getTargetRotation = () -> {
+            if (Robot.isRed()) {
+                return Rotation2d
+                        .fromRadians(Math.atan2(
+                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
+                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+            }
 
-        } else {
-            this.setName("Align to Speaker");
-
-            getTargetRotation = () -> {
-                if (Robot.isRed()) {
-                    return Rotation2d
-                            .fromRadians(Math.atan2(
-                                    drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                    drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
-                }
-
-                else {
-                    return Rotation2d
-                            .fromRadians(Math.atan2(
-                                    drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                                    drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
-                }
-            };
-        }
+            else {
+                return Rotation2d
+                        .fromRadians(Math.atan2(
+                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
+                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+            }
+        };
     }
 
     @Override
     public void initialize() {
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
-
-        if (note) {
-            driveRequest.HeadingController = new PhoenixPIDController(15, 0.1, 0);
-        } 
-        
-        else {
-            driveRequest.HeadingController = new PhoenixPIDController(12, 12, 1);
-        }
+        driveRequest.HeadingController = new PhoenixPIDController(12, 12, 1);
 
         // this is for tuning and now we can tune the PID controller
-        SmartDashboard.putData("Align PID", driveRequest.HeadingController);
-        drivetrain.postStatus("Aligning");
+        SmartDashboard.putData("Align to Speaker PID", driveRequest.HeadingController);
+        drivetrain.postStatus("Aligning to Speaker");
 
         driveRequest.Deadband = Constants.OperatorConstants.deadband;
         driveRequest.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
@@ -98,14 +87,11 @@ public class Align extends Command {
     @Override
     public void execute() {
         driveRequest.TargetDirection = getTargetRotation.get();
-        // double rotationError = driveRequest.TargetDirection.getDegrees() - getTargetRotation.get().getDegrees();
-
-        // SmartDashboard.putNumber("Swerve/Rotation Error", rotationError);
 
         driveRequest
-                .withVelocityX(-translateY.get()
+                .withVelocityX(-translateX.get()
                         * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-                .withVelocityY(-translateX.get()
+                .withVelocityY(translateY.get()
                         * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 
@@ -122,10 +108,6 @@ public class Align extends Command {
     @Override
     public boolean isFinished() {
         if (Robot.isSimulation()) {
-            return false;
-        }
-
-        if (note) {
             return false;
         }
 

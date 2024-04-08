@@ -43,7 +43,8 @@ import frc.robot.commands.ClimberCommands.Extend;
 import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.ClimberCommands.Retract;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
-import frc.robot.commands.Swerve.Align;
+import frc.robot.commands.Swerve.AlignToSpeaker;
+import frc.robot.commands.Swerve.DriveToNote;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.subsystems.Arm;
 
@@ -342,13 +343,15 @@ public class Robot extends TimedRobot {
 		// .finallyDo(Lighting.startTimer));
 
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
-				// .andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer));
+		// .andThen(Lighting.getStrobeCommand(() ->
+		// LEDState.kRed)).finallyDo(Lighting.startTimer));
 
 		NamedCommands.registerCommand("Shoot",
 				ShootCommandFactory.getAimAndShootCommandWithTimeouts()
-						.deadlineWith(new Align(false),
+						.deadlineWith(new AlignToSpeaker(),
 								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
 						.withName("Align and Shoot"));
+
 		NamedCommands.registerCommand("Shoot on the fly", ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 		NamedCommands.registerCommand("Lower Arm",
 				// doing this so that we dont have to wait for arm velocity to be 0, and as soon
@@ -357,6 +360,13 @@ public class Robot extends TimedRobot {
 				new SetPoint(Constants.ArmConstants.kArmMinAngle).raceWith(new WaitUntilCommand(
 						() -> Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.kArmMinAngle, 4)))
 						.withName("Lowering arm to hard stop"));
+
+		NamedCommands.registerCommand("Auto Intake",
+				new DeployAndIntake(true).raceWith(new DriveToNote().onlyWhile(
+					// dont go over the halfway line
+						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0.5))
+						.onlyIf(DriveToNote.thereIsANote)
+						.withTimeout(2));
 	}
 
 	@Override

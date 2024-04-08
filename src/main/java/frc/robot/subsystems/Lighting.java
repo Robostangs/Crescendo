@@ -19,13 +19,13 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 import java.util.function.Supplier;
 
 public class Lighting extends SubsystemBase {
-    CANdle mCANdle;
+    public CANdle mCANdle;
     boolean auto = false;
     int[] oldColor = new int[3];
-    LEDState oldState;
+    LEDState oldState = LEDState.kOff;
 
     boolean blink = false;
-    Timer timer = new Timer();
+    public Timer timer = new Timer();
     
     public static Runnable startTimer = () -> {
         Lighting.getInstance().timer.start();
@@ -79,7 +79,7 @@ public class Lighting extends SubsystemBase {
         }
 
         else {
-            if (timer.get() > 3 && DriverStation.isEnabled()) {
+            if (timer.get() > 1.5 && DriverStation.isEnabled()) {
                 mLighting.autoSetLights(true);
             }
         }

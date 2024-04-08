@@ -117,7 +117,8 @@ public final class Constants {
 			private static final double kSlipCurrentA = Robot.isSimulation() ? 200.0 : 80.0;
 
 			/** Theoretical free speed (m/s) at 12v applied output */
-			public static final double kSpeedAt12VoltsMps = 5.96;
+			// public static final double kSpeedAt12VoltsMps = 5.96;
+			public static final double kSpeedAt12VoltsMps = 5.03;
 
 			// TODO: tune this number
 			/**
@@ -248,11 +249,14 @@ public final class Constants {
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+		public static final double kMaxAccelerationMetersPerSecondSquared = 3.5;
 
 		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.kMaxAngularSpeedRadiansPerSecond;
 		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
 				/ SwerveConstants.driveBaseRadius;
+
+		public static final double kMaxAngularSpeedDegreesPerSecond = kMaxAngularSpeedRadiansPerSecond * 57.29577951308232;
+		public static final double kMaxAngularSpeedDegreesPerSecondSquared = kMaxAccelerationMetersPerSecondSquared * 57.29577951308232;
 
 		public static final String kFieldObjectName = "path";
 
@@ -370,7 +374,6 @@ public final class Constants {
 		public static class SetPoints {
 			public static final double kCenterToWingPass = 0;
 			public static final double kSubwoofer = kArmMinAngle;
-			// TODO: lower this number, it should be more like 40
 			public static final double kAmp = 40;
 			public static final double kIntake = kArmMinAngle;
 			public static final double kHorizontal = 0;
@@ -388,7 +391,7 @@ public final class Constants {
 
 		public static final double feederShootValue = 1;
 		public static final double feederFeedForward = 0.16;
-		public static final double shooterPoopSpeed = 0.5;
+		public static final double shooterPoopSpeed = 1;
 	}
 
 	public static class IntakeConstants {

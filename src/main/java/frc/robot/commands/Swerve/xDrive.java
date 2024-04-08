@@ -15,8 +15,8 @@ public class xDrive extends Command {
     /**
      * Command to set the drivetrain to brake mode when not moving
      * 
-     * @param translateX           the right to left movement of the robot
-     * @param translateY           the forward to backward movement of the robot
+     * @param translateX           the forward to backward movement of the robot
+     * @param translateY           the right to left movement of the robot
      * @param rotate               the rotational movement of the robot
      * @param howManyBabiesOnBoard 1 - the value of how much to slow down (right
      *                             trigger axis)
@@ -47,9 +47,9 @@ public class xDrive extends Command {
             swerveRequest = new SwerveRequest.SwerveDriveBrake();
         } else {
             swerveRequest = new SwerveRequest.FieldCentric()
-                    .withVelocityX(-translateY.get()
+                    .withVelocityX(-translateX.get()
                             * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
-                    .withVelocityY(-translateX.get()
+                    .withVelocityY(translateY.get()
                             * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
                     .withRotationalRate(-rotate.get()
                             * Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond)

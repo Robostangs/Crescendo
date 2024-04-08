@@ -35,7 +35,8 @@ import frc.robot.commands.ShooterCommands.CancelShooter;
 import frc.robot.commands.ShooterCommands.Feed;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
-import frc.robot.commands.Swerve.Align;
+import frc.robot.commands.Swerve.AlignToSpeaker;
+import frc.robot.commands.Swerve.AlignToAmp;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
 import frc.robot.subsystems.Arm;
@@ -72,11 +73,12 @@ public class RobotContainer {
 
 		if (Robot.isSimulation()) {
 			drivetrain
-					.setDefaultCommand(new xDrive(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1),
-							() -> simController.getRawAxis(2), () -> 0d));
+					.setDefaultCommand(
+							new xDrive(() -> -simController.getRawAxis(0), () -> -simController.getRawAxis(1),
+									() -> simController.getRawAxis(2), () -> 0d));
 		} else {
 			drivetrain.setDefaultCommand(
-					new xDrive(xDrive::getLeftX, xDrive::getLeftY, xDrive::getRightX,
+					new xDrive(xDrive::getLeftY, xDrive::getLeftX, xDrive::getRightX,
 							xDrive::getRightTriggerAxis).ignoringDisable(true));
 		}
 	}
@@ -105,11 +107,11 @@ public class RobotContainer {
 								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
 								.finallyDo(Lighting.startTimer));
 
-		xDrive.a().toggleOnTrue(new Align(xDrive::getLeftX, xDrive::getLeftY,
-				xDrive::getRightTriggerAxis, false));
-		xDrive.b().toggleOnTrue(new DeployAndIntake(true).deadlineWith(new Align(xDrive::getLeftX, xDrive::getLeftY,
-				xDrive::getRightTriggerAxis, true)).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed))
-				.finallyDo(Lighting.startTimer));
+		xDrive.a().toggleOnTrue(new AlignToSpeaker(xDrive::getLeftY, xDrive::getLeftX,
+				xDrive::getRightTriggerAxis));
+
+		xDrive.b().toggleOnTrue(new AlignToAmp(xDrive::getLeftX, xDrive::getLeftY,
+				xDrive::getRightTriggerAxis).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 
@@ -246,8 +248,8 @@ public class RobotContainer {
 
 	private void configureSimBinds() {
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.toggleOnTrue(new Align(() -> simController.getRawAxis(0), () -> simController.getRawAxis(1), null,
-						false));
+				.toggleOnTrue(new AlignToAmp(() -> -simController.getRawAxis(0), () -> -simController.getRawAxis(1),
+						null));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
 				.toggleOnTrue(new SetPoint());
@@ -255,9 +257,12 @@ public class RobotContainer {
 		new Trigger(() -> simController.getRawButtonPressed(3))
 				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
 						.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
-						.until(() -> Math.abs(xDrive.getLeftX()) > Constants.OperatorConstants.kDriverCommandCancelThreshold
-								|| Math.abs(xDrive.getLeftY()) > Constants.OperatorConstants.kDriverCommandCancelThreshold
-								|| Math.abs(xDrive.getRightX()) > Constants.OperatorConstants.kDriverCommandCancelThreshold)
+						.until(() -> Math
+								.abs(xDrive.getLeftX()) > Constants.OperatorConstants.kDriverCommandCancelThreshold
+								|| Math.abs(
+										xDrive.getLeftY()) > Constants.OperatorConstants.kDriverCommandCancelThreshold
+								|| Math.abs(
+										xDrive.getRightX()) > Constants.OperatorConstants.kDriverCommandCancelThreshold)
 						.withName("Auto-pilot Amp shot"));
 
 		new Trigger(() -> simController.getRawButtonPressed(4))

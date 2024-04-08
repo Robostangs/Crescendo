@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -100,7 +99,6 @@ public class AlignToSpeaker extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
         drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
         drivetrain.postStatus("Aligned");
     }

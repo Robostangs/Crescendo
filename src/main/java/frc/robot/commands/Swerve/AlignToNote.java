@@ -86,7 +86,6 @@ public class AlignToNote extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
         drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
         drivetrain.postStatus("Aligned");
     }

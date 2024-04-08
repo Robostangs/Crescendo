@@ -67,14 +67,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 mField.getObject("Front LL pose").setPose(front.pose);
             }
 
-            PoseEstimate back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
-            LimelightHelpers.SetRobotOrientation(Constants.Vision.llAprilTagRear, super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            // PoseEstimate back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
+            // LimelightHelpers.SetRobotOrientation(Constants.Vision.llAprilTagRear, super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
-            if (back.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
-                this.addVisionMeasurement(back.pose,
-                        Timer.getFPGATimestamp() - back.latency / 1000);
-                mField.getObject("Rear LL pose").setPose(back.pose);
-            }
+            // if (back.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
+            //     this.addVisionMeasurement(back.pose,
+            //             Timer.getFPGATimestamp() - back.latency / 1000);
+            //     mField.getObject("Rear LL pose").setPose(back.pose);
+            // }
 
             // PoseEstimate frontPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
 
@@ -85,15 +85,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
             // }
 
-            // PoseEstimate rearPoseEstimate = LimelightHelpers
-            //         .getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
+            PoseEstimate rearPoseEstimate = LimelightHelpers
+                    .getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
 
-            // if (rearPoseEstimate.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
-            //     this.addVisionMeasurement(rearPoseEstimate.pose,
-            //             Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
-            //     mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
-            // }
-
+            if (rearPoseEstimate.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
+                this.addVisionMeasurement(rearPoseEstimate.pose,
+                        Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
+                mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
+            }
         }
 
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());

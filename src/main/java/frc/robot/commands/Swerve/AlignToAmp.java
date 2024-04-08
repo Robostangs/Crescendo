@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.Lights.LEDState;
 import frc.robot.Robot;
-import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lighting;
@@ -118,7 +117,6 @@ public class AlignToAmp extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
         drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
         drivetrain.postStatus("Aligned");
     }

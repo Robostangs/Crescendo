@@ -431,7 +431,7 @@ public class Robot extends TimedRobot {
 		NamedCommands.registerCommand("Auto Intake",
 				new DeployAndIntake(true).raceWith(new DriveToNote().onlyWhile(
 					// dont go over the halfway line
-						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0.5))
+						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0))
 						.onlyIf(DriveToNote.thereIsANote)
 						.withTimeout(2));
 	}
@@ -556,14 +556,6 @@ public class Robot extends TimedRobot {
 
 		}
 
-		if (Constants.Vision.UseLimelight && Robot.isReal()) {
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
-					Constants.Vision.llAprilTagPipelineIndex);
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
-					Constants.Vision.llAprilTagPipelineIndex);
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
-		}
-
 		autonCommand.withName("Auto Command").schedule();
 		HomeClimber.getHomingCommand().schedule();
 	}
@@ -591,14 +583,6 @@ public class Robot extends TimedRobot {
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
 		Shooter.getInstance().setShooterBrake(true);
-
-		if (Constants.Vision.UseLimelight) {
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
-					Constants.Vision.llAprilTagPipelineIndex);
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
-					Constants.Vision.llAprilTagPipelineIndex);
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
-		}
 
 		PathPlannerCommand.unpublishTrajectory();
 

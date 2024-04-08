@@ -620,6 +620,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
+		robotContainer.configurePitBinds();
+
 		CommandScheduler.getInstance().cancelAll();
 		Shuffleboard.selectTab(testTab.getTitle());
 		HomeClimber.getHomingCommand().schedule();
@@ -628,6 +630,8 @@ public class Robot extends TimedRobot {
 		lastArm = armCommands.getSelected();
 		lastSwerve.schedule();
 		lastArm.schedule();
+		
+		Lighting.getStrobeCommand(() -> LEDState.kWhite).schedule();
 	}
 
 	@Override
@@ -652,6 +656,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testExit() {
 		wrongAlliance.set(false);
+		Lighting.getInstance().autoSetLights(true);
 	}
 
 	@Override

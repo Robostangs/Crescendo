@@ -168,7 +168,8 @@ public class RobotContainer {
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
 
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
-		xManip.x().whileTrue(new QuickFeed());
+		// xManip.x().whileTrue(new QuickFeed().alongWith());
+		xManip.x().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xManip.leftBumper()));
 		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xManip.leftBumper()));
 
@@ -187,18 +188,23 @@ public class RobotContainer {
 				.toggleOnTrue(new PassToShooter().andThen(
 						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).deadlineWith(new Prepare()),
 						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare()),
-						new Shoot(false)));
+						new Shoot(false)).finallyDo(ReturnHome.ReturnHome));
 
 		// left bumper is the universal shoot button
 		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));
 
 		// TODO: test, absolute worst case scenario
-		xManip.start().and(() -> xManip.back().getAsBoolean())
-				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-
+		// xManip.start().and(() -> xManip.back().getAsBoolean())
+		// 		.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
+		xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+		.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+		.finallyDo(Lighting.startTimer));
+		
+		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		
 	}
 
-	public static void configurePitBinds() {
+	public void configurePitBinds() {
 
 		// works perfectly
 		xPit.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
@@ -238,7 +244,6 @@ public class RobotContainer {
 		drivetrain.registerTelemetry((telemetry) -> logger.telemeterize(telemetry));
 		configureDriverBinds();
 		configureManipBinds();
-		configurePitBinds();
 		configureDefaultBinds();
 
 		if (Robot.isSimulation()) {

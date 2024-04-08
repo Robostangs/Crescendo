@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.58,
-        "y": 7.48
+        "x": 4.286882028309511,
+        "y": 7.229778095919829
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.845776442797127,
-        "y": 7.236730696208356
+        "x": 3.5526584711066374,
+        "y": 6.986508792128185
       },
       "isLocked": false,
       "linkedName": "Amp Shoot Position"
@@ -46,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": 180.0,
       "rotateFast": true
     }

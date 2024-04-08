@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7449493880469245,
+        "y": 4.4154660438950515
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8277047526317276,
+        "y": 3.317151972266908
+      },
+      "isLocked": false,
+      "linkedName": "Stage Start Position"
+    },
+    {
+      "anchor": {
+        "x": 3.0259033481029927,
+        "y": 2.551924876997902
+      },
+      "prevControl": {
+        "x": 2.810338055861297,
+        "y": 3.1402459101214504
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Stage Out West Shoot Position"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": -48.69,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.35,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 654.9949339791002,
+        "maxAngularAcceleration": 229.1831180523293
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 654.9949339791002,
+    "maxAngularAcceleration": 229.1831180523293
+  },
+  "goalEndState": {
+    "velocity": 1.5,
+    "rotation": -42.89999999999998,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Stage Side Paths",
+  "previewStartingState": {
+    "rotation": -60.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

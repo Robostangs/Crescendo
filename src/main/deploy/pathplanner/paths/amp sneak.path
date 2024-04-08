@@ -53,7 +53,7 @@
     {
       "waypointRelativePos": 0.3,
       "rotationDegrees": 51.93000000000001,
-      "rotateFast": false
+      "rotateFast": true
     }
   ],
   "constraintZones": [
@@ -77,12 +77,15 @@
     "maxAngularAcceleration": 229.1831180523293
   },
   "goalEndState": {
-    "velocity": 6.0,
+    "velocity": 3.0,
     "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Amp Side Paths",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 60.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

@@ -83,13 +83,19 @@
       "name": "New Event Marker",
       "waypointRelativePos": 1.25,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Prepare"
               }
             }
           ]

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9421196855317784,
-        "y": 1.86007413614181
+        "x": 3.0259033481029927,
+        "y": 2.551924876997902
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.134836210706347,
-        "y": 1.4349069328187127
+        "x": 3.7112584549243173,
+        "y": 0.5822044421866623
       },
       "isLocked": false,
       "linkedName": "Stage Out West Shoot Position"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 3.9421196855317784,
-        "y": 1.86007413614181
+        "x": 3.0259033481029927,
+        "y": 2.551924876997902
       },
       "prevControl": {
-        "x": 5.131106219401453,
-        "y": 1.4576495186916056
+        "x": 3.7234322524200607,
+        "y": 0.5444953621388727
       },
       "nextControl": null,
       "isLocked": false,
@@ -60,15 +60,21 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.3,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Prepare"
               }
             }
           ]

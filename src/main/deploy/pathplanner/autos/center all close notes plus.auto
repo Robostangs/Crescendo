@@ -22,12 +22,6 @@
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -38,22 +32,9 @@
                       }
                     },
                     {
-                      "type": "parallel",
+                      "type": "named",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Intake"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Prepare"
-                            }
-                          }
-                        ]
+                        "name": "Intake"
                       }
                     }
                   ]

@@ -90,6 +90,9 @@
   },
   "reversed": false,
   "folder": "Amp Side Paths",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 0.0,
+    "velocity": 3.0
+  },
   "useDefaultConstraints": true
 }

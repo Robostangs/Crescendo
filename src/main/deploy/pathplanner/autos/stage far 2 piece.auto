@@ -12,6 +12,25 @@
     "data": {
       "commands": [
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "stage sneak"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot on the fly"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "stage out west shoot to far source note"

@@ -8,27 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.719341197941655,
-        "y": 7.45428343634465
+        "x": 5.343913160048543,
+        "y": 7.252079629159259
       },
       "isLocked": false,
       "linkedName": "Amp Shoot Position"
     },
     {
       "anchor": {
-        "x": 8.122611051361037,
-        "y": 7.45
+        "x": 8.12,
+        "y": 5.79
       },
       "prevControl": {
-        "x": 8.112130152427413,
-        "y": 7.6761737599927935
+        "x": 8.129382731728423,
+        "y": 5.437731869537814
       },
       "nextControl": {
-        "x": 8.134635188711831,
-        "y": 7.190523749678206
+        "x": 8.11733742440103,
+        "y": 5.889964547171388
       },
       "isLocked": false,
-      "linkedName": "Far left Note"
+      "linkedName": "Mid Left Note"
     },
     {
       "anchor": {
@@ -36,8 +36,8 @@
         "y": 7.47613688745896
       },
       "prevControl": {
-        "x": 5.709602159945061,
-        "y": 7.447038542225233
+        "x": 5.299909335929783,
+        "y": 7.229454181130585
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,13 +49,18 @@
       "waypointRelativePos": 1,
       "rotationDegrees": 0,
       "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": -28.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.3,
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {
@@ -72,8 +77,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 781.3060842693,
     "maxAngularAcceleration": 390.6530421347
   },

@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "amp start to shoot position"
+            "pathName": "amp sneak"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "far left"
+            "pathName": "amp shoot to far amp note"
           }
         },
         {

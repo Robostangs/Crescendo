@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "close right"
+                  "pathName": null
                 }
               },
               {
@@ -39,13 +39,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "stage note to out west shoot"
+            "pathName": "close left note to stage out west shoot position"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "right far out west"
+            "pathName": "stage out west shoot to far source note"
           }
         },
         {

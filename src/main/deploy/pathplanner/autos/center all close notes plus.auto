@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "right to center note"
+                  "pathName": "close right note to close center note"
                 }
               },
               {
@@ -68,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "center to left note"
+                  "pathName": "close center note to close left note"
                 }
               },
               {
@@ -89,7 +89,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "center mid left far"
+            "pathName": "center shoot to far mid amp note"
           }
         },
         {

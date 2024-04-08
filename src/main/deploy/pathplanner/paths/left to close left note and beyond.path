@@ -3,71 +3,71 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0650533667787854,
-        "y": 5.55
+        "x": 0.74,
+        "y": 6.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6612818080240364,
-        "y": 6.374347918324269
+        "x": 1.0865283304640685,
+        "y": 7.0662065259315705
       },
       "isLocked": false,
-      "linkedName": "Close Center Shoot Position"
+      "linkedName": "Amp Start Position"
     },
     {
       "anchor": {
-        "x": 2.6375889001778003,
-        "y": 6.6644712085720474
+        "x": 2.9,
+        "y": 6.983662240472629
       },
       "prevControl": {
-        "x": 2.295328524421185,
-        "y": 6.608042234662822
+        "x": 2.19469165216221,
+        "y": 6.983662240472629
       },
       "nextControl": {
-        "x": 2.960611519830317,
-        "y": 6.717728425204754
+        "x": 3.52,
+        "y": 6.983662240472629
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0650533667787854,
-        "y": 5.55
+        "x": 4.575063617719828,
+        "y": 7.47613688745896
       },
       "prevControl": {
-        "x": 1.6667213786770063,
-        "y": 6.374296112889479
+        "x": 4.00022283840864,
+        "y": 7.213895474087245
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Close Center Shoot Position"
+      "linkedName": "Amp Shoot Position"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 53.001924090332395,
-      "rotateFast": false
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 0,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 781.3060842693,
     "maxAngularAcceleration": 390.6530421347
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 24.08,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Starting Notes",
+  "folder": "Amp Side Paths",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 60.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

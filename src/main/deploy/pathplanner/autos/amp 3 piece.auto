@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "amp start to shoot position"
+            "pathName": "amp sneak"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "far left"
+            "pathName": "amp shoot to far amp note"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "mid left far"
+            "pathName": "amp shoot to far mid amp note"
           }
         },
         {
@@ -48,7 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "amp shoot to close left"
+                  "pathName": "amp shoot to close left note"
                 }
               },
               {

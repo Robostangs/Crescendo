@@ -43,6 +43,7 @@ import frc.robot.commands.ClimberCommands.Extend;
 import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.ClimberCommands.Retract;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
+import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.Swerve.AlignToSpeaker;
 import frc.robot.commands.Swerve.DriveToNote;
 import frc.robot.commands.Swerve.PathToPoint;
@@ -341,6 +342,9 @@ public class Robot extends TimedRobot {
 		// .andThen(new BeltDrive(() -> -1d).withTimeout(1)
 		// .alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
 		// .finallyDo(Lighting.startTimer));
+
+		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
+		// NamedCommands.registerCommand("Prepare", ShootCommandFactory.getAimAndShootCommandWithWaitUntil(() -> false));
 
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		// .andThen(Lighting.getStrobeCommand(() ->

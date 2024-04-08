@@ -249,7 +249,7 @@ public final class Constants {
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
 		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 3.5;
+		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
 
 		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.kMaxAngularSpeedRadiansPerSecond;
 		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared

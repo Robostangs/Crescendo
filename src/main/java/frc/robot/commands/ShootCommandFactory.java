@@ -3,7 +3,6 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.commands.ArmCommands.ReturnHome;
@@ -33,19 +32,18 @@ public class ShootCommandFactory {
         public static Command getAimAndShootCommandWithTimeouts() {
                 return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
                                 .unless(() -> Intake.getInstance().getShooterSensor())
-                                .andThen(new ConditionalCommand(
-                                                new SetPoint().raceWith(
-                                                                new WaitUntilCommand(() -> Arm.getInstance()
-                                                                                .atSetpoint())
-                                                                                .withTimeout(Constants.OperatorConstants.setpointTimeout)
-                                                                                .deadlineWith(new Prepare())
-                                                                                .andThen(new Shoot(false)
-                                                                                                .withTimeout(Constants.OperatorConstants.shootTimeout),
-                                                                                                new Shoot(true).onlyWhile(
-                                                                                                                () -> Intake.getInstance()
-                                                                                                                                .getShooterSensor()))),
-                                                new Spit().withTimeout(Constants.AutoConstants.spitTime),
-                                                () -> Intake.getInstance().getShooterSensor()))
+                                .andThen(new SetPoint().raceWith(
+                                                new WaitUntilCommand(() -> Arm.getInstance()
+                                                                .atSetpoint())
+                                                                .withTimeout(Constants.OperatorConstants.setpointTimeout)
+                                                                .deadlineWith(new Prepare())
+                                                                .andThen(new Shoot(false)
+                                                                                .withTimeout(Constants.OperatorConstants.shootTimeout),
+                                                                                new Shoot(true).onlyWhile(
+                                                                                                () -> Intake.getInstance()
+                                                                                                                .getShooterSensor())))
+                                                .onlyIf(
+                                                                () -> Intake.getInstance().getShooterSensor()))
                                 .withName("Auto Aim and Shoot with Timeouts");
         }
 

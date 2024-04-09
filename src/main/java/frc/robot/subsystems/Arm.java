@@ -183,6 +183,7 @@ public class Arm extends SubsystemBase {
      * @return true if in range or false if out of range
      */
     public boolean isInRangeOfTarget(double target) {
+        // dynamic threshold
         return isInRangeOfTarget(target, Math.abs(calculateArmSetpoint() / 7));
     }
 
@@ -355,8 +356,6 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)",
                 Units.metersToInches(distToSpeakerMeters));
 
-        angleToSpeaker-= 1.25;
-
         /*
          * Make sure that we dont a][\ccidentally return a stupid value
          */
@@ -518,7 +517,10 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return isInRangeOfTarget() && Math.abs(getVelocity()) < 0.5;
+        // if its within 0.5 degrees of the target and the arm is moving slowly
+        return (isInRangeOfTarget(getArmTarget(), 0.5) && Math.abs(getVelocity()) < 0.5)
+        // if its within a reasonable amount of distance from its target and the arm is not moving at all pretty much
+                || (isInRangeOfTarget() && Math.abs(getVelocity()) < 0.01);
     }
 
     public void postStatus(String status) {

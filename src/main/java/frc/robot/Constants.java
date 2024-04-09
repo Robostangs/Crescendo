@@ -274,6 +274,7 @@ public final class Constants {
 				public static final Pose2d CenterStartPosition = new Pose2d(1.4, 5.55, Rotation2d.fromDegrees(0));
 				public static final Pose2d AmpStartPosition = new Pose2d(0.74, 6.7, Rotation2d.fromDegrees(60));
 				public static final Pose2d StageStartPosition = new Pose2d(0.74, 4.41, Rotation2d.fromDegrees(-60));
+				public static final Pose2d OutWestStartPosition = new Pose2d(1.32, 3, Rotation2d.fromDegrees(-63.47));
 
 				public static class StartingNotes {
 					public static final Pose2d amp = new Pose2d(2.9, 7.0, Rotation2d.fromDegrees(0));

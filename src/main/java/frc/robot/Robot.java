@@ -64,13 +64,11 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
 	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
 
-
 	// public static SendableChooser<String> firstNote = new SendableChooser<>();
 	// public static SendableChooser<String> secondNote = new SendableChooser<>();
 	// public static SendableChooser<String> thirdNote = new SendableChooser<>();
 	// public static SendableChooser<String> fourthNote = new SendableChooser<>();
 	// public static SendableChooser<String> fifthNote = new SendableChooser<>();
-
 
 	public static final double swerveTestSpeed = 0.1;
 
@@ -105,7 +103,7 @@ public class Robot extends TimedRobot {
 		// firstNote.addOption("Far Center", "far center");
 		// firstNote.addOption("Far Mid Source", "far mid source");
 		// firstNote.addOption("Far Source", "far source");
-		
+
 		// secondNote.setDefaultOption("None", "null");
 		// secondNote.addOption("Close Amp", "close amp");
 		// secondNote.addOption("Close Center", "close center");
@@ -116,7 +114,7 @@ public class Robot extends TimedRobot {
 		// secondNote.addOption("Far Center", "far center");
 		// secondNote.addOption("Far Mid Source", "far mid source");
 		// secondNote.addOption("Far Source", "far source");
-		
+
 		// thirdNote.setDefaultOption("None", "null");
 		// thirdNote.addOption("Close Amp", "close amp");
 		// thirdNote.addOption("Close Center", "close center");
@@ -127,7 +125,7 @@ public class Robot extends TimedRobot {
 		// thirdNote.addOption("Far Center", "far center");
 		// thirdNote.addOption("Far Mid Source", "far mid source");
 		// thirdNote.addOption("Far Source", "far source");
-		
+
 		// fourthNote.setDefaultOption("None", "null");
 		// fourthNote.addOption("Close Amp", "close amp");
 		// fourthNote.addOption("Close Center", "close center");
@@ -138,7 +136,7 @@ public class Robot extends TimedRobot {
 		// fourthNote.addOption("Far Center", "far center");
 		// fourthNote.addOption("Far Mid Source", "far mid source");
 		// fourthNote.addOption("Far Source", "far source");
-		
+
 		// fifthNote.setDefaultOption("None", "null");
 		// fifthNote.addOption("Close Amp", "close amp");
 		// fifthNote.addOption("Close Center", "close center");
@@ -149,7 +147,7 @@ public class Robot extends TimedRobot {
 		// fifthNote.addOption("Far Center", "far center");
 		// fifthNote.addOption("Far Mid Source", "far mid source");
 		// fifthNote.addOption("Far Source", "far source");
-		
+
 		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 		wrongAlliance = new Alert("Switch to Blue alliance for best results", Alert.AlertType.INFO);
 		StartingPosition = new Alert("Starting Position Undefined", Alert.AlertType.INFO);
@@ -174,6 +172,7 @@ public class Robot extends TimedRobot {
 		startingPose.addOption("Amp Side", "amp"); // left
 		startingPose.setDefaultOption("Center", "center"); // center
 		startingPose.addOption("Stage Side", "stage"); // right
+		startingPose.addOption("Out West", "out west"); // right
 
 		autoChooser.setDefaultOption("Sit and Shit", " null");
 		autoChooser.addOption("Simple Reverse", "back-up");
@@ -188,8 +187,8 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
 		autoChooser.addOption("Far 3 Piece (No Center)", " far 3 piece");
 
-		autoShoot.setDefaultOption("Shoot At Start", true);
-		autoShoot.addOption("Dont Shoot At Start", false);
+		autoShoot.setDefaultOption("Dont Shoot At Start", false);
+		autoShoot.addOption("Shoot At Start", true);
 
 		pathToPointCommandChooser.setDefaultOption("None", null);
 		pathToPointCommandChooser.addOption("Far Amp Note",
@@ -407,7 +406,8 @@ public class Robot extends TimedRobot {
 		// .finallyDo(Lighting.startTimer));
 
 		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
-		// NamedCommands.registerCommand("Prepare", ShootCommandFactory.getAimAndShootCommandWithWaitUntil(() -> false));
+		// NamedCommands.registerCommand("Prepare",
+		// ShootCommandFactory.getAimAndShootCommandWithWaitUntil(() -> false));
 
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		// .andThen(Lighting.getStrobeCommand(() ->
@@ -430,7 +430,7 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Auto Intake",
 				new DeployAndIntake(true).raceWith(new DriveToNote().onlyWhile(
-					// dont go over the halfway line
+						// dont go over the halfway line
 						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0))
 						.onlyIf(DriveToNote.thereIsANote)
 						.withTimeout(2));
@@ -492,9 +492,11 @@ public class Robot extends TimedRobot {
 		try {
 			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
 		} catch (RuntimeException e) {
-			if (autoChooser.getSelected().equals("back-up")) {
-				pathPlannerCommand = Drivetrain.getInstance()
-						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.75));
+			if (autoChooser.getSelected().equals("back-up") || autoChooser.getSelected().equals("null")) {
+				if (autoChooser.getSelected().equals("back-up")) {
+					pathPlannerCommand = Drivetrain.getInstance()
+							.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.75));
+				}
 
 				Pose2d startPose;
 
@@ -614,7 +616,7 @@ public class Robot extends TimedRobot {
 		lastArm = armCommands.getSelected();
 		lastSwerve.schedule();
 		lastArm.schedule();
-		
+
 		Lighting.getStrobeCommand(() -> LEDState.kWhite).schedule();
 	}
 

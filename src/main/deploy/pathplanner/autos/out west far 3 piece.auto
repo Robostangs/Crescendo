@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.74,
-      "y": 4.41
+      "x": 1.32,
+      "y": 3.0
     },
-    "rotation": -60.0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "stage sneak"
+                  "pathName": "stage out west sneak"
                 }
               },
               {
@@ -33,7 +33,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "stage out west shoot to far source note"
+            "pathName": "stage out west to far mid source note ending under stage "
           }
         },
         {
@@ -45,7 +45,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "stage out west to far mid source note ending under stage "
+            "pathName": "stage shoot to far source note"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "stage shoot to far center note"
           }
         },
         {
@@ -57,6 +69,6 @@
       ]
     }
   },
-  "folder": "Stage",
+  "folder": "Out West",
   "choreoAuto": false
 }

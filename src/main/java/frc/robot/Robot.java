@@ -64,12 +64,6 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
 	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
 
-	// public static SendableChooser<String> firstNote = new SendableChooser<>();
-	// public static SendableChooser<String> secondNote = new SendableChooser<>();
-	// public static SendableChooser<String> thirdNote = new SendableChooser<>();
-	// public static SendableChooser<String> fourthNote = new SendableChooser<>();
-	// public static SendableChooser<String> fifthNote = new SendableChooser<>();
-
 	public static final double swerveTestSpeed = 0.1;
 
 	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
@@ -93,61 +87,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
-		// firstNote.setDefaultOption("None", "null");
-		// firstNote.addOption("Close Amp", "close amp");
-		// firstNote.addOption("Close Center", "close center");
-		// firstNote.addOption("Close Stage", "close stage");
-
-		// firstNote.addOption("Far Amp", "far amp");
-		// firstNote.addOption("Far Mid Amp", "far mid amp");
-		// firstNote.addOption("Far Center", "far center");
-		// firstNote.addOption("Far Mid Source", "far mid source");
-		// firstNote.addOption("Far Source", "far source");
-
-		// secondNote.setDefaultOption("None", "null");
-		// secondNote.addOption("Close Amp", "close amp");
-		// secondNote.addOption("Close Center", "close center");
-		// secondNote.addOption("Close Stage", "close stage");
-
-		// secondNote.addOption("Far Amp", "far amp");
-		// secondNote.addOption("Far Mid Amp", "far mid amp");
-		// secondNote.addOption("Far Center", "far center");
-		// secondNote.addOption("Far Mid Source", "far mid source");
-		// secondNote.addOption("Far Source", "far source");
-
-		// thirdNote.setDefaultOption("None", "null");
-		// thirdNote.addOption("Close Amp", "close amp");
-		// thirdNote.addOption("Close Center", "close center");
-		// thirdNote.addOption("Close Stage", "close stage");
-
-		// thirdNote.addOption("Far Amp", "far amp");
-		// thirdNote.addOption("Far Mid Amp", "far mid amp");
-		// thirdNote.addOption("Far Center", "far center");
-		// thirdNote.addOption("Far Mid Source", "far mid source");
-		// thirdNote.addOption("Far Source", "far source");
-
-		// fourthNote.setDefaultOption("None", "null");
-		// fourthNote.addOption("Close Amp", "close amp");
-		// fourthNote.addOption("Close Center", "close center");
-		// fourthNote.addOption("Close Stage", "close stage");
-
-		// fourthNote.addOption("Far Amp", "far amp");
-		// fourthNote.addOption("Far Mid Amp", "far mid amp");
-		// fourthNote.addOption("Far Center", "far center");
-		// fourthNote.addOption("Far Mid Source", "far mid source");
-		// fourthNote.addOption("Far Source", "far source");
-
-		// fifthNote.setDefaultOption("None", "null");
-		// fifthNote.addOption("Close Amp", "close amp");
-		// fifthNote.addOption("Close Center", "close center");
-		// fifthNote.addOption("Close Stage", "close stage");
-
-		// fifthNote.addOption("Far Amp", "far amp");
-		// fifthNote.addOption("Far Mid Amp", "far mid amp");
-		// fifthNote.addOption("Far Center", "far center");
-		// fifthNote.addOption("Far Mid Source", "far mid source");
-		// fifthNote.addOption("Far Source", "far source");
-
 		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 		wrongAlliance = new Alert("Switch to Blue alliance for best results", Alert.AlertType.INFO);
 		StartingPosition = new Alert("Starting Position Undefined", Alert.AlertType.INFO);
@@ -503,19 +442,21 @@ public class Robot extends TimedRobot {
 				switch (startingPose.getSelected()) {
 					case "amp":
 						startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
+						StartingPosition.set(false);
 						break;
 					case "center":
 						startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+						StartingPosition.set(false);
 						break;
 					case "stage":
 						startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
+						StartingPosition.set(false);
 						break;
 					default:
 						// just dont seed the pose, instead set it to be the robot pose
 						StartingPosition.set(true);
 						System.out.println("Starting Position Undefined");
 						startPose = Drivetrain.getInstance().getPose();
-
 						break;
 				}
 
@@ -535,7 +476,7 @@ public class Robot extends TimedRobot {
 				DataLogManager.log("Autonomous init: Invalid Auto");
 			}
 		} catch (Exception e) {
-			DataLogManager.log("Auto not working actual problem");
+			DataLogManager.log("Auto not working actual problem. Stacktrace:\n" + e.getStackTrace());
 			pathPlannerCommand = new PrintCommand("Autobuilder Exception");
 			e.printStackTrace();
 		}

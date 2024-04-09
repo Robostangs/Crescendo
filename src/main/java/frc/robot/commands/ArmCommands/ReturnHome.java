@@ -6,12 +6,10 @@ import frc.robot.subsystems.Arm;
 
 public class ReturnHome extends Command {
     Arm arm;
-    public static Runnable ReturnHome = () -> {
-        Arm arm = Arm.getInstance();
-        arm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
-        arm.postStatus("Returning Home");
-    };
 
+    /**
+     * A command to move the arm back to the hard stop
+     */
     public ReturnHome() {
         arm = Arm.getInstance();
 
@@ -24,6 +22,13 @@ public class ReturnHome extends Command {
         arm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
         arm.postStatus("Returning Home");
     }
+
+        
+    public static Runnable ReturnHome = () -> {
+        Arm arm = Arm.getInstance();
+        arm.setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
+        arm.postStatus("Returning Home");
+    };
 
     @Override
     public boolean isFinished() {

@@ -19,7 +19,12 @@ public class PathPlannerCommand {
     private static Alert publishfail = new Alert("Publishing failed", AlertType.ERROR);
     private static Alert noAutoSelected = new Alert("No Auto Selected", AlertType.WARNING);
 
+    /**
+     * A method to publish the trajectory of the autos
+     * @param autoName what auto you want to publish 
+     */
     public static void publishTrajectory(String autoName) {
+        
         if (autoName == null) {
             Robot.autoField.getObject(Constants.AutoConstants.kFieldObjectName)
                     .setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
@@ -30,11 +35,13 @@ public class PathPlannerCommand {
             nullAuto.set(false);
             return;
         } 
-        
+
+        //if we are calling publish trajectory but the trjectory is already published 
         else if (autoName.equals(lastAutoName)) {
             return;
         }
-        
+
+        //we are going to use the auto name so this is the last auto we published 
         else {
             lastAutoName = autoName;
         }
@@ -43,6 +50,9 @@ public class PathPlannerCommand {
         poses.clear();
 
         try {
+            //take the auto and then break it down into paths 
+            //and then from the paths break it down into Path points 
+            //and then we take the path poses from there
             PathPlannerAuto.getPathGroupFromAutoFile(autoName).forEach((path) -> path.getAllPathPoints()
                     .forEach((point) -> {
                         Pose2d pose = new Pose2d(point.position, point.position.getAngle());
@@ -52,26 +62,29 @@ public class PathPlannerCommand {
 
                         poses.add(pose);
                     }));
+            //flip the poses if we are red
             if (Robot.isRed()) {
                 Robot.teleopField.getObject("Starting Pose").setPose(GeometryUtil.flipFieldPose(PathPlannerAuto.getStaringPoseFromAutoFile(autoName)));
             }
-
             else {
                 Robot.teleopField.getObject("Starting Pose").setPose(PathPlannerAuto.getStaringPoseFromAutoFile(autoName));
             }
             
+            //none of these are true so these alerts are usless 
             nullAuto.set(false);
             publishfail.set(false);
             noAutoSelected.set(false);
         }
         
         catch (RuntimeException e) {
+            //if we call it and we have a null auto name when we are publishing it
             System.out.println("Null Auto: " + autoName);
             nullAuto.setText("Null auto: " + autoName);
             nullAuto.set(true);
         } 
         
         catch (Exception e) {
+            //if for some reason it completly dies 
             publishfail.set(true);
             e.printStackTrace();
         }
@@ -80,6 +93,11 @@ public class PathPlannerCommand {
         Robot.teleopField.getObject(Constants.AutoConstants.kFieldObjectName).setPoses(poses);
     }
 
+    /**
+     * a method that uses the {@code publishTrajectory} method and sets it to null 
+     * <p>
+     *  if we want to unpublish trajectory we set auto name to null and we publish a trajectory to a place where we can't see
+     */
     public static void unpublishTrajectory() {
         publishTrajectory(null);
     }

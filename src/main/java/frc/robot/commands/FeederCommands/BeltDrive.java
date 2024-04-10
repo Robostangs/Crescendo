@@ -9,6 +9,10 @@ public class BeltDrive extends Command {
     Intake intake;
     Supplier<Double> manualAdjust;
 
+    /**
+     * Indexes the belt manualy 
+     * @param manualAdjust how much the belt should move 
+     */
     public BeltDrive(Supplier<Double> manualAdjust) {
         intake = Intake.getInstance();
 

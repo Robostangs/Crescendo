@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class Extend extends Command {
 	Climber climber;
 
+	/**
+	 * extends the climbers based on the {@code kExtensionPower} constant
+	 */
 	public Extend() {
 		climber = Climber.getInstance();
 

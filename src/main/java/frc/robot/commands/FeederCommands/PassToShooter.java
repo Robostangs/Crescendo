@@ -9,6 +9,9 @@ public class PassToShooter extends Command {
     Intake intake;
     Shooter shooter;
 
+    /**
+     * A command that sets power to the belt, intake wheels, and shooter feeder wheels to pass a note to the shooter
+     */
     public PassToShooter() {
         intake = Intake.getInstance();
         shooter = Shooter.getInstance();

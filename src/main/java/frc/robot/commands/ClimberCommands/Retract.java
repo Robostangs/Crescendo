@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class Retract extends Command {
 	Climber climber;
 
+	/**
+	 * Retracts the climbers 
+	 */
 	public Retract() {
 		climber = Climber.getInstance();
 

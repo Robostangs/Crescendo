@@ -7,6 +7,10 @@ public class ChargeUp extends Command {
     Shooter shooter;
     double power;
 
+    /**
+     * 
+     * @param power
+     */
     public ChargeUp(double power) {
         shooter = Shooter.getInstance();
 

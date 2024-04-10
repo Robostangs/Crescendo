@@ -8,6 +8,9 @@ public class QuickFeed extends Command {
     Intake intake;
     Shooter shooter;
 
+    /**
+     * A command that sets the belt to half power to go up 
+     */
     public QuickFeed() {
         intake = Intake.getInstance();
         shooter = Shooter.getInstance();

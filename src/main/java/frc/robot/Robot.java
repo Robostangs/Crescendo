@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,6 +63,8 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
+	public static SendableChooser<Boolean> compressChooser = new SendableChooser<>();
+
 	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
 
 	public static final double swerveTestSpeed = 0.1;
@@ -139,6 +142,10 @@ public class Robot extends TimedRobot {
 				Constants.AutoConstants.WayPoints.CenterNotes.farMidRight);
 		pathToPointCommandChooser.addOption("Far Source Note",
 				Constants.AutoConstants.WayPoints.CenterNotes.farRight);
+
+		compressChooser.setDefaultOption("Compresor Enabled", true);
+		compressChooser.addOption("Compressor Disabled", false);
+
 
 		autoTab.add("Starting Pose Selector", startingPose)
 				.withSize(3, 1)
@@ -229,6 +236,10 @@ public class Robot extends TimedRobot {
 				.withSize(5, 1)
 				.withPosition(5, 0)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
+		disabledTab.add("Toggle Compression", compressChooser)
+			.withSize(4, 1)
+			.withPosition(5, 2)
+			.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
 		Alert.groups.forEach((group, alert) -> {
 			disabledTab.add(group, alert)
@@ -416,9 +427,17 @@ public class Robot extends TimedRobot {
 	public void disabledExit() {
 		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
 	}
-
+	
+	
 	@Override
 	public void autonomousInit() {
+		if(compressChooser.getSelected()){
+			Intake.getInstance().enableCompressor();
+		}
+		else{
+			Intake.getInstance().disableCompressor();
+
+		}
 		Arm.getInstance().setBrake(true);
 		Shooter.getInstance().setShooterBrake(true);
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
@@ -520,6 +539,13 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		if(compressChooser.getSelected()){
+			Intake.getInstance().enableCompressor();
+		}
+		else{
+			Intake.getInstance().disableCompressor();
+
+		}
 		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
 
 		robotContainer.configureDefaultBinds();
@@ -557,6 +583,13 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
+		if(compressChooser.getSelected()){
+			Intake.getInstance().enableCompressor();
+		}
+		else{
+			Intake.getInstance().disableCompressor();
+
+		}
 		robotContainer.configurePitBinds();
 
 		CommandScheduler.getInstance().cancelAll();

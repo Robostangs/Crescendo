@@ -27,6 +27,7 @@
       "/Shuffleboard/Autonomous/Starting Pose Selector": "String Chooser",
       "/Shuffleboard/Disabled/Command Scheduler": "Scheduler",
       "/Shuffleboard/Disabled/Song Selector": "String Chooser",
+      "/Shuffleboard/Disabled/Toggle Compression": "String Chooser",
       "/Shuffleboard/Teleop/InstantCommand": "Command",
       "/Shuffleboard/Teleop/ParallelCommandGroup": "Command",
       "/Shuffleboard/Teleop/Setpoint: -67.0 degrees": "Command",

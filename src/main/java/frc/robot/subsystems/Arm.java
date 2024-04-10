@@ -330,9 +330,9 @@ public class Arm extends SubsystemBase {
         Pose2d speakerPose;
 
         if (Robot.isRed()) {
-            speakerPose = Constants.Vision.SpeakerPoseRed;
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseRed;
         } else {
-            speakerPose = Constants.Vision.SpeakerPoseBlue;
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseBlue;
         }
 
         /* Swerve Pose calculated in meters */
@@ -388,9 +388,9 @@ public class Arm extends SubsystemBase {
         Pose2d speakerPose;
 
         if (Robot.isRed()) {
-            speakerPose = Constants.Vision.SpeakerPoseRed;
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseRed;
         } else {
-            speakerPose = Constants.Vision.SpeakerPoseBlue;
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseBlue;
         }
 
         /** Swerve Pose calculated in meters */
@@ -408,7 +408,7 @@ public class Arm extends SubsystemBase {
         double groundToShooterInches = 26 + (Units.metersToInches(distToSpeakerMeters) * (1 / 53.75));
 
         /* ~1.3 meters */
-        double shooterToSpeakerBottomMouthMeters = Constants.Vision.SpeakerHeightMeters - Units
+        double shooterToSpeakerBottomMouthMeters = Constants.Vision.SpeakerPoses.kSpeakerHeightMeters - Units
                 .inchesToMeters(groundToShooterInches);
 
         double angleToSpeaker = Math.atan2(shooterToSpeakerBottomMouthMeters, distToSpeakerMeters);

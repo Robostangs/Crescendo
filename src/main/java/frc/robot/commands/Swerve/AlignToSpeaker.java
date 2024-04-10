@@ -58,15 +58,15 @@ public class AlignToSpeaker extends Command {
             if (Robot.isRed()) {
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoses.kSpeakerPoseRed.getY(),
+                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoses.kSpeakerPoseRed.getX()));
             }
 
             else {
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoses.kSpeakerPoseBlue.getY(),
+                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoses.kSpeakerPoseBlue.getX()));
             }
         };
     }
@@ -90,9 +90,9 @@ public class AlignToSpeaker extends Command {
 
         driveRequest
                 .withVelocityX(-translateX.get()
-                        * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withVelocityY(translateY.get()
-                        * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 
         drivetrain.setControl(driveRequest);
@@ -100,7 +100,7 @@ public class AlignToSpeaker extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
+        LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear, Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
         drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
         drivetrain.postStatus("Aligned");
     }

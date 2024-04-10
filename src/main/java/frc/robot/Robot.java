@@ -263,28 +263,28 @@ public class Robot extends TimedRobot {
 
 		swerveCommands.addOption("Drive Forward",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withVelocityX(Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
 						.withName("Drive Forward"));
 
 		swerveCommands.addOption("Drive Backwards",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withVelocityX(-Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
 						.withName("Drive Backwards"));
 
 		swerveCommands.addOption("Drive Left",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withVelocityY(Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
 						.withName("Drive Left"));
 
 		swerveCommands.addOption("Drive Right",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withVelocityY(-Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
 						.withName("Drive Right"));
 
 		swerveCommands.addOption("Rotate",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
 						.withRotationalRate(
-								Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * swerveTestSpeed))
+								Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond * swerveTestSpeed))
 						.withName("Rotate"));
 
 		testTab.add("Swerve Commands", swerveCommands)
@@ -325,14 +325,14 @@ public class Robot extends TimedRobot {
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
-			autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+			autoTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonIP))
 					.withSize(9, 7)
 					.withPosition(6, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 			// front camera (intake cam) - teleop tab
-			teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+			teleopTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonIP))
 					.withSize(9, 7)
 					.withPosition(6, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
@@ -413,7 +413,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.selectTab(disabledTab.getTitle());
-		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
+		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.LimelightPython.llPython);
 	}
 
 	@Override
@@ -424,7 +424,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledExit() {
-		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
+		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.LimelightPython.llPython);
 	}
 
 	@Override
@@ -504,11 +504,11 @@ public class Robot extends TimedRobot {
 		}
 
 		if (Constants.Vision.UseLimelight && Robot.isReal()) {
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
-					Constants.Vision.llAprilTagPipelineIndex);
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
-					Constants.Vision.llAprilTagPipelineIndex);
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightFront.llAprilTag,
+					Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
+					Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonPipelineIndex);
 		}
 
 		autonCommand.withName("Auto Command").schedule();
@@ -530,7 +530,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
+		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.LimelightPython.llPython);
 
 		robotContainer.configureDefaultBinds();
 
@@ -540,11 +540,11 @@ public class Robot extends TimedRobot {
 		Shooter.getInstance().setShooterBrake(true);
 
 		if (Constants.Vision.UseLimelight) {
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
-					Constants.Vision.llAprilTagPipelineIndex);
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
-					Constants.Vision.llAprilTagPipelineIndex);
-			LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightFront.llAprilTag,
+					Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
+					Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonPipelineIndex);
 		}
 
 		PathPlannerCommand.unpublishTrajectory();

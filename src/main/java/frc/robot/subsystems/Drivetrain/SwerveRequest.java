@@ -182,7 +182,7 @@ public interface SwerveRequest {
         /**
          * The location (x,y) that the robot should rotate about.
          */
-        public Translation2d centerOfRotation = Constants.SwerveConstants.centerOfRotation;
+        public Translation2d centerOfRotation = Constants.SwerveConstants.RobotMeasurements.kcenterOfRotation;
 
         /**
          * The type of control request to use for the drive motor.
@@ -392,7 +392,7 @@ public interface SwerveRequest {
         /**
          * The location (x,y) that the robot should rotate about.
          */
-        public Translation2d centerOfRotation = Constants.SwerveConstants.centerOfRotation;
+        public Translation2d centerOfRotation = Constants.SwerveConstants.RobotMeasurements.kcenterOfRotation;
 
         /**
          * The type of control request to use for the drive motor.

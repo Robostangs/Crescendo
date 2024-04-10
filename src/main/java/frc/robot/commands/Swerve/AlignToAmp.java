@@ -108,9 +108,9 @@ public class AlignToAmp extends Command {
 
         driveRequest
                 .withVelocityX(-translateX.get()
-                        * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withVelocityY(translateY.get()
-                        * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 
         drivetrain.setControl(driveRequest);
@@ -118,7 +118,7 @@ public class AlignToAmp extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear, Constants.Vision.llAprilTagPipelineIndex);
+        LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear, Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
         drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
         drivetrain.postStatus("Aligned");
     }

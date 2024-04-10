@@ -567,11 +567,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
-		if (compressChooser.getSelected()) {
-			Intake.getInstance().enableCompressor();
-		}
-
-		else {
+		if (!compressChooser.getSelected()) {
 			Intake.getInstance().disableCompressor();
 		}
 

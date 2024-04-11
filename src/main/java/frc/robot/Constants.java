@@ -382,6 +382,7 @@ public final class Constants {
 		public static final double shooterOffset = 67 - shooterTrapezoidalOffset;
 		public static final double kInRangeThreshold = 1.75;
 
+		public static class Regression{
 		/*
 		 * Interpolation between distance vs shooting angle (horizontal dist. to
 		 * speaker, angle to shoot)
@@ -396,7 +397,7 @@ public final class Constants {
 		public static final double a = -6789.49;
 		public static final double b = -1.24759;
 		public static final double c = -9.7318;
-
+		}
 		public static class SetPoints {
 			public static final double kCenterToWingPass = 0;
 			public static final double kSubwoofer = kArmMinAngle;

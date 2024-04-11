@@ -6,6 +6,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.GeometryUtil;
@@ -42,8 +43,15 @@ import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.Extend;
 import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.ClimberCommands.Retract;
+import frc.robot.commands.FeederCommands.BeltDrive;
+import frc.robot.commands.IntakeCommands.InfiniteIntake;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
+import frc.robot.commands.IntakeCommands.MultiIntake;
+import frc.robot.commands.ShooterCommands.ChargeUp;
+import frc.robot.commands.ShooterCommands.ChargethenShoot;
+import frc.robot.commands.ShooterCommands.FullSend;
 import frc.robot.commands.ShooterCommands.Prepare;
+import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.AlignToSpeaker;
 import frc.robot.commands.Swerve.DriveToNote;
 import frc.robot.commands.Swerve.PathToPoint;
@@ -381,6 +389,15 @@ public class Robot extends TimedRobot {
 						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0.5))
 						.onlyIf(DriveToNote.thereIsANote)
 						.withTimeout(2));
+						
+		// NamedCommands.registerCommand("Muiti Intake", 
+		// 	new MultiIntake().
+		// 	alongWith()
+		// );
+		NamedCommands.registerCommand("Devious Shooting",
+		new InfiniteIntake(0.2).deadlineWith(new FullSend(0.2))
+		);
+
 	}
 
 	@Override

@@ -134,6 +134,8 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
 		autoChooser.addOption("Far 3 Piece (No Center)", " far 3 piece");
+		autoChooser.addOption("Devious Auto", " Devious Auto");
+
 
 		autoShoot.setDefaultOption("Shoot At Start", true);
 		autoShoot.addOption("Dont Shoot At Start", false);

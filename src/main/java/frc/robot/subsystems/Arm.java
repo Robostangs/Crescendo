@@ -29,13 +29,10 @@ import frc.robot.commands.ArmCommands.FineAdjust;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 /**
- * To zero: first put the arm in a position where the shooter is parallel to the
+ * To zero: first put the arm in a position where the shooter is parallel (the angle guage should read +1.2 degrees) to the
  * ground, then, in tuner X, zero the armCoder
  */
 public class Arm extends SubsystemBase {
-
-    // TODO: -0.287841796875
-    // -0.289794921875
 
     private TalonFX armMotor;
     private CANcoder armCoder;

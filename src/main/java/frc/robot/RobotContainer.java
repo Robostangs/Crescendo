@@ -109,14 +109,6 @@ public class RobotContainer {
 								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
 								.finallyDo(Lighting.startTimer));
 
-		// new Trigger(() -> intake.getShooterSensor()).onTrue(
-		// new RunCommand(() -> {
-		// xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
-		// }).withTimeout(1)
-		// .finallyDo(
-		// () -> {xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
-		// }));
-
 		xDrive.a().toggleOnTrue(new AlignToSpeaker(xDrive::getLeftY, xDrive::getLeftX,
 				xDrive::getRightTriggerAxis));
 
@@ -136,25 +128,25 @@ public class RobotContainer {
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
-								.withTimeout(2))
-						.onlyIf(() -> Intake.getInstance().getShooterSensor())
+								.withTimeout(2)
+								.handleInterrupt(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
 						.finallyDo(Lighting.startTimer));
+
 		// deploys intake (right paddle)
 		xDrive.rightStick()
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
-								.withTimeout(2))
-						.onlyIf(() -> Intake.getInstance().getShooterSensor())
+								.withTimeout(2)
+								.handleInterrupt(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
-
+		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
 				Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
 
-		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		// Square up to the speaker and press this to reset odometry to the speaker
 		xDrive.povRight().onTrue(drivetrain
 				.runOnce(() -> drivetrain
@@ -213,11 +205,13 @@ public class RobotContainer {
 				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
 
 		// TODO: this wont work
-		// xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-		// 		.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink),
-		// 				new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
-		// 		.onlyIf(() -> Intake.getInstance().getShooterSensor())
-		// 		.finallyDo(Lighting.startTimer));
+		// xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() ->
+		// Intake.getInstance().getShooterSensor())
+		// .andThen(Lighting.getStrobeCommand(() -> LEDState.kPink),
+		// new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
+		// 1)).withTimeout(2))
+		// .onlyIf(() -> Intake.getInstance().getShooterSensor())
+		// .finallyDo(Lighting.startTimer));
 
 		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 

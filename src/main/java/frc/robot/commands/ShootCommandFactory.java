@@ -62,7 +62,6 @@ public class ShootCommandFactory {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut())
                                 .finallyDo(ReturnHome.ReturnHome)
-                                // new CancelShooter().alongWith(new ReturnHome()))
                                 .withName("Auto Amp Shot");
         }
 

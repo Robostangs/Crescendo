@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.506705731004055,
-        "y": 4.044313681219955
+        "x": 2.262932859199052,
+        "y": 4.096156243238412
       },
       "isLocked": false,
       "linkedName": "Close Stage Note"
@@ -36,8 +36,8 @@
         "y": 2.551924876997902
       },
       "prevControl": {
-        "x": 2.668765698642509,
-        "y": 2.973732114130896
+        "x": 2.7503598340530013,
+        "y": 3.0174984007375425
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,7 +55,7 @@
   },
   "goalEndState": {
     "velocity": 3.0,
-    "rotation": -42.89999999999998,
+    "rotation": -44.69,
     "rotateFast": false
   },
   "reversed": false,

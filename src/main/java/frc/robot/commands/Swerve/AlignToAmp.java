@@ -68,6 +68,7 @@ public class AlignToAmp extends Command {
 
         driveRequest.Deadband = Constants.OperatorConstants.deadband;
         driveRequest.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
+        lighting.autoSetLights(false);
     }
 
     @Override
@@ -119,6 +120,7 @@ public class AlignToAmp extends Command {
     public void end(boolean interrupted) {
         drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
         drivetrain.postStatus("Aligned");
+        lighting.autoSetLights(true);
     }
 
     @Override

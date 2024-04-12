@@ -34,6 +34,7 @@ public class Lighting extends SubsystemBase {
     @Override
     public void periodic() {
         if (auto) {
+            timer.stop();
             timer.reset();
 
             clearAnimations();
@@ -46,7 +47,13 @@ public class Lighting extends SubsystemBase {
                 }
 
                 else {
-                    state = LEDState.kOff;
+                    if (!Intake.getInstance().getShooterSensor()) {
+                        state = LEDState.kRobostangsOrange;
+                    } 
+                    
+                    else {
+                        state = LEDState.kOff;
+                    }
                 }
             }
 
@@ -148,6 +155,7 @@ public class Lighting extends SubsystemBase {
             Lighting.getInstance().autoSetLights(false);
             Lighting.getInstance().oldState = LEDState.kCustom;
             Lighting.getInstance().timer.reset();
+            Lighting.getInstance().timer.stop();
             Lighting.getInstance().setCANdleAnimation(animation);
             Lighting.getInstance().setRightBarAnimation(animation);
             Lighting.getInstance().setLeftBarAnimation(animation);
@@ -166,6 +174,7 @@ public class Lighting extends SubsystemBase {
             Lighting.getInstance().autoSetLights(false);
             Lighting.getInstance().oldState = LEDState.kCustom;
             Lighting.getInstance().timer.reset();
+            Lighting.getInstance().timer.stop();
             Lighting.getInstance().setCANdleLights(state.get());
             Lighting.getInstance().setRightBarAnimation(animation);
             Lighting.getInstance().setLeftBarAnimation(animation);

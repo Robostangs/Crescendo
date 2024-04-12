@@ -11,6 +11,10 @@ public class DeployAndIntake extends Command {
 
     boolean deploy;
 
+    /**
+     * A command that sets power to the belt and deploys the intake
+     * @param deploy If the crashbar should deploy or not 
+     */
     public DeployAndIntake(boolean deploy) {
         this.deploy = deploy;
 
@@ -50,7 +54,6 @@ public class DeployAndIntake extends Command {
             intake.setExtend(false);
             intake.setIntake(0);
         }
-
         shooter.setFeederMotor(0);
         intake.setBelt(0);
     }

@@ -1,28 +1,26 @@
 package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-public class ChargeUp extends Command {
+public class ChargethenShoot extends Command {
     Shooter shooter;
     double power;
 
-    /**
-     * 
-     * @param power
-     */
-    public ChargeUp(double power) {
+ 
+    public ChargethenShoot(double power) {
         shooter = Shooter.getInstance();
 
         this.power = power;
 
         this.addRequirements(shooter);
-        this.setName("Charge Up");
+        this.setName("Auto Charge Up");
     }
 
     @Override
-    public void initialize() {
-        shooter.postStatus("Charging to " + power);
+    public void execute() {
+        shooter.postStatus("Charging the shooter to: " + power);
         shooter.setShooterMotors(power);
     }
 
@@ -30,4 +28,5 @@ public class ChargeUp extends Command {
     public boolean isFinished() {
         return shooter.readyToShoot(power);
     }
+
 }

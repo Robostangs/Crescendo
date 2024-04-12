@@ -32,7 +32,6 @@ public class Intake extends SubsystemBase {
         shooterSensor = new DigitalInput(Constants.IntakeConstants.shooterSensorPWM_ID);
 
         compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-        compressor.enableDigital();
         
         intakeMotor = new TalonFX(Constants.IntakeConstants.intakeMotorID, "rio");
         beltMotor = new TalonFX(Constants.IntakeConstants.beltMotorID, "rio");
@@ -116,6 +115,15 @@ public class Intake extends SubsystemBase {
     public void postStatus(String status) {
         SmartDashboard.putString("Intake/status", status);
     }
+
+    public void enableCompressor() {
+        compressor.enableDigital();
+    }
+
+    public void disableCompressor() {
+        compressor.disable();
+    }
+
 
     private static Intake mInstance;
 

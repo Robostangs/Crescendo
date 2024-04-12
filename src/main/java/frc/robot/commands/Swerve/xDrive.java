@@ -48,11 +48,11 @@ public class xDrive extends Command {
         } else {
             swerveRequest = new SwerveRequest.FieldCentric()
                     .withVelocityX(-translateX.get()
-                            * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                            * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                     .withVelocityY(translateY.get()
-                            * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                            * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                     .withRotationalRate(-rotate.get()
-                            * Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond)
+                            * Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond)
                     .withSlowDown(1 - howManyBabiesOnBoard.get())
                     .withRotationalDeadband(Constants.OperatorConstants.rotationalDeadband)
                     .withDeadband(Constants.OperatorConstants.deadband);

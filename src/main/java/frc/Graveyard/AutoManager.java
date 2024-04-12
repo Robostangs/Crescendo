@@ -1,3 +1,9 @@
+// Here lies the remains of @Ardusa's auto manager 
+//it looked good but unfortunatly it didn't have the personality for him 
+//febuary 2024 - late march 2024
+
+
+
 // package frc.robot.commands.AutoCommands;
 
 // import com.pathplanner.lib.util.GeometryUtil;

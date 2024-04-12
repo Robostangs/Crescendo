@@ -28,7 +28,7 @@ public class Telemetry {
          * @param maxSpeed Maximum speed in meters per second
          */
         public Telemetry() {
-                MaxSpeed = Constants.SwerveConstants.kMaxSpeedMetersPerSecond;
+                MaxSpeed = Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond;
                 SignalLogger.start();
                 field = Robot.teleopField;
         }

@@ -42,7 +42,9 @@ import frc.robot.commands.AutoCommands.PathPlannerCommand;
 import frc.robot.commands.ClimberCommands.Extend;
 import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.ClimberCommands.Retract;
+import frc.robot.commands.IntakeCommands.InfiniteIntake;
 import frc.robot.commands.IntakeCommands.DeployAndIntake;
+import frc.robot.commands.ShooterCommands.FullSend;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.Swerve.AlignToSpeaker;
 import frc.robot.commands.Swerve.DriveToNote;
@@ -58,13 +60,15 @@ import frc.robot.subsystems.Drivetrain.SwerveRequest;
 public class Robot extends TimedRobot {
 	public static SendableChooser<String> startingPose = new SendableChooser<>();
 	public static SendableChooser<String> autoChooser = new SendableChooser<>();
+	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
 	public static SendableChooser<Boolean> autoShoot = new SendableChooser<>();
+
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
-	public static SendableChooser<String> songChooser = new SendableChooser<>();
-	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
-
 	public static final double swerveTestSpeed = 0.1;
+
+	public static SendableChooser<String> songChooser = new SendableChooser<>();
+	public static SendableChooser<Boolean> compressChooser = new SendableChooser<>();
 
 	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
 
@@ -125,6 +129,7 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
 		autoChooser.addOption("Far 3 Piece (No Center)", " far 3 piece");
+		autoChooser.addOption("Devious Auto", " Devious Auto");
 
 		autoShoot.setDefaultOption("Dont Shoot At Start", false);
 		autoShoot.addOption("Shoot At Start", true);
@@ -140,6 +145,9 @@ public class Robot extends TimedRobot {
 				Constants.AutoConstants.WayPoints.CenterNotes.farMidRight);
 		pathToPointCommandChooser.addOption("Far Source Note",
 				Constants.AutoConstants.WayPoints.CenterNotes.farRight);
+
+		compressChooser.setDefaultOption("Compresor Enabled", true);
+		compressChooser.addOption("Compressor Disabled", false);
 
 		autoTab.add("Starting Pose Selector", startingPose)
 				.withSize(3, 1)
@@ -230,6 +238,10 @@ public class Robot extends TimedRobot {
 				.withSize(5, 1)
 				.withPosition(5, 0)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
+		disabledTab.add("Toggle Compression", compressChooser)
+				.withSize(4, 1)
+				.withPosition(5, 2)
+				.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
 		Alert.groups.forEach((group, alert) -> {
 			disabledTab.add(group, alert)
@@ -255,28 +267,33 @@ public class Robot extends TimedRobot {
 
 		swerveCommands.addOption("Drive Forward",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withVelocityX(
+								Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
 						.withName("Drive Forward"));
 
 		swerveCommands.addOption("Drive Backwards",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withVelocityX(
+								-Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
 						.withName("Drive Backwards"));
 
 		swerveCommands.addOption("Drive Left",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withVelocityY(
+								Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
 						.withName("Drive Left"));
 
 		swerveCommands.addOption("Drive Right",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(-Constants.SwerveConstants.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+						.withVelocityY(
+								-Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
 						.withName("Drive Right"));
 
 		swerveCommands.addOption("Rotate",
 				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
 						.withRotationalRate(
-								Constants.SwerveConstants.kMaxAngularSpeedRadiansPerSecond * swerveTestSpeed))
+								Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond
+										* swerveTestSpeed))
 						.withName("Rotate"));
 
 		testTab.add("Swerve Commands", swerveCommands)
@@ -317,18 +334,30 @@ public class Robot extends TimedRobot {
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
-			autoTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+			autoTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython,
+					Constants.Vision.LimelightPython.llPythonIP))
 					.withSize(9, 7)
 					.withPosition(6, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 			// front camera (intake cam) - teleop tab
-			teleopTab.add(new HttpCamera(Constants.Vision.llPython, Constants.Vision.llPythonIP))
+			teleopTab
+					.add(new HttpCamera(Constants.Vision.LimelightPython.llPython,
+							Constants.Vision.LimelightPython.llPythonIP))
 					.withSize(9, 7)
 					.withPosition(6, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
+			if (Constants.Vision.UseLimelight && Robot.isReal()) {
+				LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightFront.llAprilTag,
+						Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+				LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
+						Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+				LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython,
+						Constants.Vision.LimelightPython.llPythonPipelineIndex);
+			}
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);
@@ -370,9 +399,17 @@ public class Robot extends TimedRobot {
 		NamedCommands.registerCommand("Auto Intake",
 				new DeployAndIntake(true).raceWith(new DriveToNote().onlyWhile(
 						// dont go over the halfway line
-						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0))
+						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0.5))
 						.onlyIf(DriveToNote.thereIsANote)
 						.withTimeout(2));
+
+		// NamedCommands.registerCommand("Muiti Intake",
+		// new MultiIntake().
+		// alongWith()
+		// );
+		NamedCommands.registerCommand("Devious Shooting",
+				new InfiniteIntake(0.2).deadlineWith(new FullSend(0.2)));
+
 	}
 
 	@Override
@@ -405,7 +442,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.selectTab(disabledTab.getTitle());
-		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.llPython);
+		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.LimelightPython.llPython);
 	}
 
 	@Override
@@ -416,7 +453,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledExit() {
-		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
+		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.LimelightPython.llPython);
 	}
 
 	@Override
@@ -518,7 +555,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.llPython);
+		LimelightHelpers.setLEDMode_ForceOn(Constants.Vision.LimelightPython.llPython);
 
 		robotContainer.configureDefaultBinds();
 
@@ -547,6 +584,10 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
+		if (!compressChooser.getSelected()) {
+			Intake.getInstance().disableCompressor();
+		}
+
 		robotContainer.configurePitBinds();
 
 		CommandScheduler.getInstance().cancelAll();
@@ -584,6 +625,7 @@ public class Robot extends TimedRobot {
 	public void testExit() {
 		wrongAlliance.set(false);
 		Lighting.getInstance().autoSetLights(true);
+		Intake.getInstance().enableCompressor();
 	}
 
 	@Override

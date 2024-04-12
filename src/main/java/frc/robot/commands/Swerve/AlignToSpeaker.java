@@ -57,15 +57,15 @@ public class AlignToSpeaker extends Command {
             if (Robot.isRed()) {
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()));
+                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoses.kSpeakerPoseRed.getY(),
+                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoses.kSpeakerPoseRed.getX()));
             }
 
             else {
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()));
+                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoses.kSpeakerPoseBlue.getY(),
+                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoses.kSpeakerPoseBlue.getX()));
             }
         };
     }
@@ -89,9 +89,9 @@ public class AlignToSpeaker extends Command {
 
         driveRequest
                 .withVelocityX(-translateX.get()
-                        * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withVelocityY(translateY.get()
-                        * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 
         drivetrain.setControl(driveRequest);

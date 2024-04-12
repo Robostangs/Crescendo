@@ -1,3 +1,17 @@
+// Here lies the code of @Ardusa 
+//it did what it was supposed to do pretty well
+//but in got the death from the big man
+
+
+
+
+
+
+
+
+
+
+
 // package frc.robot.commands.ShooterCommands;
 
 // import java.util.function.Supplier;

@@ -7,10 +7,17 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 
 public class FineAdjust extends Command {
-    Arm arm = Arm.getInstance();
-    Supplier<Double> manualAdjust;
-
+    private Arm arm;
+    private Supplier<Double> manualAdjust;
+    
+    /**
+     * Command to adjust the arm based on a supplied value 
+     * 
+     * @param manualAdjust how much power to adjust the arm by
+     */
     public FineAdjust(Supplier<Double> manualAdjust) {
+
+        arm = Arm.getInstance();
         this.manualAdjust = manualAdjust;
 
         this.addRequirements(arm);

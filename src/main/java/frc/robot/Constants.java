@@ -25,37 +25,53 @@ public final class Constants {
 	/** Should be 16.542 */
 	public static final double fieldLength = Units.inchesToMeters(76.1 + 250.5) * 2;
 	public static final double fieldHeight = 8.014;
+
 	public static final double kRange = 20;
 
 	public static final String logDirectory = "";
 
 	public class Vision {
-		public static final boolean UseLimelight = true;
-		public static final String llAprilTag = "limelight-front";
-		public static final String llAprilTagRear = "limelight-rear";
-		public static final String llPython = "limelight-python";
 
-		public static final String llAprilTagRearIP = "http://10.5.48.11:5800/stream.mjpg";
-		public static final String llPythonIP = "http://10.5.48.12:5800/stream.mjpg";
-		public static final String llAprilTagIP = "http://10.5.48.13:5800/stream.mjpg";
-		public static final int llPythonPipelineIndex = 0;
-		public static final int llAprilTagPipelineIndex = 1;
-		public static final int llAprilTagWithLightsPipelineIndex = 2;
+		public static final boolean UseLimelight = true;
 
 		// the lower the number, the more odometry will trust the vision
 		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.42, 0.42, Units.degreesToRadians(100));
 
-		/** The height (in meters) of the speaker */
-		public static final Pose2d SpeakerPoseBlue = new Pose2d(0, 5.55, Rotation2d.fromDegrees(0));
-		public static final Pose2d SpeakerPoseRed = new Pose2d(fieldLength - SpeakerPoseBlue.getX(),
-				SpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
-		public static final double SpeakerHeightMeters = 2.032;
+		public static class LimelightFront{
+			public static final String llAprilTag = "limelight-front";
+			public static final String llAprilTagIP = "http://10.5.48.13:5800/stream.mjpg";
+			public static final int llAprilTagPipelineIndex = 0;
 
-		public static final Pose3d SpeakerPoseBlue3d = new Pose3d(SpeakerPoseBlue.getX(), SpeakerPoseBlue.getY(),
-				SpeakerHeightMeters, new Rotation3d(0, 0, SpeakerPoseBlue.getRotation().getRadians()));
-		public static final Pose3d SpeakerPoseRed3d = new Pose3d(SpeakerPoseRed.getX(), SpeakerPoseRed.getY(),
-				SpeakerHeightMeters, new Rotation3d(0, 0, SpeakerPoseRed.getRotation().getRadians()));
+		}
+
+
+		public static class LimelightRear{
+			public static final String llAprilTagRear = "limelight-rear";
+			public static final String llAprilTagRearIP = "http://10.5.48.11:5800/stream.mjpg";
+			public static final int llAprilTagWithLightsPipelineIndex = 2;
+		}
+	
+		public static class LimelightPython{
+			public static final String llPython = "limelight-python";
+			public static final String llPythonIP = "http://10.5.48.12:5800/stream.mjpg";
+			public static final int llPythonPipelineIndex = 0;
+
+		}
+
+		public static class SpeakerPoses {
+			/** The height (in meters) of the speaker */
+			public static final Pose2d kSpeakerPoseBlue = new Pose2d(0, 5.55, Rotation2d.fromDegrees(0));
+			public static final Pose2d kSpeakerPoseRed = new Pose2d(fieldLength - kSpeakerPoseBlue.getX(),
+					kSpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
+
+			public static final double kSpeakerHeightMeters = 2.032;
+
+			public static final Pose3d kSpeakerPoseBlue3d = new Pose3d(kSpeakerPoseBlue.getX(), kSpeakerPoseBlue.getY(),
+					kSpeakerHeightMeters, new Rotation3d(0, 0, kSpeakerPoseBlue.getRotation().getRadians()));
+			public static final Pose3d kSpeakerPoseRed3d = new Pose3d(kSpeakerPoseRed.getX(), kSpeakerPoseRed.getY(),
+					kSpeakerHeightMeters, new Rotation3d(0, 0, kSpeakerPoseRed.getRotation().getRadians()));
+		}
 	}
 
 	public class SwerveConstants {
@@ -63,34 +79,39 @@ public final class Constants {
 			kSpeaker, kAmp, None
 		}
 
-		public static final double kMaxSpeedMetersPerSecond = TunerConstants.kSpeedAt12VoltsMps;
+		public static class SwerveSpeeds {
+			public static final double kMaxSpeedMetersPerSecond = TunerConstants.kSpeedAt12VoltsMps;
 
-		// public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
-		public static final double kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond / 0.44;
+			// public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
+			public static final double kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond / 0.44;
 
-		public static final double maxModuleSpeed = TunerConstants.kSpeedAt12VoltsMps;
+			public static final double kmaxModuleSpeed = TunerConstants.kSpeedAt12VoltsMps;
+		}
 
-		/** Distance (inches) between the 2 left side CANcoders */
-		public static final double driveBaseWidth = 24.75;
-		/** Distance (inches) between the 2 front side CANcoders */
-		public static final double driveBaseHeight = 24.1;
+		public static class RobotMeasurements {
+			/** Distance (inches) between the 2 left side CANcoders */
+			public static final double kdriveBaseWidth = 24.75;
+			/** Distance (inches) between the 2 front side CANcoders */
+			public static final double kdriveBaseHeight = 24.1;
 
-		/**
-		 * Picture the front of the robot facing to the right in the XY axis
-		 */
-		public static final Translation2d centerOfRotation = new Translation2d(0, 0);
+			/**
+			 * Picture the front of the robot facing to the right in the XY axis
+			 */
+			public static final Translation2d kcenterOfRotation = new Translation2d(0, 0);
 
-		/**
-		 * distance from the center of the robot to the furthest module (meters)
-		 * should be 0.438658 meters (17.27 inches)
-		 */
-		// public static final double driveBaseRadius = Units
-		// .inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
+			/**
+			 * distance from the center of the robot to the furthest module (meters)
+			 * should be 0.438658 meters (17.27 inches)
+			 */
+			// public static final double driveBaseRadius = Units
+			// .inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
 
-		public static final double driveBaseRadius = 0.44;
+			public static final double kdriveBaseRadius = 0.44;
+
+		}
 
 		// TODO: test with off for faster speed lower acceleration
-		public static final boolean enableFOC = true;
+		public static final boolean kenableFOC = true;
 
 		public class TunerConstants {
 			// The steer motor uses any SwerveModule.SteerRequestType control request with
@@ -129,7 +150,8 @@ public final class Constants {
 
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
-			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6); // PROBABLY THE PROBLEM.  NOT CALIBRATED FOR THE CARPET!
+			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6); // PROBABLY THE PROBLEM. NOT CALIBRATED
+																				// FOR THE CARPET!
 
 			private static final boolean kSteerMotorReversed = false;
 			private static final boolean kInvertLeftSide = true;
@@ -244,19 +266,23 @@ public final class Constants {
 	}
 
 	public static final class AutoConstants {
+
 		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0.1, 0.5);
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
-		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.kMaxSpeedMetersPerSecond;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 4;
+		public static class AutoSpeeds{
+		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond;
+		public static final double kMaxAccelerationMetersPerSecondSquared = 3.5;
 
-		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.kMaxAngularSpeedRadiansPerSecond;
+		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond;
 		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
-				/ SwerveConstants.driveBaseRadius;
+				/ SwerveConstants.RobotMeasurements.kdriveBaseRadius;
 
-		public static final double kMaxAngularSpeedDegreesPerSecond = kMaxAngularSpeedRadiansPerSecond * 57.29577951308232;
-		public static final double kMaxAngularSpeedDegreesPerSecondSquared = kMaxAccelerationMetersPerSecondSquared * 57.29577951308232;
-
+		public static final double kMaxAngularSpeedDegreesPerSecond = kMaxAngularSpeedRadiansPerSecond
+				* 57.29577951308232;
+		public static final double kMaxAngularSpeedDegreesPerSecondSquared = kMaxAngularAccelerationRadiansPerSecondSquared
+				* 57.29577951308232;
+		}
 		public static final String kFieldObjectName = "path";
 
 		public static final double spitTime = 0.5;
@@ -266,7 +292,7 @@ public final class Constants {
 				public static final Pose2d kAmp = new Pose2d(1.81, 7.65, Rotation2d.fromDegrees(-90));
 				public static final Pose2d kHumanPlayer = new Pose2d(13.8, 1.2, Rotation2d.fromDegrees(0));
 				public static final Pose2d kSpeakerLeft = new Pose2d(2.6, 6.45, Rotation2d.fromDegrees(180));
-				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoseBlue.getY(),
+				public static final Pose2d kSpeakerCenter = new Pose2d(2.6, Vision.SpeakerPoses.kSpeakerPoseBlue.getY(),
 						Rotation2d.fromDegrees(180));
 				public static final Pose2d kSpeakerRight = new Pose2d(2.6, 4.65, Rotation2d.fromDegrees(180));
 				public static final Pose2d kSource = (new Pose2d(15.13, 1.06, Rotation2d.fromDegrees(-60.5)));
@@ -320,8 +346,9 @@ public final class Constants {
 
 		public static final double slowDownMultiplier = 0.5;
 
-		public static final double deadband = SwerveConstants.kMaxSpeedMetersPerSecond * 0.07;
-		public static final double rotationalDeadband = SwerveConstants.kMaxAngularSpeedRadiansPerSecond * 0.07;
+		public static final double deadband = SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * 0.07;
+		public static final double rotationalDeadband = SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond
+				* 0.07;
 
 		public static final double setpointTimeout = 4;
 		public static final double feedTimeout = 1;
@@ -329,8 +356,6 @@ public final class Constants {
 		public static final double chargeUpTimeout = 2;
 
 	}
-
-	
 
 	public static class ArmConstants {
 		public static final int armMotorID = 53;
@@ -358,6 +383,7 @@ public final class Constants {
 		public static final double shooterOffset = 67 - shooterTrapezoidalOffset;
 		public static final double kInRangeThreshold = 1.75;
 
+		public static class Regression{
 		/*
 		 * Interpolation between distance vs shooting angle (horizontal dist. to
 		 * speaker, angle to shoot)
@@ -372,7 +398,7 @@ public final class Constants {
 		public static final double a = -6789.49;
 		public static final double b = -1.24759;
 		public static final double c = -9.7318;
-
+		}
 		public static class SetPoints {
 			public static final double kCenterToWingPass = 0;
 			public static final double kSubwoofer = kArmMinAngle;
@@ -396,7 +422,7 @@ public final class Constants {
 		public static final double shooterPoopSpeed = 1;
 	}
 
-public static class IntakeConstants {
+	public static class IntakeConstants {
 		public static final int intakeMotorID = 62;
 		public static final int beltMotorID = 61;
 

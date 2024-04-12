@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -22,7 +24,7 @@ import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.FineAdjust;
 import frc.robot.commands.ArmCommands.ReturnHome;
 import frc.robot.commands.ArmCommands.SetPoint;
-import frc.robot.commands.ClimberCommands.AlrightTranslate;
+import frc.robot.commands.ClimberCommands.ClimberAdjust;
 import frc.robot.commands.ClimberCommands.Extend;
 import frc.robot.commands.ClimberCommands.HomeClimber;
 import frc.robot.commands.ClimberCommands.Retract;
@@ -69,7 +71,7 @@ public class RobotContainer {
 		removeDefaultCommands();
 
 		climber.setDefaultCommand(
-				new AlrightTranslate(() -> -xManip.getLeftTriggerAxis(), () -> -xManip.getRightTriggerAxis()));
+				new ClimberAdjust(() -> -xManip.getLeftTriggerAxis(), () -> -xManip.getRightTriggerAxis()));
 
 		if (Robot.isSimulation()) {
 			drivetrain
@@ -103,10 +105,18 @@ public class RobotContainer {
 
 		new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.kDriverDeadzone)
 				.whileTrue(
-						new AlrightTranslate(() -> -xDrive.getLeftTriggerAxis(), () -> -xDrive.getLeftTriggerAxis())
+						new ClimberAdjust(() -> -xDrive.getLeftTriggerAxis(), () -> -xDrive.getLeftTriggerAxis())
 								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
 								.finallyDo(Lighting.startTimer));
 
+		// new Trigger(() -> intake.getShooterSensor()).onTrue(
+		// 	new RunCommand(() -> {
+		// 		xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
+		// 	}).withTimeout(1)
+		// 	.finallyDo(
+		// 			() -> {xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
+		// 	}));
+		
 		xDrive.a().toggleOnTrue(new AlignToSpeaker(xDrive::getLeftY, xDrive::getLeftX,
 				xDrive::getRightTriggerAxis));
 
@@ -125,12 +135,16 @@ public class RobotContainer {
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+						.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+						.onlyIf(() -> Intake.getInstance().getShooterSensor())
 						.finallyDo(Lighting.startTimer));
 		// deploys intake (right paddle)
 		xDrive.rightStick()
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+						.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+						.onlyIf(() -> Intake.getInstance().getShooterSensor())
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
@@ -198,6 +212,8 @@ public class RobotContainer {
 		// 		.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
 		xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
 		.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+		.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+		.onlyIf(() -> Intake.getInstance().getShooterSensor())
 		.finallyDo(Lighting.startTimer));
 		
 		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));

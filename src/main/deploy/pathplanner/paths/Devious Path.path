@@ -1,0 +1,135 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7449493880469245,
+        "y": 4.4154660438950515
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7449493880469245,
+        "y": 4.4154660438950515
+      },
+      "isLocked": false,
+      "linkedName": "Stage Start Position"
+    },
+    {
+      "anchor": {
+        "x": 2.7729258977036473,
+        "y": 0.64901186746818
+      },
+      "prevControl": {
+        "x": 1.7729258977036473,
+        "y": 0.64901186746818
+      },
+      "nextControl": {
+        "x": 3.7729258977036473,
+        "y": 0.64901186746818
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.116860648099326,
+        "y": 0.7762526348962228
+      },
+      "prevControl": {
+        "x": 7.773700784566749,
+        "y": 0.7415393876546676
+      },
+      "nextControl": {
+        "x": 8.259386915322168,
+        "y": 0.7906702579293802
+      },
+      "isLocked": false,
+      "linkedName": "Far Right Note"
+    },
+    {
+      "anchor": {
+        "x": 8.122611051361037,
+        "y": 7.441695291306576
+      },
+      "prevControl": {
+        "x": 8.50758718589664,
+        "y": 7.120561352907747
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Far left Note"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.85,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 2.5,
+      "rotationDegrees": 64.0,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "InandOut",
+      "waypointRelativePos": 1.6500000000000001,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Devious Shooting"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 2.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 654.9949339791002,
+    "maxAngularAcceleration": 455.7618824904275
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 45.785103914749754,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Stage Side Paths",
+  "previewStartingState": {
+    "rotation": -60.578695328263926,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -8,6 +8,9 @@ import frc.robot.subsystems.Climber;
 public class HomeClimber extends Command {
     Climber climber;
 
+    /**
+     * Makes the climber go to the hard stop and tells the climbers it is at the hard stop at the end
+     */
     private HomeClimber() {
         climber = Climber.getInstance();
         

@@ -9,6 +9,12 @@ public class TrackSetPoint extends Command {
     Arm mArm;
     Supplier<Double> armSetpoint;
 
+    /**
+     * A command to move the arm so it can shoot a note into the speaker automatically 
+     * <p>
+     * Use this for the regression 
+     * @param target A supplier to keep track of what angle the arm should be at
+     */
     public TrackSetPoint(Supplier<Double> target) {
         mArm = Arm.getInstance();
         armSetpoint = target;

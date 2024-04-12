@@ -107,9 +107,9 @@ public class AlignToAmp extends Command {
 
         driveRequest
                 .withVelocityX(-translateX.get()
-                        * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withVelocityY(translateY.get()
-                        * Constants.SwerveConstants.kMaxSpeedMetersPerSecond)
+                        * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 
         drivetrain.setControl(driveRequest);

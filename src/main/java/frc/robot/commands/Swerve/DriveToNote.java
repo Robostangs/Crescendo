@@ -15,7 +15,7 @@ public class DriveToNote extends Command {
     SwerveRequest.RobotCentric driveRequest;
     PIDController pidRadianController;
 
-    public static BooleanSupplier thereIsANote = () -> LimelightHelpers.getTX(Constants.Vision.llPython) != 0.00;
+    public static BooleanSupplier thereIsANote = () -> LimelightHelpers.getTX(Constants.Vision.LimelightPython.llPython) != 0.00;
 
     public DriveToNote() {
         drivetrain = Drivetrain.getInstance();
@@ -36,13 +36,13 @@ public class DriveToNote extends Command {
     @Override
     public void execute() {
         driveRequest.RotationalRate = pidRadianController
-                .calculate(Units.degreesToRadians(LimelightHelpers.getTX(Constants.Vision.llPython)));
+                .calculate(Units.degreesToRadians(LimelightHelpers.getTX(Constants.Vision.LimelightPython.llPython)));
 
-        driveRequest.VelocityX = Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1;
+        driveRequest.VelocityX = Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * 1;
 
         drivetrain.setControl(driveRequest
                 .withRotationalRate(Units
-                        .degreesToRadians(pidRadianController.calculate(LimelightHelpers.getTX(Constants.Vision.llPython)))));
+                        .degreesToRadians(pidRadianController.calculate(LimelightHelpers.getTX(Constants.Vision.LimelightPython.llPython)))));
     }
 
     @Override

@@ -10,23 +10,28 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Climber;
 
-public class AlrightTranslate extends Command {
+public class ClimberAdjust extends Command {
 	Climber climber;
 	DoubleSupplier mLeftSupplier, mRightSupplier;
 
-	public AlrightTranslate(DoubleSupplier leftSupplier, DoubleSupplier rightSupplier) {
+	/**
+	 * Adjust the left and right climbers based on the value supplied 
+	 * @param leftSupplier How much to adjust the left side by
+	 * @param rightSupplier How much to adjust the right side by
+	 */
+	public ClimberAdjust(DoubleSupplier leftSupplier, DoubleSupplier rightSupplier) {
 		climber = Climber.getInstance();
 
 		mLeftSupplier = leftSupplier;
 		mRightSupplier = rightSupplier;
 
 		this.addRequirements(climber);
-		this.setName("Alright Translate");
+		this.setName("Climber Adjust");
 	}
 
 	@Override
 	public void initialize() {
-		climber.postStatus("Manually Translating");
+		climber.postStatus("Manually Adjusting Climber ");
 	}
 
 	@Override

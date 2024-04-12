@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -58,41 +59,59 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
 
-            PoseEstimate front = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
-            LimelightHelpers.SetRobotOrientation(Constants.Vision.llAprilTag, super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            PoseEstimate front, back;
 
-            if (front.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
+            if (DriverStation.isDisabled()) {
+                front = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightFront.llAprilTag);
+                back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightRear.llAprilTagRear);
+            }
+
+            else {
+                front = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightFront.llAprilTag);
+                back = LimelightHelpers
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightRear.llAprilTagRear);
+            }
+
+            // if (front.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
+            if (front.tagCount >= 1) {
                 this.addVisionMeasurement(front.pose,
                         Timer.getFPGATimestamp() - front.latency / 1000);
                 mField.getObject("Front LL pose").setPose(front.pose);
             }
 
-            // PoseEstimate back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
-            // LimelightHelpers.SetRobotOrientation(Constants.Vision.llAprilTagRear, super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-
             // if (back.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
-            //     this.addVisionMeasurement(back.pose,
-            //             Timer.getFPGATimestamp() - back.latency / 1000);
-            //     mField.getObject("Rear LL pose").setPose(back.pose);
-            // }
-
-            // PoseEstimate frontPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
-
-            // if (frontPoseEstimate.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
-            //     this.addVisionMeasurement(frontPoseEstimate.pose,
-            //             Timer.getFPGATimestamp() - frontPoseEstimate.latency / 1000);
-            //     mField.getObject("Front LL pose").setPose(frontPoseEstimate.pose);
-
-            // }
-
-            PoseEstimate rearPoseEstimate = LimelightHelpers
-                    .getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
-
-            if (rearPoseEstimate.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
-                this.addVisionMeasurement(rearPoseEstimate.pose,
-                        Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
-                mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
+            if (back.tagCount >= 1) {
+                this.addVisionMeasurement(back.pose,
+                        Timer.getFPGATimestamp() - back.latency / 1000);
+                mField.getObject("Rear LL pose").setPose(back.pose);
             }
+
+            // PoseEstimate frontPoseEstimate =
+            // LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
+
+            // if (frontPoseEstimate.tagCount > 1 &&
+            // LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
+            // this.addVisionMeasurement(frontPoseEstimate.pose,
+            // Timer.getFPGATimestamp() - frontPoseEstimate.latency / 1000);
+            // mField.getObject("Front LL pose").setPose(frontPoseEstimate.pose);
+
+            // }
+
+            // PoseEstimate rearPoseEstimate = LimelightHelpers
+            // .getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
+
+            // if (rearPoseEstimate.tagCount > 1 &&
+            // LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
+            // this.addVisionMeasurement(rearPoseEstimate.pose,
+            // Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
+            // mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
+            // }
+
+            LimelightHelpers.SetRobotOrientation(Constants.Vision.LimelightFront.llAprilTag,
+                    super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+
+            LimelightHelpers.SetRobotOrientation(Constants.Vision.LimelightRear.llAprilTagRear,
+                    super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         }
 
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
@@ -149,11 +168,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         }
 
         if (Constants.Vision.UseLimelight) {
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTag,
-                    Constants.Vision.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llAprilTagRear,
-                    Constants.Vision.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.llPython, Constants.Vision.llPythonPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightFront.llAprilTag,
+                    Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
+                    Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonPipelineIndex);
 
             super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionInMyVision);
         }
@@ -165,11 +184,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
         mField = Robot.teleopField;
         if (Robot.isRed()) {
-            mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseRed);
+            mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoses.kSpeakerPoseRed);
         }
 
         else {
-            mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoseBlue);
+            mField.getObject("Speaker").setPose(Constants.Vision.SpeakerPoses.kSpeakerPoseBlue);
         }
 
         for (SwerveModule module : Modules) {
@@ -188,8 +207,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 new HolonomicPathFollowerConfig(
                         Constants.AutoConstants.translationPID,
                         Constants.AutoConstants.rotationPID,
-                        SwerveConstants.maxModuleSpeed,
-                        Constants.SwerveConstants.driveBaseRadius,
+                        SwerveConstants.SwerveSpeeds.kmaxModuleSpeed,
+                        Constants.SwerveConstants.RobotMeasurements.kdriveBaseRadius,
                         new ReplanningConfig(true, true, 1, 0.25)),
                 Robot::isRed,
                 this);
@@ -274,9 +293,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         Pose2d speakerPose;
 
         if (Robot.isRed()) {
-            speakerPose = Constants.Vision.SpeakerPoseRed;
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseRed;
         } else {
-            speakerPose = Constants.Vision.SpeakerPoseBlue;
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseBlue;
         }
 
         /* Swerve Pose calculated in meters */
@@ -294,16 +313,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         if (Robot.isRed()) {
             return Rotation2d
                     .fromRadians(Math.atan2(
-                            getPose().getY() - Constants.Vision.SpeakerPoseRed.getY(),
-                            getPose().getX() - Constants.Vision.SpeakerPoseRed.getX()))
+                            getPose().getY() - Constants.Vision.SpeakerPoses.kSpeakerPoseRed.getY(),
+                            getPose().getX() - Constants.Vision.SpeakerPoses.kSpeakerPoseRed.getX()))
                     .getDegrees();
         }
 
         else {
             return Rotation2d
                     .fromRadians(Math.atan2(
-                            getPose().getY() - Constants.Vision.SpeakerPoseBlue.getY(),
-                            getPose().getX() - Constants.Vision.SpeakerPoseBlue.getX()))
+                            getPose().getY() - Constants.Vision.SpeakerPoses.kSpeakerPoseBlue.getY(),
+                            getPose().getX() - Constants.Vision.SpeakerPoses.kSpeakerPoseBlue.getX()))
                     .getDegrees();
         }
     }

@@ -113,13 +113,14 @@ public class RobotContainer {
 				xDrive::getRightTriggerAxis));
 
 		xDrive.b().toggleOnTrue(new AlignToAmp(xDrive::getLeftX, xDrive::getLeftY,
-				xDrive::getRightTriggerAxis).andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)));
+				xDrive::getRightTriggerAxis));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kSource)
-				// .andThen(ShootCommandFactory.getAmpCommand()));
-				.alongWith(new DeployAndIntake(true))
+		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
+				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kGreen))
+				.andThen(ShootCommandFactory.getAmpCommand())
+				// .alongWith(new DeployAndIntake(true))
 				.withName("Auto-pilot Source Intake"));
 
 		// just runs feeder
@@ -154,6 +155,8 @@ public class RobotContainer {
 								: GeometryUtil
 										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
 				.withName("Zero Swerve 2 Speaker"));
+
+		xDrive.leftBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 
 		xDrive.rightBumper().toggleOnTrue(new Extend()
 				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
@@ -252,6 +255,30 @@ public class RobotContainer {
 		xPit.leftStick().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
 	}
 
+	private void configureSimBinds() {
+		new Trigger(() -> simController.getRawButtonPressed(1))
+				.toggleOnTrue(new AlignToSpeaker(() -> -simController.getRawAxis(0), () -> -simController.getRawAxis(1),
+						null));
+
+		new Trigger(() -> simController.getRawButtonPressed(2))
+		.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
+				// .toggleOnTrue(new SetPoint());
+
+		new Trigger(() -> simController.getRawButtonPressed(3))
+				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
+						.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
+						.until(() -> Math
+								.abs(xDrive.getLeftX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
+								|| Math.abs(
+										xDrive.getLeftY()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
+							|| Math.abs(
+										xDrive.getRightX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold)
+						.withName("Auto-pilot Amp shot"));
+
+		new Trigger(() -> simController.getRawButtonPressed(4))
+				.toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
+	}
+
 	public RobotContainer() {
 		logger = new Telemetry();
 		field = Robot.teleopField;
@@ -263,28 +290,5 @@ public class RobotContainer {
 		if (Robot.isSimulation()) {
 			configureSimBinds();
 		}
-	}
-
-	private void configureSimBinds() {
-		new Trigger(() -> simController.getRawButtonPressed(1))
-				.toggleOnTrue(new AlignToSpeaker(() -> -simController.getRawAxis(0), () -> -simController.getRawAxis(1),
-						null));
-
-		new Trigger(() -> simController.getRawButtonPressed(2))
-				.toggleOnTrue(new SetPoint());
-
-		new Trigger(() -> simController.getRawButtonPressed(3))
-				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-						.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
-						.until(() -> Math
-								.abs(xDrive.getLeftX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
-								|| Math.abs(
-										xDrive.getLeftY()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
-								|| Math.abs(
-										xDrive.getRightX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold)
-						.withName("Auto-pilot Amp shot"));
-
-		new Trigger(() -> simController.getRawButtonPressed(4))
-				.toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 	}
 }

@@ -110,13 +110,13 @@ public class RobotContainer {
 								.finallyDo(Lighting.startTimer));
 
 		// new Trigger(() -> intake.getShooterSensor()).onTrue(
-		// 	new RunCommand(() -> {
-		// 		xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
-		// 	}).withTimeout(1)
-		// 	.finallyDo(
-		// 			() -> {xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
-		// 	}));
-		
+		// new RunCommand(() -> {
+		// xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
+		// }).withTimeout(1)
+		// .finallyDo(
+		// () -> {xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
+		// }));
+
 		xDrive.a().toggleOnTrue(new AlignToSpeaker(xDrive::getLeftY, xDrive::getLeftX,
 				xDrive::getRightTriggerAxis));
 
@@ -135,7 +135,8 @@ public class RobotContainer {
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
+								.withTimeout(2))
 						.onlyIf(() -> Intake.getInstance().getShooterSensor())
 						.finallyDo(Lighting.startTimer));
 		// deploys intake (right paddle)
@@ -143,7 +144,8 @@ public class RobotContainer {
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
+								.withTimeout(2))
 						.onlyIf(() -> Intake.getInstance().getShooterSensor())
 						.finallyDo(Lighting.startTimer));
 
@@ -181,9 +183,8 @@ public class RobotContainer {
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
 
-		xManip.y().onTrue(HomeClimber.getHomingCommand());
-		// xManip.x().whileTrue(new QuickFeed().alongWith());
 		xManip.x().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xManip.leftBumper()));
 		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xManip.leftBumper()));
 
@@ -207,20 +208,23 @@ public class RobotContainer {
 		// left bumper is the universal shoot button
 		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));
 
-		// TODO: test, absolute worst case scenario
-		// xManip.start().and(() -> xManip.back().getAsBoolean())
-		// 		.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-		xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-		.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-		.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
-		.onlyIf(() -> Intake.getInstance().getShooterSensor())
-		.finallyDo(Lighting.startTimer));
-		
+		// absolute worst case scenario
+		xManip.start().and(() -> xManip.back().getAsBoolean())
+				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
+
+		// TODO: this wont work
+		// xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+		// 		.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink),
+		// 				new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+		// 		.onlyIf(() -> Intake.getInstance().getShooterSensor())
+		// 		.finallyDo(Lighting.startTimer));
+
 		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
-		
+
 	}
 
 	public void configurePitBinds() {
+		// TODO: retest all of these
 
 		// works perfectly
 		xPit.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());

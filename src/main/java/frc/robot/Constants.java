@@ -23,7 +23,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 	/** Should be 16.542 */
-	public static final double fieldLength = Units.inchesToMeters(76.1 + 250.5) * 2;
+	public static final double fieldLength = 16.542;
 	public static final double fieldHeight = 8.014;
 
 	public static final double kRange = 20;
@@ -37,22 +37,20 @@ public final class Constants {
 		// the lower the number, the more odometry will trust the vision
 		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.42, 0.42, Units.degreesToRadians(100));
 
-
-		public static class LimelightFront{
+		public static class LimelightFront {
 			public static final String llAprilTag = "limelight-front";
 			public static final String llAprilTagIP = "http://10.5.48.13:5800/stream.mjpg";
 			public static final int llAprilTagPipelineIndex = 0;
 
 		}
 
-
-		public static class LimelightRear{
+		public static class LimelightRear {
 			public static final String llAprilTagRear = "limelight-rear";
 			public static final String llAprilTagRearIP = "http://10.5.48.11:5800/stream.mjpg";
 			public static final int llAprilTagWithLightsPipelineIndex = 2;
 		}
-	
-		public static class LimelightPython{
+
+		public static class LimelightPython {
 			public static final String llPython = "limelight-python";
 			public static final String llPythonIP = "http://10.5.48.12:5800/stream.mjpg";
 			public static final int llPythonPipelineIndex = 0;
@@ -150,8 +148,9 @@ public final class Constants {
 
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
-			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6); // PROBABLY THE PROBLEM. NOT CALIBRATED
-																				// FOR THE CARPET!
+
+			// TODO: calibrate for carpet
+			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6);
 
 			private static final boolean kSteerMotorReversed = false;
 			private static final boolean kInvertLeftSide = true;
@@ -270,19 +269,20 @@ public final class Constants {
 		public static final PIDConstants translationPID = new PIDConstants(0.85, 0.05, 0.1, 0.5);
 		public static final PIDConstants rotationPID = new PIDConstants(4, 0, 0, 1);
 
-		public static class AutoSpeeds{
-		public static final double kMaxSpeedMetersPerSecond = SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond;
-		public static final double kMaxAccelerationMetersPerSecondSquared = 3.5;
+		public static class AutoSpeeds {
+			public static final double kMaxSpeedMetersPerSecond = SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond;
+			public static final double kMaxAccelerationMetersPerSecondSquared = 3.5;
 
-		public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond;
-		public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
-				/ SwerveConstants.RobotMeasurements.kdriveBaseRadius;
+			public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond;
+			public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
+					/ SwerveConstants.RobotMeasurements.kdriveBaseRadius;
 
-		public static final double kMaxAngularSpeedDegreesPerSecond = kMaxAngularSpeedRadiansPerSecond
-				* 57.29577951308232;
-		public static final double kMaxAngularSpeedDegreesPerSecondSquared = kMaxAngularAccelerationRadiansPerSecondSquared
-				* 57.29577951308232;
+			public static final double kMaxAngularSpeedDegreesPerSecond = kMaxAngularSpeedRadiansPerSecond
+					* 57.29577951308232;
+			public static final double kMaxAngularSpeedDegreesPerSecondSquared = kMaxAngularAccelerationRadiansPerSecondSquared
+					* 57.29577951308232;
 		}
+
 		public static final String kFieldObjectName = "path";
 
 		public static final double spitTime = 0.5;
@@ -355,9 +355,9 @@ public final class Constants {
 		}
 
 		public static final double setpointTimeout = 4;
-		public static final double feedTimeout = 0.5	;
+		public static final double feedTimeout = 0.5;
 		public static final double shootTimeout = 0.5;
-		public static final double chargeUpTimeout = 2;
+		public static final double chargeUpTimeout = 1;
 
 	}
 
@@ -387,22 +387,23 @@ public final class Constants {
 		public static final double shooterOffset = 67 - shooterTrapezoidalOffset;
 		public static final double kInRangeThreshold = 1.75;
 
-		public static class Regression{
-		/*
-		 * Interpolation between distance vs shooting angle (horizontal dist. to
-		 * speaker, angle to shoot)
-		 * Y = a*x^b + c
-		 * 
-		 * A decrease in C will shoot further up a constant amount, any distance
-		 * A decrease in B "bows" the curve in, closer distances will shoot further up
-		 * and further values will shoot futher down
-		 * A decrease in A shifts curve up, no matter the distance, it will shoot lower,
-		 * but closer distances will be effected greater than further distances
-		 */
-		public static final double a = -6789.49;
-		public static final double b = -1.24759;
-		public static final double c = -9.7318;
+		public static class Regression {
+			/*
+			 * Interpolation between distance vs shooting angle (horizontal dist. to
+			 * speaker, angle to shoot)
+			 * Y = a*x^b + c
+			 * 
+			 * A decrease in C will shoot further up a constant amount, any distance
+			 * A decrease in B "bows" the curve in, closer distances will shoot further up
+			 * and further values will shoot futher down
+			 * A decrease in A shifts curve up, no matter the distance, it will shoot lower,
+			 * but closer distances will be effected greater than further distances
+			 */
+			public static final double a = -6789.49;
+			public static final double b = -1.24759;
+			public static final double c = -9.7318;
 		}
+
 		public static class SetPoints {
 			public static final double kCenterToWingPass = 0;
 			public static final double kSubwoofer = kArmMinAngle;

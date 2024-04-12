@@ -235,17 +235,19 @@ public class Robot extends TimedRobot {
 		disabledTab.add("Command Scheduler", CommandScheduler.getInstance());
 
 		disabledTab.add("Song Selector", songChooser)
-				.withSize(5, 1)
-				.withPosition(5, 0)
+				.withSize(3, 1)
+				.withPosition(0, 3)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
+				
 		disabledTab.add("Toggle Compression", compressChooser)
-				.withSize(4, 1)
-				.withPosition(5, 2)
+				.withSize(3, 1)
+				.withPosition(0, 4)
 				.withWidget(BuiltInWidgets.kSplitButtonChooser);
 
 		Alert.groups.forEach((group, alert) -> {
 			disabledTab.add(group, alert)
-					.withSize(5, 5)
+					.withSize(3, 3)
+					.withPosition(0, 0)
 					.withWidget("Alerts");
 
 			testTab.add(group, alert)
@@ -350,14 +352,50 @@ public class Robot extends TimedRobot {
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
-			if (Constants.Vision.UseLimelight && Robot.isReal()) {
-				LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightFront.llAprilTag,
-						Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
-				LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
-						Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
-				LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython,
-						Constants.Vision.LimelightPython.llPythonPipelineIndex);
-			}
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightFront.llAprilTag,
+					Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
+					Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython,
+					Constants.Vision.LimelightPython.llPythonPipelineIndex);
+
+			// check if cameras are all connected
+			disabledTab.add(new HttpCamera(Constants.Vision.LimelightFront.llAprilTag, Constants.Vision.LimelightFront.llAprilTagIP))
+					.withSize(2, 2)
+					.withPosition(3, 0)
+					.withWidget(BuiltInWidgets.kCameraStream)
+					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
+			disabledTab.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear, Constants.Vision.LimelightRear.llAprilTagRearIP))
+					.withSize(2, 2)
+					.withPosition(5, 0)
+					.withWidget(BuiltInWidgets.kCameraStream)
+					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
+			disabledTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonIP))
+					.withSize(2, 2)
+					.withPosition(7, 0)
+					.withWidget(BuiltInWidgets.kCameraStream)
+					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
+			// check if cameras are working
+			testTab.add(new HttpCamera(Constants.Vision.LimelightFront.llAprilTag, Constants.Vision.LimelightFront.llAprilTagIP))
+					.withSize(3, 2)
+					.withPosition(1, 3)
+					.withWidget(BuiltInWidgets.kCameraStream)
+					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
+			testTab.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear, Constants.Vision.LimelightRear.llAprilTagRearIP))
+					.withSize(3, 2)
+					.withPosition(4, 3)
+					.withWidget(BuiltInWidgets.kCameraStream)
+					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+
+			testTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonIP))
+					.withSize(3, 2)
+					.withPosition(7, 3)
+					.withWidget(BuiltInWidgets.kCameraStream)
+					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 		}
 
 		DriverStation.silenceJoystickConnectionWarning(true);
@@ -393,9 +431,9 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Devious Shooting",
 				new InfiniteIntake(0.2)
-				.alongWith(new FullSend(0.2), Lighting.getLarsonCommand(() -> LEDState.kWhite))
-				.finallyDo(Lighting.startTimer)
-				.withName("Devious Shooting"));
+						.alongWith(new FullSend(0.2), Lighting.getLarsonCommand(() -> LEDState.kWhite))
+						.finallyDo(Lighting.startTimer)
+						.withName("Devious Shooting"));
 
 	}
 

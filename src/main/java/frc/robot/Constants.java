@@ -355,7 +355,7 @@ public final class Constants {
 		}
 
 		public static final double setpointTimeout = 4;
-		public static final double feedTimeout = 1;
+		public static final double feedTimeout = 0.5;
 		public static final double shootTimeout = 0.5;
 		public static final double chargeUpTimeout = 2;
 

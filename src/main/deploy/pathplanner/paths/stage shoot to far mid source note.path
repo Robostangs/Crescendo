@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.879228195451544,
-        "y": 2.895250334119408
+        "x": 4.743418329429252,
+        "y": 4.347055240406777
       },
       "isLocked": false,
       "linkedName": "Stage Shoot Position"
@@ -20,12 +20,12 @@
         "y": 2.0
       },
       "prevControl": {
-        "x": 3.6874976127481682,
-        "y": 2.7710637442972113
+        "x": 4.053439863690549,
+        "y": 3.3347320375060368
       },
       "nextControl": {
-        "x": 6.5414117709334,
-        "y": 0.41123092585442156
+        "x": 5.0392644425698565,
+        "y": 1.0122748710660268
       },
       "isLocked": true,
       "linkedName": null
@@ -36,28 +36,28 @@
         "y": 2.4355807112260432
       },
       "prevControl": {
-        "x": 8.115617317664361,
-        "y": 2.1855807112260432
+        "x": 8.116870497230641,
+        "y": 2.185583852163825
       },
       "nextControl": {
-        "x": 8.115617317664361,
-        "y": 2.7655807112260433
+        "x": 8.109087338545047,
+        "y": 3.738246596863564
       },
       "isLocked": false,
       "linkedName": "Far Mid Right Note"
     },
     {
       "anchor": {
-        "x": 5.9082913521239,
-        "y": 4.061235254942239
+        "x": 6.413544577089154,
+        "y": 4.001260007149644
       },
       "prevControl": {
-        "x": 6.62108232940214,
-        "y": 3.9883450081924403
+        "x": 7.078055767222646,
+        "y": 3.873939900657579
       },
       "nextControl": {
-        "x": 5.583994369936997,
-        "y": 4.0943979741759735
+        "x": 5.634767533702894,
+        "y": 4.150473410279237
       },
       "isLocked": false,
       "linkedName": null
@@ -68,8 +68,8 @@
         "y": 4.892453456150855
       },
       "prevControl": {
-        "x": 4.832396082401212,
-        "y": 3.9293904234012027
+        "x": 5.119321442346588,
+        "y": 3.992530503579526
       },
       "nextControl": null,
       "isLocked": false,
@@ -83,14 +83,19 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.45,
-      "rotationDegrees": 63.22046498895906,
+      "waypointRelativePos": 1.5,
+      "rotationDegrees": 38.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.3,
+      "waypointRelativePos": 0.85,
       "rotationDegrees": -90.0,
       "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 3.3,
+      "rotationDegrees": 3.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],

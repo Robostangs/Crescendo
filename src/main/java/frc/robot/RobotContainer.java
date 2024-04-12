@@ -98,10 +98,9 @@ public class RobotContainer {
 		new Trigger(() -> Timer.getMatchTime() > 15).and(() -> Timer.getMatchTime() < 20)
 				.whileTrue(new RunCommand(() -> {
 					xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
-				})
-						.finallyDo(() -> {
-							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
-						}));
+				})).negate().onTrue(new RunCommand(() -> {
+					xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
+				}));
 
 		new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.Driver.kDeadzone)
 				.whileTrue(
@@ -112,7 +111,7 @@ public class RobotContainer {
 		xDrive.a().toggleOnTrue(new AlignToSpeaker(xDrive::getLeftY, xDrive::getLeftX,
 				xDrive::getRightTriggerAxis));
 
-		xDrive.b().toggleOnTrue(new AlignToAmp(xDrive::getLeftX, xDrive::getLeftY,
+		xDrive.b().toggleOnTrue(new AlignToAmp(xDrive::getLeftY, xDrive::getLeftX,
 				xDrive::getRightTriggerAxis));
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
@@ -128,7 +127,8 @@ public class RobotContainer {
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
+						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
+								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
 								.withTimeout(2)
 								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
 						.finallyDo(Lighting.startTimer));
@@ -138,7 +138,8 @@ public class RobotContainer {
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
+						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
+								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
 								.withTimeout(2)
 								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
 						.finallyDo(Lighting.startTimer));
@@ -167,10 +168,9 @@ public class RobotContainer {
 		new Trigger(() -> Timer.getMatchTime() > 15).and(() -> Timer.getMatchTime() < 20)
 				.whileTrue(new RunCommand(() -> {
 					xManip.getHID().setRumble(RumbleType.kBothRumble, 1);
-				})
-						.finallyDo(() -> {
-							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
-						}));
+				})).negate().onTrue(new RunCommand(() -> {
+					xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
+				}));
 
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.Manip.kDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
@@ -235,23 +235,25 @@ public class RobotContainer {
 		// works perfectly
 		xPit.x().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
 
-		// works perfect
+		// works perfectly
 		xPit.povUp().toggleOnTrue(ShootCommandFactory.getAmpCommand());
 
-		// works perfect
+		// works perfectly
 		xPit.povDown().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xPit.leftBumper()));
 
-		// doesnt prepare while setpoint (if shoots early returns to intake improperly)
-		// test 2: it doesnt return to intake, but it can shoot before setpoint
+		// works perfectly but doesnt return to home or cancel shooter
 		xPit.povLeft().toggleOnTrue(ShootCommandFactory.getCenterToWingCommand(xPit.leftBumper()));
 
-		// works perfect
+		// works perfectly
+		xPit.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommandWithWaitUntil(xPit.leftBumper()));
+
+		// works perfectly
 		xPit.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xPit.leftBumper()));
 
-		// works perfect
+		// works perfectly
 		xPit.rightStick().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithTimeouts());
 
-		// works perfect
+		// shoots fine but never cancels the shooter
 		xPit.leftStick().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
 	}
 
@@ -261,8 +263,8 @@ public class RobotContainer {
 						null));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
-		.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-				// .toggleOnTrue(new SetPoint());
+				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
+		// .toggleOnTrue(new SetPoint());
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
 				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
@@ -271,7 +273,7 @@ public class RobotContainer {
 								.abs(xDrive.getLeftX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
 								|| Math.abs(
 										xDrive.getLeftY()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
-							|| Math.abs(
+								|| Math.abs(
 										xDrive.getRightX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold)
 						.withName("Auto-pilot Amp shot"));
 

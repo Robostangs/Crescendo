@@ -49,7 +49,7 @@ public class xDrive extends Command {
             swerveRequest = new SwerveRequest.FieldCentric()
                     .withVelocityX(-translateX.get()
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
-                    .withVelocityY(translateY.get()
+                    .withVelocityY(-translateY.get()
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                     .withRotationalRate(-rotate.get()
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond)

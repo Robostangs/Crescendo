@@ -90,7 +90,7 @@ public class AlignToSpeaker extends Command {
         driveRequest
                 .withVelocityX(-translateX.get()
                         * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
-                .withVelocityY(translateY.get()
+                .withVelocityY(-translateY.get()
                         * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                 .withSlowDown(1 - howManyBabiesOnBoard.get());
 

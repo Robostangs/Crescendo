@@ -411,6 +411,7 @@ public class Robot extends TimedRobot {
 						.withName("Align and Shoot"));
 
 		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
+		NamedCommands.registerCommand("Prepare Shooter", new Prepare());
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		NamedCommands.registerCommand("Shoot on the fly", ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 		NamedCommands.registerCommand("Lower Arm",

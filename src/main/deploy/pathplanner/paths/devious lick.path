@@ -126,7 +126,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Stage Side Paths",
+  "folder": null,
   "previewStartingState": {
     "rotation": -60.578695328263926,
     "velocity": 0

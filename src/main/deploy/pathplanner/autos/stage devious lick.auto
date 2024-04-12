@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.7417426316334117,
+      "y": 4.41
+    },
+    "rotation": -60.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Devious Path"
+            "pathName": "devious lick"
           }
         }
       ]

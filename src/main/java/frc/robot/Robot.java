@@ -366,27 +366,14 @@ public class Robot extends TimedRobot {
 
 		Lighting.getInstance().autoSetLights(true);
 
-		// NamedCommands.registerCommand("Intake",
-		// new DeployAndIntake(true).unless(() ->
-		// Intake.getInstance().getShooterSensor())
-		// .andThen(new BeltDrive(() -> -1d).withTimeout(1)
-		// .alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed)))
-		// .finallyDo(Lighting.startTimer));
-
-		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
-		// NamedCommands.registerCommand("Prepare",
-		// ShootCommandFactory.getAimAndShootCommandWithWaitUntil(() -> false));
-
-		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
-		// .andThen(Lighting.getStrobeCommand(() ->
-		// LEDState.kRed)).finallyDo(Lighting.startTimer));
-
 		NamedCommands.registerCommand("Shoot",
 				ShootCommandFactory.getAimAndShootCommandWithTimeouts()
 						.deadlineWith(new AlignToSpeaker(),
 								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
 						.withName("Align and Shoot"));
 
+		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
+		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		NamedCommands.registerCommand("Shoot on the fly", ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 		NamedCommands.registerCommand("Lower Arm",
 				// doing this so that we dont have to wait for arm velocity to be 0, and as soon
@@ -401,14 +388,14 @@ public class Robot extends TimedRobot {
 						// dont go over the halfway line
 						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0.5))
 						.onlyIf(DriveToNote.thereIsANote)
+						.withName("Auto Intake")
 						.withTimeout(2));
 
-		// NamedCommands.registerCommand("Muiti Intake",
-		// new MultiIntake().
-		// alongWith()
-		// );
 		NamedCommands.registerCommand("Devious Shooting",
-				new InfiniteIntake(0.2).deadlineWith(new FullSend(0.2)));
+				new InfiniteIntake(0.2)
+				.alongWith(new FullSend(0.2), Lighting.getLarsonCommand(() -> LEDState.kWhite))
+				.finallyDo(Lighting.startTimer)
+				.withName("Devious Shooting"));
 
 	}
 

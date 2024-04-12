@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7449493880469245,
-        "y": 4.4154660438950515
+        "x": 0.8660341348460477,
+        "y": 3.3596711869349667
       },
       "isLocked": false,
       "linkedName": "Stage Start Position"
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 8.116860648099326,
+        "x": 8.12,
         "y": 0.7762526348962228
       },
       "prevControl": {
-        "x": 7.773700784566749,
-        "y": 0.7415393876546676
+        "x": 8.059560767269682,
+        "y": 0.6377288356428572
       },
       "nextControl": {
-        "x": 8.259386915322168,
-        "y": 0.7906702579293802
+        "x": 8.177287513568261,
+        "y": 0.9075528462120056
       },
       "isLocked": false,
       "linkedName": "Far Right Note"
@@ -52,8 +52,8 @@
         "y": 7.441695291306576
       },
       "prevControl": {
-        "x": 8.50758718589664,
-        "y": 7.120561352907747
+        "x": 7.693634229861052,
+        "y": 6.950822679423137
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,7 +62,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.85,
       "rotationDegrees": 0,
       "rotateFast": false
     },

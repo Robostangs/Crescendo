@@ -29,7 +29,8 @@ import frc.robot.commands.ArmCommands.FineAdjust;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 /**
- * To zero: first put the arm in a position where the shooter is parallel (the angle guage should read +1.2 degrees) to the
+ * To zero: first put the arm in a position where the shooter is parallel (the
+ * angle guage should read +1.2 degrees) to the
  * ground, then, in tuner X, zero the armCoder
  */
 public class Arm extends SubsystemBase {
@@ -345,8 +346,12 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        double angleToSpeaker = Constants.ArmConstants.Regression.a * Math.pow(Units.metersToInches(distToSpeakerMeters),
-                Constants.ArmConstants.Regression.c) + Constants.ArmConstants.Regression.c;
+        double angleToSpeaker = -6798.49 * Math.pow(Units.metersToInches(distToSpeakerMeters),
+                -1.24759) + -9.7318;
+
+        // double angleToSpeaker = Constants.ArmConstants.Regression.a *
+        // Math.pow(Units.metersToInches(distToSpeakerMeters),
+        // Constants.ArmConstants.Regression.c) + Constants.ArmConstants.Regression.c;
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)",
                 distToSpeakerMeters);
@@ -516,7 +521,8 @@ public class Arm extends SubsystemBase {
     public boolean atSetpoint() {
         // if its within 0.5 degrees of the target and the arm is moving slowly
         return (isInRangeOfTarget(getArmTarget(), 0.5) && Math.abs(getVelocity()) < 0.5)
-        // if its within a reasonable amount of distance from its target and the arm is not moving at all pretty much
+                // if its within a reasonable amount of distance from its target and the arm is
+                // not moving at all pretty much
                 || (isInRangeOfTarget() && Math.abs(getVelocity()) < 0.01);
     }
 

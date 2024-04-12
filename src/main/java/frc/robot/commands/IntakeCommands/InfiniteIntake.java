@@ -2,14 +2,11 @@
 package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 
 public class InfiniteIntake extends Command {
     Intake intake;
     double power;
-
 
     public InfiniteIntake(double power) {
         this.power = power;
@@ -21,24 +18,20 @@ public class InfiniteIntake extends Command {
 
     @Override
     public void initialize() {
-            intake.setExtend(true);
-            intake.setIntake(power);
-            intake.postStatus("Deploying Intake");
+        intake.setExtend(true);
+        intake.setIntake(power);
         
-
-            intake.postStatus("Intaking");
-        
-
         intake.setBelt(power);
-        intake.setHolding(true);
-    }
+        // intake.setHolding(true);
 
+        intake.postStatus("Deploying Intake");
+        intake.postStatus("Infinitely Intaking");
+    }
 
     @Override
     public void end(boolean interrupted) {
-            intake.setExtend(false);
-            intake.setIntake(0);
-        
+        intake.setExtend(false);
+        intake.setIntake(0);
         intake.setBelt(0);
     }
 }

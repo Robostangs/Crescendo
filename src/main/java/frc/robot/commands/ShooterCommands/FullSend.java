@@ -9,33 +9,25 @@ public class FullSend extends Command {
     double power;
 
     public FullSend() {
-        power = 0;
+        power = 1;
         shooter = Shooter.getInstance();
 
         this.addRequirements(shooter);
         this.setName("Full Send");
     }
 
-
     public FullSend(double power) {
         this.power = power;
         shooter = Shooter.getInstance();
 
         this.addRequirements(shooter);
-        this.setName("Kinda Send");
+        this.setName("Kinda Send " + power * 100 + "%");
     }
 
     @Override
     public void initialize() {
-
-        if(power == 0){
         shooter.postStatus("SEND IT");
-        shooter.shoot(1, 1);
-        }
-        else{
-            shooter.postStatus("WE ARE SENDING IT");
-            shooter.shoot(Constants.ShooterConstants.feederShootValue, power);
-        }
+        shooter.shoot(Constants.ShooterConstants.feederShootValue, power);
     }
 
     @Override

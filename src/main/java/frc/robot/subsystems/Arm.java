@@ -82,6 +82,7 @@ public class Arm extends SubsystemBase {
 
         if (ArmIsBroken) {
             postStatus("ARM IS BROKEN");
+            setArmTarget(Constants.ArmConstants.kArmMinAngle);
             // armIsBrokenAlert.set(true);
         }
 

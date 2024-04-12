@@ -504,6 +504,10 @@ public class Robot extends TimedRobot {
 							.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.75));
 				}
 
+				else {
+					pathPlannerCommand = new PrintCommand("Doing nothing");
+				}
+
 				Pose2d startPose;
 
 				switch (startingPose.getSelected()) {
@@ -561,9 +565,6 @@ public class Robot extends TimedRobot {
 			autonCommand.addCommands(
 					new PathToPoint(pathToPointCommandChooser.getSelected()).alongWith(new DeployAndIntake(true)
 							.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer)));
-			Drivetrain.getInstance().getField().getObject("Last Ditch Effort")
-					.setPose(pathToPointCommandChooser.getSelected());
-
 		}
 
 		autonCommand.withName("Auto Command").schedule();

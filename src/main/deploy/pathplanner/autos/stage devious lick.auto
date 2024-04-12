@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot on the fly"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "devious lick"

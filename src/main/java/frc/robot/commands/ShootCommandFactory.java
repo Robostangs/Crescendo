@@ -84,11 +84,17 @@ public class ShootCommandFactory {
 
         // works perfectly
         public static Command getPrepareAndShootCommandWithTimeouts() {
-                return new Prepare().until(() -> Shooter.getInstance().readyToShoot())
-                                .withTimeout(Constants.OperatorConstants.chargeUpTimeout)
-                                .andThen(new Shoot(false).withTimeout(Constants.OperatorConstants.shootTimeout),
-                                                new Shoot(true).onlyWhile(
-                                                                () -> Intake.getInstance().getShooterSensor()))
+                return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
+                                .unless(() -> Intake.getInstance().getShooterSensor())
+                                .andThen(
+
+                                                new Prepare().until(() -> Shooter.getInstance().readyToShoot())
+                                                                .withTimeout(Constants.OperatorConstants.chargeUpTimeout)
+                                                                .andThen(new Shoot(false).withTimeout(
+                                                                                Constants.OperatorConstants.shootTimeout),
+                                                                                new Shoot(true).onlyWhile(
+                                                                                                () -> Intake.getInstance()
+                                                                                                                .getShooterSensor())))
                                 .withName("Auto Prepare and Shoot with Timeouts");
         }
 

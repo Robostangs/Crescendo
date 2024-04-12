@@ -66,8 +66,8 @@ public class AlignToAmp extends Command {
         SmartDashboard.putData("Align PID", driveRequest.HeadingController);
         drivetrain.postStatus("Aligning");
 
-        driveRequest.Deadband = Constants.OperatorConstants.deadband;
-        driveRequest.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
+        driveRequest.Deadband = Constants.OperatorConstants.Driver.deadband;
+        driveRequest.RotationalDeadband = Constants.OperatorConstants.Driver.rotationalDeadband * 0.05;
         lighting.autoSetLights(false);
     }
 

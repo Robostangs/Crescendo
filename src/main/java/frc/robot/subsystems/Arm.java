@@ -219,17 +219,6 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * supply a specific value [-1,1] to the arm motor, has a deadzone of 0.06
-     * 
-     * @param setVal the value to set the arm motor to [-1,1]
-     */
-    public void aim(double setVal) {
-        if (!(Math.abs(setVal) <= Constants.OperatorConstants.kManipDeadzone)) {
-            armMotor.set(setVal);
-        }
-    }
-
-    /**
      * supply a specific value [-1,1] to the arm motor
      * 
      * @param setVal the value to set the arm motor to [-1,1]

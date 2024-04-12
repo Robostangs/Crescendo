@@ -29,8 +29,8 @@ public class DriveToNote extends Command {
 
     @Override
     public void initialize() {
-        driveRequest.Deadband = Constants.OperatorConstants.deadband;
-        driveRequest.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband;
+        driveRequest.Deadband = Constants.OperatorConstants.Driver.deadband;
+        driveRequest.RotationalDeadband = Constants.OperatorConstants.Driver.rotationalDeadband;
     }
 
     @Override

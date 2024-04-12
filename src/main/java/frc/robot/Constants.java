@@ -339,16 +339,20 @@ public final class Constants {
 	}
 
 	public static class OperatorConstants {
-		public static final double kDriverDeadzone = 0.04;
-		public static final double kDriverCommandCancelThreshold = 0.2;
+		public static class Driver {
+			public static final double kDeadzone = 0.04;
+			public static final double kCommandCancelThreshold = 0.2;
+			public static final double slowDownMultiplier = 0.5;
+			public static final double deadband = SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * 0.07;
+			public static final double rotationalDeadband = SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond
+					* 0.07;
+			public static final double kIntakeRumbleStrength = 0.5;
+		}
 
-		public static final double kManipDeadzone = 0.07;
+		public static class Manip {
+			public static final double kDeadzone = 0.07;
 
-		public static final double slowDownMultiplier = 0.5;
-
-		public static final double deadband = SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * 0.07;
-		public static final double rotationalDeadband = SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond
-				* 0.07;
+		}
 
 		public static final double setpointTimeout = 4;
 		public static final double feedTimeout = 1;

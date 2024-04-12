@@ -36,11 +36,11 @@ public class ClimberAdjust extends Command {
 
 	@Override
 	public void execute() {
-		if (Math.abs(mLeftSupplier.getAsDouble()) > OperatorConstants.kManipDeadzone) {
+		if (Math.abs(mLeftSupplier.getAsDouble()) > OperatorConstants.Manip.kDeadzone) {
 			climber.setLeftClimbPower(mLeftSupplier.getAsDouble());
 		}
 
-		if (Math.abs(mRightSupplier.getAsDouble()) > OperatorConstants.kManipDeadzone) {
+		if (Math.abs(mRightSupplier.getAsDouble()) > OperatorConstants.Manip.kDeadzone) {
 			climber.setRightClimbPower(mRightSupplier.getAsDouble());
 		}
 	}

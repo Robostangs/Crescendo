@@ -117,19 +117,19 @@ public class Robot extends TimedRobot {
 		startingPose.addOption("Stage Side", "stage"); // right
 		startingPose.addOption("Out West", "out west"); // right
 
-		autoChooser.setDefaultOption("Sit and Shit", " null");
+		autoChooser.setDefaultOption("Sit and Shit", "null");
 		autoChooser.addOption("Simple Reverse", "back-up");
+		autoChooser.addOption("All Close Notes", " all close notes");
+		autoChooser.addOption("All Close Notes Plus far Piece", " all close notes plus");
+		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
 		autoChooser.addOption("1 Piece", " 1 piece");
 		autoChooser.addOption("2 Piece", " 2 piece");
 		autoChooser.addOption("3 Piece", " 3 piece");
 		autoChooser.addOption("4 Piece (Center Only)", " 4 piece");
-		autoChooser.addOption("All Close Notes", " all close notes");
-		autoChooser.addOption("All Close Notes Plus far Piece", " all close notes plus");
-		autoChooser.addOption("Close 2 Piece (No Center)", " close 2 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
 		autoChooser.addOption("Far 3 Piece (No Center)", " far 3 piece");
-		autoChooser.addOption("Devious Auto", " Devious Auto");
+		autoChooser.addOption("Devious Auto (Stage Only)", " devious lick");
 
 		autoShoot.setDefaultOption("Dont Shoot At Start", false);
 		autoShoot.addOption("Shoot At Start", true);
@@ -435,7 +435,12 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		PathPlannerCommand.publishTrajectory(startingPose.getSelected() + autoChooser.getSelected());
-		autoField.setRobotPose(Drivetrain.getInstance().getPose());
+		try {
+			Pose2d centerPose = pathToPointCommandChooser.getSelected();
+			teleopField.getObject("Last Ditch Effort").setPose(centerPose);
+		} catch (Exception e) {
+			teleopField.getObject("Last Ditch Effort").setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
+		}
 	}
 
 	@Override
@@ -529,7 +534,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		autoField.setRobotPose(Drivetrain.getInstance().getPose());
 		NetworkTableInstance.getDefault().getTable("PathPlanner").getEntry("Auto Timer").setDouble(timer.get());
 	}
 

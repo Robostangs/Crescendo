@@ -40,9 +40,9 @@ public class xDrive extends Command {
 
     @Override
     public void execute() {
-        if (Math.abs(translateX.get()) <= Constants.OperatorConstants.kDriverDeadzone
-                && Math.abs(translateY.get()) <= Constants.OperatorConstants.kDriverDeadzone
-                && Math.abs(rotate.get()) <= Constants.OperatorConstants.kDriverDeadzone) {
+        if (Math.abs(translateX.get()) <= Constants.OperatorConstants.Driver.kDeadzone
+                && Math.abs(translateY.get()) <= Constants.OperatorConstants.Driver.kDeadzone
+                && Math.abs(rotate.get()) <= Constants.OperatorConstants.Driver.kDeadzone) {
 
             swerveRequest = new SwerveRequest.SwerveDriveBrake();
         } else {
@@ -54,8 +54,8 @@ public class xDrive extends Command {
                     .withRotationalRate(-rotate.get()
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond)
                     .withSlowDown(1 - howManyBabiesOnBoard.get())
-                    .withRotationalDeadband(Constants.OperatorConstants.rotationalDeadband)
-                    .withDeadband(Constants.OperatorConstants.deadband);
+                    .withRotationalDeadband(Constants.OperatorConstants.Driver.rotationalDeadband)
+                    .withDeadband(Constants.OperatorConstants.Driver.deadband);
         }
 
         drivetrain.setControl(swerveRequest);

@@ -66,8 +66,8 @@ public class AlignToNote extends Command {
         SmartDashboard.putData("Align to Note PID", driveRequest.HeadingController);
         drivetrain.postStatus("Aligning to Note");
 
-        driveRequest.Deadband = Constants.OperatorConstants.deadband;
-        driveRequest.RotationalDeadband = Constants.OperatorConstants.rotationalDeadband * 0.05;
+        driveRequest.Deadband = Constants.OperatorConstants.Driver.deadband;
+        driveRequest.RotationalDeadband = Constants.OperatorConstants.Driver.rotationalDeadband * 0.05;
     }
 
     @Override

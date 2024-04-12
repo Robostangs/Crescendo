@@ -103,7 +103,7 @@ public class RobotContainer {
 							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
 
-		new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.kDriverDeadzone)
+		new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.Driver.kDeadzone)
 				.whileTrue(
 						new ClimberAdjust(() -> -xDrive.getLeftTriggerAxis(), () -> -xDrive.getLeftTriggerAxis())
 								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
@@ -127,9 +127,9 @@ public class RobotContainer {
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
+						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
 								.withTimeout(2)
-								.handleInterrupt(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
+								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
 						.finallyDo(Lighting.startTimer));
 
 		// deploys intake (right paddle)
@@ -137,9 +137,9 @@ public class RobotContainer {
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
+						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
 								.withTimeout(2)
-								.handleInterrupt(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
+								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
@@ -169,10 +169,10 @@ public class RobotContainer {
 							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
 						}));
 
-		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.kManipDeadzone)
+		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.Manip.kDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
-		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.kManipDeadzone)
+		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.Manip.kDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
 
 		xManip.x().onTrue(new ReturnHome().alongWith(new CancelShooter()));
@@ -267,7 +267,7 @@ public class RobotContainer {
 
 	private void configureSimBinds() {
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.toggleOnTrue(new AlignToAmp(() -> -simController.getRawAxis(0), () -> -simController.getRawAxis(1),
+				.toggleOnTrue(new AlignToSpeaker(() -> -simController.getRawAxis(0), () -> -simController.getRawAxis(1),
 						null));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
@@ -277,11 +277,11 @@ public class RobotContainer {
 				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
 						.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
 						.until(() -> Math
-								.abs(xDrive.getLeftX()) > Constants.OperatorConstants.kDriverCommandCancelThreshold
+								.abs(xDrive.getLeftX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
 								|| Math.abs(
-										xDrive.getLeftY()) > Constants.OperatorConstants.kDriverCommandCancelThreshold
+										xDrive.getLeftY()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
 								|| Math.abs(
-										xDrive.getRightX()) > Constants.OperatorConstants.kDriverCommandCancelThreshold)
+										xDrive.getRightX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold)
 						.withName("Auto-pilot Amp shot"));
 
 		new Trigger(() -> simController.getRawButtonPressed(4))

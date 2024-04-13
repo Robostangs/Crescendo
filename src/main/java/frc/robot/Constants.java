@@ -372,7 +372,7 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -62;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.6;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -541,16 +541,21 @@ public final class Constants {
 		/** Left Shooter Bar */
 		public static final int strip2Length = 29;
 
-		/** Left Climber Support */
-		public static final int strip3Length = 33;
+		/** Left Climber */
+		public static final int strip3Length = 34;
 
-		/** Right Climber Support */
-		public static final int strip4Length = 33;
+		/** Climber Support */
+		public static final int strip4Length = 15;
+		
+		/** Right Climber */
+		public static final int strip5Length = 34;
 
 		public static final double larsonAnimationSpeed = 0.06;
+
 		/** Standard is 2 LEDs */
 		public static final int larsonAnimationSize = 5;
-		public static final double strobeAnimationSpeed = 0.12;
+
+		public static final double strobeAnimationSpeed = 1;
 	}
 
 	public static class ShootPoints {

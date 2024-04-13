@@ -74,17 +74,14 @@ public class Arm extends SubsystemBase {
         }
 
         if (!(this.getCurrentCommand() instanceof FineAdjust)) {
-            // postStatus("Setpoint");
             if (!ArmIsBroken) {
                 armMotor.setControl(motionMagicDutyCycle);
-                // armIsBrokenAlert.set(false);
             }
         }
 
         if (ArmIsBroken) {
             postStatus("ARM IS BROKEN");
             setArmTarget(Constants.ArmConstants.kArmMinAngle);
-            // armIsBrokenAlert.set(true);
         }
 
         if (Robot.isReal()) {
@@ -183,7 +180,6 @@ public class Arm extends SubsystemBase {
      * @return true if in range or false if out of range
      */
     public boolean isInRangeOfTarget(double target) {
-        // dynamic threshold
         return isInRangeOfTarget(target, Constants.ArmConstants.kInRangeThreshold);
     }
 
@@ -305,7 +301,7 @@ public class Arm extends SubsystemBase {
      *         to shoot into the speaker
      */
     public double calculateArmSetpoint() {
-        return calculateArmSetpointSteven();
+        return calculateArmSetpointExpo();
     }
 
     /**
@@ -448,8 +444,10 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        double angleToSpeaker = -6798.49 * Math.pow(Units.metersToInches(distToSpeakerMeters),
-                -1.24759) + -9.7318;
+        distToSpeakerMeters -= Units.inchesToMeters(15);
+
+        double angleToSpeaker = -108.295 * Math.pow(Units.metersToFeet(distToSpeakerMeters),
+                -0.325315) + 22.8515;
 
         // double angleToSpeaker = Constants.ArmConstants.Regression.a *
         // Math.pow(Units.metersToInches(distToSpeakerMeters),

@@ -79,7 +79,8 @@ public class Lighting extends SubsystemBase {
             }
 
             if (state != oldState) {
-                mCANdle.setLEDs(state.getColor()[0], state.getColor()[1], state.getColor()[2]);
+                mCANdle.setLEDs(state.getColor()[0], state.getColor()[1], state.getColor()[2], 0, 0, 8 + Lights.strip1Length +
+                        Lights.strip2Length + Lights.strip3Length + Lights.strip4Length + Lights.strip5Length);
             }
 
             oldState = state;
@@ -104,13 +105,18 @@ public class Lighting extends SubsystemBase {
         mCANdle.setLEDs(r, g, b, 0, 7 + Lights.strip1Length, Lights.strip2Length);
     }
 
-    public void setLeftClimberSupport(int r, int g, int b) {
+    public void setLeftClimber(int r, int g, int b) {
         mCANdle.setLEDs(r, g, b, 0, 7 + Lights.strip1Length + Lights.strip2Length, Lights.strip3Length);
     }
 
-    public void setRightClimberSupport(int r, int g, int b) {
+    public void setClimberSupport(int r, int g, int b) {
         mCANdle.setLEDs(r, g, b, 0, 7 + Lights.strip1Length + Lights.strip2Length + Lights.strip3Length,
                 Lights.strip4Length);
+    }
+
+    public void setRightClimber(int r, int g, int b) {
+        mCANdle.setLEDs(r, g, b, 0, 7 + Lights.strip1Length + Lights.strip2Length + Lights.strip3Length +
+                Lights.strip4Length, Lights.strip5Length);
     }
 
     public void setRightBarAnimation(Animation animation) {
@@ -125,16 +131,22 @@ public class Lighting extends SubsystemBase {
         mCANdle.animate(animation, 1);
     }
 
-    public void setLeftClimberSupportAnimation(Animation animation) {
+    public void setLeftClimberAnimation(Animation animation) {
         animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length);
         animation.setNumLed(Lights.strip3Length);
         mCANdle.animate(animation, 2);
     }
 
-    public void setRightClimberSupportAnimation(Animation animation) {
+    public void setClimberSupportAnimation(Animation animation) {
         animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length + Lights.strip3Length);
         animation.setNumLed(Lights.strip4Length);
         mCANdle.animate(animation, 3);
+    }
+
+    public void setRightClimberAnimation(Animation animation) {
+        animation.setLedOffset(8 + Lights.strip1Length + Lights.strip2Length + Lights.strip3Length + Lights.strip4Length);
+        animation.setNumLed(Lights.strip5Length);
+        mCANdle.animate(animation, 4);
     }
 
     public void setCANdleLights(LEDState state) {
@@ -144,7 +156,7 @@ public class Lighting extends SubsystemBase {
     public void setCANdleAnimation(Animation animation) {
         animation.setLedOffset(0);
         animation.setNumLed(8);
-        mCANdle.animate(animation, 4);
+        mCANdle.animate(animation, 5);
     }
 
     public static Command getStrobeCommand(Supplier<LEDState> state) {
@@ -159,8 +171,9 @@ public class Lighting extends SubsystemBase {
             Lighting.getInstance().setCANdleAnimation(animation);
             Lighting.getInstance().setRightBarAnimation(animation);
             Lighting.getInstance().setLeftBarAnimation(animation);
-            Lighting.getInstance().setLeftClimberSupportAnimation(animation);
-            Lighting.getInstance().setRightClimberSupportAnimation(animation);
+            Lighting.getInstance().setLeftClimberAnimation(animation);
+            Lighting.getInstance().setClimberSupportAnimation(animation);
+            Lighting.getInstance().setRightClimberAnimation(animation);
         }).ignoringDisable(true);
     }
 
@@ -178,8 +191,9 @@ public class Lighting extends SubsystemBase {
             Lighting.getInstance().setCANdleLights(state.get());
             Lighting.getInstance().setRightBarAnimation(animation);
             Lighting.getInstance().setLeftBarAnimation(animation);
-            Lighting.getInstance().setLeftClimberSupportAnimation(animation);
-            Lighting.getInstance().setRightClimberSupportAnimation(animation);
+            Lighting.getInstance().setLeftClimberAnimation(animation);
+            Lighting.getInstance().setClimberSupportAnimation(animation);
+            Lighting.getInstance().setRightClimberAnimation(animation);
         }).ignoringDisable(true);
     }
 
@@ -189,6 +203,7 @@ public class Lighting extends SubsystemBase {
         mCANdle.clearAnimation(2);
         mCANdle.clearAnimation(3);
         mCANdle.clearAnimation(4);
+        mCANdle.clearAnimation(5);
     }
 
     private Lighting() {

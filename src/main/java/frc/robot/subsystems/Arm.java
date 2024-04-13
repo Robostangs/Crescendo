@@ -306,7 +306,70 @@ public class Arm extends SubsystemBase {
     public double calculateArmSetpoint() {
         return calculateArmSetpointExpo();
     }
+    public double calculateArmSetpointSteven() {
+        Pose2d speakerPose;
 
+        if (Robot.isRed()) {
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseRed;
+        } else {
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseBlue;
+        }
+
+        /* Swerve Pose calculated in meters */
+        Pose2d currentPose = Drivetrain.getInstance().getPose();
+        double SpeakerY = speakerPose.getY();
+
+        Robot.teleopField.getObject("Speaker")
+                .setPose(new Pose2d(speakerPose.getX(), SpeakerY,
+                        Rotation2d.fromDegrees(0)));
+
+        double distToSpeakerMeters = Math.sqrt(
+                Math.pow(speakerPose.getX() - currentPose.getX(), 2)
+                        + Math.pow(SpeakerY - currentPose.getY(), 2));
+
+        distToSpeakerMeters -= Units.inchesToMeters(23);
+
+        //OG regression
+        // double angleToSpeaker = -6798.49 * Math.pow(Units.metersToInches(distToSpeakerMeters),
+        //         -1.24759) + -9.7318;
+
+
+        //new regression
+  
+         
+        double angleToSpeaker = -( (69.8879 * (Math.pow(0.79082 , Units.metersToFeet(distToSpeakerMeters))) ) + ((6.6172 * (Math.pow(10,24))) ) * ( Math.pow(( 8.5448 * (Math.pow(10,-15)) ) , Units.metersToFeet(distToSpeakerMeters)))+ 21.3068 );
+
+        angleToSpeaker -= Constants.ArmConstants.shooterTrapezoidalOffset;
+
+        // angle = - ( (69.8879 (0.79082 ^ distance) ) + ( (6.6172(10^24) ) ( ( 8.5448(10^-15) ) ^ distance ) ) + 21.3068 ) (edited) 
+
+
+
+
+        // double angleToSpeaker = Constants.ArmConstants.Regression.a *
+        // Math.pow(Units.metersToInches(distToSpeakerMeters),
+        // Constants.ArmConstants.Regression.c) + Constants.ArmConstants.Regression.c;
+
+        SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)",
+                distToSpeakerMeters);
+        SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)",
+                Units.metersToInches(distToSpeakerMeters));
+
+        /*
+         * Make sure that we dont a][\ccidentally return a stupid value
+         */
+        if (validSetpoint(angleToSpeaker)) {
+            return angleToSpeaker;
+        }
+
+        else {
+            if (angleToSpeaker < Constants.ArmConstants.SetPoints.kSubwoofer) {
+                return Constants.ArmConstants.SetPoints.kSubwoofer;
+            } else {
+                return getArmPosition();
+            }
+        }
+    }
     /**
      * Calculates the arm setpoint based on the current robot pose using an
      * exponential model

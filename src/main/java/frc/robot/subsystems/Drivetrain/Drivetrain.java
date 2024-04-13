@@ -61,7 +61,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
             PoseEstimate front, back;
 
-            if (DriverStation.isDisabled()) {
+            if (DriverStation.isDisabled() || super.getPigeon2().getAngularVelocityXWorld().getValue() < 180) {
                 front = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightFront.llAprilTag);
                 back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightRear.llAprilTagRear);
             }
@@ -73,14 +73,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             }
 
             // if (front.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
-            if (front.tagCount >= 1) {
+            if (front.tagCount > 1) {
                 this.addVisionMeasurement(front.pose,
                         Timer.getFPGATimestamp() - front.latency / 1000);
                 mField.getObject("Front LL pose").setPose(front.pose);
             }
 
             // if (back.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
-            if (back.tagCount >= 1) {
+            if (back.tagCount > 1) {
                 this.addVisionMeasurement(back.pose,
                         Timer.getFPGATimestamp() - back.latency / 1000);
                 mField.getObject("Rear LL pose").setPose(back.pose);

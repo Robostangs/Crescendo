@@ -60,7 +60,7 @@ public class AlignToAmp extends Command {
     public void initialize() {
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
 
-        driveRequest.HeadingController = new PhoenixPIDController(12, 12, 1);
+        driveRequest.HeadingController = new PhoenixPIDController(12, 2, 1);
 
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Align PID", driveRequest.HeadingController);

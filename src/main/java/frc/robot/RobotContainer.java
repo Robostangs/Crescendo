@@ -185,6 +185,7 @@ public class RobotContainer {
 
 		xManip.rightStick().toggleOnTrue(new Extend().alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
 				.finallyDo(Lighting.startTimer));
+
 		xManip.leftStick()
 				.toggleOnTrue(new Retract()
 						.alongWith(Lighting.getStrobeCommand(() -> Robot.isRed() ? LEDState.kRed : LEDState.kBlue))
@@ -218,11 +219,19 @@ public class RobotContainer {
 
 		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 
+		xManip.back()
+				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
+								.withTimeout(2))
+						.onlyIf(() -> Intake.getInstance().getShooterSensor())
+						.finallyDo(Lighting.startTimer));
+
+		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 	}
 
 	public void configurePitBinds() {
-		// TODO: retest all of these
-
 		// works perfectly
 		xPit.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 
@@ -263,8 +272,8 @@ public class RobotContainer {
 						null));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
-				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-		// .toggleOnTrue(new SetPoint());
+				// .onTrue(arm.runOnce(arm::toggleArmMotorLimits));
+				.toggleOnTrue(new SetPoint());
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
 				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)

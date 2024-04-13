@@ -73,7 +73,7 @@ public class AlignToSpeaker extends Command {
     @Override
     public void initialize() {
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
-        driveRequest.HeadingController = new PhoenixPIDController(12, 12, 1);
+        driveRequest.HeadingController = new PhoenixPIDController(12, 6, 1);
 
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Align to Speaker PID", driveRequest.HeadingController);

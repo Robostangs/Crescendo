@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -37,6 +38,13 @@ public class Intake extends SubsystemBase {
         beltMotor = new TalonFX(Constants.IntakeConstants.beltMotorID, "rio");
 
         Robot.verifyMotors(intakeMotor, beltMotor);
+
+        var txConfig = new TalonFXConfiguration();
+        txConfig.CurrentLimits.StatorCurrentLimit = 80;
+        txConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        intakeMotor.getConfigurator().apply(txConfig);
+        beltMotor.getConfigurator().apply(txConfig);
         
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorInverted);
         beltMotor.setInverted(Constants.IntakeConstants.beltMotorInverted);

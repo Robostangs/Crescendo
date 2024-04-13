@@ -205,17 +205,8 @@ public class RobotContainer {
 		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));
 
 		// absolute worst case scenario
-		xManip.start().and(() -> xManip.back().getAsBoolean())
+		xManip.start().and(xManip.back())
 				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-
-		// TODO: this wont work
-		// xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() ->
-		// Intake.getInstance().getShooterSensor())
-		// .andThen(Lighting.getStrobeCommand(() -> LEDState.kPink),
-		// new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
-		// 1)).withTimeout(2))
-		// .onlyIf(() -> Intake.getInstance().getShooterSensor())
-		// .finallyDo(Lighting.startTimer));
 
 		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 

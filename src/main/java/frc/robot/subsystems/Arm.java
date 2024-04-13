@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -66,7 +67,7 @@ public class Arm extends SubsystemBase {
 
         motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrent;
         motionMagicDutyCycle.FeedForward *= Rotation2d.fromDegrees(getShooterExtensionPosition())
-                .minus(Rotation2d.fromDegrees(30)).getCos();
+                .minus(Rotation2d.fromDegrees(20)).getCos();
 
         if (getArmPosition() > Constants.ArmConstants.kArmMaxAngle) {
             motionMagicDutyCycle.FeedForward = -8;
@@ -328,7 +329,7 @@ public class Arm extends SubsystemBase {
                 Math.pow(speakerPose.getX() - currentPose.getX(), 2)
                         + Math.pow(SpeakerY - currentPose.getY(), 2));
 
-        distToSpeakerMeters -= Units.inchesToMeters(14);
+        distToSpeakerMeters -= Units.inchesToMeters(15);
 
         double angleToSpeaker = -((69.8879 * (Math.pow(0.79082, Units.metersToFeet(distToSpeakerMeters))))
                 + ((6.6172 * (Math.pow(10, 24))))
@@ -506,17 +507,19 @@ public class Arm extends SubsystemBase {
 
         // armMotorConfig.Slot0.kP = 250;
         // armMotorConfig.Slot0.kI = 3;
-        armMotorConfig.Slot0.kP = 300;
-        armMotorConfig.Slot0.kI = 300;
+        armMotorConfig.Slot0.kP = 500;
+        armMotorConfig.Slot0.kI = 60;
         armMotorConfig.Slot0.kD = 60;
-        armMotorConfig.Slot0.kS = 6;
-        armMotorConfig.Slot0.kA = 3;
+        armMotorConfig.Slot0.kS = 0.25;
+        armMotorConfig.Slot0.kA = 1;
 
-        motionMagicConfigs.MotionMagicCruiseVelocity = 1.5;
+        armMotorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
+
+        motionMagicConfigs.MotionMagicCruiseVelocity = 2;
         motionMagicConfigs.MotionMagicAcceleration = 2;
 
         // tune this so that the arm starts moving quicker, 100 -> 1000
-        motionMagicConfigs.MotionMagicJerk = 0;
+        motionMagicConfigs.MotionMagicJerk = 1000;
 
         armMotorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         armMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;

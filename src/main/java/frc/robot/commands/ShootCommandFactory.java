@@ -111,6 +111,7 @@ public class ShootCommandFactory {
                 return new Shoot(false)
                                 .andThen(new BeltDrive(() -> Constants.IntakeConstants.beltIntakeSpeed)
                                                 .alongWith(new FullSend()))
+                                .finallyDo(CancelShooter.CancelShooter)
                                 .withName("Auto Rapid Fire");
         }
 
@@ -130,7 +131,8 @@ public class ShootCommandFactory {
                                                 new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass),
                                                 new ChargeUp(0.5)),
                                                 new Shoot(true))
-                                .finallyDo(ReturnHome.ReturnHome).handleInterrupt(CancelShooter.CancelShooter)
+                                .finallyDo(ReturnHome.ReturnHome)
+                                .handleInterrupt(CancelShooter.CancelShooter)
                                 .withName("Pass to Center");
 
                 // return new PassToShooter().unless(() ->

@@ -61,25 +61,31 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
             PoseEstimate front, back;
 
-            // if (DriverStation.isDisabled() || super.getPigeon2().getAngularVelocityXWorld().getValue() < 180) {
+            if (DriverStation.isDisabled() || LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > 0.221) {
                 front = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightFront.llAprilTag);
-                back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightRear.llAprilTagRear);
-            // }
+            }
 
-            // else {
-            //     front = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightFront.llAprilTag);
-            //     back = LimelightHelpers
-            //             .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightRear.llAprilTagRear);
-            // }
+            else {
+                front = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightFront.llAprilTag);
+            }
+
+            if (DriverStation.isDisabled() || LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > 0.221) {
+                back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightRear.llAprilTagRear);
+            }
+
+            else {
+                back = LimelightHelpers
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightRear.llAprilTagRear);
+            }
 
             // if (front.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
-            if (front.tagCount > 1) {
+            if (front.tagCount >= 1) {
                 this.addVisionMeasurement(front.pose, front.timestampSeconds);
                 mField.getObject("Front LL pose").setPose(front.pose);
             }
 
             // if (back.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
-            if (back.tagCount > 1) {
+            if (back.tagCount >= 1) {
                 this.addVisionMeasurement(back.pose, back.timestampSeconds);
                 mField.getObject("Rear LL pose").setPose(back.pose);
             }

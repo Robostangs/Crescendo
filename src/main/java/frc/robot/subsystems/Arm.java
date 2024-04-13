@@ -308,6 +308,66 @@ public class Arm extends SubsystemBase {
         return calculateArmSetpointSteven();
     }
 
+    /**
+     * Calculates the arm setpoint based on the current robot pose using an
+     * exponential model
+     * 
+     * @return the desired arm angle
+     *         <h1>(in degrees)</h1>
+     *         to shoot into the speaker
+     */
+    public double calculateArmSetpointSimpleSteven() {
+        Pose2d speakerPose;
+
+        if (Robot.isRed()) {
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseRed;
+        } else {
+            speakerPose = Constants.Vision.SpeakerPoses.kSpeakerPoseBlue;
+        }
+
+        /* Swerve Pose calculated in meters */
+        Pose2d currentPose = Drivetrain.getInstance().getPose();
+        double SpeakerY = speakerPose.getY();
+
+        Robot.teleopField.getObject("Speaker")
+                .setPose(new Pose2d(speakerPose.getX(), SpeakerY,
+                        Rotation2d.fromDegrees(0)));
+
+        double distToSpeakerMeters = Math.sqrt(
+                Math.pow(speakerPose.getX() - currentPose.getX(), 2)
+                        + Math.pow(SpeakerY - currentPose.getY(), 2));
+
+        distToSpeakerMeters -= Units.inchesToMeters(15);
+
+        double angleToSpeaker = -(81.9311 * (Math.pow(0.7659, Units.metersToFeet(distToSpeakerMeters))) + 21.9503);
+
+        angleToSpeaker -= Constants.ArmConstants.shooterTrapezoidalOffset;
+
+        // double angleToSpeaker = Constants.ArmConstants.Regression.a *
+        // Math.pow(Units.metersToInches(distToSpeakerMeters),
+        // Constants.ArmConstants.Regression.c) + Constants.ArmConstants.Regression.c;
+
+        SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)",
+                distToSpeakerMeters);
+        SmartDashboard.putNumber("Arm/Distance From Speaker (Inches)",
+                Units.metersToInches(distToSpeakerMeters));
+
+        /*
+         * Make sure that we dont a][\ccidentally return a stupid value
+         */
+        if (validSetpoint(angleToSpeaker)) {
+            return angleToSpeaker;
+        }
+
+        else {
+            if (angleToSpeaker < Constants.ArmConstants.SetPoints.kSubwoofer) {
+                return Constants.ArmConstants.SetPoints.kSubwoofer;
+            } else {
+                return getArmPosition();
+            }
+        }
+    }
+
     public double calculateArmSetpointSteven() {
         Pose2d speakerPose;
 

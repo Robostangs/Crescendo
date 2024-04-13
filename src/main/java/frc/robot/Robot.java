@@ -53,11 +53,16 @@ import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lighting;
+import frc.robot.subsystems.Music;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class Robot extends TimedRobot {
+	// TODO list at Home: Zero Shooter, Test Regression Data, Test swerve no FOC
+	// TODO list at Houston: Calibrate Limelight, Calibrate Odometry for carpet,
+	// Zero Shooter, Test Regression Data
+
 	public static SendableChooser<String> startingPose = new SendableChooser<>();
 	public static SendableChooser<String> autoChooser = new SendableChooser<>();
 	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
@@ -238,7 +243,7 @@ public class Robot extends TimedRobot {
 				.withSize(3, 1)
 				.withPosition(0, 3)
 				.withWidget(BuiltInWidgets.kComboBoxChooser);
-				
+
 		disabledTab.add("Toggle Compression", compressChooser)
 				.withSize(3, 1)
 				.withPosition(0, 4)
@@ -360,38 +365,47 @@ public class Robot extends TimedRobot {
 					Constants.Vision.LimelightPython.llPythonPipelineIndex);
 
 			// check if cameras are all connected
-			disabledTab.add(new HttpCamera(Constants.Vision.LimelightFront.llAprilTag, Constants.Vision.LimelightFront.llAprilTagIP))
+			disabledTab
+					.add(new HttpCamera(Constants.Vision.LimelightFront.llAprilTag,
+							Constants.Vision.LimelightFront.llAprilTagIP))
 					.withSize(2, 2)
 					.withPosition(3, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
-			disabledTab.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear, Constants.Vision.LimelightRear.llAprilTagRearIP))
+			disabledTab
+					.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear,
+							Constants.Vision.LimelightRear.llAprilTagRearIP))
 					.withSize(2, 2)
 					.withPosition(5, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
-			disabledTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonIP))
+			disabledTab
+					.add(new HttpCamera(Constants.Vision.LimelightPython.llPython,
+							Constants.Vision.LimelightPython.llPythonIP))
 					.withSize(2, 2)
 					.withPosition(7, 0)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 			// check if cameras are working
-			testTab.add(new HttpCamera(Constants.Vision.LimelightFront.llAprilTag, Constants.Vision.LimelightFront.llAprilTagIP))
+			testTab.add(new HttpCamera(Constants.Vision.LimelightFront.llAprilTag,
+					Constants.Vision.LimelightFront.llAprilTagIP))
 					.withSize(3, 2)
 					.withPosition(1, 3)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
-			testTab.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear, Constants.Vision.LimelightRear.llAprilTagRearIP))
+			testTab.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear,
+					Constants.Vision.LimelightRear.llAprilTagRearIP))
 					.withSize(3, 2)
 					.withPosition(4, 3)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
-			testTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonIP))
+			testTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython,
+					Constants.Vision.LimelightPython.llPythonIP))
 					.withSize(3, 2)
 					.withPosition(7, 3)
 					.withWidget(BuiltInWidgets.kCameraStream)
@@ -477,8 +491,14 @@ public class Robot extends TimedRobot {
 		try {
 			Pose2d centerPose = pathToPointCommandChooser.getSelected();
 			teleopField.getObject("Last Ditch Effort").setPose(centerPose);
-		} catch (Exception e) {
+		} 
+		
+		catch (Exception e) {
 			teleopField.getObject("Last Ditch Effort").setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
+		}
+
+		if (!songChooser.getSelected().equals("")) {
+			Music.getInstance().playMusic(songChooser.getSelected());
 		}
 	}
 
@@ -647,9 +667,6 @@ public class Robot extends TimedRobot {
 
 		lastSwerve = swerveCommands.getSelected();
 		lastArm = armCommands.getSelected();
-		// if(!songChooser.equals("")){
-		// Music.getInstance().playMusic(songChooser.getSelected());
-		// }
 	}
 
 	@Override

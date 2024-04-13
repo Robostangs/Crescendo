@@ -53,7 +53,6 @@ import frc.robot.subsystems.Arm;
 
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lighting;
-import frc.robot.subsystems.Music;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
@@ -497,9 +496,9 @@ public class Robot extends TimedRobot {
 			teleopField.getObject("Last Ditch Effort").setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
 		}
 
-		if (!songChooser.getSelected().equals("")) {
-			Music.getInstance().playMusic(songChooser.getSelected());
-		}
+		// if (!songChooser.getSelected().equals("")) {
+		// 	Music.getInstance().playMusic(songChooser.getSelected());
+		// }
 	}
 
 	@Override

@@ -98,9 +98,10 @@ public class RobotContainer {
 		new Trigger(() -> Timer.getMatchTime() > 15).and(() -> Timer.getMatchTime() < 20)
 				.whileTrue(new RunCommand(() -> {
 					xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
-				})).negate().onTrue(new RunCommand(() -> {
-					xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
-				}));
+				})
+						.finallyDo(() -> {
+							xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
+						}));
 
 		new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.Driver.kDeadzone)
 				.whileTrue(
@@ -127,25 +128,21 @@ public class RobotContainer {
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
-								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
-								.withTimeout(2)
-								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
+						.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+						.onlyIf(() -> Intake.getInstance().getShooterSensor())
 						.finallyDo(Lighting.startTimer));
 
 		// deploys intake (right paddle)
-		xDrive.rightStick()
+		xDrive.povLeft()
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
 						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
-								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
-								.withTimeout(2)
-								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
+						.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+						.onlyIf(() -> Intake.getInstance().getShooterSensor())
 						.finallyDo(Lighting.startTimer));
 
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
-		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
+
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
 				Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
 
@@ -168,9 +165,10 @@ public class RobotContainer {
 		new Trigger(() -> Timer.getMatchTime() > 15).and(() -> Timer.getMatchTime() < 20)
 				.whileTrue(new RunCommand(() -> {
 					xManip.getHID().setRumble(RumbleType.kBothRumble, 1);
-				})).negate().onTrue(new RunCommand(() -> {
-					xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
-				}));
+				})
+						.finallyDo(() -> {
+							xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
+						}));
 
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.Manip.kDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
@@ -203,19 +201,15 @@ public class RobotContainer {
 		// left bumper is the universal shoot button
 		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));
 
-		// absolute worst case scenario
-		xManip.start().and(() -> xManip.back().getAsBoolean())
-				.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-
-		// TODO: this wont work
-		// xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() ->
-		// Intake.getInstance().getShooterSensor())
-		// .andThen(Lighting.getStrobeCommand(() -> LEDState.kPink),
-		// new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
-		// 1)).withTimeout(2))
-		// .onlyIf(() -> Intake.getInstance().getShooterSensor())
-		// .finallyDo(Lighting.startTimer));
-
+		// TODO: test, absolute worst case scenario
+		// xManip.start().and(() -> xManip.back().getAsBoolean())
+		// 		.onTrue(arm.runOnce(arm::toggleArmMotorLimits));
+		xManip.back().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+		.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+		.andThen(new RunCommand( () -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1)).withTimeout(2))
+		.onlyIf(() -> Intake.getInstance().getShooterSensor())
+		.finallyDo(Lighting.startTimer));
+		
 		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 
 	}

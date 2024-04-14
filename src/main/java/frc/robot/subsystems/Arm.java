@@ -566,7 +566,7 @@ public class Arm extends SubsystemBase {
         // armMotorConfig.Slot0.kP = 250;
         // armMotorConfig.Slot0.kI = 3;
         armMotorConfig.Slot0.kP = 500;
-        armMotorConfig.Slot0.kI = 60;
+        armMotorConfig.Slot0.kI = 100;
         armMotorConfig.Slot0.kD = 60;
         armMotorConfig.Slot0.kS = 0.25;
         armMotorConfig.Slot0.kA = 1;

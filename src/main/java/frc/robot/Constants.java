@@ -354,7 +354,7 @@ public final class Constants {
 
 		}
 
-		public static final double setpointTimeout = 4;
+		public static final double setpointTimeout = 2;
 		public static final double feedTimeout = 0.5;
 		public static final double shootTimeout = 0.5;
 		public static final double chargeUpTimeout = 1;
@@ -385,7 +385,7 @@ public final class Constants {
 				+ shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 		public static final double shooterOffset = 67 - shooterTrapezoidalOffset;
-		public static final double kInRangeThreshold = 1;
+		public static final double kInRangeThreshold = 2;
 
 		public static class Regression {
 			/*

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.8660341348460477,
-        "y": 3.3596711869349667
+        "x": 0.7694751361724949,
+        "y": 3.519237010696244
       },
       "isLocked": false,
       "linkedName": "Stage Start Position"
@@ -81,7 +81,7 @@
   "eventMarkers": [
     {
       "name": "InandOut",
-      "waypointRelativePos": 1.6500000000000001,
+      "waypointRelativePos": 1.25,
       "command": {
         "type": "parallel",
         "data": {
@@ -89,7 +89,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Devious Shooting"
+                "name": "Devious Lick"
               }
             }
           ]

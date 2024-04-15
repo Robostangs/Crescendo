@@ -59,11 +59,6 @@
       "waypointRelativePos": 0.0,
       "rotationDegrees": 60.0,
       "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.15,
-      "rotationDegrees": -13.0,
-      "rotateFast": false
     }
   ],
   "constraintZones": [
@@ -72,8 +67,8 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 0.65,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 781.3060842693,
         "maxAngularAcceleration": 390.6530421347
       }
@@ -98,9 +93,9 @@
     "maxAngularAcceleration": 455.7618824904275
   },
   "goalEndState": {
-    "velocity": 2.0,
+    "velocity": 3.0,
     "rotation": -13.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Amp Side Paths",

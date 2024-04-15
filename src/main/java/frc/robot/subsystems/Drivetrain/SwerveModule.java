@@ -281,7 +281,7 @@ public class SwerveModule {
             case MotionMagic:
                 switch (m_steerClosedLoopOutput) {
                     case Voltage:
-                        m_steerMotor.setControl(m_angleVoltageSetter.withPosition(angleToSetDeg).withEnableFOC(Constants.SwerveConstants.kEnableFOC));
+                        m_steerMotor.setControl(m_angleVoltageSetter.withPosition(angleToSetDeg).withEnableFOC(Constants.SwerveConstants.kEnableTurnFOC));
                         break;
 
                     case TorqueCurrentFOC:
@@ -293,7 +293,7 @@ public class SwerveModule {
             case MotionMagicExpo:
                 switch (m_steerClosedLoopOutput) {
                     case Voltage:
-                        m_steerMotor.setControl(m_angleVoltageExpoSetter.withPosition(angleToSetDeg).withEnableFOC(Constants.SwerveConstants.kEnableFOC));
+                        m_steerMotor.setControl(m_angleVoltageExpoSetter.withPosition(angleToSetDeg).withEnableFOC(Constants.SwerveConstants.kEnableTurnFOC));
                         break;
 
                     case TorqueCurrentFOC:
@@ -329,13 +329,13 @@ public class SwerveModule {
                 /* Open loop ignores the driveRotationsPerMeter since it only cares about the open loop at the mechanism */
                 /* But we do care about the backout due to coupling, so we keep it in */
                 velocityToSet /= m_driveRotationsPerMeter;
-                m_driveMotor.setControl(m_voltageOpenLoopSetter.withOutput(velocityToSet / m_speedAt12VoltsMps * 12.0));
+                m_driveMotor.setControl(m_voltageOpenLoopSetter.withOutput(velocityToSet / m_speedAt12VoltsMps * 12.0).withEnableFOC(Constants.SwerveConstants.kEnableDriveFOC));
                 break;
 
             case Velocity:
                 switch (m_driveClosedLoopOutput) {
                     case Voltage:
-                        m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet).withEnableFOC(Constants.SwerveConstants.kEnableFOC));
+                        m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet).withEnableFOC(Constants.SwerveConstants.kEnableDriveFOC));
                         break;
 
                     case TorqueCurrentFOC:

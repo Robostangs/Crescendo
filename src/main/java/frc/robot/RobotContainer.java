@@ -76,7 +76,7 @@ public class RobotContainer {
 		if (Robot.isSimulation()) {
 			drivetrain
 					.setDefaultCommand(
-							new xDrive(() -> -simController.getRawAxis(0), () -> -simController.getRawAxis(1),
+							new xDrive(() -> -simController.getRawAxis(0), () -> simController.getRawAxis(1),
 									() -> simController.getRawAxis(2), () -> 0d));
 		} else {
 			drivetrain.setDefaultCommand(
@@ -259,7 +259,7 @@ public class RobotContainer {
 
 	private void configureSimBinds() {
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.toggleOnTrue(new AlignToSpeaker(() -> -simController.getRawAxis(0), () -> -simController.getRawAxis(1),
+				.toggleOnTrue(new AlignToSpeaker(() -> -simController.getRawAxis(0), () -> simController.getRawAxis(1),
 						null));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))

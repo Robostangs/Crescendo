@@ -108,8 +108,10 @@ public final class Constants {
 
 		}
 
-		// TODO: test with off for faster speed lower acceleration
-		public static final boolean kEnableFOC = false;
+		// TODO: test with drive off for faster speed lower acceleration
+		public static final boolean kEnableDriveFOC = false;
+		public static final boolean kEnableTurnFOC = true;
+		
 
 		public class TunerConstants {
 			// The steer motor uses any SwerveModule.SteerRequestType control request with

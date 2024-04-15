@@ -489,14 +489,45 @@ public class Robot extends TimedRobot {
 		try {
 			Pose2d centerPose = pathToPointCommandChooser.getSelected();
 			teleopField.getObject("Last Ditch Effort").setPose(centerPose);
-		} 
-		
+		}
+
 		catch (Exception e) {
 			teleopField.getObject("Last Ditch Effort").setPose(new Pose2d(-5, -5, Rotation2d.fromDegrees(0)));
 		}
 
+		try {
+			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
+			forwardAuto.set(false);
+		}
+
+		catch (RuntimeException e) {
+			// if (autoChooser.getSelected().equals("back-up") ||
+			// autoChooser.getSelected().equals("null")) {
+			if (autoChooser.getSelected().equals("back-up")) {
+				pathPlannerCommand = Drivetrain.getInstance()
+						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.75));
+				forwardAuto.set(true);
+			}
+
+			else if (autoChooser.getSelected().equals("null")) {
+				pathPlannerCommand = new PrintCommand("Doing nothing");
+				forwardAuto.set(false);
+			}
+
+			else {
+				pathPlannerCommand = new PrintCommand(
+						"Null Path: " + startingPose.getSelected() + autoChooser.getSelected());
+				DataLogManager.log("Autonomous init: Invalid Auto");
+			}
+
+		} catch (Exception e) {
+			DataLogManager.log("Auto not working actual problem. Stacktrace:\n" + e.getStackTrace());
+			pathPlannerCommand = new PrintCommand("Autobuilder Exception");
+			e.printStackTrace();
+		}
+
 		// if (!songChooser.getSelected().equals("")) {
-		// 	Music.getInstance().playMusic(songChooser.getSelected());
+		// Music.getInstance().playMusic(songChooser.getSelected());
 		// }
 	}
 
@@ -514,63 +545,6 @@ public class Robot extends TimedRobot {
 		Shuffleboard.selectTab(autoTab.getTitle());
 		robotContainer.removeDefaultCommands();
 
-		try {
-			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
-		} catch (RuntimeException e) {
-			if (autoChooser.getSelected().equals("back-up") || autoChooser.getSelected().equals("null")) {
-				if (autoChooser.getSelected().equals("back-up")) {
-					pathPlannerCommand = Drivetrain.getInstance()
-							.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.75));
-				}
-
-				else {
-					pathPlannerCommand = new PrintCommand("Doing nothing");
-				}
-
-				Pose2d startPose;
-
-				switch (startingPose.getSelected()) {
-					case "amp":
-						startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
-						StartingPosition.set(false);
-						break;
-					case "center":
-						startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
-						StartingPosition.set(false);
-						break;
-					case "stage":
-						startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
-						StartingPosition.set(false);
-						break;
-					default:
-						// just dont seed the pose, instead set it to be the robot pose
-						StartingPosition.set(true);
-						System.out.println("Starting Position Undefined");
-						startPose = Drivetrain.getInstance().getPose();
-						break;
-				}
-
-				if (Robot.isRed()) {
-					startPose = GeometryUtil.flipFieldPose(startPose);
-				}
-
-				Drivetrain.getInstance().seedFieldRelative(startPose);
-
-				forwardAuto.set(true);
-				DataLogManager.log("Backing Up");
-			}
-
-			else {
-				pathPlannerCommand = new PrintCommand(
-						"Null Path: " + startingPose.getSelected() + autoChooser.getSelected());
-				DataLogManager.log("Autonomous init: Invalid Auto");
-			}
-		} catch (Exception e) {
-			DataLogManager.log("Auto not working actual problem. Stacktrace:\n" + e.getStackTrace());
-			pathPlannerCommand = new PrintCommand("Autobuilder Exception");
-			e.printStackTrace();
-		}
-
 		Arm.getInstance().setMotionMagic(Constants.ArmConstants.SetPoints.kIntake);
 
 		autonCommand = new SequentialCommandGroup(
@@ -584,6 +558,40 @@ public class Robot extends TimedRobot {
 			autonCommand.addCommands(
 					new PathToPoint(pathToPointCommandChooser.getSelected()).alongWith(new DeployAndIntake(true)
 							.andThen(Lighting.getStrobeCommand(() -> LEDState.kRed)).finallyDo(Lighting.startTimer)));
+		}
+
+		if (autoChooser.getSelected().equals("back-up") || autoChooser.getSelected().equals("null")) {
+			Pose2d startPose;
+
+			switch (startingPose.getSelected()) {
+				case "amp":
+					startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
+					StartingPosition.set(false);
+					break;
+				case "center":
+					startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
+					StartingPosition.set(false);
+					break;
+				case "stage":
+					startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
+					StartingPosition.set(false);
+					break;
+				default:
+					// just dont seed the pose, instead set it to be the robot pose
+					StartingPosition.set(true);
+					System.out.println("Starting Position Undefined");
+					startPose = Drivetrain.getInstance().getPose();
+					break;
+			}
+
+			if (Robot.isRed()) {
+				startPose = GeometryUtil.flipFieldPose(startPose);
+			}
+
+			Drivetrain.getInstance().seedFieldRelative(startPose);
+
+			forwardAuto.set(true);
+			DataLogManager.log("Backing Up");
 		}
 
 		autonCommand.withName("Auto Command").schedule();

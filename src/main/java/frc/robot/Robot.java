@@ -58,9 +58,8 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class Robot extends TimedRobot {
-	// TODO list at Home: Zero Shooter, Test Regression Data, Test swerve no FOC
 	// TODO list at Houston: Calibrate Limelight, Calibrate Odometry for carpet,
-	// Zero Shooter, Test Regression Data
+	// TODO: Zero Shooter, Test Regression Data
 
 	public static SendableChooser<String> startingPose = new SendableChooser<>();
 	public static SendableChooser<String> autoChooser = new SendableChooser<>();

@@ -58,18 +58,26 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         super.setOperatorPerspectiveForward(Rotation2d.fromDegrees((Robot.isRed() ? 180 : 0)));
 
         if (Constants.Vision.UseLimelight && Robot.isReal()) {
+            LimelightHelpers.SetRobotOrientation(Constants.Vision.LimelightFront.llAprilTag,
+                    super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+
+            LimelightHelpers.SetRobotOrientation(Constants.Vision.LimelightRear.llAprilTagRear,
+                    super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
             PoseEstimate front, back;
 
-            if (DriverStation.isDisabled() || LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > 0.221) {
+            if (DriverStation.isDisabled()
+                    || LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > 0.221) {
                 front = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightFront.llAprilTag);
             }
 
             else {
-                front = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightFront.llAprilTag);
+                front = LimelightHelpers
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightFront.llAprilTag);
             }
 
-            if (DriverStation.isDisabled() || LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > 0.221) {
+            if (DriverStation.isDisabled()
+                    || LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > 0.221) {
                 back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightRear.llAprilTagRear);
             }
 
@@ -78,44 +86,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightRear.llAprilTagRear);
             }
 
-            // if (front.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
-            if (front.tagCount >= 1) {
+            // TODO: find the MT2 TA threshold
+            if (front.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > 0.05) {
+                // if (front.tagCount >= 1) {
                 this.addVisionMeasurement(front.pose, front.timestampSeconds);
                 mField.getObject("Front LL pose").setPose(front.pose);
             }
 
-            // if (back.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
-            if (back.tagCount >= 1) {
+            if (back.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > 0.05) {
+                // if (back.tagCount >= 1) {
                 this.addVisionMeasurement(back.pose, back.timestampSeconds);
                 mField.getObject("Rear LL pose").setPose(back.pose);
             }
-
-            // PoseEstimate frontPoseEstimate =
-            // LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTag);
-
-            // if (frontPoseEstimate.tagCount > 1 &&
-            // LimelightHelpers.getTA(Constants.Vision.llAprilTag) > 0.2) {
-            // this.addVisionMeasurement(frontPoseEstimate.pose,
-            // Timer.getFPGATimestamp() - frontPoseEstimate.latency / 1000);
-            // mField.getObject("Front LL pose").setPose(frontPoseEstimate.pose);
-
-            // }
-
-            // PoseEstimate rearPoseEstimate = LimelightHelpers
-            // .getBotPoseEstimate_wpiBlue(Constants.Vision.llAprilTagRear);
-
-            // if (rearPoseEstimate.tagCount > 1 &&
-            // LimelightHelpers.getTA(Constants.Vision.llAprilTagRear) > 0.2) {
-            // this.addVisionMeasurement(rearPoseEstimate.pose,
-            // Timer.getFPGATimestamp() - rearPoseEstimate.latency / 1000);
-            // mField.getObject("Rear LL pose").setPose(rearPoseEstimate.pose);
-            // }
-
-            LimelightHelpers.SetRobotOrientation(Constants.Vision.LimelightFront.llAprilTag,
-                    super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-
-            LimelightHelpers.SetRobotOrientation(Constants.Vision.LimelightRear.llAprilTagRear,
-                    super.m_odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         }
 
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
@@ -176,7 +158,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                     Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
             LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
                     Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython, Constants.Vision.LimelightPython.llPythonPipelineIndex);
+            LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython,
+                    Constants.Vision.LimelightPython.llPythonPipelineIndex);
 
             super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionInMyVision);
         }
@@ -211,8 +194,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 new HolonomicPathFollowerConfig(
                         Constants.AutoConstants.translationPID,
                         Constants.AutoConstants.rotationPID,
-                        SwerveConstants.SwerveSpeeds.kmaxModuleSpeed,
-                        Constants.SwerveConstants.RobotMeasurements.kdriveBaseRadius,
+                        SwerveConstants.SwerveSpeeds.kMaxModuleSpeed,
+                        Constants.SwerveConstants.RobotMeasurements.kDriveBaseRadius,
                         new ReplanningConfig(true, true, 1, 0.25)),
                 Robot::isRed,
                 this);

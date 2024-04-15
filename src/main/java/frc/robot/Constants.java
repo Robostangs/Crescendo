@@ -83,19 +83,19 @@ public final class Constants {
 			// public static final double kMaxAngularSpeedMetersPerSecond = 4 * Math.PI;
 			public static final double kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond / 0.44;
 
-			public static final double kmaxModuleSpeed = TunerConstants.kSpeedAt12VoltsMps;
+			public static final double kMaxModuleSpeed = TunerConstants.kSpeedAt12VoltsMps;
 		}
 
 		public static class RobotMeasurements {
 			/** Distance (inches) between the 2 left side CANcoders */
-			public static final double kdriveBaseWidth = 24.75;
+			public static final double kDriveBaseWidth = 24.75;
 			/** Distance (inches) between the 2 front side CANcoders */
-			public static final double kdriveBaseHeight = 24.1;
+			public static final double kDriveBaseHeight = 24.1;
 
 			/**
 			 * Picture the front of the robot facing to the right in the XY axis
 			 */
-			public static final Translation2d kcenterOfRotation = new Translation2d(0, 0);
+			public static final Translation2d kCenterOfRotation = new Translation2d(0, 0);
 
 			/**
 			 * distance from the center of the robot to the furthest module (meters)
@@ -104,12 +104,12 @@ public final class Constants {
 			// public static final double driveBaseRadius = Units
 			// .inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
 
-			public static final double kdriveBaseRadius = 0.44;
+			public static final double kDriveBaseRadius = 0.44;
 
 		}
 
 		// TODO: test with off for faster speed lower acceleration
-		public static final boolean kenableFOC = false;
+		public static final boolean kEnableFOC = false;
 
 		public class TunerConstants {
 			// The steer motor uses any SwerveModule.SteerRequestType control request with
@@ -275,7 +275,7 @@ public final class Constants {
 
 			public static final double kMaxAngularSpeedRadiansPerSecond = SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond;
 			public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared
-					/ SwerveConstants.RobotMeasurements.kdriveBaseRadius;
+					/ SwerveConstants.RobotMeasurements.kDriveBaseRadius;
 
 			public static final double kMaxAngularSpeedDegreesPerSecond = kMaxAngularSpeedRadiansPerSecond
 					* 57.29577951308232;

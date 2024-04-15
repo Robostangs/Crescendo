@@ -281,7 +281,7 @@ public class SwerveModule {
             case MotionMagic:
                 switch (m_steerClosedLoopOutput) {
                     case Voltage:
-                        m_steerMotor.setControl(m_angleVoltageSetter.withPosition(angleToSetDeg).withEnableFOC(Constants.SwerveConstants.kenableFOC));
+                        m_steerMotor.setControl(m_angleVoltageSetter.withPosition(angleToSetDeg).withEnableFOC(Constants.SwerveConstants.kEnableFOC));
                         break;
 
                     case TorqueCurrentFOC:
@@ -293,7 +293,7 @@ public class SwerveModule {
             case MotionMagicExpo:
                 switch (m_steerClosedLoopOutput) {
                     case Voltage:
-                        m_steerMotor.setControl(m_angleVoltageExpoSetter.withPosition(angleToSetDeg).withEnableFOC(Constants.SwerveConstants.kenableFOC));
+                        m_steerMotor.setControl(m_angleVoltageExpoSetter.withPosition(angleToSetDeg).withEnableFOC(Constants.SwerveConstants.kEnableFOC));
                         break;
 
                     case TorqueCurrentFOC:
@@ -335,7 +335,7 @@ public class SwerveModule {
             case Velocity:
                 switch (m_driveClosedLoopOutput) {
                     case Voltage:
-                        m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet).withEnableFOC(Constants.SwerveConstants.kenableFOC));
+                        m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet).withEnableFOC(Constants.SwerveConstants.kEnableFOC));
                         break;
 
                     case TorqueCurrentFOC:

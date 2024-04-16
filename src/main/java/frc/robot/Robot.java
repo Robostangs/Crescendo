@@ -90,13 +90,13 @@ public class Robot extends TimedRobot {
 
 	public static Command setpointCommand;
 
-	public static Alert forwardAuto, wrongAlliance, StartingPosition;
+	public static Alert forwardAuto, wrongAlliance;
 
 	@Override
 	public void robotInit() {
 		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 		wrongAlliance = new Alert("Switch to Blue alliance for best results", Alert.AlertType.INFO);
-		StartingPosition = new Alert("Starting Position Undefined", Alert.AlertType.INFO);
+		// StartingPosition = new Alert("Starting Position Undefined", Alert.AlertType.INFO);
 
 		teleopTab = Shuffleboard.getTab("Teleoperated");
 		autoTab = Shuffleboard.getTab("Autonomous");
@@ -442,11 +442,12 @@ public class Robot extends TimedRobot {
 						.withName("Auto Intake")
 						.withTimeout(2));
 
-		NamedCommands.registerCommand("Devious Shooting",
+		NamedCommands.registerCommand("Devious Lick",
+				// new MultiIntake()
 				new InfiniteIntake(0.2)
-						.alongWith(new FullSend(0.2), Lighting.getLarsonCommand(() -> LEDState.kWhite))
+						.alongWith(new FullSend(0.2), Lighting.getStrobeCommand(() -> LEDState.kRobostangsOrange))
 						.finallyDo(Lighting.startTimer)
-						.withName("Devious Shooting"));
+						.withName("Devious Licking"));
 
 	}
 
@@ -501,8 +502,6 @@ public class Robot extends TimedRobot {
 		}
 
 		catch (RuntimeException e) {
-			// if (autoChooser.getSelected().equals("back-up") ||
-			// autoChooser.getSelected().equals("null")) {
 			if (autoChooser.getSelected().equals("back-up")) {
 				pathPlannerCommand = Drivetrain.getInstance()
 						.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.75));
@@ -517,7 +516,6 @@ public class Robot extends TimedRobot {
 			else {
 				pathPlannerCommand = new PrintCommand(
 						"Null Path: " + startingPose.getSelected() + autoChooser.getSelected());
-				DataLogManager.log("Autonomous init: Invalid Auto");
 			}
 
 		} catch (Exception e) {
@@ -566,19 +564,15 @@ public class Robot extends TimedRobot {
 			switch (startingPose.getSelected()) {
 				case "amp":
 					startPose = Constants.AutoConstants.WayPoints.Blue.AmpStartPosition;
-					StartingPosition.set(false);
 					break;
 				case "center":
 					startPose = Constants.AutoConstants.WayPoints.Blue.CenterStartPosition;
-					StartingPosition.set(false);
 					break;
 				case "stage":
 					startPose = Constants.AutoConstants.WayPoints.Blue.StageStartPosition;
-					StartingPosition.set(false);
 					break;
 				default:
 					// just dont seed the pose, instead set it to be the robot pose
-					StartingPosition.set(true);
 					System.out.println("Starting Position Undefined");
 					startPose = Drivetrain.getInstance().getPose();
 					break;

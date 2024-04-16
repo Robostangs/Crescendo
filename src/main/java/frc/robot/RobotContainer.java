@@ -196,10 +196,7 @@ public class RobotContainer {
 		xManip.povDown().whileTrue(new Spit());
 
 		xManip.povLeft()
-				.toggleOnTrue(new PassToShooter().andThen(
-						new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass).deadlineWith(new Prepare()),
-						new WaitUntilCommand(() -> xManip.getHID().getLeftBumper()).deadlineWith(new Prepare()),
-						new Shoot(false)).finallyDo(ReturnHome.ReturnHome));
+				.toggleOnTrue(ShootCommandFactory.getCenterToWingCommand(xManip.leftBumper()));
 
 		// left bumper is the universal shoot button
 		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));

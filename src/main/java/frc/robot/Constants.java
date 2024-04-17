@@ -374,7 +374,7 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.6;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.75;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -547,7 +547,7 @@ public final class Constants {
 		public static final int strip3Length = 34;
 
 		/** Climber Support */
-		public static final int strip4Length = 15;
+		public static final int strip4Length = 19;
 		
 		/** Right Climber */
 		public static final int strip5Length = 34;

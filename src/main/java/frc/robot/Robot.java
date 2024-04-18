@@ -360,6 +360,7 @@ public class Robot extends TimedRobot {
 		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.LimelightPython.llPython);
 	}
 
+	static String lastAuto = "";
 	@Override
 	public void disabledPeriodic() {
 		PathPlannerCommand.publishTrajectory(startingPose.getSelected() + autoChooser.getSelected());
@@ -374,7 +375,11 @@ public class Robot extends TimedRobot {
 		}
 
 		try {
-			pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
+			if (!lastAuto.equals(startingPose.getSelected() + autoChooser.getSelected())) {
+				pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
+			}
+			
+			lastAuto = startingPose.getSelected() + autoChooser.getSelected();
 			forwardAuto.set(false);
 		}
 

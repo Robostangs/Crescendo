@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
 	public static final double swerveTestSpeed = 0.1;
+	public boolean testConfigured = false;
 
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
 	public static SendableChooser<Boolean> compressChooser = new SendableChooser<>();
@@ -96,7 +97,8 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 		wrongAlliance = new Alert("Switch to Blue alliance for best results", Alert.AlertType.INFO);
-		// StartingPosition = new Alert("Starting Position Undefined", Alert.AlertType.INFO);
+		// StartingPosition = new Alert("Starting Position Undefined",
+		// Alert.AlertType.INFO);
 
 		teleopTab = Shuffleboard.getTab("Teleoperated");
 		autoTab = Shuffleboard.getTab("Autonomous");
@@ -208,33 +210,6 @@ public class Robot extends TimedRobot {
 				.withPosition(0, 2)
 				.withWidget(BuiltInWidgets.kBooleanBox);
 
-		testTab.add("Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake)
-				.withSize(3, 1)
-				.withPosition(2, 0)
-				.withWidget(BuiltInWidgets.kTextView)
-				.withProperties(Map.of("show_submit_button", true));
-
-		desiredSetpointEntry = NetworkTableInstance.getDefault()
-				.getTable("Shuffleboard")
-				.getSubTable(testTab.getTitle())
-				.getEntry("Desired Setpoint");
-
-		// use this for shooter regression
-		setpointCommand = new TrackSetPoint(
-				() -> desiredSetpointEntry.getDouble(Constants.ArmConstants.SetPoints.kIntake));
-
-		testTab.add(setpointCommand)
-				.withSize(2, 1)
-				.withPosition(5, 0)
-				.withWidget(BuiltInWidgets.kCommand);
-
-		pathDelayEntry = NetworkTableInstance.getDefault()
-				.getTable("Shuffleboard")
-				.getSubTable(autoTab.getTitle())
-				.getEntry("Path Delay");
-
-		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
-
 		disabledTab.add("Command Scheduler", CommandScheduler.getInstance());
 
 		disabledTab.add("Song Selector", songChooser)
@@ -252,90 +227,7 @@ public class Robot extends TimedRobot {
 					.withSize(3, 3)
 					.withPosition(0, 0)
 					.withWidget("Alerts");
-
-			testTab.add(group, alert)
-					.withSize(2, 3)
-					.withPosition(0, 0)
-					.withWidget("Alerts");
 		});
-
-		// drive forward command
-		swerveCommands.setDefaultOption("Do Nothing (Reset Gyro)",
-				Drivetrain.getInstance()
-						.runOnce(() -> Drivetrain.getInstance()
-								.seedFieldRelative(!Robot.isRed()
-										? Constants.AutoConstants.WayPoints.Blue.CenterStartPosition
-										: GeometryUtil
-												.flipFieldPose(
-														Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
-						.withName("Zero Swerve 2 Speaker"));
-
-		swerveCommands.addOption("Drive Forward",
-				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(
-								Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
-						.withName("Drive Forward"));
-
-		swerveCommands.addOption("Drive Backwards",
-				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityX(
-								-Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
-						.withName("Drive Backwards"));
-
-		swerveCommands.addOption("Drive Left",
-				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(
-								Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
-						.withName("Drive Left"));
-
-		swerveCommands.addOption("Drive Right",
-				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withVelocityY(
-								-Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
-						.withName("Drive Right"));
-
-		swerveCommands.addOption("Rotate",
-				Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
-						.withRotationalRate(
-								Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond
-										* swerveTestSpeed))
-						.withName("Rotate"));
-
-		testTab.add("Swerve Commands", swerveCommands)
-				.withSize(9, 1)
-				.withPosition(2, 2)
-				.withWidget(BuiltInWidgets.kSplitButtonChooser);
-
-		armCommands.setDefaultOption("Nothing", new InstantCommand());
-		armCommands.addOption("Intake", new SetPoint(Constants.ArmConstants.SetPoints.kIntake));
-		armCommands.addOption("Track Speaker", new SetPoint());
-		armCommands.addOption("0 degrees", new SetPoint(0));
-		armCommands.addOption("Amp", new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
-
-		testTab.add("Arm Commands", armCommands)
-				.withSize(5, 1)
-				.withPosition(2, 1)
-				.withWidget(BuiltInWidgets.kSplitButtonChooser);
-
-		testTab.add("Extend Climber", new Extend())
-				.withSize(2, 1)
-				.withPosition(9, 0)
-				.withWidget(BuiltInWidgets.kCommand);
-
-		testTab.add("Retract Climber", new Retract())
-				.withSize(2, 1)
-				.withPosition(9, 1)
-				.withWidget(BuiltInWidgets.kCommand);
-
-		testTab.add("Intake (with deploying)", new DeployAndIntake(true))
-				.withSize(2, 1)
-				.withPosition(7, 0)
-				.withWidget(BuiltInWidgets.kCommand);
-
-		testTab.add("Intake (without deploying)", new DeployAndIntake(false))
-				.withSize(2, 1)
-				.withPosition(7, 1)
-				.withWidget(BuiltInWidgets.kCommand);
 
 		if (Robot.isReal() && Constants.Vision.UseLimelight) {
 			// front camera (intake cam) - auto tab
@@ -384,28 +276,6 @@ public class Robot extends TimedRobot {
 							Constants.Vision.LimelightPython.llPythonIP))
 					.withSize(2, 2)
 					.withPosition(7, 0)
-					.withWidget(BuiltInWidgets.kCameraStream)
-					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-
-			// check if cameras are working
-			testTab.add(new HttpCamera(Constants.Vision.LimelightFront.llAprilTag,
-					Constants.Vision.LimelightFront.llAprilTagIP))
-					.withSize(3, 2)
-					.withPosition(1, 3)
-					.withWidget(BuiltInWidgets.kCameraStream)
-					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-
-			testTab.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear,
-					Constants.Vision.LimelightRear.llAprilTagRearIP))
-					.withSize(3, 2)
-					.withPosition(4, 3)
-					.withWidget(BuiltInWidgets.kCameraStream)
-					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-
-			testTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython,
-					Constants.Vision.LimelightPython.llPythonIP))
-					.withSize(3, 2)
-					.withPosition(7, 3)
 					.withWidget(BuiltInWidgets.kCameraStream)
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 		}
@@ -637,6 +507,146 @@ public class Robot extends TimedRobot {
 	public void testInit() {
 		if (!compressChooser.getSelected()) {
 			Intake.getInstance().disableCompressor();
+		}
+
+		if (!testConfigured) {
+			// drive forward command
+			swerveCommands.setDefaultOption("Do Nothing (Reset Gyro)",
+					Drivetrain.getInstance()
+							.runOnce(() -> Drivetrain.getInstance()
+									.seedFieldRelative(!Robot.isRed()
+											? Constants.AutoConstants.WayPoints.Blue.CenterStartPosition
+											: GeometryUtil
+													.flipFieldPose(
+															Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
+							.withName("Zero Swerve 2 Speaker"));
+
+			swerveCommands.addOption("Drive Forward",
+					Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+							.withVelocityX(
+									Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+							.withName("Drive Forward"));
+
+			swerveCommands.addOption("Drive Backwards",
+					Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+							.withVelocityX(
+									-Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+							.withName("Drive Backwards"));
+
+			swerveCommands.addOption("Drive Left",
+					Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+							.withVelocityY(
+									Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+							.withName("Drive Left"));
+
+			swerveCommands.addOption("Drive Right",
+					Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+							.withVelocityY(
+									-Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond * swerveTestSpeed))
+							.withName("Drive Right"));
+
+			swerveCommands.addOption("Rotate",
+					Drivetrain.getInstance().applyRequest(() -> new SwerveRequest.FieldCentric()
+							.withRotationalRate(
+									Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond
+											* swerveTestSpeed))
+							.withName("Rotate"));
+
+			testTab.add("Swerve Commands", swerveCommands)
+					.withSize(9, 1)
+					.withPosition(2, 2)
+					.withWidget(BuiltInWidgets.kSplitButtonChooser);
+
+			armCommands.setDefaultOption("Nothing", new InstantCommand());
+			armCommands.addOption("Intake", new SetPoint(Constants.ArmConstants.SetPoints.kIntake));
+			armCommands.addOption("Track Speaker", new SetPoint());
+			armCommands.addOption("0 degrees", new SetPoint(0));
+			armCommands.addOption("Amp", new SetPoint(Constants.ArmConstants.SetPoints.kAmp));
+
+			testTab.add("Arm Commands", armCommands)
+					.withSize(5, 1)
+					.withPosition(2, 1)
+					.withWidget(BuiltInWidgets.kSplitButtonChooser);
+
+			testTab.add("Extend Climber", new Extend())
+					.withSize(2, 1)
+					.withPosition(9, 0)
+					.withWidget(BuiltInWidgets.kCommand);
+
+			testTab.add("Retract Climber", new Retract())
+					.withSize(2, 1)
+					.withPosition(9, 1)
+					.withWidget(BuiltInWidgets.kCommand);
+
+			testTab.add("Intake (with deploying)", new DeployAndIntake(true))
+					.withSize(2, 1)
+					.withPosition(7, 0)
+					.withWidget(BuiltInWidgets.kCommand);
+
+			testTab.add("Intake (without deploying)", new DeployAndIntake(false))
+					.withSize(2, 1)
+					.withPosition(7, 1)
+					.withWidget(BuiltInWidgets.kCommand);
+
+			testTab.add("Desired Setpoint", Constants.ArmConstants.SetPoints.kIntake)
+					.withSize(3, 1)
+					.withPosition(2, 0)
+					.withWidget(BuiltInWidgets.kTextView)
+					.withProperties(Map.of("show_submit_button", true));
+
+			desiredSetpointEntry = NetworkTableInstance.getDefault()
+					.getTable("Shuffleboard")
+					.getSubTable(testTab.getTitle())
+					.getEntry("Desired Setpoint");
+
+			// use this for shooter regression
+			setpointCommand = new TrackSetPoint(
+					() -> desiredSetpointEntry.getDouble(Constants.ArmConstants.SetPoints.kIntake));
+
+			testTab.add(setpointCommand)
+					.withSize(2, 1)
+					.withPosition(5, 0)
+					.withWidget(BuiltInWidgets.kCommand);
+
+			pathDelayEntry = NetworkTableInstance.getDefault()
+					.getTable("Shuffleboard")
+					.getSubTable(autoTab.getTitle())
+					.getEntry("Path Delay");
+
+			SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+
+			Alert.groups.forEach((group, alert) -> {
+				testTab.add(group, alert)
+						.withSize(2, 3)
+						.withPosition(0, 0)
+						.withWidget("Alerts");
+			});
+
+			if (Robot.isReal() && Constants.Vision.UseLimelight) {
+				// check if cameras are working
+				testTab.add(new HttpCamera(Constants.Vision.LimelightFront.llAprilTag,
+						Constants.Vision.LimelightFront.llAprilTagIP))
+						.withSize(3, 2)
+						.withPosition(1, 3)
+						.withWidget(BuiltInWidgets.kCameraStream)
+						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+	
+				testTab.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear,
+						Constants.Vision.LimelightRear.llAprilTagRearIP))
+						.withSize(3, 2)
+						.withPosition(4, 3)
+						.withWidget(BuiltInWidgets.kCameraStream)
+						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+	
+				testTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython,
+						Constants.Vision.LimelightPython.llPythonIP))
+						.withSize(3, 2)
+						.withPosition(7, 3)
+						.withWidget(BuiltInWidgets.kCameraStream)
+						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
+			}
+
+			testConfigured = true;
 		}
 
 		robotContainer.configurePitBinds();

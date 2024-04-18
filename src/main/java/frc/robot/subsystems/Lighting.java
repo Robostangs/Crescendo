@@ -37,8 +37,6 @@ public class Lighting extends SubsystemBase {
             timer.stop();
             timer.reset();
 
-            clearAnimations();
-
             LEDState state;
 
             if (DriverStation.isDisabled()) {
@@ -94,6 +92,10 @@ public class Lighting extends SubsystemBase {
     }
 
     public void autoSetLights(boolean autoSet) {
+        if (autoSet) {
+            clearAnimations();
+        }
+        
         auto = autoSet;
     }
 

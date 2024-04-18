@@ -63,7 +63,7 @@ public class Arm extends SubsystemBase {
 
         SmartDashboard.putNumber("Arm/Position Error",
                 Units.rotationsToDegrees(motionMagicDutyCycle.Position) - getArmPosition());
-        SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
+        // SmartDashboard.putNumber("Arm/Calculated Setpoint", calculateArmSetpoint());
 
         motionMagicDutyCycle.FeedForward = Constants.ArmConstants.kFeedForwardTorqueCurrent;
         motionMagicDutyCycle.FeedForward *= Rotation2d.fromDegrees(getShooterExtensionPosition())

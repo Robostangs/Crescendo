@@ -342,6 +342,7 @@ public class Robot extends TimedRobot {
 		CommandScheduler.getInstance()
 				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
 		CommandScheduler.getInstance()
+		
 				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
 		CommandScheduler.getInstance()
 				.onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
@@ -362,6 +363,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		PathPlannerCommand.publishTrajectory(startingPose.getSelected() + autoChooser.getSelected());
+
 		try {
 			Pose2d centerPose = pathToPointCommandChooser.getSelected();
 			teleopField.getObject("Last Ditch Effort").setPose(centerPose);

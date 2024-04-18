@@ -35,7 +35,7 @@ public final class Constants {
 		public static final boolean UseLimelight = true;
 
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.42, 0.42, Units.degreesToRadians(100));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.34, 0.34, Units.degreesToRadians(100));
 
 		public static class LimelightFront {
 			public static final String llAprilTag = "limelight-front";
@@ -110,7 +110,6 @@ public final class Constants {
 			// .inchesToMeters(Utils.pythagorean(driveBaseWidth / 2, driveBaseHeight / 2));
 
 			public static final double kDriveBaseRadius = 0.44;
-
 		}
 
 		public static final boolean kEnableDriveFOC = true;
@@ -140,8 +139,8 @@ public final class Constants {
 			private static final double kSlipCurrentA = Robot.isSimulation() ? 200.0 : 80.0;
 
 			/** Theoretical free speed (m/s) at 12v applied output */
-			// public static final double kSpeedAt12VoltsMps = 5.96;
-			public static final double kSpeedAt12VoltsMps = 5.03;
+			public static final double kSpeedAt12VoltsMps = 5.96;
+			// public static final double kSpeedAt12VoltsMps = ;
 
 			/**
 			 * Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns
@@ -457,7 +456,7 @@ public final class Constants {
 			public static final double kGearboxRotationsToMechanismMeters = 18.1430612 / 0.0889;
 			public static final double kMaxExtensionMeters = 0.6604;
 			public static final double kExtensionThreshold = kMaxExtensionMeters - 0.482;
-			public static final double kExtensionPower = 0.5;
+			public static final double kExtensionPower = 1;
 			public static final double kRetractPower = -1;
 
 			// 0.0889 meters moves

@@ -131,7 +131,7 @@ public class ShootCommandFactory {
                                 .andThen(new WaitUntilCommand(waitUntil).deadlineWith(
                                                 new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass),
                                                 new ChargeUp(0.75)),
-                                                new Shoot(true))
+                                                new Shoot(true).onlyWhile(waitUntil))
                                 .finallyDo(ReturnHome.ReturnHome)
                                 .handleInterrupt(CancelShooter.CancelShooter)
                                 .withName("Pass to Center");

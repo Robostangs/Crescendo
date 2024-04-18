@@ -151,8 +151,8 @@ public final class Constants {
 			private static final double kSteerGearRatio = 21.428571428571427;
 
 			// TODO: calibrate for carpet
-			// private static final double kWheelRadiusInches = 2 * (6.3 / 6.6);
-			private static final double kWheelRadiusInches = 3.9275 / 2;
+			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6);
+			// private static final double kWheelRadiusInches = 3.9275 / 2;
 
 			private static final boolean kSteerMotorReversed = false;
 			private static final boolean kInvertLeftSide = true;
@@ -324,8 +324,8 @@ public final class Constants {
 
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
-		public static final double falconShooterLoadRPM = 5400;
-		public static final double falconShooterThresholdRPM = falconShooterLoadRPM * 0.875;
+		public static final double falconShooterLoadRPM = 5340;
+		public static final double falconShooterThresholdRPM = falconShooterLoadRPM * 0.925;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
@@ -374,7 +374,7 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.75;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -61.9;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -557,7 +557,7 @@ public final class Constants {
 		/** Standard is 2 LEDs */
 		public static final int larsonAnimationSize = 5;
 
-		public static final double strobeAnimationSpeed = 1;
+		public static final double strobeAnimationSpeed = 0.5;
 	}
 
 	public static class ShootPoints {

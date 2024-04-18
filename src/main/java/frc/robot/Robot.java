@@ -280,6 +280,11 @@ public class Robot extends TimedRobot {
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 		}
 
+		pathDelayEntry = NetworkTableInstance.getDefault()
+				.getTable("Shuffleboard")
+				.getSubTable(autoTab.getTitle())
+				.getEntry("Path Delay");
+
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		Shuffleboard.selectTab(disabledTab.getTitle());
@@ -608,11 +613,6 @@ public class Robot extends TimedRobot {
 					.withPosition(5, 0)
 					.withWidget(BuiltInWidgets.kCommand);
 
-			pathDelayEntry = NetworkTableInstance.getDefault()
-					.getTable("Shuffleboard")
-					.getSubTable(autoTab.getTitle())
-					.getEntry("Path Delay");
-
 			SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
 			Alert.groups.forEach((group, alert) -> {
@@ -630,14 +630,14 @@ public class Robot extends TimedRobot {
 						.withPosition(1, 3)
 						.withWidget(BuiltInWidgets.kCameraStream)
 						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-	
+
 				testTab.add(new HttpCamera(Constants.Vision.LimelightRear.llAprilTagRear,
 						Constants.Vision.LimelightRear.llAprilTagRearIP))
 						.withSize(3, 2)
 						.withPosition(4, 3)
 						.withWidget(BuiltInWidgets.kCameraStream)
 						.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
-	
+
 				testTab.add(new HttpCamera(Constants.Vision.LimelightPython.llPython,
 						Constants.Vision.LimelightPython.llPythonIP))
 						.withSize(3, 2)

@@ -157,7 +157,7 @@ public class RobotContainer {
 										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
 				.withName("Zero Swerve 2 Speaker"));
 
-		xDrive.leftBumper().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
+		xDrive.leftBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommand());
 
 		xDrive.rightBumper().toggleOnTrue(new Extend()
 				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))

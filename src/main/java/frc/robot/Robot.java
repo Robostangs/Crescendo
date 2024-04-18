@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
 
 	public static SendableChooser<Command> swerveCommands = new SendableChooser<>();
 	public static SendableChooser<Command> armCommands = new SendableChooser<>();
-	public static final double swerveTestSpeed = 0.1;
+	public static final double swerveTestSpeed = 0.05;
 	public boolean testConfigured = false;
 
 	public static SendableChooser<String> songChooser = new SendableChooser<>();

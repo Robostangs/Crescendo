@@ -152,7 +152,7 @@ public final class Constants {
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
 
-			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6);
+			private static final double kWheelRadiusInches = 2 * (6.45 / 6.6);
 			// private static final double kWheelRadiusInches = 3.9275 / 2;
 
 			private static final boolean kSteerMotorReversed = false;

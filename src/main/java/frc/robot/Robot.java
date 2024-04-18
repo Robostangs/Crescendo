@@ -58,9 +58,6 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
 public class Robot extends TimedRobot {
-	// TODO list at Houston: Calibrate Limelight, Calibrate Odometry for carpet,
-	// TODO: Zero Shooter, Test Regression Data
-
 	public static SendableChooser<String> startingPose = new SendableChooser<>();
 	public static SendableChooser<String> autoChooser = new SendableChooser<>();
 	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
@@ -248,9 +245,9 @@ public class Robot extends TimedRobot {
 					.withProperties(Map.of("Show Crosshair", false, "Show Controls", false));
 
 			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightFront.llAprilTag,
-					Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+					Constants.Vision.LimelightFront.AprilTagPipelineIndex);
 			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
-					Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
+					Constants.Vision.LimelightRear.AprilTagPipelineIndex);
 			LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython,
 					Constants.Vision.LimelightPython.llPythonPipelineIndex);
 
@@ -378,7 +375,7 @@ public class Robot extends TimedRobot {
 			if (!lastAuto.equals(startingPose.getSelected() + autoChooser.getSelected())) {
 				pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
 			}
-			
+
 			lastAuto = startingPose.getSelected() + autoChooser.getSelected();
 			forwardAuto.set(false);
 		}

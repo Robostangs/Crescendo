@@ -29,6 +29,9 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.Vision;
+import frc.robot.Constants.Vision.LimelightFront;
+import frc.robot.Constants.Vision.LimelightRear;
 import frc.robot.Robot;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.Vision.LimelightHelpers.PoseEstimate;
@@ -65,8 +68,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             PoseEstimate front, back;
 
             if (DriverStation.isDisabled()
-                    || LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > 0.221
-                    || Math.abs(super.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) < 45) {
+                    || LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > LimelightFront.MegaTag1AreaThreshold
+                    || Math.abs(super.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) < LimelightFront.MegatTag2AngularVelocityThreshold) {
                 front = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightFront.llAprilTag);
             }
 
@@ -76,8 +79,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             }
 
             if (DriverStation.isDisabled()
-                    || LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > 0.221
-                    || Math.abs(super.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) < 45) {
+                    || LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > LimelightRear.MegaTag1AreaThreshold
+                    || Math.abs(super.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) < LimelightRear.MegatTag2AngularVelocityThreshold) {
                 back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightRear.llAprilTagRear);
             }
 
@@ -86,14 +89,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                         .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Vision.LimelightRear.llAprilTagRear);
             }
 
-            // TODO: find the MT2 TA threshold
-            if (front.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > 0.05) {
+            if (front.tagCount > 1
+                    && LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > LimelightFront.MegaTag2AreaThreshold) {
                 // if (front.tagCount >= 1) {
                 this.addVisionMeasurement(front.pose, front.timestampSeconds);
                 mField.getObject("Front LL pose").setPose(front.pose);
             }
 
-            if (back.tagCount > 1 && LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > 0.05) {
+            if (back.tagCount > 1
+                    && LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > LimelightRear.MegaTag2AreaThreshold) {
                 // if (back.tagCount >= 1) {
                 this.addVisionMeasurement(back.pose, back.timestampSeconds);
                 mField.getObject("Rear LL pose").setPose(back.pose);
@@ -154,13 +158,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         }
 
         if (Constants.Vision.UseLimelight) {
-            LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightFront.llAprilTag,
-                    Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightRear.llAprilTagRear,
-                    Constants.Vision.LimelightFront.llAprilTagPipelineIndex);
-            LimelightHelpers.setPipelineIndex(Constants.Vision.LimelightPython.llPython,
-                    Constants.Vision.LimelightPython.llPythonPipelineIndex);
-
             super.setVisionMeasurementStdDevs(Constants.Vision.kPrecisionInMyVision);
         }
 

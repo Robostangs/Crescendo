@@ -40,14 +40,19 @@ public final class Constants {
 		public static class LimelightFront {
 			public static final String llAprilTag = "limelight-front";
 			public static final String llAprilTagIP = "http://10.5.48.13:5800/stream.mjpg";
-			public static final int llAprilTagPipelineIndex = 0;
-
+			public static final int AprilTagPipelineIndex = 0;
+			public static final double MegaTag1AreaThreshold = 0.221;
+			public static final double MegaTag2AreaThreshold = 0.1;
+			public static final double MegatTag2AngularVelocityThreshold = 22.5;
 		}
 
 		public static class LimelightRear {
 			public static final String llAprilTagRear = "limelight-rear";
 			public static final String llAprilTagRearIP = "http://10.5.48.11:5800/stream.mjpg";
-			public static final int llAprilTagWithLightsPipelineIndex = 2;
+			public static final int AprilTagPipelineIndex = 0;
+			public static final double MegaTag1AreaThreshold = LimelightFront.MegaTag1AreaThreshold;
+			public static final double MegaTag2AreaThreshold = LimelightFront.MegaTag2AreaThreshold;
+			public static final double MegatTag2AngularVelocityThreshold = LimelightFront.MegatTag2AngularVelocityThreshold;
 		}
 
 		public static class LimelightPython {
@@ -108,10 +113,8 @@ public final class Constants {
 
 		}
 
-		// TODO: test with drive off for faster speed lower acceleration
-		public static final boolean kEnableDriveFOC = false;
+		public static final boolean kEnableDriveFOC = true;
 		public static final boolean kEnableTurnFOC = true;
-		
 
 		public class TunerConstants {
 			// The steer motor uses any SwerveModule.SteerRequestType control request with
@@ -150,7 +153,6 @@ public final class Constants {
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
 
-			// TODO: calibrate for carpet
 			private static final double kWheelRadiusInches = 2 * (6.3 / 6.6);
 			// private static final double kWheelRadiusInches = 3.9275 / 2;
 

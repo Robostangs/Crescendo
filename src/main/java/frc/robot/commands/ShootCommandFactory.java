@@ -130,7 +130,7 @@ public class ShootCommandFactory {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new WaitUntilCommand(waitUntil).deadlineWith(
                                                 new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass),
-                                                new ChargeUp(0.75)),
+                                                new ChargeUp(0.65)),
                                                 new Shoot(true).onlyWhile(waitUntil))
                                 .finallyDo(ReturnHome.ReturnHome)
                                 .handleInterrupt(CancelShooter.CancelShooter)

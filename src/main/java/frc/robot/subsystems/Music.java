@@ -65,13 +65,13 @@ public class Music extends SubsystemBase {
     @Override
     public void periodic() {
 
-        play = SmartDashboard.getBoolean("Play Music", false);
+        // play = SmartDashboard.getBoolean("Play Music", false);
 
-        if (play) {
-            mOrchestra.play();
-        } else {
-            mOrchestra.pause();
-        }
+        // if (play) {
+        //     mOrchestra.play();
+        // } else {
+        //     mOrchestra.pause();
+        // }
     }
 
     public void playMusic(String chrpFile) {

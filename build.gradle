@@ -29,7 +29,7 @@ deploy {
                 frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
                 // Enable VisualVM connection (profiling)
                     jvmArgs.add("-Dcom.sun.management.jmxremote=true")
-                    jvmArgs.add("-Dcom.sun.management.jmxremote.port=1198")
+                    jvmArgs.add("-Dcom.sun.management.jmxremote.port=5800")
                     jvmArgs.add("-Dcom.sun.management.jmxremote.local.only=false")
                     jvmArgs.add("-Dcom.sun.management.jmxremote.ssl=false")
                     jvmArgs.add("-Dcom.sun.management.jmxremote.authenticate=false")

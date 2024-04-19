@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
 		startingPose.addOption("Amp Side", "amp"); // left
 		startingPose.setDefaultOption("Center", "center"); // center
 		startingPose.addOption("Stage Side", "stage"); // right
-		startingPose.addOption("Out West", "out west"); // right
+		startingPose.addOption("Out West", "out west");
 
 		autoChooser.setDefaultOption("Sit and Shit", "null");
 		autoChooser.addOption("Simple Reverse", "back-up");

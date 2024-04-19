@@ -35,7 +35,7 @@ public final class Constants {
 		public static final boolean UseLimelight = true;
 
 		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.34, 0.34, Units.degreesToRadians(100));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.22, 0.22, Units.degreesToRadians(100));
 
 		public static class LimelightFront {
 			public static final String llAprilTag = "limelight-front";
@@ -152,8 +152,20 @@ public final class Constants {
 			private static final double kDriveGearRatio = 5.357142857142857;
 			private static final double kSteerGearRatio = 21.428571428571427;
 
-			private static final double kWheelRadiusInches = 2 * (6.45 / 6.6);
+			// private static final double kWheelRadiusInches = (2 * (6.45 / 6.6)) * (139.505 / 120);
 			// private static final double kWheelRadiusInches = 3.9275 / 2;
+			private static final double kWheelRadiusInches = 2 * (3.082 / 3.586);
+
+			/*
+			 * X:1.4
+			 * Y:5.55
+			 * 
+			 * X:-2.153
+			 * Y:5.359
+			 * 
+			 * X-delta: 3.553
+			 * X-delta: 139.88 - 0.375
+			 */
 
 			private static final boolean kSteerMotorReversed = false;
 			private static final boolean kInvertLeftSide = true;

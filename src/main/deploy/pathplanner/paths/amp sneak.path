@@ -20,12 +20,12 @@
         "y": 7.8
       },
       "prevControl": {
-        "x": 2.043616682231938,
-        "y": 7.822261042374338
+        "x": 2.3601823468803307,
+        "y": 7.8140321552290715
       },
       "nextControl": {
-        "x": 3.689701925700148,
-        "y": 7.779472290426063
+        "x": 3.3998311602959896,
+        "y": 7.787007263676785
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 7.229778095919829
       },
       "prevControl": {
-        "x": 3.629842472647908,
-        "y": 7.478215340689942
+        "x": 3.482724103194182,
+        "y": 7.68061185496253
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,8 +46,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.85,
-      "rotationDegrees": 13.0,
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     },
     {
@@ -58,6 +58,11 @@
     {
       "waypointRelativePos": 0.0,
       "rotationDegrees": 60.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.75,
+      "rotationDegrees": -27.0,
       "rotateFast": false
     }
   ],
@@ -93,9 +98,9 @@
     "maxAngularAcceleration": 455.7618824904275
   },
   "goalEndState": {
-    "velocity": 3.0,
-    "rotation": -13.0,
-    "rotateFast": true
+    "velocity": 2.0,
+    "rotation": -7.7218258001309845,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Amp Side Paths",

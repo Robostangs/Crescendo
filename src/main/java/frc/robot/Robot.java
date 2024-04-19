@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
 		autoChooser.addOption("1 Piece", " 1 piece");
 		autoChooser.addOption("2 Piece", " 2 piece");
 		autoChooser.addOption("3 Piece", " 3 piece");
-		autoChooser.addOption("4 Piece (Center Only)", " 4 piece");
+		autoChooser.addOption("4 Piece", " 4 piece");
 		autoChooser.addOption("Far 1 Piece (No Center)", " far 1 piece");
 		autoChooser.addOption("Far 2 Piece (No Center)", " far 2 piece");
 		autoChooser.addOption("Far 3 Piece (No Center)", " far 3 piece");
@@ -355,6 +355,7 @@ public class Robot extends TimedRobot {
 	public void disabledInit() {
 		Shuffleboard.selectTab(disabledTab.getTitle());
 		LimelightHelpers.setLEDMode_ForceOff(Constants.Vision.LimelightPython.llPython);
+		lastAuto = "";
 	}
 
 	static String lastAuto = "";

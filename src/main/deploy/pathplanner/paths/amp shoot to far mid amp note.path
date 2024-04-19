@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.055731570638225,
-        "y": 7.005720837620128
+        "x": 5.891176004176696,
+        "y": 6.402957492855952
       },
       "isLocked": false,
       "linkedName": "Amp Shoot Position"
@@ -36,8 +36,8 @@
         "y": 7.229778095919829
       },
       "prevControl": {
-        "x": 5.011727746519465,
-        "y": 6.983095389591454
+        "x": 5.891176004176696,
+        "y": 6.329529081240632
       },
       "nextControl": null,
       "isLocked": false,
@@ -51,7 +51,7 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.45,
       "rotationDegrees": -28.0,
       "rotateFast": false
     }

@@ -77,8 +77,9 @@ public class Lighting extends SubsystemBase {
             }
 
             if (state != oldState) {
-                mCANdle.setLEDs(state.getColor()[0], state.getColor()[1], state.getColor()[2], 0, 0, 8 + Lights.strip1Length +
-                        Lights.strip2Length + Lights.strip3Length + Lights.strip4Length + Lights.strip5Length);
+                mCANdle.setLEDs(state.getColor()[0], state.getColor()[1], state.getColor()[2]);
+                // mCANdle.setLEDs(state.getColor()[0], state.getColor()[1], state.getColor()[2], 0, 0, 8 + Lights.strip1Length +
+                        // Lights.strip2Length + Lights.strip3Length + Lights.strip4Length + Lights.strip5Length);
             }
 
             oldState = state;

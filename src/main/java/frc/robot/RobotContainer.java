@@ -172,13 +172,20 @@ public class RobotContainer {
 					xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
 				}));
 
+		new Trigger(() -> Timer.getMatchTime() > 5).and(() -> Timer.getMatchTime() < 10)
+				.whileTrue(new RunCommand(() -> {
+					xManip.getHID().setRumble(RumbleType.kBothRumble, 1);
+				})).negate().onTrue(new RunCommand(() -> {
+					xManip.getHID().setRumble(RumbleType.kBothRumble, 0);
+				}));
+
 		new Trigger(() -> Math.abs(xManip.getRightY()) > Constants.OperatorConstants.Manip.kDeadzone)
 				.whileTrue(new FineAdjust(() -> -xManip.getRightY()));
 
 		new Trigger(() -> Math.abs(xManip.getLeftY()) > Constants.OperatorConstants.Manip.kDeadzone)
 				.whileTrue(new BeltDrive(() -> -xManip.getLeftY()));
 
-		xManip.x().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		xManip.x().toggleOnTrue(ShootCommandFactory.getCenterToWingCommand(xManip.leftBumper()));
 		xManip.y().onTrue(HomeClimber.getHomingCommand());
 		xManip.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xManip.leftBumper()));
 		xManip.b().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xManip.leftBumper()));
@@ -195,8 +202,7 @@ public class RobotContainer {
 		xManip.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommandWithWaitUntil(xManip.leftBumper()));
 		xManip.povDown().whileTrue(new Spit());
 
-		xManip.povLeft()
-				.toggleOnTrue(ShootCommandFactory.getCenterToWingCommand(xManip.leftBumper()));
+		xManip.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 
 		// left bumper is the universal shoot button
 		xManip.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xManip.leftBumper()));

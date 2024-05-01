@@ -7,18 +7,27 @@ import frc.robot.subsystems.Shooter;
 public class Shoot extends Command {
     Shooter shooter;
     boolean force;
+    double mult;
 
     public Shoot(boolean force) {
         shooter = Shooter.getInstance();
         this.force = force;
+        this.mult = 1;
+        this.addRequirements(shooter);
+        this.setName("Shoot");
+    }
 
+    public Shoot(boolean force, double mult) {
+        shooter = Shooter.getInstance();
+        this.force = force;
+        this.mult = mult;
         this.addRequirements(shooter);
         this.setName("Shoot");
     }
 
     @Override
     public void initialize() {
-        shooter.setShooterMotors(1);
+        shooter.setShooterMotors(mult*1);
         shooter.setFeederMotor(0);
         shooter.postStatus("Charging Shooter");
     }

@@ -654,7 +654,7 @@ public class Robot extends TimedRobot {
 			testConfigured = true;
 		}
 
-		robotContainer.configurePitBinds();
+		robotContainer.configureOutreachBinds();
 
 		CommandScheduler.getInstance().cancelAll();
 		Shuffleboard.selectTab(testTab.getTitle());

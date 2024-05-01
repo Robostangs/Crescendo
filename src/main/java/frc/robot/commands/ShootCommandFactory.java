@@ -58,6 +58,15 @@ public class ShootCommandFactory {
         }
 
         // works perfectly
+        public static Command getAimAndShootCommandWithWaitUntilandMult(BooleanSupplier waitUntil,double mult) {
+                return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
+                                .andThen(new SetPoint()
+                                                .raceWith(new Prepare(mult).until(waitUntil).andThen(new Shoot(false))),
+                                                new CancelShooter().alongWith(new ReturnHome()))
+                                .withName("Aim and Shoot");
+        }
+
+        // works perfectly
         public static Command getAmpCommand() {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new SetPoint(Constants.ArmConstants.SetPoints.kAmp), new PoopOut())
@@ -106,6 +115,15 @@ public class ShootCommandFactory {
                                 .withName("Prepare and Shoot");
         }
 
+
+        // works perfectly
+        public static Command getPrepareAndShootCommandWithWaitUntilandMult(BooleanSupplier waitUntil) {
+                return new Prepare().until(waitUntil)
+                                .andThen(new Shoot(true, Constants.ShooterConstants.shooterMult).onlyWhile(waitUntil))
+                                .finallyDo(CancelShooter.CancelShooter)
+                                .withName("Prepare and Shoot");
+        }
+
         // works perfectly
         public static Command getRapidFireCommand() {
                 return new Shoot(false)
@@ -125,7 +143,6 @@ public class ShootCommandFactory {
                                 .withName("Rapid Fire");
         }
 
-        
         public static Command getCenterToWingCommand(BooleanSupplier waitUntil) {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new WaitUntilCommand(waitUntil).deadlineWith(

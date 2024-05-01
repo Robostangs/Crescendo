@@ -53,7 +53,7 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 public class RobotContainer {
 	public static final CommandXboxController xDrive = new CommandXboxController(0);
 	public static final CommandXboxController xManip = new CommandXboxController(1);
-	public static final CommandXboxController xPit = new CommandXboxController(2);
+	public static final CommandXboxController xOut = new CommandXboxController(2);
 	private static final GenericHID simController = new GenericHID(3);
 
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
@@ -82,6 +82,10 @@ public class RobotContainer {
 			drivetrain.setDefaultCommand(
 					new xDrive(xDrive::getLeftY, xDrive::getLeftX, xDrive::getRightX,
 							xDrive::getRightTriggerAxis).ignoringDisable(true));
+
+			drivetrain.setDefaultCommand(
+					new xDrive(xOut::getLeftY, xOut::getLeftX, xOut::getRightX,
+							xOut::getRightTriggerAxis).ignoringDisable(true));
 		}
 	}
 
@@ -225,39 +229,74 @@ public class RobotContainer {
 		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 	}
 
-	public void configurePitBinds() {
-		// works perfectly
-		xPit.a().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
+	public void configureOutreachBinds() {
+		// Manually adjusts the arm
+		new Trigger(() -> xOut.getLeftY() > Constants.OperatorConstants.Manip.kDeadzone).onTrue(
+				new FineAdjust(() -> xOut.getLeftY()));
 
-		// works perfectly
-		xPit.b().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithTimeouts());
+		// deploys intake and belt drives
+		// flashes purple when doing it
+		// flashes pink and rumbles when it has a note
+		xOut.rightStick().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+				.andThen(Lighting.getStrobeCommand(() -> LEDState.kPurple)).andThen(
+						new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble,
+								Constants.OperatorConstants.Driver.kIntakeRumbleStrength)),
+						Lighting.getStrobeCommand(() -> LEDState.kPink))
+				.onlyIf(() -> Intake.getInstance().getShooterSensor())
+				.withTimeout(2)
+				.finallyDo(
+						Lighting.startTimer)
+				.alongWith(
+						new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 0))));
 
-		// works perfectly
-		xPit.y().toggleOnTrue(ShootCommandFactory.getAimAndShootCommandWithWaitUntil(xPit.leftBumper()));
+		// only belt drives
+		// flashes purple when doing it
+		// flashes pink and rumbles when it has a note
+		xOut.leftStick().toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
+				.andThen(Lighting.getStrobeCommand(() -> LEDState.kYellowRed)).andThen(
+						new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble,
+								Constants.OperatorConstants.Driver.kIntakeRumbleStrength)),
+						Lighting.getStrobeCommand(() -> LEDState.kPink))
+				.onlyIf(() -> Intake.getInstance().getShooterSensor())
+				.withTimeout(2)
+				.finallyDo(
+						Lighting.startTimer)
+				.alongWith(
+						new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 0))));
 
-		// works perfectly
-		xPit.x().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommand());
+		xOut.a().toggleOnTrue(
+				new Extend()
+						.alongWith(Lighting.getLarsonCommand(() -> LEDState.kYellowRed))
+						.finallyDo(Lighting.startTimer));
 
-		// works perfectly
-		xPit.povUp().toggleOnTrue(ShootCommandFactory.getAmpCommand());
+		xOut.b().toggleOnTrue(
+			new Retract()
+			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kRed))
+			.finallyDo(Lighting.startTimer));
+		
+		xOut.x().whileTrue(
+			ShootCommandFactory.getAmpCommandWithWaitUntil(xOut.leftBumper())
+			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kBlue))
+			.finallyDo(Lighting.startTimer));
+		
 
-		// works perfectly
-		xPit.povDown().toggleOnTrue(ShootCommandFactory.getAmpCommandWithWaitUntil(xPit.leftBumper()));
+		xOut.y().whileTrue(
+			ShootCommandFactory.getCenterToWingCommand(xOut.leftBumper())
+			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kWhite))
+			.finallyDo(Lighting.startTimer));
+	
 
-		// works perfectly but doesnt return to home or cancel shooter
-		xPit.povLeft().toggleOnTrue(ShootCommandFactory.getCenterToWingCommand(xPit.leftBumper()));
+		xOut.rightBumper().whileTrue(
+			ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xOut.leftBumper())
+			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kWhite))
+			.finallyDo(Lighting.startTimer));
 
-		// works perfectly
-		xPit.povRight().toggleOnTrue(ShootCommandFactory.getRapidFireCommandWithWaitUntil(xPit.leftBumper()));
+		xOut.povLeft().onTrue(
+			new CancelShooter()
+			.alongWith(new ReturnHome())
+			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kBrown))
+			.finallyDo(Lighting.startTimer));
 
-		// works perfectly
-		xPit.rightBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xPit.leftBumper()));
-
-		// works perfectly
-		xPit.rightStick().toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithTimeouts());
-
-		// shoots fine but never cancels the shooter
-		xPit.leftStick().toggleOnTrue(ShootCommandFactory.getRapidFireCommand());
 	}
 
 	private void configureSimBinds() {

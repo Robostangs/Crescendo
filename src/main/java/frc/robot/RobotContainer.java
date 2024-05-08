@@ -95,43 +95,47 @@ public class RobotContainer {
 	}
 
 	private void configureDriverBinds() {
-		new Trigger(() -> Timer.getMatchTime() > 15).and(() -> Timer.getMatchTime() < 20)
-				.whileTrue(new RunCommand(() -> {
-					xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
-				})).negate().onTrue(new RunCommand(() -> {
-					xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
-				}));
+		// new Trigger(() -> Timer.getMatchTime() > 15).and(() -> Timer.getMatchTime() < 20)
+		// 		.whileTrue(new RunCommand(() -> {
+		// 			xDrive.getHID().setRumble(RumbleType.kBothRumble, 1);
+		// 		})).negate().onTrue(new RunCommand(() -> {
+		// 			xDrive.getHID().setRumble(RumbleType.kBothRumble, 0);
+		// 		}));
 
-		new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.Driver.kDeadzone)
-				.whileTrue(
-						new ClimberAdjust(() -> -xDrive.getLeftTriggerAxis(), () -> -xDrive.getLeftTriggerAxis())
-								.alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
-								.finallyDo(Lighting.startTimer));
+		// new Trigger(() -> Math.abs(xDrive.getLeftTriggerAxis()) > Constants.OperatorConstants.Driver.kDeadzone)
+		// 		.whileTrue(
+		// 				new ClimberAdjust(() -> -xDrive.getLeftTriggerAxis(), () -> -xDrive.getLeftTriggerAxis())
+		// 						.alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
+		// 						.finallyDo(Lighting.startTimer));
 
-		xDrive.a().toggleOnTrue(new AlignToSpeaker(xDrive::getLeftY, xDrive::getLeftX,
-				xDrive::getRightTriggerAxis));
+		// xDrive.a().toggleOnTrue(new AlignToSpeaker(xDrive::getLeftY, xDrive::getLeftX,
+		// 		xDrive::getRightTriggerAxis));
 
-		xDrive.b().toggleOnTrue(new AlignToAmp(xDrive::getLeftY, xDrive::getLeftX,
-				xDrive::getRightTriggerAxis));
+		// xDrive.b().toggleOnTrue(new AlignToAmp(xDrive::getLeftY, xDrive::getLeftX,
+		// 		xDrive::getRightTriggerAxis));
 
-		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
+		// xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kGreen))
-				.andThen(ShootCommandFactory.getAmpCommand())
-				// .alongWith(new DeployAndIntake(true))
-				.withName("Auto-pilot Source Intake"));
+		xDrive.x().toggleOnTrue(ShootCommandFactory.getCenterToWingCommandHill(xDrive.leftBumper()));
+
+
+		
+		// xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
+		// 		.alongWith(Lighting.getStrobeCommand(() -> LEDState.kGreen))
+		// 		.andThen(ShootCommandFactory.getAmpCommand())
+		// 		// .alongWith(new DeployAndIntake(true))
+		// 		.withName("Auto-pilot Source Intake"));
 
 		// just runs feeder
-		xDrive.leftStick()
-				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
-						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
-						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
-								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
-								.withTimeout(2)
-								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
-						.finallyDo(Lighting.startTimer));
+		// xDrive.leftStick()
+		// 		.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
+		// 				// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+		// 				.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+		// 				.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
+		// 						Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
+		// 						.withTimeout(2)
+		// 						.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
+		// 				.finallyDo(Lighting.startTimer));
 
 		// deploys intake (right paddle)
 		xDrive.rightStick()
@@ -144,24 +148,24 @@ public class RobotContainer {
 								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
 						.finallyDo(Lighting.startTimer));
 
-		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
-		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
-		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
-				Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
+		xDrive.y().onTrue(new ReturnHome().alongWith(new CancelShooter()));
+		// xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
+		// xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
+		// 		Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
 
 		// Square up to the speaker and press this to reset odometry to the speaker
-		xDrive.povRight().onTrue(drivetrain
-				.runOnce(() -> drivetrain
-						.seedFieldRelative(!Robot.isRed() ? Constants.AutoConstants.WayPoints.Blue.CenterStartPosition
-								: GeometryUtil
-										.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
-				.withName("Zero Swerve 2 Speaker"));
+		// xDrive.povRight().onTrue(drivetrain
+		// 		.runOnce(() -> drivetrain
+		// 				.seedFieldRelative(!Robot.isRed() ? Constants.AutoConstants.WayPoints.Blue.CenterStartPosition
+		// 						: GeometryUtil
+		// 								.flipFieldPose(Constants.AutoConstants.WayPoints.Blue.CenterStartPosition)))
+		// 		.withName("Zero Swerve 2 Speaker"));
 
-		xDrive.leftBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommand());
+		// xDrive.leftBumper().whileTrue(ShootCommandFactory.getPrepareAndShootCommand());
 
-		xDrive.rightBumper().toggleOnTrue(new Extend()
-				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
-				.finallyDo(Lighting.startTimer));
+		// xDrive.rightBumper().toggleOnTrue(new Extend()
+		// 		.alongWith(Lighting.getStrobeCommand(() -> LEDState.kWhite))
+		// 		.finallyDo(Lighting.startTimer));
 	}
 
 	private void configureManipBinds() {

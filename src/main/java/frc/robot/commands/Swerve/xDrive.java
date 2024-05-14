@@ -53,7 +53,7 @@ public class xDrive extends Command {
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                     .withRotationalRate(-rotate.get()
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond)
-                    .withSlowDown(1 - howManyBabiesOnBoard.get())
+                    .withSlowDown(howManyBabiesOnBoard.get())
                     .withRotationalDeadband(Constants.OperatorConstants.Driver.rotationalDeadband)
                     .withDeadband(Constants.OperatorConstants.Driver.deadband);
         }

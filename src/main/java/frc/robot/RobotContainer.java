@@ -77,15 +77,19 @@ public class RobotContainer {
 			drivetrain
 					.setDefaultCommand(
 							new xDrive(() -> -simController.getRawAxis(0), () -> simController.getRawAxis(1),
-									() -> simController.getRawAxis(2), () -> 0d));
+									() -> simController.getRawAxis(2), Robot.multChooser.getSelected()));
 		} else {
 			drivetrain.setDefaultCommand(
 					new xDrive(xDrive::getLeftY, xDrive::getLeftX, xDrive::getRightX,
-							xDrive::getRightTriggerAxis).ignoringDisable(true));
+							Robot.multChooser.getSelected()));
 
-			drivetrain.setDefaultCommand(
-					new xDrive(xOut::getLeftY, xOut::getLeftX, xOut::getRightX,
-							xOut::getRightTriggerAxis).ignoringDisable(true));
+			// drivetrain.setDefaultCommand(
+			// new xDrive(xOut::getLeftY, xOut::getLeftX, xOut::getRightX,
+			// xOut::getRightTriggerAxis).ignoringDisable(true));
+
+			// drivetrain.setDefaultCommand(
+			// new xDrive(xOut::getLeftY, xOut::getLeftX, xOut::getRightX,
+			// Robot.multChooser.getSelected()));
 		}
 	}
 
@@ -231,93 +235,91 @@ public class RobotContainer {
 
 	public void configureOutreachBinds() {
 		// Manually adjusts the arm
-		new Trigger(() -> xOut.getLeftY() > Constants.OperatorConstants.Manip.kDeadzone).onTrue(
-				new FineAdjust(() -> xOut.getLeftY()));
+		// new Trigger(() -> xOut.getLeftY() >
+		// Constants.OperatorConstants.Manip.kDeadzone).onTrue(
+		// new FineAdjust(() -> xOut.getLeftY()));
 
 		// deploys intake and belt drives
 		// flashes purple when doing it
 		// flashes pink and rumbles when it has a note
-		xOut.rightStick().toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-				.andThen(Lighting.getStrobeCommand(() -> LEDState.kPurple)).andThen(
-						new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble,
-								Constants.OperatorConstants.Driver.kIntakeRumbleStrength)),
-						Lighting.getStrobeCommand(() -> LEDState.kPink))
-				.onlyIf(() -> Intake.getInstance().getShooterSensor())
-				.withTimeout(2)
-				.finallyDo(
-						Lighting.startTimer)
-				.alongWith(
-						new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 0))));
+		xOut.b()
+				.toggleOnTrue(new DeployAndIntake(false)
+						.unless(() -> Intake.getInstance().getShooterSensor())
+						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+						.andThen(new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 2)))
+						.withTimeout(2)
+						.onlyIf(() -> Intake.getInstance().getShooterSensor())
+						.finallyDo(Lighting.startTimer));
 
 		// only belt drives
 		// flashes purple when doing it
 		// flashes pink and rumbles when it has a note
-		xOut.leftStick().toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
-				.andThen(Lighting.getStrobeCommand(() -> LEDState.kYellowRed)).andThen(
-						new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble,
-								Constants.OperatorConstants.Driver.kIntakeRumbleStrength)),
-						Lighting.getStrobeCommand(() -> LEDState.kPink))
-				.onlyIf(() -> Intake.getInstance().getShooterSensor())
-				.withTimeout(2)
-				.finallyDo(
-						Lighting.startTimer)
-				.alongWith(
-						new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 0))));
+		xOut.a()
 
-		xOut.a().toggleOnTrue(
-				new Extend()
-						.alongWith(Lighting.getLarsonCommand(() -> LEDState.kYellowRed))
+				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
+						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
+								.withTimeout(2))
+						.onlyIf(() -> Intake.getInstance().getShooterSensor())
+						.finallyDo(Lighting.startTimer));
+		// .toggleOnTrue(new DeployAndIntake(false).unless(() ->
+		// Intake.getInstance().getShooterSensor())
+		// .andThen(Lighting.getStrobeCommand(() -> LEDState.kYellowRed)).andThen(
+		// new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble,
+		// Constants.OperatorConstants.Driver.kIntakeRumbleStrength)),
+		// Lighting.getStrobeCommand(() -> LEDState.kPink))
+		// .onlyIf(() -> Intake.getInstance().getShooterSensor())
+		// .withTimeout(2)
+		// .finallyDo(
+		// Lighting.startTimer)
+		// .alongWith(
+		// new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 0))));
+
+		// xOut.a().toggleOnTrue(
+		// new Extend()
+		// .alongWith(Lighting.getLarsonCommand(() -> LEDState.kYellowRed))
+		// .finallyDo(Lighting.startTimer));
+
+		// xOut.b().toggleOnTrue(
+		// new Retract()
+		// .alongWith(Lighting.getLarsonCommand(() -> LEDState.kRed))
+		// .finallyDo(Lighting.startTimer));
+
+		xOut.x().toggleOnTrue(
+				ShootCommandFactory.getAmpCommandWithWaitUntil(xOut.leftBumper())
+						.alongWith(Lighting.getLarsonCommand(() -> LEDState.kBlue))
 						.finallyDo(Lighting.startTimer));
 
-		xOut.b().toggleOnTrue(
-			new Retract()
-			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kRed))
-			.finallyDo(Lighting.startTimer));
-		
-		xOut.x().whileTrue(
-			ShootCommandFactory.getAmpCommandWithWaitUntil(xOut.leftBumper())
-			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kBlue))
-			.finallyDo(Lighting.startTimer));
-		
-
-		xOut.y().whileTrue(
-			ShootCommandFactory.getCenterToWingCommand(xOut.leftBumper())
-			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kWhite))
-			.finallyDo(Lighting.startTimer));
-	
+		xOut.y().toggleOnTrue(
+				ShootCommandFactory.getCenterToWingCommand(xOut.leftBumper())
+						.alongWith(Lighting.getLarsonCommand(() -> LEDState.kWhite))
+						.finallyDo(Lighting.startTimer));
 
 		xOut.rightBumper().whileTrue(
-			ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xOut.leftBumper())
-			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kWhite))
-			.finallyDo(Lighting.startTimer));
+				ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xOut.leftBumper())
+						.alongWith(Lighting.getLarsonCommand(() -> LEDState.kWhite))
+						.finallyDo(Lighting.startTimer));
 
 		xOut.povLeft().onTrue(
-			new CancelShooter()
-			.alongWith(new ReturnHome())
-			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kBrown))
-			.finallyDo(Lighting.startTimer));
+				new CancelShooter()
+						.alongWith(new ReturnHome())
+						.alongWith(Lighting.getLarsonCommand(() -> LEDState.kBrown))
+						.finallyDo(Lighting.startTimer));
+
+		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 
 	}
 
 	private void configureSimBinds() {
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.toggleOnTrue(new AlignToSpeaker(() -> -simController.getRawAxis(0), () -> simController.getRawAxis(1),
-						null));
+				.toggleOnTrue(ShootCommandFactory.getAmpCommand());
 
 		new Trigger(() -> simController.getRawButtonPressed(2))
-				// .onTrue(arm.runOnce(arm::toggleArmMotorLimits));
-				.toggleOnTrue(new SetPoint());
+				.toggleOnTrue(ShootCommandFactory.getCenterToWingCommand(xOut.leftBumper()));
 
 		new Trigger(() -> simController.getRawButtonPressed(3))
-				.toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-						.alongWith(ShootCommandFactory.getAmpCommandWithWaitUntil(xDrive.leftBumper()))
-						.until(() -> Math
-								.abs(xDrive.getLeftX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
-								|| Math.abs(
-										xDrive.getLeftY()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold
-								|| Math.abs(
-										xDrive.getRightX()) > Constants.OperatorConstants.Driver.kCommandCancelThreshold)
-						.withName("Auto-pilot Amp shot"));
+				.toggleOnTrue(ShootCommandFactory.getPrepareAndShootCommandWithWaitUntil(xOut.leftBumper()));
 
 		new Trigger(() -> simController.getRawButtonPressed(4))
 				.toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
@@ -329,6 +331,7 @@ public class RobotContainer {
 		drivetrain.registerTelemetry((telemetry) -> logger.telemeterize(telemetry));
 		configureDriverBinds();
 		configureManipBinds();
+		configureOutreachBinds();
 		configureDefaultBinds();
 
 		if (Robot.isSimulation()) {

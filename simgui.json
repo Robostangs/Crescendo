@@ -26,6 +26,7 @@
       "/Shuffleboard/Autonomous/Shoot Selector": "String Chooser",
       "/Shuffleboard/Autonomous/Starting Pose Selector": "String Chooser",
       "/Shuffleboard/Disabled/Command Scheduler": "Scheduler",
+      "/Shuffleboard/Disabled/Multiplier": "String Chooser",
       "/Shuffleboard/Disabled/Song Selector": "String Chooser",
       "/Shuffleboard/Disabled/Toggle Compression": "String Chooser",
       "/Shuffleboard/Teleop/InstantCommand": "Command",

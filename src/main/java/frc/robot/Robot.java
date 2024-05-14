@@ -1,6 +1,8 @@
 package frc.robot;
 
 import java.util.Map;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.AudioConfigs;
@@ -70,6 +72,9 @@ public class Robot extends TimedRobot {
 
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
 	public static SendableChooser<Boolean> compressChooser = new SendableChooser<>();
+
+	public static SendableChooser<Supplier<Double>> multChooser = new SendableChooser<>();
+
 
 	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
 
@@ -151,6 +156,13 @@ public class Robot extends TimedRobot {
 		compressChooser.setDefaultOption("Compresor Enabled", true);
 		compressChooser.addOption("Compressor Disabled", false);
 
+
+		multChooser.setDefaultOption("Outreach mode", () -> 0.5);
+		// multChooser.addOption("0.75", () -> 0.75);
+		// multChooser.addOption("0.5", () -> 0.5);
+		multChooser.addOption("Full Speed", () -> 1.0);
+
+
 		autoTab.add("Starting Pose Selector", startingPose)
 				.withSize(3, 1)
 				.withPosition(0, 3)
@@ -218,6 +230,14 @@ public class Robot extends TimedRobot {
 				.withSize(3, 1)
 				.withPosition(0, 4)
 				.withWidget(BuiltInWidgets.kSplitButtonChooser);
+
+		
+		disabledTab.add("Multiplier", multChooser)
+				.withSize(2, 1)
+				.withPosition(6, 4)
+				.withWidget(BuiltInWidgets.kComboBoxChooser)
+				;
+		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
 		Alert.groups.forEach((group, alert) -> {
 			disabledTab.add(group, alert)
@@ -618,7 +638,6 @@ public class Robot extends TimedRobot {
 					.withPosition(5, 0)
 					.withWidget(BuiltInWidgets.kCommand);
 
-			SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
 			Alert.groups.forEach((group, alert) -> {
 				testTab.add(group, alert)

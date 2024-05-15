@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
 	public static SendableChooser<String> songChooser = new SendableChooser<>();
 	public static SendableChooser<Boolean> compressChooser = new SendableChooser<>();
 
-	public static SendableChooser<Supplier<Double>> multChooser = new SendableChooser<>();
+	public static SendableChooser<Double> multChooser = new SendableChooser<>();
 
 
 	public static NetworkTableEntry pathDelayEntry, desiredSetpointEntry;
@@ -157,10 +157,10 @@ public class Robot extends TimedRobot {
 		compressChooser.addOption("Compressor Disabled", false);
 
 
-		multChooser.setDefaultOption("Outreach mode", () -> 0.5);
+		multChooser.setDefaultOption("Outreach mode", 0.5);
 		// multChooser.addOption("0.75", () -> 0.75);
 		// multChooser.addOption("0.5", () -> 0.5);
-		multChooser.addOption("Full Speed", () -> 1.0);
+		multChooser.addOption("Full Speed", 0.0);
 
 
 		autoTab.add("Starting Pose Selector", startingPose)

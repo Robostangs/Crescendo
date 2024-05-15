@@ -77,11 +77,11 @@ public class RobotContainer {
 			drivetrain
 					.setDefaultCommand(
 							new xDrive(() -> -simController.getRawAxis(0), () -> simController.getRawAxis(1),
-									() -> simController.getRawAxis(2), Robot.multChooser.getSelected()));
+									() -> simController.getRawAxis(2), () -> Robot.multChooser.getSelected()));
 		} else {
 			drivetrain.setDefaultCommand(
 					new xDrive(xDrive::getLeftY, xDrive::getLeftX, xDrive::getRightX,
-							Robot.multChooser.getSelected()));
+					() -> Robot.multChooser.getSelected()).ignoringDisable(true));
 
 			// drivetrain.setDefaultCommand(
 			// new xDrive(xOut::getLeftY, xOut::getLeftX, xOut::getRightX,

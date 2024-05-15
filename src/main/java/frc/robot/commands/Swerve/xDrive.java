@@ -29,6 +29,7 @@ public class xDrive extends Command {
         this.addRequirements(drivetrain);
         this.translateX = translateX;
         this.translateY = translateY;
+        
         this.rotate = rotate;
         this.howManyBabiesOnBoard = howManyBabiesOnBoard;
     }
@@ -40,12 +41,13 @@ public class xDrive extends Command {
 
     @Override
     public void execute() {
-        if (Math.abs(translateX.get()) <= Constants.OperatorConstants.Driver.kDeadzone
-                && Math.abs(translateY.get()) <= Constants.OperatorConstants.Driver.kDeadzone
-                && Math.abs(rotate.get()) <= Constants.OperatorConstants.Driver.kDeadzone) {
+        // if (Math.abs(translateX.get()) <= Constants.OperatorConstants.Driver.kDeadzone
+        //         && Math.abs(translateY.get()) <= Constants.OperatorConstants.Driver.kDeadzone
+        //         && Math.abs(rotate.get()) <= Constants.OperatorConstants.Driver.kDeadzone) {
 
-            swerveRequest = new SwerveRequest.SwerveDriveBrake();
-        } else {
+        //     swerveRequest = new SwerveRequest.SwerveDriveBrake();
+        // } 
+        // else {
             swerveRequest = new SwerveRequest.FieldCentric()
                     .withVelocityX(-translateX.get()
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
@@ -53,10 +55,10 @@ public class xDrive extends Command {
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
                     .withRotationalRate(-rotate.get()
                             * Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond)
-                    .withSlowDown(howManyBabiesOnBoard.get())
+                    .withSlowDown(1 - howManyBabiesOnBoard.get())
                     .withRotationalDeadband(Constants.OperatorConstants.Driver.rotationalDeadband)
                     .withDeadband(Constants.OperatorConstants.Driver.deadband);
-        }
+        // }
 
         drivetrain.setControl(swerveRequest);
     }

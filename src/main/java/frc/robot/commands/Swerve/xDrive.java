@@ -41,24 +41,24 @@ public class xDrive extends Command {
 
     @Override
     public void execute() {
-        // if (Math.abs(translateX.get()) <= Constants.OperatorConstants.Driver.kDeadzone
-        //         && Math.abs(translateY.get()) <= Constants.OperatorConstants.Driver.kDeadzone
-        //         && Math.abs(rotate.get()) <= Constants.OperatorConstants.Driver.kDeadzone) {
+        if (Math.abs(translateX.get()) <= Constants.OperatorConstants.Driver.kDeadzone
+                && Math.abs(translateY.get()) <= Constants.OperatorConstants.Driver.kDeadzone
+                && Math.abs(rotate.get()) <= Constants.OperatorConstants.Driver.kDeadzone) {
 
-        //     swerveRequest = new SwerveRequest.SwerveDriveBrake();
-        // } 
-        // else {
+            swerveRequest = new SwerveRequest.SwerveDriveBrake();
+        } 
+        else {
             swerveRequest = new SwerveRequest.FieldCentric()
-                    .withVelocityX(-translateX.get()
-                            * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
-                    .withVelocityY(-translateY.get()
-                            * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)
-                    .withRotationalRate(-rotate.get()
-                            * Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond)
-                    .withSlowDown(1 - howManyBabiesOnBoard.get())
+                    .withVelocityX((-translateX.get()
+                            * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)*(1 - howManyBabiesOnBoard.get()))
+                    .withVelocityY((-translateY.get()
+                            * Constants.SwerveConstants.SwerveSpeeds.kMaxSpeedMetersPerSecond)*(1 - howManyBabiesOnBoard.get()))
+                    .withRotationalRate((-rotate.get()
+                            * Constants.SwerveConstants.SwerveSpeeds.kMaxAngularSpeedRadiansPerSecond)*(1 - howManyBabiesOnBoard.get()))
+                    // .withSlowDown(1 - howManyBabiesOnBoard.get())
                     .withRotationalDeadband(Constants.OperatorConstants.Driver.rotationalDeadband)
                     .withDeadband(Constants.OperatorConstants.Driver.deadband);
-        // }
+        }
 
         drivetrain.setControl(swerveRequest);
     }

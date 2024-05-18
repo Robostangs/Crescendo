@@ -7,7 +7,13 @@ import frc.robot.subsystems.Intake;
 public class InfiniteIntake extends Command {
     Intake intake;
     double power;
-
+/**
+ * Runs belt without stopping
+ * </p></p>
+ * Works good with {@code FullSend}
+ * 
+ * @param power what power to run the belt
+ */
     public InfiniteIntake(double power) {
         this.power = power;
         intake = Intake.getInstance();

@@ -8,6 +8,9 @@ public class FullSend extends Command {
     Shooter shooter;
     double power;
 
+    /**
+     * A command that sets the shooter motors TO THE MAX
+     */
     public FullSend() {
         power = 1;
         shooter = Shooter.getInstance();
@@ -15,7 +18,10 @@ public class FullSend extends Command {
         this.addRequirements(shooter);
         this.setName("Full Send");
     }
-
+   /**
+     * A command that sets the shooter motors to the spsecified power
+     * @param power percentage to run it at
+     */
     public FullSend(double power) {
         this.power = power;
         shooter = Shooter.getInstance();

@@ -6,7 +6,9 @@ import frc.robot.subsystems.Intake;
 
 public class MultiIntake extends Command {
     Intake intake;
-
+/**
+ * runs belt and then once it's in the shooter it slows belt down instead of stopping
+ */
     public MultiIntake() {
         intake = Intake.getInstance();
 

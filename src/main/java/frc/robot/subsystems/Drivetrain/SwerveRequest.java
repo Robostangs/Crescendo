@@ -277,7 +277,7 @@ public interface SwerveRequest {
 
         public FieldCentric withSlowDown(double slowDownRate) {
            
-                this.slowDownRate = slowDownRate;
+            this.slowDownRate = slowDownRate;
 
             return this;
         }
@@ -537,11 +537,7 @@ public interface SwerveRequest {
         }
 
         public FieldCentricFacingAngle withSlowDown(double slowDownRate) {
-            if (slowDownRate <= 0.1) {
-                slowDownRate = 0.3;
-            } else {
-                this.slowDownRate = slowDownRate;
-            }
+            this.slowDownRate = slowDownRate;
 
             return this;
         }

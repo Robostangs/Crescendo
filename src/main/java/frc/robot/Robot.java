@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
 		compressChooser.addOption("Compressor Disabled", false);
 
 
-		multChooser.setDefaultOption("Outreach mode", 0.5);
+		multChooser.setDefaultOption("Outreach mode", 0.7);
 		// multChooser.addOption("0.75", () -> 0.75);
 		// multChooser.addOption("0.5", () -> 0.5);
 		multChooser.addOption("Full Speed", 0.0);

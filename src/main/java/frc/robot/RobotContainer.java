@@ -80,8 +80,8 @@ public class RobotContainer {
 									() -> simController.getRawAxis(2), () -> Robot.multChooser.getSelected()));
 		} else {
 			drivetrain.setDefaultCommand(
-					new xDrive(xDrive::getLeftY, xDrive::getLeftX, xDrive::getRightX,
-					() -> Robot.multChooser.getSelected()).ignoringDisable(true));
+					new xDrive(xOut::getLeftY, xOut::getLeftX, xOut::getRightX,
+					() -> Robot.multiChooser).ignoringDisable(true));
 
 			// drivetrain.setDefaultCommand(
 			// new xDrive(xOut::getLeftY, xOut::getLeftX, xOut::getRightX,
@@ -133,7 +133,6 @@ public class RobotContainer {
 		// just runs feeder
 		xDrive.leftStick()
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
-						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
 								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
@@ -242,27 +241,26 @@ public class RobotContainer {
 		// deploys intake and belt drives
 		// flashes purple when doing it
 		// flashes pink and rumbles when it has a note
-		xOut.b()
-				.toggleOnTrue(new DeployAndIntake(false)
-						.unless(() -> Intake.getInstance().getShooterSensor())
-						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 2)))
-						.withTimeout(2)
-						.onlyIf(() -> Intake.getInstance().getShooterSensor())
-						.finallyDo(Lighting.startTimer));
+		xOut.rightStick()
+				.toggleOnTrue(new DeployAndIntake(false));
+						// .unless(() -> Intake.getInstance().getShooterSensor())
+						// .andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+						// .andThen(new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 1)))
+						// .withTimeout(2)
+						// .onlyIf(() -> Intake.getInstance().getShooterSensor())
+						// .finallyDo(Lighting.startTimer));
 
 		// only belt drives
 		// flashes purple when doing it
 		// flashes pink and rumbles when it has a note
-		xOut.a()
-
-				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
-						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
-						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 1))
-								.withTimeout(2))
-						.onlyIf(() -> Intake.getInstance().getShooterSensor())
-						.finallyDo(Lighting.startTimer));
+		xOut.leftStick()
+				.toggleOnTrue(new DeployAndIntake(true));	
+				// .unless(() -> Intake.getInstance().getShooterSensor())
+						// .andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
+						// .andThen(new RunCommand(() -> xOut.getHID().setRumble(RumbleType.kBothRumble, 1))
+						// 		.withTimeout(2))
+						// .onlyIf(() -> Intake.getInstance().getShooterSensor())
+						// .finallyDo(Lighting.startTimer));
 		// .toggleOnTrue(new DeployAndIntake(false).unless(() ->
 		// Intake.getInstance().getShooterSensor())
 		// .andThen(Lighting.getStrobeCommand(() -> LEDState.kYellowRed)).andThen(
@@ -307,8 +305,21 @@ public class RobotContainer {
 						.alongWith(Lighting.getLarsonCommand(() -> LEDState.kBrown))
 						.finallyDo(Lighting.startTimer));
 
-		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
+		xOut.povRight().onTrue(
+			drivetrain.runOnce(drivetrain::seedFieldRelative)
+			.withName("Seed Field Relative")
+			.alongWith(Lighting.getLarsonCommand(() -> LEDState.kGreen))
+			.finallyDo(Lighting.startTimer));
+		
+		xOut.povUp().whileTrue(
+			new Extend()
+			.alongWith(Lighting.getStrobeCommand(() -> LEDState.kRed))
+			.finallyDo(Lighting.startTimer));
 
+			xOut.povDown().whileTrue(
+				new Retract()
+				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kBlue))
+				.finallyDo(Lighting.startTimer));
 	}
 
 	private void configureSimBinds() {

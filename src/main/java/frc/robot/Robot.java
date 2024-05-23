@@ -93,6 +93,8 @@ public class Robot extends TimedRobot {
 
 	public static Command setpointCommand;
 
+	public static double multiChooser = 0.7;
+
 	public static Alert forwardAuto, wrongAlliance;
 
 	@Override
@@ -202,6 +204,9 @@ public class Robot extends TimedRobot {
 				.withPosition(0, 0)
 				.withWidget(BuiltInWidgets.kBooleanBox);
 
+
+		
+
 		teleopTab
 				.addBoolean("Ready To Shoot",
 						() -> Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot())
@@ -235,8 +240,10 @@ public class Robot extends TimedRobot {
 		disabledTab.add("Multiplier", multChooser)
 				.withSize(2, 1)
 				.withPosition(6, 4)
-				.withWidget(BuiltInWidgets.kComboBoxChooser)
-				;
+				.withWidget(BuiltInWidgets.kComboBoxChooser);
+
+
+
 		SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
 		Alert.groups.forEach((group, alert) -> {

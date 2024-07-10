@@ -57,6 +57,7 @@ public class Intake extends SubsystemBase {
         }
 
         postStatus("Idle");
+        compressor.disable();
     }
 
     public void setExtend(boolean deploy) {

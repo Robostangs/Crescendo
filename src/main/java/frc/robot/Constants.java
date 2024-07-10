@@ -206,7 +206,7 @@ public final class Constants {
 			private static final int kFrontLeftDriveMotorId = 11;
 			private static final int kFrontLeftSteerMotorId = 12;
 			private static final int kFrontLeftEncoderId = 10;
-			private static final double kFrontLeftEncoderOffset = -0.321533203125;
+			private static final double kFrontLeftEncoderOffset = -0.326416015625;
 
 			private static final double kFrontLeftXPosInches = 12.875;
 			private static final double kFrontLeftYPosInches = 12.05;
@@ -215,7 +215,7 @@ public final class Constants {
 			private static final int kFrontRightDriveMotorId = 21;
 			private static final int kFrontRightSteerMotorId = 22;
 			private static final int kFrontRightEncoderId = 20;
-			private static final double kFrontRightEncoderOffset = -0.375244140625;
+			private static final double kFrontRightEncoderOffset = -0.372802734375;
 
 			private static final double kFrontRightXPosInches = 12.875;
 			private static final double kFrontRightYPosInches = -12.05;
@@ -224,7 +224,7 @@ public final class Constants {
 			private static final int kBackLeftDriveMotorId = 31;
 			private static final int kBackLeftSteerMotorId = 32;
 			private static final int kBackLeftEncoderId = 30;
-			private static final double kBackLeftEncoderOffset = -0.178955078125;
+			private static final double kBackLeftEncoderOffset = -0.180908203125;
 
 			private static final double kBackLeftXPosInches = -12.875;
 			private static final double kBackLeftYPosInches = 12.05;
@@ -233,7 +233,7 @@ public final class Constants {
 			private static final int kBackRightDriveMotorId = 41;
 			private static final int kBackRightSteerMotorId = 42;
 			private static final int kBackRightEncoderId = 40;
-			private static final double kBackRightEncoderOffset = -0.088623046875;
+			private static final double kBackRightEncoderOffset = -0.084716796875;
 
 			private static final double kBackRightXPosInches = -12.875;
 			private static final double kBackRightYPosInches = -12.05;
@@ -380,6 +380,7 @@ public final class Constants {
 		public static final int armMotorID = 53;
 		public static final int armCoderID = 50;
 		public static final boolean armMotorInverted = true;
+		//0.407958984375
 
 		public static final double kFeedForwardDutyCycle = 0.025;
 

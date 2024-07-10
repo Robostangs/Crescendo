@@ -551,7 +551,7 @@ public final class Constants {
 		public static final double lowVoltageThreshold = 12.5;
 
 		/** Right Shooter Bar */
-		public static final int strip1Length = 40;
+		public static final int strip1Length = 39;
 
 		/** Left Shooter Bar */
 		public static final int strip2Length = 29;

@@ -154,7 +154,29 @@ public final class Constants {
 
 			// private static final double kWheelRadiusInches = (2 * (6.45 / 6.6)) * (139.505 / 120);
 			// private static final double kWheelRadiusInches = 3.9275 / 2;
-			private static final double kWheelRadiusInches = 2 * (3.082 / 3.586);
+			// private static final double kWheelRadiusInches = 2 * (3.082 / 3.586);
+
+			//front bumper to edge of note is 4 ft
+			//from 14.11 - 15.25
+
+			//How to calibrate 
+			//put robot at speaker
+			//measure a distance to drive(in meters)
+			//see what the robot thinks it drove
+			//put: what odo thinks/what it acually drove
+			//multiply by 2
+			// private static final double kWheelRadiusInches = 2 * (1.14 / 1.22);
+
+
+
+
+
+			//163 inches 
+
+			//15.2 - 12
+			private static final double kWheelRadiusInches = 2 * (3.2 / 4.14);
+
+
 
 			/*
 			 * X:1.4

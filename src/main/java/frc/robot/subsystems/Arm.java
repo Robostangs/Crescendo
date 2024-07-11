@@ -625,7 +625,7 @@ public class Arm extends SubsystemBase {
 
     public boolean atSetpoint() {
         // if its within 0.5 degrees of the target and the arm is moving slowly
-        return (isInRangeOfTarget(getArmTarget(), 0.5) && Math.abs(getVelocity()) < 20)
+        return (isInRangeOfTarget(getArmTarget(), 0.5) && Math.abs(getVelocity()) < 50)
                 // if its within a reasonable amount of distance from its target and the arm is
                 // not moving at all pretty much
                 || (isInRangeOfTarget() && Math.abs(getVelocity()) < 0.01);

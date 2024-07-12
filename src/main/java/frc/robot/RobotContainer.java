@@ -143,7 +143,6 @@ public class RobotContainer {
 								.withTimeout(2)
 								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
 						.finallyDo(Lighting.startTimer).handleInterrupt(() -> Lighting.getInstance().autoSetLights(true)));
-
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),

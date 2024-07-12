@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4854713072574635,
-        "y": 4.3029049206577845
+        "x": 1.363793991476872,
+        "y": 4.0349903338695565
       },
       "isLocked": false,
       "linkedName": "Stage Start Position"
@@ -28,7 +28,13 @@
       "linkedName": "Close Stage Note"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,7 +45,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -6.615031937489725,
+    "rotation": 2.186516226001085,
     "rotateFast": false
   },
   "reversed": false,

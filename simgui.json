@@ -63,6 +63,11 @@
       "/SmartDashboard/Swerve/Module 3": "Mechanism2d"
     },
     "windows": {
+      "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
       "/Shuffleboard/Autonomous/Path Selector": {
         "window": {
           "visible": true
@@ -139,7 +144,8 @@
             "open": true
           },
           "open": true
-        }
+        },
+        "open": true
       }
     },
     "transitory": {

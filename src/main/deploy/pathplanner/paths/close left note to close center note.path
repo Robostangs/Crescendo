@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5086324894872012,
-        "y": 5.590029656911167
+        "x": 1.6103579290491916,
+        "y": 6.219504064008128
       },
       "isLocked": false,
       "linkedName": "Close Amp Note"
@@ -20,8 +20,8 @@
         "y": 5.523341000385705
       },
       "prevControl": {
-        "x": 2.1542594474077834,
-        "y": 5.454455121873207
+        "x": 1.473298784560532,
+        "y": 5.351720147884741
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.35,
-      "rotationDegrees": -27.0,
+      "rotationDegrees": 2.606453149239447,
       "rotateFast": false
     }
   ],

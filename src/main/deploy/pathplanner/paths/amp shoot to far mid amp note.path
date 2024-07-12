@@ -20,12 +20,12 @@
         "y": 5.79
       },
       "prevControl": {
-        "x": 8.129382731728423,
-        "y": 5.437731869537814
+        "x": 8.116702500988229,
+        "y": 5.437622364650822
       },
       "nextControl": {
-        "x": 8.11733742440103,
-        "y": 5.889964547171388
+        "x": 8.12339971728244,
+        "y": 6.153300893363863
       },
       "isLocked": false,
       "linkedName": "Mid Left Note"
@@ -52,7 +52,7 @@
     },
     {
       "waypointRelativePos": 0.45,
-      "rotationDegrees": -28.0,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     }
   ],

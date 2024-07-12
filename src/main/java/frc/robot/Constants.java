@@ -360,13 +360,12 @@ public final class Constants {
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
 		public static final double falconShooterLoadRPM = 5340;
-		public static final double falconShooterThresholdRPM = falconShooterLoadRPM * 0.925;
+		public static final double falconShooterThresholdRPM = falconShooterLoadRPM * 0.86;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
 			public static final double krakenFreeSpeedRotationPerMinute = 5800.0;
-			public static final double krakenFreeSpeedRadiansPerSecond = krakenFreeSpeedRotationPerMinute * 2 * Math.PI
-					/ 60;
+			public static final double krakenFreeSpeedRadiansPerSecond = krakenFreeSpeedRotationPerMinute * 2 * Math.PI/ 60;
 			public static final double krakenStallTorqueNM = 9.37;
 			public static final double krakenStallCurrentAmps = 483;
 			public static final double krakenPeakPowerWatts = 1405;

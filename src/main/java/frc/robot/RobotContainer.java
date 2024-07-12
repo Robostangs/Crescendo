@@ -125,7 +125,7 @@ public class RobotContainer {
 		// just runs feeder
 		xDrive.leftStick()
 				.toggleOnTrue(new DeployAndIntake(false).unless(() -> Intake.getInstance().getShooterSensor())
-						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+						.deadlineWith(Lighting.getStrobeCommand(() -> LEDState.kRed))
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
 								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
@@ -136,7 +136,7 @@ public class RobotContainer {
 		// deploys intake (right paddle)
 		xDrive.rightStick()
 				.toggleOnTrue(new DeployAndIntake(true).unless(() -> Intake.getInstance().getShooterSensor())
-						// .andThen(new BeltDrive(() -> -0.2).withTimeout(1)
+						.deadlineWith(Lighting.getStrobeCommand(() -> LEDState.kRed))
 						.andThen(Lighting.getStrobeCommand(() -> LEDState.kPink))
 						.andThen(new RunCommand(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble,
 								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))

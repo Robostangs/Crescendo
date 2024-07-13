@@ -58,8 +58,8 @@ public class AlignToStage extends Command {
             if (Robot.isRed()) {
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - 16,
-                                drivetrain.getPose().getX() - 8));
+                                drivetrain.getPose().getY() - 8,
+                                drivetrain.getPose().getX() - 16));
             }
 
             else {

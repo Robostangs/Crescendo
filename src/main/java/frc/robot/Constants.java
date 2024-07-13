@@ -408,7 +408,7 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.8 - 2.1;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.8 - 5;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -450,7 +450,7 @@ public final class Constants {
 	}
 
 	public static class ShooterConstants {
-		public static final int feedMotor = 60;
+		public static final int feedMotorID = 60;
 		public static final int topShooterMotorID = 51;
 		public static final int bottomShooterMotorID = 52;
 		public static final boolean feedIsInverted = false;

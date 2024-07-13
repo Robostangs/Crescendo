@@ -43,6 +43,7 @@
       "/Shuffleboard/Test/Track Setpoint": "Command",
       "/SmartDashboard/Align PID": "PIDController",
       "/SmartDashboard/Align to Speaker PID": "PIDController",
+      "/SmartDashboard/Align to Stage PID": "PIDController",
       "/SmartDashboard/Arm": "Subsystem",
       "/SmartDashboard/Arm/Target Profile": "Mechanism2d",
       "/SmartDashboard/Auto Chooser": "String Chooser",

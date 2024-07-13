@@ -38,6 +38,7 @@ import frc.robot.commands.ShooterCommands.Feed;
 import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.commands.Swerve.AlignToSpeaker;
+import frc.robot.commands.Swerve.AlignToStage;
 import frc.robot.commands.Swerve.AlignToAmp;
 import frc.robot.commands.Swerve.PathToPoint;
 import frc.robot.commands.Swerve.xDrive;
@@ -116,11 +117,16 @@ public class RobotContainer {
 
 		xDrive.x().toggleOnTrue(ShootCommandFactory.getAimAndShootCommand());
 
-		xDrive.y().toggleOnTrue(new PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
-				.alongWith(Lighting.getStrobeCommand(() -> LEDState.kGreen))
-				.andThen(ShootCommandFactory.getAmpCommand())
-				// .alongWith(new DeployAndIntake(true))
-				.withName("Auto-pilot Source Intake"));
+		// xDrive.y().toggleOnTrue(new
+		// PathToPoint(Constants.AutoConstants.WayPoints.Blue.kAmp)
+		// .alongWith(Lighting.getStrobeCommand(() -> LEDState.kGreen))
+		// .andThen(ShootCommandFactory.getAmpCommand())
+		// // .alongWith(new DeployAndIntake(true))
+		// .withName("Auto-pilot Source Intake"));
+
+		xDrive.y().toggleOnTrue(new AlignToStage(xDrive::getLeftY, xDrive::getLeftX, xDrive::getRightTriggerAxis)
+				.deadlineWith(Lighting.getStrobeCommand(() -> LEDState.kGreen))
+				.finallyDo(Lighting.startTimer));
 
 		// just runs feeder
 		xDrive.leftStick()
@@ -131,7 +137,8 @@ public class RobotContainer {
 								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
 								.withTimeout(2)
 								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
-						.finallyDo(Lighting.startTimer).handleInterrupt(() -> Lighting.getInstance().autoSetLights(true)));
+						.finallyDo(Lighting.startTimer)
+						.handleInterrupt(() -> Lighting.getInstance().autoSetLights(true)));
 
 		// deploys intake (right paddle)
 		xDrive.rightStick()
@@ -142,7 +149,8 @@ public class RobotContainer {
 								Constants.OperatorConstants.Driver.kIntakeRumbleStrength))
 								.withTimeout(2)
 								.finallyDo(() -> xDrive.getHID().setRumble(RumbleType.kBothRumble, 0)))
-						.finallyDo(Lighting.startTimer).handleInterrupt(() -> Lighting.getInstance().autoSetLights(true)));
+						.finallyDo(Lighting.startTimer)
+						.handleInterrupt(() -> Lighting.getInstance().autoSetLights(true)));
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
@@ -261,7 +269,7 @@ public class RobotContainer {
 
 	private void configureSimBinds() {
 		new Trigger(() -> simController.getRawButtonPressed(1))
-				.toggleOnTrue(new AlignToSpeaker(() -> -simController.getRawAxis(0), () -> simController.getRawAxis(1),
+				.toggleOnTrue(new AlignToStage(() -> -simController.getRawAxis(0), () -> simController.getRawAxis(1),
 						null));
 
 		new Trigger(() -> simController.getRawButtonPressed(2))

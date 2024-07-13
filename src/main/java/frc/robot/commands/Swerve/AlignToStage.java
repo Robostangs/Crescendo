@@ -55,7 +55,9 @@ public class AlignToStage extends Command {
 
         //TODO make these constants
         getTargetRotation = () -> {
+
             if (Robot.isRed()) {
+                // return GeometryUtil.flipFieldPose(Constants.Vision.SpeakerPoses.kPassPoseBlue).getRotation();
                 return Rotation2d
                         .fromRadians(Math.atan2(
                                 drivetrain.getPose().getY() - 8,
@@ -63,9 +65,10 @@ public class AlignToStage extends Command {
             }
 
             else {
+                // return Constants.Vision.SpeakerPoses.kPassPoseBlue.getRotation();
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - 8,
+                                drivetrain.getPose().getY() - 9,
                                 drivetrain.getPose().getX() - 0));
             }
         };

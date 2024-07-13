@@ -60,7 +60,7 @@ public class AlignToStage extends Command {
                 // return GeometryUtil.flipFieldPose(Constants.Vision.SpeakerPoses.kPassPoseBlue).getRotation();
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - 8,
+                                drivetrain.getPose().getY() - 9,
                                 drivetrain.getPose().getX() - 16));
             }
 

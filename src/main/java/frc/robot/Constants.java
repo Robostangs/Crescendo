@@ -68,6 +68,9 @@ public final class Constants {
 			public static final Pose2d kSpeakerPoseRed = new Pose2d(fieldLength - kSpeakerPoseBlue.getX(),
 					kSpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
+			public static final Pose2d kPassPoseBlue = new Pose2d(0, Constants.fieldHeight, Rotation2d.fromDegrees(0));
+			public static final Pose2d kPassPoseRed = new Pose2d(Constants.fieldLength, Constants.fieldHeight, Rotation2d.fromDegrees(0));
+
 			public static final double kSpeakerHeightMeters = 2.032;
 
 			public static final Pose3d kSpeakerPoseBlue3d = new Pose3d(kSpeakerPoseBlue.getX(), kSpeakerPoseBlue.getY(),
@@ -408,7 +411,7 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.8 - 5;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.8 - 2.5;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -487,7 +490,7 @@ public final class Constants {
 
 			/** should be 204.083928 */
 			public static final double kGearboxRotationsToMechanismMeters = 18.1430612 / 0.0889;
-			public static final double kMaxExtensionMeters = 0.6604;
+			public static final double kMaxExtensionMeters = 0.62;
 			public static final double kExtensionThreshold = kMaxExtensionMeters - 0.482;
 			public static final double kExtensionPower = 1;
 			public static final double kRetractPower = -1;

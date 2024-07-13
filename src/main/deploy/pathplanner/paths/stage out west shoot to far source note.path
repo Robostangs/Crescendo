@@ -8,27 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.714947816299927,
-        "y": 0.27902796413821923
+        "x": 4.877863923885272,
+        "y": 1.0867404919067447
       },
       "isLocked": false,
       "linkedName": "Stage Out West Shoot Position"
     },
     {
       "anchor": {
-        "x": 8.115617317664361,
-        "y": 2.4355807112260432
+        "x": 8.116860648099326,
+        "y": 0.7762526348962228
       },
       "prevControl": {
-        "x": 8.125904348418691,
-        "y": 2.2793108922796024
+        "x": 8.127147678853657,
+        "y": 0.6199828159497818
       },
       "nextControl": {
-        "x": 8.105308036141112,
-        "y": 2.592188540596792
+        "x": 8.106551366576078,
+        "y": 0.9328604642669713
       },
       "isLocked": false,
-      "linkedName": "Far Mid Right Note"
+      "linkedName": "Far Right Note"
     },
     {
       "anchor": {
@@ -36,8 +36,8 @@
         "y": 2.551924876997902
       },
       "prevControl": {
-        "x": 5.759004863269118,
-        "y": 0.2937136464612825
+        "x": 4.863178241562208,
+        "y": 1.1601689035220655
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.7,
-      "rotationDegrees": 25.17784825921614,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     },
     {

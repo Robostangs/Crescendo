@@ -68,6 +68,9 @@ public final class Constants {
 			public static final Pose2d kSpeakerPoseRed = new Pose2d(fieldLength - kSpeakerPoseBlue.getX(),
 					kSpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
+			public static final Pose2d kPassPoseBlue = new Pose2d(0, Constants.fieldHeight, Rotation2d.fromDegrees(0));
+			public static final Pose2d kPassPoseRed = new Pose2d(Constants.fieldLength, Constants.fieldHeight, Rotation2d.fromDegrees(0));
+
 			public static final double kSpeakerHeightMeters = 2.032;
 
 			public static final Pose3d kSpeakerPoseBlue3d = new Pose3d(kSpeakerPoseBlue.getX(), kSpeakerPoseBlue.getY(),
@@ -154,7 +157,29 @@ public final class Constants {
 
 			// private static final double kWheelRadiusInches = (2 * (6.45 / 6.6)) * (139.505 / 120);
 			// private static final double kWheelRadiusInches = 3.9275 / 2;
-			private static final double kWheelRadiusInches = 2 * (3.082 / 3.586);
+			// private static final double kWheelRadiusInches = 2 * (3.082 / 3.586);
+
+			//front bumper to edge of note is 4 ft
+			//from 14.11 - 15.25
+
+			//How to calibrate 
+			//put robot at speaker
+			//measure a distance to drive(in meters)
+			//see what the robot thinks it drove
+			//put: what odo thinks/what it acually drove
+			//multiply by 2
+			// private static final double kWheelRadiusInches = 2 * (1.14 / 1.22);
+
+
+
+
+
+			//163 inches 
+
+			//15.2 - 12
+			private static final double kWheelRadiusInches = 2 * (3.2 / 4.14);
+
+
 
 			/*
 			 * X:1.4
@@ -338,13 +363,12 @@ public final class Constants {
 	public static class MotorConstants {
 		public static final double falconFreeSpeedRPM = 6380.0;
 		public static final double falconShooterLoadRPM = 5340;
-		public static final double falconShooterThresholdRPM = falconShooterLoadRPM * 0.925;
+		public static final double falconShooterThresholdRPM = falconShooterLoadRPM * 0.86;
 
 		/* Kraken x60 Info */
 		public static class Kraken {
 			public static final double krakenFreeSpeedRotationPerMinute = 5800.0;
-			public static final double krakenFreeSpeedRadiansPerSecond = krakenFreeSpeedRotationPerMinute * 2 * Math.PI
-					/ 60;
+			public static final double krakenFreeSpeedRadiansPerSecond = krakenFreeSpeedRotationPerMinute * 2 * Math.PI/ 60;
 			public static final double krakenStallTorqueNM = 9.37;
 			public static final double krakenStallCurrentAmps = 483;
 			public static final double krakenPeakPowerWatts = 1405;
@@ -388,7 +412,7 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -61.9;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.8 - 2.5;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -430,7 +454,7 @@ public final class Constants {
 	}
 
 	public static class ShooterConstants {
-		public static final int feedMotor = 60;
+		public static final int feedMotorID = 60;
 		public static final int topShooterMotorID = 51;
 		public static final int bottomShooterMotorID = 52;
 		public static final boolean feedIsInverted = false;
@@ -467,7 +491,7 @@ public final class Constants {
 
 			/** should be 204.083928 */
 			public static final double kGearboxRotationsToMechanismMeters = 18.1430612 / 0.0889;
-			public static final double kMaxExtensionMeters = 0.6604;
+			public static final double kMaxExtensionMeters = 0.62;
 			public static final double kExtensionThreshold = kMaxExtensionMeters - 0.482;
 			public static final double kExtensionPower = 1;
 			public static final double kRetractPower = -1;

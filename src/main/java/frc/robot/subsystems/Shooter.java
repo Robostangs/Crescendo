@@ -24,7 +24,7 @@ public class Shooter extends SubsystemBase {
     private Shooter() {
         bottomShooter = new TalonFX(Constants.ShooterConstants.bottomShooterMotorID, "rio");
         topShooter = new TalonFX(Constants.ShooterConstants.topShooterMotorID, "rio");
-        feedMotor = new TalonFX(Constants.ShooterConstants.feedMotor, "rio");
+        feedMotor = new TalonFX(Constants.ShooterConstants.feedMotorID, "rio");
 
         Robot.verifyMotors(bottomShooter, topShooter, feedMotor);
 

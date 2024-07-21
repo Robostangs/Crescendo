@@ -68,8 +68,9 @@ public final class Constants {
 			public static final Pose2d kSpeakerPoseRed = new Pose2d(fieldLength - kSpeakerPoseBlue.getX(),
 					kSpeakerPoseBlue.getY(), Rotation2d.fromDegrees(180));
 
-			public static final Pose2d kPassPoseBlue = new Pose2d(0, Constants.fieldHeight, Rotation2d.fromDegrees(0));
-			public static final Pose2d kPassPoseRed = new Pose2d(Constants.fieldLength, Constants.fieldHeight, Rotation2d.fromDegrees(0));
+			public static final Pose2d kPassPoseBlue = new Pose2d(0, 9, Rotation2d.fromDegrees(0));
+			//TODO these values are kinda untested try tuning them at a comp if we have free time 
+			public static final Pose2d kPassPoseRed = new Pose2d(16, 9, Rotation2d.fromDegrees(0));
 
 			public static final double kSpeakerHeightMeters = 2.032;
 

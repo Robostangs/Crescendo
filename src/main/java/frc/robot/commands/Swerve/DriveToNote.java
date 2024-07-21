@@ -17,6 +17,7 @@ public class DriveToNote extends Command {
 
     public static BooleanSupplier thereIsANote = () -> LimelightHelpers.getTX(Constants.Vision.LimelightPython.llPython) != 0.00;
 
+    //TODO expiremental code from @ardusa  try to fix?
     public DriveToNote() {
         drivetrain = Drivetrain.getInstance();
         driveRequest = new SwerveRequest.RobotCentric();

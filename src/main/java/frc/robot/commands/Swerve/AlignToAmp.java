@@ -27,7 +27,7 @@ public class AlignToAmp extends Command {
     Supplier<Rotation2d> getTargetRotation;
 
     /**
-     * Command to set the drivetrain to brake mode when not moving
+     * Aligns the robot to -90 degrees 
      * 
      * @param translateX           the forward to backward movement of the robot
      * @param translateY           the right to left movement of the robot

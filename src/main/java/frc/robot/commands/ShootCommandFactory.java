@@ -19,7 +19,11 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class ShootCommandFactory {
-        // works perfectly
+
+        /**
+         *Shoots when the arm reaches it's setpoint
+         *@see Don't use too much, it doesn't have timeouts
+        */
         public static Command getAimAndShootCommand() {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new SetPoint()
@@ -28,7 +32,10 @@ public class ShootCommandFactory {
                                 .withName("Auto Aim and Shoot");
         }
 
-        // works perfectly
+        /**
+         * 
+         * @return
+         */
         public static Command getAimAndShootCommandWithTimeouts() {
                 return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
                                 .unless(() -> Intake.getInstance().getShooterSensor())

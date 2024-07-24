@@ -1,0 +1,138 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.1976519557114806,
+        "y": 5.5307069329568055
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.5342048240501143,
+        "y": 4.763458560759916
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.225151392806425,
+        "y": 3.8015766379058227
+      },
+      "prevControl": {
+        "x": 3.9481126551408856,
+        "y": 4.689724468604687
+      },
+      "nextControl": {
+        "x": 6.367603087825751,
+        "y": 3.007030658459271
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.880942414905209,
+        "y": 2.505822231440677
+      },
+      "prevControl": {
+        "x": 6.520811750684638,
+        "y": 2.5082674947009274
+      },
+      "nextControl": {
+        "x": 7.98086225628542,
+        "y": 2.505642594054708
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.525250659125773,
+        "y": 4.600754505366361
+      },
+      "prevControl": {
+        "x": 7.567686117732473,
+        "y": 4.590128522100719
+      },
+      "nextControl": {
+        "x": 7.482815200519073,
+        "y": 4.611380488632004
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.1976519557114806,
+        "y": 5.5307069329568055
+      },
+      "prevControl": {
+        "x": 4.007175167734616,
+        "y": 6.091095438195243
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Under Stage Speed 1",
+      "minWaypointRelativePos": 0.35,
+      "maxWaypointRelativePos": 1.2,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 776.0973770408424,
+        "maxAngularAcceleration": 455.7618824904275
+      }
+    },
+    {
+      "name": "Under Stage Speed 2",
+      "minWaypointRelativePos": 3.4,
+      "maxWaypointRelativePos": 3.7,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 776.0973770408424,
+        "maxAngularAcceleration": 455.7618824904275
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.96,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 776.0973770408424,
+    "maxAngularAcceleration": 455.7618824904275
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Center Paths",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

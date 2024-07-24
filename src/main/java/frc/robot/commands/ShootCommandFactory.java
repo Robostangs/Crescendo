@@ -22,7 +22,7 @@ public class ShootCommandFactory {
 
         /**
          *Shoots when the arm reaches it's setpoint
-         *@see Don't use too much, it doesn't have timeouts
+         *@see also used for shooting in teleop
         */
         public static Command getAimAndShootCommand() {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
@@ -33,8 +33,8 @@ public class ShootCommandFactory {
         }
 
         /**
-         * 
-         * @return
+         * Shoots when the arm reaches it's setpoint and after all the timeouts
+         *@see also used for shooting in auto
          */
         public static Command getAimAndShootCommandWithTimeouts() {
                 return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)

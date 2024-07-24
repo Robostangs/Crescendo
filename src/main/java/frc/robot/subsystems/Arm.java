@@ -449,9 +449,6 @@ public class Arm extends SubsystemBase {
         double angleToSpeaker = -108.295 * Math.pow(Units.metersToFeet(distToSpeakerMeters),
                 -0.325315) + 22.8515;
 
-        // double angleToSpeaker = Constants.ArmConstants.Regression.a *
-        // Math.pow(Units.metersToInches(distToSpeakerMeters),
-        // Constants.ArmConstants.Regression.c) + Constants.ArmConstants.Regression.c;
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)",
                 distToSpeakerMeters);
@@ -459,7 +456,7 @@ public class Arm extends SubsystemBase {
                 Units.metersToInches(distToSpeakerMeters));
 
         /*
-         * Make sure that we dont a][\ccidentally return a stupid value
+         * Make sure that we dont accidentally return a stupid value
          */
         if (validSetpoint(angleToSpeaker)) {
             return angleToSpeaker;

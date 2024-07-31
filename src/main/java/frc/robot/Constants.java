@@ -138,8 +138,10 @@ public final class Constants {
 			/** The closed-loop output type to use for the drive motors */
 			private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
+			
+
 			/** The stator current at which the wheels start to slip */
-			private static final double kSlipCurrentA = Robot.isSimulation() ? 200.0 : 80.0;
+			private static final double kSlipCurrentA = Robot.isSimulation() ? 200.0 : 120.0;
 
 			/** Theoretical free speed (m/s) at 12v applied output */
 			public static final double kSpeedAt12VoltsMps = 5.96;
@@ -178,6 +180,7 @@ public final class Constants {
 
 			//15.2 - 12
 			private static final double kWheelRadiusInches = 2 * (3.2 / 4.14);
+
 
 
 
@@ -225,7 +228,9 @@ public final class Constants {
 					.withDriveFrictionVoltage(kDriveFrictionVoltage)
 					.withFeedbackSource(SteerFeedbackType.FusedCANcoder)
 					.withCouplingGearRatio(kCoupleRatio)
-					.withSteerMotorInverted(kSteerMotorReversed);
+					.withSteerMotorInverted(kSteerMotorReversed)
+					
+					;
 
 			// Front Left
 			private static final int kFrontLeftDriveMotorId = 11;

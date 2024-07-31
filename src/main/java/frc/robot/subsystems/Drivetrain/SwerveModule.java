@@ -132,6 +132,14 @@ public class SwerveModule {
         talonConfigs.TorqueCurrent.PeakReverseTorqueCurrent = -constants.SlipCurrent;
         talonConfigs.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
         talonConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        //TODO make these constants
+        talonConfigs.CurrentLimits.SupplyCurrentLimit=80;
+        //TODO may need to tune these  
+        talonConfigs.CurrentLimits.SupplyCurrentThreshold=60;
+        talonConfigs.CurrentLimits.SupplyTimeThreshold=0.5;
+
+        talonConfigs.CurrentLimits.SupplyCurrentLimitEnable=true;
+        
 
         talonConfigs.MotorOutput.Inverted = constants.DriveMotorInverted ? InvertedValue.Clockwise_Positive
                 : InvertedValue.CounterClockwise_Positive;

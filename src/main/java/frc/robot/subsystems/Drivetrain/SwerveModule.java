@@ -133,10 +133,10 @@ public class SwerveModule {
         talonConfigs.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
         talonConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         //TODO make these constants
-        talonConfigs.CurrentLimits.SupplyCurrentLimit=80;
+        talonConfigs.CurrentLimits.SupplyCurrentLimit=60;
         //TODO may need to tune these  
-        talonConfigs.CurrentLimits.SupplyCurrentThreshold=60;
-        talonConfigs.CurrentLimits.SupplyTimeThreshold=0.5;
+        talonConfigs.CurrentLimits.SupplyCurrentThreshold=80;
+        talonConfigs.CurrentLimits.SupplyTimeThreshold=0;
 
         talonConfigs.CurrentLimits.SupplyCurrentLimitEnable=true;
         

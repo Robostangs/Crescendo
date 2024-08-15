@@ -103,7 +103,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
                 mField.getObject("Rear LL pose").setPose(back.pose);
             }
         }
+        for (int i=0;i<4;i++) {
 
+            SmartDashboard.putNumber(String.valueOf(i)+" supply current", Modules[i].getDriveMotor().getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber(String.valueOf(i)+" stator current", Modules[i].getDriveMotor().getStatorCurrent().getValueAsDouble());
+            SmartDashboard.putNumber(String.valueOf(i)+" supply voltage", Modules[i].getDriveMotor().getSupplyVoltage().getValueAsDouble());
+            SmartDashboard.putNumber(String.valueOf(i)+" bridge output", Math.abs(Modules[i].getDriveMotor().getDutyCycle().getValue()));
+            SmartDashboard.putBoolean(String.valueOf(i)+" stator limit", Modules[i].getDriveMotor().getFault_StatorCurrLimit().getValue());
+            SmartDashboard.putBoolean(String.valueOf(i)+" supply limit", Modules[i].getDriveMotor().getFault_SupplyCurrLimit().getValue());
+
+
+
+        }
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
         SmartDashboard.putNumber("Swerve/Rotation Error", (angleToSpeaker() -
                 getPose().getRotation().getDegrees()));

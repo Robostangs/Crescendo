@@ -34,8 +34,11 @@ public final class Constants {
 
 		public static final boolean UseLimelight = true;
 
-		// the lower the number, the more odometry will trust the vision
-		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.22, 0.22, Units.degreesToRadians(100));
+		// the lower the number, the more odometry will trust the vision		
+		//TODO revert this change at MARC
+		// public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.22, 0.22, Units.degreesToRadians(100));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.18, 0.18, Units.degreesToRadians(100));
+
 
 		public static class LimelightFront {
 			public static final String llAprilTag = "limelight-front";
@@ -416,7 +419,7 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -60.8;
+		public static final double angleOfShooterReferencePointSittingOnHardStop = -62.6;
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number

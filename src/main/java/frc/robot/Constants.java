@@ -144,7 +144,7 @@ public final class Constants {
 			
 
 			/** The stator current at which the wheels start to slip */
-			private static final double kSlipCurrentA = Robot.isSimulation() ? 200.0 : 120.0;
+			private static final double kSlipCurrentA = Robot.isSimulation() ? 200.0 : 60.0;
 
 			/** Theoretical free speed (m/s) at 12v applied output */
 			public static final double kSpeedAt12VoltsMps = 5.96;

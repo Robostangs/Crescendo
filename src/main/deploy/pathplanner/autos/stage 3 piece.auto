@@ -12,35 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "right to close right note"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Shoot on the fly"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "stage sneak"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "stage out west shoot to mid source note"
           }
         },
         {
@@ -52,25 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "stage out west to far mid source note ending stage shoot "
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "stage out west shoot to far source note"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "stage out west to far mid source note ending under stage "
+            "pathName": "stage out west shoot to mid note"
           }
         },
         {

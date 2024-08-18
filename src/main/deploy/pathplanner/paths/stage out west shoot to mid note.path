@@ -3,64 +3,64 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.286882028309511,
-        "y": 7.229778095919829
+        "x": 3.0259033481029927,
+        "y": 2.551924876997902
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.891176004176696,
-        "y": 6.402957492855952
+        "x": 6.186774598137632,
+        "y": -0.6510257846115555
       },
       "isLocked": false,
-      "linkedName": "Amp Shoot Position"
+      "linkedName": "Stage Out West Shoot Position"
     },
     {
       "anchor": {
-        "x": 8.12,
-        "y": 5.79
+        "x": 7.915764195164753,
+        "y": 4.104648209296419
       },
       "prevControl": {
-        "x": 8.116702500988229,
-        "y": 5.437622364650822
+        "x": 8.214284064931766,
+        "y": 3.2184173459256016
       },
       "nextControl": {
-        "x": 8.12339971728244,
-        "y": 6.153300893363863
+        "x": 7.8656638197006705,
+        "y": 4.253383698955415
       },
       "isLocked": false,
-      "linkedName": "Mid Left Note"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.286882028309511,
-        "y": 7.229778095919829
+        "x": 3.0259033481029927,
+        "y": 2.551924876997902
       },
       "prevControl": {
-        "x": 5.891176004176696,
-        "y": 6.329529081240632
+        "x": 5.84446607549273,
+        "y": -0.9560238329705495
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp Shoot Position"
+      "linkedName": "Stage Out West Shoot Position"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 0,
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 34.63034153777849,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.45,
-      "rotationDegrees": 0.0,
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": 46.97220527400062,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0.25,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "sequential",
         "data": {
@@ -84,11 +84,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 24.08,
+    "rotation": -43.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp Side Paths",
+  "folder": "Stage Side Paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

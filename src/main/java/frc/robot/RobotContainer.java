@@ -70,7 +70,6 @@ public class RobotContainer {
 
 	public void configureDefaultBinds() {
 		removeDefaultCommands();
-
 		climber.setDefaultCommand(
 				new ClimberAdjust(() -> -xManip.getLeftTriggerAxis(), () -> -xManip.getRightTriggerAxis()));
 

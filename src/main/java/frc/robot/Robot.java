@@ -296,7 +296,7 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
 		NamedCommands.registerCommand("Prepare Shooter", new Prepare());
-		NamedCommands.registerCommand("Intake", new DeployAndIntake(true).withTimeout(0.3));
+		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		NamedCommands.registerCommand("Shoot on the fly", ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 		NamedCommands.registerCommand("Lower Arm",
 				// doing this so that we dont have to wait for arm velocity to be 0, and as soon

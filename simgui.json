@@ -123,6 +123,26 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Swerve/Module 0": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Swerve/Module 1": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Swerve/Module 2": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Swerve/Module 3": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },

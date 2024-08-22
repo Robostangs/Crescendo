@@ -1,5 +1,9 @@
 package frc.robot;
 
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.util.List;
 import java.util.Map;
 
 import com.ctre.phoenix6.StatusCode;
@@ -18,7 +22,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -57,7 +60,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import frc.robot.subsystems.Drivetrain.SwerveRequest;
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobotstangs {
 	public static SendableChooser<String> startingPose = new SendableChooser<>();
 	public static SendableChooser<String> autoChooser = new SendableChooser<>();
 	public static SendableChooser<Pose2d> pathToPointCommandChooser = new SendableChooser<>();
@@ -88,12 +91,17 @@ public class Robot extends TimedRobot {
 
 	public static Command setpointCommand;
 
-	public static Alert forwardAuto, wrongAlliance;
+	public static Alert forwardAuto, wrongAlliance,gcAlert;
+
+	GcStatsCollector gc = new GcStatsCollector();		
+
 
 	@Override
 	public void robotInit() {
 		forwardAuto = new Alert("Robot will travel forward", Alert.AlertType.INFO);
 		wrongAlliance = new Alert("Switch to Blue alliance for best results", Alert.AlertType.INFO);
+		gcAlert = new Alert("memory is not being deleted ", Alert.AlertType.WARNING);
+
 		// StartingPosition = new Alert("Starting Position Undefined",
 		// Alert.AlertType.INFO);
 
@@ -348,8 +356,11 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
+		gc.update();
 
-	}
+		}
+
+	
 
 	@Override
 	public void disabledInit() {
@@ -373,9 +384,9 @@ public class Robot extends TimedRobot {
 		}
 
 		try {
-			if (!lastAuto.equals(startingPose.getSelected() + autoChooser.getSelected())) {
+			// if (!lastAuto.equals(startingPose.getSelected() + autoChooser.getSelected())) {
 				pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
-			}
+			// }
 
 			lastAuto = startingPose.getSelected() + autoChooser.getSelected();
 			forwardAuto.set(false);
@@ -768,4 +779,35 @@ public class Robot extends TimedRobot {
 
 		return false;
 	}
+
+	private static final class GcStatsCollector {
+    private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
+	private MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+    private final long[] lastTimes = new long[gcBeans.size()];
+    private final long[] lastCounts = new long[gcBeans.size()];
+  
+    public void update() {
+      long accumTime = 0;
+      long accumCounts = 0;
+      for (int i = 0; i < gcBeans.size(); i++) {
+        long gcTime = gcBeans.get(i).getCollectionTime();
+        long gcCount = gcBeans.get(i).getCollectionCount();
+        accumTime += gcTime - lastTimes[i];
+        accumCounts += gcCount - lastCounts[i];
+  
+        lastTimes[i] = gcTime;
+        lastCounts[i] = gcCount;
+      }
+  
+	  SmartDashboard.putNumber("GC Time MS", (double)accumTime);
+	  SmartDashboard.putNumber("GCCounts", (double)accumCounts);
+	  SmartDashboard.putNumber("Memory Usage", (double) memBean.getHeapMemoryUsage().getUsed());
+	  
+	  //TODO find this number
+	  if(accumTime>1){
+		gcAlert.set(true);
+	  }
+
+    }
+  }
 }

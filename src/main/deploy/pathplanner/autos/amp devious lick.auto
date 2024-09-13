@@ -2,30 +2,24 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7417426316334117,
-      "y": 4.41
+      "x": 0.74,
+      "y": 6.7
     },
-    "rotation": -60.0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Shoot on the fly"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "devious lick stage"
+            "pathName": "devious lick amp"
           }
         }
       ]
     }
   },
-  "folder": "Stage",
+  "folder": "Amp",
   "choreoAuto": false
 }

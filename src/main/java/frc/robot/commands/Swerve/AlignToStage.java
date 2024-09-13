@@ -26,7 +26,7 @@ public class AlignToStage extends Command {
     }
 
     /**
-     * Command to set the drivetrain to brake mode when not moving
+     * Aligns the robot to the {@code kPassPoseRed} or {@code kPassPoseBlue} 
      * 
      * @param translateX           the forward to backward movement of the robot
      * @param translateY           the right to left movement of the robot
@@ -53,23 +53,20 @@ public class AlignToStage extends Command {
 
         this.setName("Align to Stage");
 
-        //TODO make these constants
         getTargetRotation = () -> {
 
             if (Robot.isRed()) {
-                // return GeometryUtil.flipFieldPose(Constants.Vision.SpeakerPoses.kPassPoseBlue).getRotation();
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - 9,
-                                drivetrain.getPose().getX() - 16));
+                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoses.kPassPoseRed.getY(),
+                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoses.kPassPoseRed.getX()));
             }
 
             else {
-                // return Constants.Vision.SpeakerPoses.kPassPoseBlue.getRotation();
                 return Rotation2d
                         .fromRadians(Math.atan2(
-                                drivetrain.getPose().getY() - 9,
-                                drivetrain.getPose().getX() - 0));
+                                drivetrain.getPose().getY() - Constants.Vision.SpeakerPoses.kPassPoseBlue.getY(),
+                                drivetrain.getPose().getX() - Constants.Vision.SpeakerPoses.kPassPoseBlue.getX()));
             }
         };
     }

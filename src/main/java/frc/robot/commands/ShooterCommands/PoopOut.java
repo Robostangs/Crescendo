@@ -8,6 +8,11 @@ import frc.robot.subsystems.Shooter;
 public class PoopOut extends Command {
     Shooter shooter;
 
+    /**
+     * we all have to go this is just how our robot does it
+     * <p>
+     * sets shooter and feeder wheels to the max until the note is pooped out
+     */
     public PoopOut() {
         shooter = Shooter.getInstance();
 

@@ -57,6 +57,7 @@ public class Intake extends SubsystemBase {
         }
 
         postStatus("Idle");
+
     }
 
     public void setExtend(boolean deploy) {

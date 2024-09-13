@@ -13,8 +13,7 @@ public class PathToPoint extends SequentialCommandGroup {
         private Pose2d targetPose;
 
         /**
-         * Command to set the drivetrain to a specific position on the field while
-         * avoiding field obstacles
+         * Uses {@code AutoBuilder} to drive to {@code targetPose} 
          * 
          * @param targetPose the position that the robot should move to
          */

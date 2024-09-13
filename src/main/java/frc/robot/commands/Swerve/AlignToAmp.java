@@ -20,14 +20,14 @@ public class AlignToAmp extends Command {
     Drivetrain drivetrain;
     Lighting lighting;
 
-    LEDState oldState = LEDState.kOff;
+    LEDState oldState;
     SwerveRequest.FieldCentricFacingAngle driveRequest;
 
     Supplier<Double> translateX, translateY, howManyBabiesOnBoard;
     Supplier<Rotation2d> getTargetRotation;
 
     /**
-     * Command to set the drivetrain to brake mode when not moving
+     * Aligns the robot to -90 degrees 
      * 
      * @param translateX           the forward to backward movement of the robot
      * @param translateY           the right to left movement of the robot
@@ -37,8 +37,8 @@ public class AlignToAmp extends Command {
     public AlignToAmp(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Double> howManyBabiesOnBoard) {
         drivetrain = Drivetrain.getInstance();
         lighting = Lighting.getInstance();
-
         this.addRequirements(drivetrain, lighting);
+        oldState = LEDState.kOff;
 
         if (howManyBabiesOnBoard == null) {
             this.howManyBabiesOnBoard = () -> 0.0;
@@ -78,7 +78,6 @@ public class AlignToAmp extends Command {
         LEDState state;
 
         if (Intake.getInstance().getShooterSensor()) {
-
             if (Drivetrain.getInstance().readyToAmp()) {
                 if (Arm.getInstance().isInRangeOfTarget(Constants.ArmConstants.SetPoints.kAmp)) {
                     state = LEDState.kGreen;
@@ -88,7 +87,7 @@ public class AlignToAmp extends Command {
                     state = LEDState.kBlue;
                 }
             }
-
+            
             else {
                 state = LEDState.kRed;
             }

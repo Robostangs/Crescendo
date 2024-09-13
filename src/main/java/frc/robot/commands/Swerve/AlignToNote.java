@@ -25,7 +25,8 @@ public class AlignToNote extends Command {
     }
 
     /**
-     * Command to set the drivetrain to brake mode when not moving
+     * 
+     * Aligns the robot to where a note is based off of {@code llPython} 
      * 
      * @param translateX           the forward to backward movement of the robot
      * @param translateY           the right to left movement of the robot

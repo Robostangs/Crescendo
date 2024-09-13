@@ -8,6 +8,13 @@ public class Shoot extends Command {
     Shooter shooter;
     boolean force;
 
+    /**
+     * A command that sets the shoot motors to 1 
+     * <p>
+     * 
+     * @param force wheather or not to force the shot
+     * 
+     */
     public Shoot(boolean force) {
         shooter = Shooter.getInstance();
         this.force = force;

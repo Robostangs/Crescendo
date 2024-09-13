@@ -153,6 +153,8 @@ public class RobotContainer {
 						
 		xDrive.povLeft().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 		xDrive.povDown().onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative).withName("Seed Field Relative"));
+
+		//TODO remake MultiIntake
 		xDrive.povUp().toggleOnTrue(new MultiIntake().alongWith(new Feed(),
 				Lighting.getStrobeCommand(() -> LEDState.kPurple)).finallyDo(Lighting.startTimer));
 
@@ -229,7 +231,6 @@ public class RobotContainer {
 						.onlyIf(() -> Intake.getInstance().getShooterSensor())
 						.finallyDo(Lighting.startTimer));
 
-		xManip.start().onTrue(new ReturnHome().alongWith(new CancelShooter()));
 	}
 
 	public void configurePitBinds() {

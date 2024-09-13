@@ -13,7 +13,9 @@ public class xDrive extends Command {
     private SwerveRequest swerveRequest;
 
     /**
-     * Command to set the drivetrain to brake mode when not moving
+     * Sets swerve based on @param translateX @param translatey @param rotate 
+     * <p>
+     * When it isn't driving it will defult to a "X" position
      * 
      * @param translateX           the forward to backward movement of the robot
      * @param translateY           the right to left movement of the robot

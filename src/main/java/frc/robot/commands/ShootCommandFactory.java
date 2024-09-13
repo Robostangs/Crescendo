@@ -10,7 +10,6 @@ import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.FeederCommands.BeltDrive;
 import frc.robot.commands.FeederCommands.PassToShooter;
 import frc.robot.commands.ShooterCommands.CancelShooter;
-import frc.robot.commands.ShooterCommands.ChargeUp;
 import frc.robot.commands.ShooterCommands.FullSend;
 import frc.robot.commands.ShooterCommands.PoopOut;
 import frc.robot.commands.ShooterCommands.Prepare;
@@ -20,7 +19,11 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class ShootCommandFactory {
-        // works perfectly
+
+        /**
+         *Shoots when the arm reaches it's setpoint
+         *@see also used for shooting in teleop
+        */
         public static Command getAimAndShootCommand() {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new SetPoint()
@@ -29,7 +32,10 @@ public class ShootCommandFactory {
                                 .withName("Auto Aim and Shoot");
         }
 
-        // works perfectly
+        /**
+         * Shoots when the arm reaches it's setpoint and after all the timeouts
+         *@see also used for shooting in auto
+         */
         public static Command getAimAndShootCommandWithTimeouts() {
                 return new PassToShooter().withTimeout(Constants.OperatorConstants.feedTimeout)
                                 .unless(() -> Intake.getInstance().getShooterSensor())
@@ -130,7 +136,7 @@ public class ShootCommandFactory {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new WaitUntilCommand(waitUntil).deadlineWith(
                                                 new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass),
-                                                new ChargeUp(0.62)),
+                                                new Prepare(0.65)),
                                                 new Shoot(true).onlyWhile(waitUntil))
                                 .finallyDo(ReturnHome.ReturnHome)
                                 .handleInterrupt(CancelShooter.CancelShooter)

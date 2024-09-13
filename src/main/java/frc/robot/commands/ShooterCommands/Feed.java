@@ -8,6 +8,11 @@ import frc.robot.subsystems.Shooter;
 public class Feed extends Command {
     Shooter shooter;
 
+    /**
+     * A command that sets the feeder motors on the shooter to the feed forward value
+     * <p>
+     * Stops when the shooter sensor sees a piece
+     */
     public Feed() {
         shooter = Shooter.getInstance();
 

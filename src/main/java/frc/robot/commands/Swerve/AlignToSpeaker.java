@@ -26,7 +26,7 @@ public class AlignToSpeaker extends Command {
     }
 
     /**
-     * Command to set the drivetrain to brake mode when not moving
+     * Aligns the robot to the speaker using the {@code kSpeakerPoseRed} or {@code kSpeakerPoseBlue} constants
      * 
      * @param translateX           the forward to backward movement of the robot
      * @param translateY           the right to left movement of the robot

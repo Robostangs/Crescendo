@@ -449,9 +449,6 @@ public class Arm extends SubsystemBase {
         double angleToSpeaker = -108.295 * Math.pow(Units.metersToFeet(distToSpeakerMeters),
                 -0.325315) + 22.8515;
 
-        // double angleToSpeaker = Constants.ArmConstants.Regression.a *
-        // Math.pow(Units.metersToInches(distToSpeakerMeters),
-        // Constants.ArmConstants.Regression.c) + Constants.ArmConstants.Regression.c;
 
         SmartDashboard.putNumber("Arm/Distance From Speaker (Meters)",
                 distToSpeakerMeters);
@@ -459,7 +456,7 @@ public class Arm extends SubsystemBase {
                 Units.metersToInches(distToSpeakerMeters));
 
         /*
-         * Make sure that we dont a][\ccidentally return a stupid value
+         * Make sure that we dont accidentally return a stupid value
          */
         if (validSetpoint(angleToSpeaker)) {
             return angleToSpeaker;
@@ -570,9 +567,9 @@ public class Arm extends SubsystemBase {
         // armMotorConfig.Slot0.kI = 3;
         armMotorConfig.Slot0.kP = 500;
         armMotorConfig.Slot0.kI = 100;
-        armMotorConfig.Slot0.kD = 60;
-        armMotorConfig.Slot0.kS = 0.25;
-        armMotorConfig.Slot0.kA = 1;
+        armMotorConfig.Slot0.kD = 70;
+        armMotorConfig.Slot0.kS = 0.25; // try 0
+        armMotorConfig.Slot0.kA = 0.2;
 
         armMotorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 

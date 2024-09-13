@@ -384,9 +384,9 @@ public class Robot extends TimedRobotstangs {
 		}
 
 		try {
-			// if (!lastAuto.equals(startingPose.getSelected() + autoChooser.getSelected())) {
+			if (!lastAuto.equals(startingPose.getSelected() + autoChooser.getSelected())) {
 				pathPlannerCommand = AutoBuilder.buildAuto(startingPose.getSelected() + autoChooser.getSelected());
-			// }
+			}
 
 			lastAuto = startingPose.getSelected() + autoChooser.getSelected();
 			forwardAuto.set(false);

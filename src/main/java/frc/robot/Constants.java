@@ -434,7 +434,7 @@ public final class Constants {
 				+ shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 		public static final double shooterOffset = 67 - shooterTrapezoidalOffset;
-		public static final double kInRangeThreshold = 2;
+		public static final double kInRangeThreshold = 1;
 
 		public static class Regression {
 			/*

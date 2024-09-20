@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.110374392045081,
-        "y": 6.298869603665135
+        "x": 1.1036435668577964,
+        "y": 6.197357940333054
       },
       "isLocked": false,
       "linkedName": "Close Center Note"
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 45.98987511693675,
+      "rotationDegrees": 34.42639231456445,
       "rotateFast": false
     }
   ],

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.739340798126041,
-        "y": 5.081996302881495
+        "x": 1.8412894657114616,
+        "y": 4.292571862252158
       },
       "isLocked": false,
       "linkedName": "Close Stage Note"
@@ -20,8 +20,8 @@
         "y": 5.561525155457719
       },
       "prevControl": {
-        "x": 1.9546955457547277,
-        "y": 5.597247558131481
+        "x": 1.7028194056388113,
+        "y": 5.598146714365719
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,8 +30,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.45,
-      "rotationDegrees": 32.344681825868705,
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 12.43285272538421,
       "rotateFast": true
     }
   ],

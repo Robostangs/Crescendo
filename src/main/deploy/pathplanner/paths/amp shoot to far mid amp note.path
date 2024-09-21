@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 8.12,
-        "y": 5.79
+        "x": 8.284942222836145,
+        "y": 5.7567874706411315
       },
       "prevControl": {
-        "x": 8.116702500988229,
-        "y": 5.437622364650822
+        "x": 8.281644723824375,
+        "y": 5.404409835291953
       },
       "nextControl": {
-        "x": 8.12339971728244,
-        "y": 6.153300893363863
+        "x": 8.288341940118586,
+        "y": 6.120088364004994
       },
       "isLocked": false,
       "linkedName": "Mid Left Note"
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 0,
+      "rotationDegrees": 5.355825042855109,
       "rotateFast": false
     },
     {

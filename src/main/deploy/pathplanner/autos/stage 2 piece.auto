@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.74,
-      "y": 4.41
+      "x": 1.4,
+      "y": 5.55
     },
-    "rotation": -60.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -18,47 +18,16 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "right to close right note"
+                  "pathName": "center to close center note"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Shoot on the fly"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake"
-                      }
-                    }
-                  ]
+                  "name": "Intake"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "stage out west to far mid source note ending stage shoot "
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "stage out west shoot to far source note"
           }
         },
         {
@@ -70,6 +39,6 @@
       ]
     }
   },
-  "folder": "Stage",
+  "folder": "Center",
   "choreoAuto": false
 }

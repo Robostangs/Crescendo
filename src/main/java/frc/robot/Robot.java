@@ -804,8 +804,12 @@ public class Robot extends TimedRobotstangs {
 	  SmartDashboard.putNumber("GCCounts", (double)accumCounts);
 	  SmartDashboard.putNumber("Memory Usage", (double) memBean.getHeapMemoryUsage().getUsed());
 	  
-	  if(accumTime>(1)){
+	  if(accumTime>(100)){
 		gcAlert.set(true);
+	  }
+	  else{
+		gcAlert.set(false);
+
 	  }
 
     }

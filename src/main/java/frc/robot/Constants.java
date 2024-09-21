@@ -420,8 +420,9 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -62.5;
-		
+		// public static final double angleOfShooterReferencePointSittingOnHardStop = -62.5;
+				public static final double angleOfShooterReferencePointSittingOnHardStop = -62-2.6;
+
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number

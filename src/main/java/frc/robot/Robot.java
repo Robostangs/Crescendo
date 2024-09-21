@@ -304,7 +304,7 @@ public class Robot extends TimedRobotstangs {
 
 		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
 		NamedCommands.registerCommand("Prepare Shooter", new Prepare());
-		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
+		NamedCommands.registerCommand("Intake", new DeployAndIntake(false));
 		NamedCommands.registerCommand("Shoot on the fly", ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 		NamedCommands.registerCommand("Lower Arm",
 				// doing this so that we dont have to wait for arm velocity to be 0, and as soon
@@ -315,7 +315,7 @@ public class Robot extends TimedRobotstangs {
 						.withName("Lowering arm to hard stop"));
 
 		NamedCommands.registerCommand("Auto Intake",
-				new DeployAndIntake(true).raceWith(new DriveToNote().onlyWhile(
+				new DeployAndIntake(false).raceWith(new DriveToNote().onlyWhile(
 						// dont go over the halfway line
 						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0.5))
 						.onlyIf(DriveToNote.thereIsANote)

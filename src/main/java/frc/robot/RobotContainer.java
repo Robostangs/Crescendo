@@ -124,7 +124,7 @@ public class RobotContainer {
 		// .withName("Auto-pilot Source Intake"));
 
 		xDrive.y().toggleOnTrue(new AlignToStage(xDrive::getLeftY, xDrive::getLeftX, xDrive::getRightTriggerAxis)
-				.deadlineWith(Lighting.getStrobeCommand(() -> LEDState.kGreen))
+				.deadlineWith(Lighting.getLarsonCommand(() -> LEDState.kGreen))
 				.finallyDo(Lighting.startTimer));
 
 		// just runs feeder

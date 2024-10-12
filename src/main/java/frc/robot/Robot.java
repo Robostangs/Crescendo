@@ -115,7 +115,7 @@ public class Robot extends TimedRobotstangs {
 		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
 
 		SmartDashboard.putData("Field", teleopField);
-
+	
 		songChooser.setDefaultOption("The defult option is nothing", "");
 		songChooser.addOption("Imperial March", "Sith.chrp");
 		songChooser.addOption("Under Pressure ", "underpressure.chrp");
@@ -210,10 +210,17 @@ public class Robot extends TimedRobotstangs {
 				.withWidget("Match Time")
 				.withProperties(Map.of("red_start_time", 15, "yellow_start_time", 30));
 
-		teleopTab.addBoolean("Holding", () -> Intake.getInstance().getShooterSensor())
-				.withSize(3, 2)
-				.withPosition(0, 2)
-				.withWidget(BuiltInWidgets.kBooleanBox);
+		// teleopTab.addBoolean("Holding", () -> Intake.getInstance().getShooterSensor())
+		// 		.withSize(3, 2)
+		// 		.withPosition(0, 2)
+		// 		.withWidget(BuiltInWidgets.kBooleanBox);
+
+		
+
+		teleopTab.add("Swerve Drive", Drivetrain.getInstance().getSwerveDrive())
+			.withSize(3, 2)
+			.withPosition(0, 2)
+			.withWidget("SwerveDrive");
 
 		disabledTab.add("Command Scheduler", CommandScheduler.getInstance());
 
@@ -358,7 +365,7 @@ public class Robot extends TimedRobotstangs {
 		CommandScheduler.getInstance().run();
 		gc.update();
 
-		}
+	}
 
 	
 

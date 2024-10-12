@@ -21,6 +21,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -68,8 +70,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             PoseEstimate front, back;
 
             if (DriverStation.isDisabled()
-                    || LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > LimelightFront.MegaTag1AreaThreshold
-                    || Math.abs(super.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) < LimelightFront.MegatTag2AngularVelocityThreshold) {
+                    || LimelightHelpers
+                            .getTA(Constants.Vision.LimelightFront.llAprilTag) > LimelightFront.MegaTag1AreaThreshold
+                    || Math.abs(super.getPigeon2().getAngularVelocityZWorld()
+                            .getValueAsDouble()) < LimelightFront.MegatTag2AngularVelocityThreshold) {
                 front = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightFront.llAprilTag);
             }
 
@@ -79,8 +83,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             }
 
             if (DriverStation.isDisabled()
-                    || LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > LimelightRear.MegaTag1AreaThreshold
-                    || Math.abs(super.getPigeon2().getAngularVelocityZWorld().getValueAsDouble()) < LimelightRear.MegatTag2AngularVelocityThreshold) {
+                    || LimelightHelpers
+                            .getTA(Constants.Vision.LimelightRear.llAprilTagRear) > LimelightRear.MegaTag1AreaThreshold
+                    || Math.abs(super.getPigeon2().getAngularVelocityZWorld()
+                            .getValueAsDouble()) < LimelightRear.MegatTag2AngularVelocityThreshold) {
                 back = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Vision.LimelightRear.llAprilTagRear);
             }
 
@@ -90,30 +96,41 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
             }
 
             if (front.tagCount > 1
-                    && LimelightHelpers.getTA(Constants.Vision.LimelightFront.llAprilTag) > LimelightFront.MegaTag2AreaThreshold) {
+                    && LimelightHelpers
+                            .getTA(Constants.Vision.LimelightFront.llAprilTag) > LimelightFront.MegaTag2AreaThreshold) {
                 // if (front.tagCount >= 1) {
                 this.addVisionMeasurement(front.pose, front.timestampSeconds);
                 mField.getObject("Front LL pose").setPose(front.pose);
             }
 
             if (back.tagCount > 1
-                    && LimelightHelpers.getTA(Constants.Vision.LimelightRear.llAprilTagRear) > LimelightRear.MegaTag2AreaThreshold) {
+                    && LimelightHelpers.getTA(
+                            Constants.Vision.LimelightRear.llAprilTagRear) > LimelightRear.MegaTag2AreaThreshold) {
                 // if (back.tagCount >= 1) {
                 this.addVisionMeasurement(back.pose, back.timestampSeconds);
                 mField.getObject("Rear LL pose").setPose(back.pose);
             }
         }
         // for (int i=0;i<4;i++) {
-        //     SmartDashboard.putNumber(String.valueOf(i)+" supply current", Modules[i].getDriveMotor().getSupplyCurrent().getValueAsDouble());
-        //     SmartDashboard.putNumber(String.valueOf(i)+" stator current", Modules[i].getDriveMotor().getStatorCurrent().getValueAsDouble());
-        //     SmartDashboard.putNumber(String.valueOf(i)+" supply voltage", Modules[i].getDriveMotor().getSupplyVoltage().getValueAsDouble());
-        //     SmartDashboard.putNumber(String.valueOf(i)+" bridge output", Math.abs(Modules[i].getDriveMotor().getDutyCycle().getValue()));
-        //     SmartDashboard.putBoolean(String.valueOf(i)+" stator limit", Modules[i].getDriveMotor().getFault_StatorCurrLimit().getValue());
-        //     SmartDashboard.putBoolean(String.valueOf(i)+" supply limit", Modules[i].getDriveMotor().getFault_SupplyCurrLimit().getValue());
+        // SmartDashboard.putNumber(String.valueOf(i)+" supply current",
+        // Modules[i].getDriveMotor().getSupplyCurrent().getValueAsDouble());
+        // SmartDashboard.putNumber(String.valueOf(i)+" stator current",
+        // Modules[i].getDriveMotor().getStatorCurrent().getValueAsDouble());
+        // SmartDashboard.putNumber(String.valueOf(i)+" supply voltage",
+        // Modules[i].getDriveMotor().getSupplyVoltage().getValueAsDouble());
+        // SmartDashboard.putNumber(String.valueOf(i)+" bridge output",
+        // Math.abs(Modules[i].getDriveMotor().getDutyCycle().getValue()));
+        // SmartDashboard.putBoolean(String.valueOf(i)+" stator limit",
+        // Modules[i].getDriveMotor().getFault_StatorCurrLimit().getValue());
+        // SmartDashboard.putBoolean(String.valueOf(i)+" supply limit",
+        // Modules[i].getDriveMotor().getFault_SupplyCurrLimit().getValue());
         // }
         SmartDashboard.putBoolean("Swerve/Is In Range", isInRangeOfTarget());
         SmartDashboard.putNumber("Swerve/Rotation Error", (angleToSpeaker() -
                 getPose().getRotation().getDegrees()));
+
+     
+
     }
 
     private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -350,6 +367,25 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
 
     public void postStatus(String status) {
         SmartDashboard.putString("Swerve/status", status);
+    }
+    public Sendable getSwerveDrive(){
+        return new Sendable() {
+            @Override
+            public void initSendable(SendableBuilder builder) {
+                builder.setSmartDashboardType("SwerveDrive");
+
+                for (int c = 0; c < 4; c++) {
+                    final int moduleIndex = c; // Use a final variable to capture the value of c
+                    builder.addDoubleProperty("Swerve Module Angle " + c,
+                            Drivetrain.getInstance().getModule(moduleIndex).getCurrentState().angle::getDegrees,
+                            null);
+                    builder.addDoubleProperty("Swerve Module Velocity" + c,
+                            () -> Drivetrain.getInstance().getModule(moduleIndex).getCurrentState().speedMetersPerSecond,
+                            null);
+                }
+                builder.addDoubleProperty("Robot Angle", Drivetrain.getInstance().m_yawGetter::getValue, null);
+            }
+        };
     }
 
     private static Drivetrain mInstance;

@@ -13,7 +13,7 @@ public class xDrive extends Command {
     private SwerveRequest swerveRequest;
 
     /**
-     * Sets swerve based on @param translateX @param translatey @param rotate 
+     * Sets swerve based on @param translateX @param translatey @param rotate
      * <p>
      * When it isn't driving it will defult to a "X" position
      * 

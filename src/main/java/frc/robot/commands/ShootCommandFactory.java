@@ -50,9 +50,9 @@ public class ShootCommandFactory {
                                                                                 .withTimeout(Constants.OperatorConstants.shootTimeout),
                                                                                 new Shoot(true).onlyWhile(
                                                                                                 () -> Intake.getInstance()
-                                                                                                                .getShooterSensor())))
+                                                                                                                .getShooterSensor()))))
                                                 .onlyIf(
-                                                                () -> Intake.getInstance().getShooterSensor()))
+                                                                () -> Intake.getInstance().getShooterSensor())
                                 .withName("Auto Aim and Shoot with Timeouts");
         }
 

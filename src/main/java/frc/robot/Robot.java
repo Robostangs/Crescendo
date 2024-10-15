@@ -39,6 +39,7 @@ import frc.robot.Alert.AlertType;
 import frc.robot.Constants.Lights.LEDState;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.ShootCommandFactory;
+import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ArmCommands.TrackSetPoint;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
@@ -302,9 +303,15 @@ public class Robot extends TimedRobotstangs {
 								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
 						.withName("Align and Shoot"));
 
+	NamedCommands.registerCommand("Just Shoot",
+				new Spit().withTimeout(0.5)
+						.andThen(
+								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
+						.withName("Align and Shoot"));
+						
 		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
 		NamedCommands.registerCommand("Prepare Shooter", new Prepare());
-		NamedCommands.registerCommand("Intake", new DeployAndIntake(false));
+		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
 		NamedCommands.registerCommand("Shoot on the fly", ShootCommandFactory.getAimAndShootCommandWithTimeouts());
 		NamedCommands.registerCommand("Lower Arm",
 				// doing this so that we dont have to wait for arm velocity to be 0, and as soon
@@ -315,7 +322,7 @@ public class Robot extends TimedRobotstangs {
 						.withName("Lowering arm to hard stop"));
 
 		NamedCommands.registerCommand("Auto Intake",
-				new DeployAndIntake(false).raceWith(new DriveToNote().onlyWhile(
+				new DeployAndIntake(true).raceWith(new DriveToNote().onlyWhile(
 						// dont go over the halfway line
 						() -> Drivetrain.getInstance().getPose().getX() + (0.92 / 2) < Constants.fieldLength / 2 - 0.5))
 						.onlyIf(DriveToNote.thereIsANote)

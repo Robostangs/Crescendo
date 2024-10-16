@@ -36,9 +36,9 @@ public final class Constants {
 
 		// the lower the number, the more odometry will trust the vision		
 		//TODO revert this change at MARC
-		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(100));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.28, 0.28, Units.degreesToRadians(100));
 
-
+//
 		public static class LimelightFront {
 			public static final String llAprilTag = "limelight-front";
 			public static final String llAprilTagIP = "http://10.5.48.13:5800/stream.mjpg";
@@ -402,8 +402,8 @@ public final class Constants {
 		}
 
 		public static final double setpointTimeout = 2;
-		public static final double feedTimeout = 0.5;
-		public static final double shootTimeout = 0.5;
+		public static final double feedTimeout = 1;
+		public static final double shootTimeout = 1;
 		public static final double chargeUpTimeout = 1;
 
 	}
@@ -420,8 +420,9 @@ public final class Constants {
 		public static final double kFeedForwardTorqueCurrentWhileShooting = 6;
 
 		public static final double shooterTrapezoidalOffset = 2.6;
-		public static final double angleOfShooterReferencePointSittingOnHardStop = -62.5;
-		
+		// public static final double angleOfShooterReferencePointSittingOnHardStop = -62.5;
+				public static final double angleOfShooterReferencePointSittingOnHardStop = -59.5-2.6;
+
 
 		/**
 		 * Value that gets multiplied against the FineAdjust input variable, this number
@@ -434,7 +435,7 @@ public final class Constants {
 				+ shooterTrapezoidalOffset;
 		public static final double kArmRangeOfMotion = kArmMaxAngle - kArmMinAngle;
 		public static final double shooterOffset = 67 - shooterTrapezoidalOffset;
-		public static final double kInRangeThreshold = 1;
+		public static final double kInRangeThreshold = 0.5;
 
 		public static class Regression {
 			/*

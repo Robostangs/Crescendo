@@ -39,6 +39,7 @@ import frc.robot.Alert.AlertType;
 import frc.robot.Constants.Lights.LEDState;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.ShootCommandFactory;
+import frc.robot.commands.Spit;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.ArmCommands.TrackSetPoint;
 import frc.robot.commands.AutoCommands.PathPlannerCommand;
@@ -309,6 +310,12 @@ public class Robot extends TimedRobotstangs {
 								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
 						.withName("Align and Shoot"));
 
+	NamedCommands.registerCommand("Just Shoot",
+				new Spit().withTimeout(0.5)
+						.andThen(
+								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
+						.withName("Align and Shoot"));
+						
 		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
 		NamedCommands.registerCommand("Prepare Shooter", new Prepare());
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
@@ -811,8 +818,12 @@ public class Robot extends TimedRobotstangs {
 	  SmartDashboard.putNumber("GCCounts", (double)accumCounts);
 	  SmartDashboard.putNumber("Memory Usage", (double) memBean.getHeapMemoryUsage().getUsed());
 	  
-	  if(accumTime>(1)){
+	  if(accumTime>(100)){
 		gcAlert.set(true);
+	  }
+	  else{
+		gcAlert.set(false);
+
 	  }
 
     }

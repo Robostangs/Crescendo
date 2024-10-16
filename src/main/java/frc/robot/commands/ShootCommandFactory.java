@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.Lights.LEDState;
 import frc.robot.commands.ArmCommands.ReturnHome;
 import frc.robot.commands.ArmCommands.SetPoint;
 import frc.robot.commands.FeederCommands.BeltDrive;
@@ -16,6 +17,7 @@ import frc.robot.commands.ShooterCommands.Prepare;
 import frc.robot.commands.ShooterCommands.Shoot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.Shooter;
 
 public class ShootCommandFactory {
@@ -48,9 +50,9 @@ public class ShootCommandFactory {
                                                                                 .withTimeout(Constants.OperatorConstants.shootTimeout),
                                                                                 new Shoot(true).onlyWhile(
                                                                                                 () -> Intake.getInstance()
-                                                                                                                .getShooterSensor())))
+                                                                                                                .getShooterSensor()))))
                                                 .onlyIf(
-                                                                () -> Intake.getInstance().getShooterSensor()))
+                                                                () -> Intake.getInstance().getShooterSensor())
                                 .withName("Auto Aim and Shoot with Timeouts");
         }
 
@@ -136,9 +138,10 @@ public class ShootCommandFactory {
                 return new PassToShooter().unless(() -> Intake.getInstance().getShooterSensor())
                                 .andThen(new WaitUntilCommand(waitUntil).deadlineWith(
                                                 new SetPoint(Constants.ArmConstants.SetPoints.kCenterToWingPass),
-                                                new Prepare(0.65)),
+                                                new Prepare(0.60)).finallyDo(() ->Lighting.getStrobeCommand(() ->LEDState.kPurple)),
                                                 new Shoot(true).onlyWhile(waitUntil))
                                 .finallyDo(ReturnHome.ReturnHome)
+                                .alongWith(Lighting.getStrobeCommand(() -> LEDState.kPurple))
                                 .handleInterrupt(CancelShooter.CancelShooter)
                                 .withName("Pass to Center");
         }

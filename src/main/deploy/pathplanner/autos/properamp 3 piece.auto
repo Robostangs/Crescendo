@@ -39,7 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Just Shoot"
+            "name": "Shoot"
           }
         },
         {
@@ -51,7 +51,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Just Shoot"
+            "name": "Shoot"
           }
         },
         {
@@ -89,7 +89,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Just Shoot"
+            "name": "Shoot"
           }
         }
       ]

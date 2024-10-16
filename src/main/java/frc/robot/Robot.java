@@ -92,10 +92,9 @@ public class Robot extends TimedRobotstangs {
 
 	public static Command setpointCommand;
 
-	public static Alert forwardAuto, wrongAlliance,gcAlert;
+	public static Alert forwardAuto, wrongAlliance, gcAlert;
 
-	GcStatsCollector gc = new GcStatsCollector();		
-
+	GcStatsCollector gc = new GcStatsCollector();
 
 	@Override
 	public void robotInit() {
@@ -116,7 +115,7 @@ public class Robot extends TimedRobotstangs {
 		Drivetrain.getInstance().getDaqThread().setThreadPriority(99);
 
 		SmartDashboard.putData("Field", teleopField);
-	
+
 		songChooser.setDefaultOption("The defult option is nothing", "");
 		songChooser.addOption("Imperial March", "Sith.chrp");
 		songChooser.addOption("Under Pressure ", "underpressure.chrp");
@@ -211,17 +210,11 @@ public class Robot extends TimedRobotstangs {
 				.withWidget("Match Time")
 				.withProperties(Map.of("red_start_time", 15, "yellow_start_time", 30));
 
-		// teleopTab.addBoolean("Holding", () -> Intake.getInstance().getShooterSensor())
-		// 		.withSize(3, 2)
-		// 		.withPosition(0, 2)
-		// 		.withWidget(BuiltInWidgets.kBooleanBox);
-
-		
-
-		teleopTab.add("Swerve Drive", Drivetrain.getInstance().getSwerveDrive())
-			.withSize(3, 2)
-			.withPosition(0, 2)
-			.withWidget("SwerveDrive");
+		// teleopTab.addBoolean("Holding", () ->
+		// Intake.getInstance().getShooterSensor())
+		// .withSize(3, 2)
+		// .withPosition(0, 2)
+		// .withWidget(BuiltInWidgets.kBooleanBox);
 
 		disabledTab.add("Command Scheduler", CommandScheduler.getInstance());
 
@@ -310,12 +303,12 @@ public class Robot extends TimedRobotstangs {
 								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
 						.withName("Align and Shoot"));
 
-	NamedCommands.registerCommand("Just Shoot",
+		NamedCommands.registerCommand("Just Shoot",
 				new Spit().withTimeout(0.5)
 						.andThen(
 								new InstantCommand(() -> Lighting.getInstance().autoSetLights(true)))
 						.withName("Align and Shoot"));
-						
+
 		NamedCommands.registerCommand("Prepare", new SetPoint().alongWith(new Prepare()));
 		NamedCommands.registerCommand("Prepare Shooter", new Prepare());
 		NamedCommands.registerCommand("Intake", new DeployAndIntake(true));
@@ -361,7 +354,7 @@ public class Robot extends TimedRobotstangs {
 		CommandScheduler.getInstance()
 				.onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
 		CommandScheduler.getInstance()
-		
+
 				.onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
 		CommandScheduler.getInstance()
 				.onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
@@ -374,8 +367,6 @@ public class Robot extends TimedRobotstangs {
 
 	}
 
-	
-
 	@Override
 	public void disabledInit() {
 		Shuffleboard.selectTab(disabledTab.getTitle());
@@ -384,6 +375,7 @@ public class Robot extends TimedRobotstangs {
 	}
 
 	static String lastAuto = "";
+
 	@Override
 	public void disabledPeriodic() {
 		PathPlannerCommand.publishTrajectory(startingPose.getSelected() + autoChooser.getSelected());
@@ -630,6 +622,11 @@ public class Robot extends TimedRobotstangs {
 					.withWidget(BuiltInWidgets.kTextView)
 					.withProperties(Map.of("show_submit_button", true));
 
+			testTab.add("Swerve Drive", Drivetrain.getInstance().getSwerveDrive())
+					.withSize(3, 2)
+					.withPosition(5, 3)
+					.withWidget("SwerveDrive");
+
 			desiredSetpointEntry = NetworkTableInstance.getDefault()
 					.getTable("Shuffleboard")
 					.getSubTable(testTab.getTitle())
@@ -796,36 +793,35 @@ public class Robot extends TimedRobotstangs {
 	}
 
 	private static final class GcStatsCollector {
-    private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
-	private MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
-    private final long[] lastTimes = new long[gcBeans.size()];
-    private final long[] lastCounts = new long[gcBeans.size()];
-  
-    public void update() {
-      long accumTime = 0;
-      long accumCounts = 0;
-      for (int i = 0; i < gcBeans.size(); i++) {
-        long gcTime = gcBeans.get(i).getCollectionTime();
-        long gcCount = gcBeans.get(i).getCollectionCount();
-        accumTime += gcTime - lastTimes[i];
-        accumCounts += gcCount - lastCounts[i];
-  
-        lastTimes[i] = gcTime;
-        lastCounts[i] = gcCount;
-      }
-  
-	  SmartDashboard.putNumber("GC Time MS", (double)accumTime);
-	  SmartDashboard.putNumber("GCCounts", (double)accumCounts);
-	  SmartDashboard.putNumber("Memory Usage", (double) memBean.getHeapMemoryUsage().getUsed());
-	  
-	  if(accumTime>(100)){
-		gcAlert.set(true);
-	  }
-	  else{
-		gcAlert.set(false);
+		private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
+		private MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+		private final long[] lastTimes = new long[gcBeans.size()];
+		private final long[] lastCounts = new long[gcBeans.size()];
 
-	  }
+		public void update() {
+			long accumTime = 0;
+			long accumCounts = 0;
+			for (int i = 0; i < gcBeans.size(); i++) {
+				long gcTime = gcBeans.get(i).getCollectionTime();
+				long gcCount = gcBeans.get(i).getCollectionCount();
+				accumTime += gcTime - lastTimes[i];
+				accumCounts += gcCount - lastCounts[i];
 
-    }
-  }
+				lastTimes[i] = gcTime;
+				lastCounts[i] = gcCount;
+			}
+
+			SmartDashboard.putNumber("GC Time MS", (double) accumTime);
+			SmartDashboard.putNumber("GCCounts", (double) accumCounts);
+			SmartDashboard.putNumber("Memory Usage", (double) memBean.getHeapMemoryUsage().getUsed());
+
+			if (accumTime > (100)) {
+				gcAlert.set(true);
+			} else {
+				gcAlert.set(false);
+
+			}
+
+		}
+	}
 }

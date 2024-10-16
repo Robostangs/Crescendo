@@ -129,8 +129,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
         SmartDashboard.putNumber("Swerve/Rotation Error", (angleToSpeaker() -
                 getPose().getRotation().getDegrees()));
 
-     
-
     }
 
     private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -368,20 +366,23 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem {
     public void postStatus(String status) {
         SmartDashboard.putString("Swerve/status", status);
     }
-    public Sendable getSwerveDrive(){
+
+    public Sendable getSwerveDrive() {
         return new Sendable() {
             @Override
             public void initSendable(SendableBuilder builder) {
                 builder.setSmartDashboardType("SwerveDrive");
 
                 for (int c = 0; c < 4; c++) {
-                    final int moduleIndex = c; // Use a final variable to capture the value of c
+                    final int moduleIndex = c;
                     builder.addDoubleProperty("Swerve Module Angle " + c,
                             Drivetrain.getInstance().getModule(moduleIndex).getCurrentState().angle::getDegrees,
                             null);
                     builder.addDoubleProperty("Swerve Module Velocity" + c,
-                            () -> Drivetrain.getInstance().getModule(moduleIndex).getCurrentState().speedMetersPerSecond,
+                            () -> Drivetrain.getInstance().getModule(moduleIndex)
+                                    .getCurrentState().speedMetersPerSecond,
                             null);
+
                 }
                 builder.addDoubleProperty("Robot Angle", Drivetrain.getInstance().m_yawGetter::getValue, null);
             }

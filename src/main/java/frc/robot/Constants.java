@@ -35,8 +35,7 @@ public final class Constants {
 		public static final boolean UseLimelight = true;
 
 		// the lower the number, the more odometry will trust the vision		
-		//TODO revert this change at MARC
-		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.25, 0.25, Units.degreesToRadians(100));
+		public static final Vector<N3> kPrecisionInMyVision = VecBuilder.fill(0.29, 0.29, Units.degreesToRadians(100));
 
 //
 		public static class LimelightFront {

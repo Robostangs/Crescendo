@@ -198,6 +198,13 @@ public class Robot extends TimedRobotstangs {
 				.withPosition(0, 0)
 				.withWidget(BuiltInWidgets.kBooleanBox);
 
+		Alert.groups.forEach((group, alert) -> {
+			autoTab.add(group, alert)
+					.withSize(3, 3)
+					.withPosition(6, 1)
+					.withWidget("Alerts");
+		});
+
 		teleopTab
 				.addBoolean("Ready To Shoot",
 						() -> Shooter.getInstance().readyToShootAdvanced() && Drivetrain.getInstance().readyToShoot())

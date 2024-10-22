@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -30,14 +30,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.65,
-      "rotationDegrees": -47.76999999999998,
-      "rotateFast": false
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": -57.54000000000002
     },
     {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": -57.54000000000002,
-      "rotateFast": true
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": -47.76999999999998
     }
   ],
   "constraintZones": [
@@ -49,27 +47,31 @@
         "maxVelocity": 1.5,
         "maxAcceleration": 1.0,
         "maxAngularVelocity": 654.9949339791002,
-        "maxAngularAcceleration": 229.1831180523293
+        "maxAngularAcceleration": 229.1831180523293,
+        "nominalVoltage": 12.0,
+        "unlimited": false
       }
     }
   ],
+  "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 1.0,
     "maxAngularVelocity": 654.9949339791002,
-    "maxAngularAcceleration": 455.7618824904275
+    "maxAngularAcceleration": 455.7618824904275,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 1.5,
-    "rotation": -43.0,
-    "rotateFast": false
+    "rotation": -43.0
   },
   "reversed": false,
   "folder": "Stage Side Paths",
-  "previewStartingState": {
-    "rotation": 0.0,
-    "velocity": 0
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }

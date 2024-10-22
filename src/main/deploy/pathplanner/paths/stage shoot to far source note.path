@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -36,12 +36,12 @@
         "y": 0.7762526348962228
       },
       "prevControl": {
-        "x": 8.123685430082224,
-        "y": 0.9931022289657819
+        "x": 8.124724859815046,
+        "y": 1.026128912630005
       },
       "nextControl": {
-        "x": 8.110921158591847,
-        "y": 0.5875321905062192
+        "x": 8.108996436383606,
+        "y": 0.5263763571624405
       },
       "isLocked": false,
       "linkedName": "Far Right Note"
@@ -57,7 +57,7 @@
       },
       "nextControl": {
         "x": 3.9255786451808783,
-        "y": 2.51058743064916
+        "y": 2.5105874306491605
       },
       "isLocked": false,
       "linkedName": null
@@ -69,7 +69,7 @@
       },
       "prevControl": {
         "x": 4.570312867477587,
-        "y": 3.4706605894693277
+        "y": 3.470660589469328
       },
       "nextControl": null,
       "isLocked": false,
@@ -79,15 +79,16 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 2.0,
-      "rotationDegrees": 0.0,
-      "rotateFast": false
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Intake",
       "waypointRelativePos": 0.75,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "sequential",
         "data": {
@@ -113,15 +114,19 @@
     "maxVelocity": 5.96,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 776.0973770408424,
-    "maxAngularAcceleration": 455.7618824904275
+    "maxAngularAcceleration": 455.7618824904275,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -7.759999999999991,
-    "rotateFast": false
+    "rotation": -7.759999999999991
   },
   "reversed": false,
   "folder": "Stage Side Paths",
-  "previewStartingState": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
   "useDefaultConstraints": true
 }

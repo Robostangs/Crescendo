@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -36,12 +36,12 @@
         "y": 7.4309552554704394
       },
       "prevControl": {
-        "x": 8.209817307782764,
-        "y": 7.292431456217073
+        "x": 8.170280870602321,
+        "y": 7.201815853738885
       },
       "nextControl": {
-        "x": 8.327544054081342,
-        "y": 7.562255466786221
+        "x": 8.370232210423842,
+        "y": 7.660094657201994
       },
       "isLocked": false,
       "linkedName": "Far left Note"
@@ -53,7 +53,7 @@
       },
       "prevControl": {
         "x": 7.829751244436076,
-        "y": 1.3356734306061215
+        "y": 1.3356734306061213
       },
       "nextControl": null,
       "isLocked": false,
@@ -63,25 +63,24 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.85,
-      "rotationDegrees": 0,
-      "rotateFast": false
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 1.85,
-      "rotationDegrees": 0,
-      "rotateFast": false
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 2.5,
-      "rotationDegrees": -26.0,
-      "rotateFast": true
+      "rotationDegrees": -26.0
     }
   ],
   "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "InandOut",
       "waypointRelativePos": 1.25,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
         "data": {
@@ -99,6 +98,7 @@
     {
       "name": "Intake",
       "waypointRelativePos": 2.8,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
         "data": {
@@ -118,18 +118,19 @@
     "maxVelocity": 5.96,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 776.0973770408424,
-    "maxAngularAcceleration": 455.7618824904275
+    "maxAngularAcceleration": 455.7618824904275,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -35.5134383228845,
-    "rotateFast": false
+    "rotation": -35.5134383228845
   },
   "reversed": false,
-  "folder": null,
-  "previewStartingState": {
-    "rotation": 60.25744175573384,
-    "velocity": 0
+  "folder": "Amp Side Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 4.745199860770092,
-        "y": 1.5951831625885478
+        "y": 1.595183162588548
       },
       "isLocked": false,
       "linkedName": "Stage Out West Shoot Position"
@@ -36,8 +36,8 @@
         "y": 2.4355807112260432
       },
       "prevControl": {
-        "x": 8.148173294916656,
-        "y": 2.2878643392504503
+        "x": 8.169424786422294,
+        "y": 2.1914398578117407
       },
       "nextControl": {
         "x": 8.024485348630256,
@@ -78,26 +78,25 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2.0,
-      "rotationDegrees": 0.0,
-      "rotateFast": false
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": -9.0
     },
     {
       "waypointRelativePos": 1.05,
-      "rotationDegrees": 27.0,
-      "rotateFast": false
+      "rotationDegrees": 27.0
     },
     {
-      "waypointRelativePos": 0.3,
-      "rotationDegrees": -9.0,
-      "rotateFast": false
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Intake",
       "waypointRelativePos": 0.5,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "sequential",
         "data": {
@@ -121,6 +120,7 @@
     {
       "name": "Lower Arm",
       "waypointRelativePos": 2.55,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
         "data": {
@@ -140,15 +140,19 @@
     "maxVelocity": 5.96,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 776.0973770408424,
-    "maxAngularAcceleration": 455.7618824904275
+    "maxAngularAcceleration": 455.7618824904275,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -7.759999999999991,
-    "rotateFast": false
+    "rotation": -7.759999999999991
   },
   "reversed": false,
   "folder": "Stage Side Paths",
-  "previewStartingState": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
   "useDefaultConstraints": true
 }

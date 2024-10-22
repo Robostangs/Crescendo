@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 5.054092111762042,
-        "y": 0.6021129752456295
+        "y": 0.60211297524563
       },
       "isLocked": false,
       "linkedName": "Stage Out West Shoot Position"
@@ -20,12 +20,12 @@
         "y": 0.7342841161532057
       },
       "prevControl": {
-        "x": 8.295229253590476,
-        "y": 0.5780142972067647
+        "x": 8.301363842248042,
+        "y": 0.4848240383533885
       },
       "nextControl": {
-        "x": 8.274632941312897,
-        "y": 0.8908919455239542
+        "x": 8.268520603424248,
+        "y": 0.9837441939530227
       },
       "isLocked": false,
       "linkedName": null
@@ -47,20 +47,20 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.7,
-      "rotationDegrees": 15.222415382044666,
-      "rotateFast": false
+      "rotationDegrees": 15.222415382044664
     },
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 21.161259816828295,
-      "rotateFast": false
+      "rotationDegrees": 21.161259816828295
     }
   ],
   "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "New Event Marker",
       "waypointRelativePos": 0.3,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "sequential",
         "data": {
@@ -86,15 +86,19 @@
     "maxVelocity": 5.96,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 776.0973770408424,
-    "maxAngularAcceleration": 455.7618824904275
+    "maxAngularAcceleration": 455.7618824904275,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -43.0,
-    "rotateFast": false
+    "rotation": -43.0
   },
   "reversed": false,
   "folder": "Stage Side Paths",
-  "previewStartingState": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
   "useDefaultConstraints": true
 }

@@ -1,12 +1,5 @@
 {
-  "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.74,
-      "y": 6.7
-    },
-    "rotation": 60.0
-  },
+  "version": "2025.0",
   "command": {
     "type": "sequential",
     "data": {
@@ -120,6 +113,7 @@
       ]
     }
   },
-  "folder": "All Close Notes",
+  "resetOdom": true,
+  "folder": "Alll Close Notes",
   "choreoAuto": false
 }
